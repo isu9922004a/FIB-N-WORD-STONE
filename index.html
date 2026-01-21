@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>N字戰法：三盤轉折判斷計算機 (V9.3 翻紅定義詳解版)</title>
+    <title>N字戰法：三盤轉折判斷計算機 (V9.4 強勢防守版)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
@@ -18,6 +18,7 @@
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
         
         .invalid-target { text-decoration: line-through; color: #9ca3af; }
+        .input-error { border-color: #ef4444 !important; ring: 2px; ring-color: #ef4444; background-color: #fef2f2; }
         
         /* 摺疊選單樣式 */
         details > summary { list-style: none; cursor: pointer; transition: all 0.2s; }
@@ -31,139 +32,82 @@
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-xl overflow-hidden border border-slate-300 relative">
         <!-- Header -->
         <div class="bg-slate-900 p-5 text-white text-center relative z-20">
-            <h1 class="text-2xl font-black tracking-wider">N字戰法指揮中心 <span class="text-yellow-400 text-sm align-top">V9.3</span></h1>
-            <p class="text-xs text-slate-400 mt-1">三盤轉折 x 動態測幅 x 完整戰法百科</p>
+            <h1 class="text-2xl font-black tracking-wider">N字戰法指揮中心 <span class="text-yellow-400 text-sm align-top">V9.4</span></h1>
+            <p class="text-xs text-slate-400 mt-1">三盤轉折 x 強勢判定 x 軋空防守</p>
         </div>
 
         <!-- 戰法百科全書 (Accordion Menu) -->
         <div class="bg-slate-50 border-b border-slate-200">
             <div class="p-3 text-center bg-blue-700 text-white font-bold text-sm cursor-pointer hover:bg-blue-800 transition-colors" onclick="toggleEncyclopedia()">
-                📖 點我打開：N字戰法全能百科 (所有邏輯清單) ▼
+                📖 點我打開：N字戰法全能百科 (邏輯說明) ▼
             </div>
             
             <div id="encyclopediaContent" class="hidden max-h-[400px] overflow-y-auto p-4 space-y-3 shadow-inner bg-white">
-                
                 <!-- Chapter 1: 測幅公式 -->
                 <details class="group border border-green-200 rounded overflow-hidden">
                     <summary class="flex justify-between items-center font-bold text-green-800 bg-green-50 p-3">
-                        <span>1. 攻擊篇：N字測幅公式 (謝老師手稿)</span>
+                        <span>1. 攻擊篇：N字測幅公式</span>
                         <span class="text-green-500 transition-transform group-open:rotate-180">▼</span>
                     </summary>
                     <div class="p-3 text-xs text-slate-700 bg-white space-y-2">
-                        <p>參數定義：<span class="font-bold text-red-600">h2 (今日最高)</span>，<span class="font-bold text-green-600">L (前三低)</span></p>
-                        <div class="bg-green-50 p-2 rounded border border-green-100 font-mono">
-                            <p>● <span class="font-bold">一飽 (1x)：</span> h2 × 2 - L</p>
-                            <p>● <span class="font-bold">二吐 (2x)：</span> 一飽 + (h2 - L)</p>
-                            <p>● <span class="font-bold">五倍 (5x)：</span> h2 + 5 × (h2 - L)</p>
-                        </div>
-                        <p class="text-[10px] text-gray-500 bg-gray-50 p-1 rounded mt-1">
-                            邏輯：h2 是動態的，漲越高目標推越遠。衝過二吐不回頭，目標直指五倍 (摺疊翻箱)。
-                        </p>
-                    </div>
-                </details>
-
-                <!-- Chapter 2: 防守定義 (本版更新重點) -->
-                <details class="group border border-purple-200 rounded overflow-hidden" open>
-                    <summary class="flex justify-between items-center font-bold text-purple-800 bg-purple-50 p-3">
-                        <span>2. 防守篇：軋空低定義與輸入時機 (詳解)</span>
-                        <span class="text-purple-500 transition-transform group-open:rotate-180">▼</span>
-                    </summary>
-                    <div class="p-3 text-xs text-slate-700 bg-white space-y-3">
-                        
-                        <!-- 基礎定義 -->
-                        <div>
-                            <p class="font-bold bg-indigo-100 text-indigo-800 px-1 rounded inline-block mb-1">基礎定義</p>
-                            <ul class="list-disc list-inside space-y-1 ml-1">
-                                <li><span class="font-bold">翻紅K棒：</span>寶塔線由綠翻紅 (收盤 > 前三高) 當天的那根K棒。</li>
-                                <li><span class="font-bold">軋空低：</span>翻紅K棒的<span class="text-red-600 font-bold">最低點</span>。</li>
-                            </ul>
-                        </div>
-
-                        <!-- 核心觀念解惑 (New) -->
-                        <div class="bg-red-50 p-2 rounded border border-red-200">
-                            <p class="font-bold text-red-800 border-b border-red-200 pb-1 mb-1">💡 核心觀念解惑：為什麼是填「今天」？</p>
-                            <p class="mb-2">您的疑問：「今天還沒收盤，搞不好等一下殺下去變黑K怎麼辦？」</p>
-                            <p class="font-bold text-red-600 mb-1">正解：N字戰法是操作「當下」，不是等收盤！</p>
-                            <ol class="list-decimal list-inside space-y-1 ml-1 text-slate-800">
-                                <li><span class="font-bold">假設：</span>今天盤中突破前三高(翻紅)，視為攻擊發起，市價買進。</li>
-                                <li><span class="font-bold">防守：</span>把<span class="bg-yellow-200 px-1 rounded">今天盤中的最低點</span>暫定為軋空低。</li>
-                                <li><span class="font-bold">應變：</span>萬一尾盤真的殺下去，跌破了這個最低點，代表「翻紅失敗(假突破)」，訊號消失，必須在收盤前或隔天一早停損離場。</li>
-                            </ol>
-                            <p class="mt-2 text-center font-bold text-slate-900 border-t border-red-200 pt-1">「所以，那個欄位就是要填『訊號發生的那一天』。」</p>
-                        </div>
-
-                        <!-- 輸入情境對照 (New) -->
-                        <div class="grid grid-cols-1 gap-2">
-                            <div class="bg-yellow-50 p-2 rounded border border-yellow-200">
-                                <p class="font-bold text-yellow-800">📌 情境 A (空手想買)</p>
-                                <p>狀況：今天盤中剛突破。</p>
-                                <p>輸入：填 <span class="font-bold text-red-600">「今天」</span> 的盤中最低點。</p>
-                            </div>
-                            <div class="bg-green-50 p-2 rounded border border-green-200">
-                                <p class="font-bold text-green-800">📌 情境 B (持有續抱)</p>
-                                <p>狀況：前幾天已經買進了。</p>
-                                <p>輸入：填 <span class="font-bold text-red-600">「當初買進那天」</span> 的最低點。</p>
-                            </div>
-                        </div>
-
-                        <div class="bg-slate-100 p-2 rounded border border-slate-300">
-                            <p class="font-bold text-slate-800">實戰範例 (茂達)：</p>
-                            <p>翻紅日最低點為 221。這就是生死線。</p>
-                            <p class="text-red-600 font-bold mt-1">⚡ 跌破 221 = 攻擊失敗 = 目標價全數抵銷。</p>
-                        </div>
-                    </div>
-                </details>
-
-                <!-- Chapter 3: 盤態心法 -->
-                <details class="group border border-orange-200 rounded overflow-hidden">
-                    <summary class="flex justify-between items-center font-bold text-orange-800 bg-orange-50 p-3">
-                        <span>3. 心法篇：空頭抵抗 (Day 2 必讀)</span>
-                        <span class="text-orange-500 transition-transform group-open:rotate-180">▼</span>
-                    </summary>
-                    <div class="p-3 text-xs text-slate-700 bg-white space-y-2">
-                        <p class="font-bold bg-orange-100 p-1 rounded text-orange-900">「翻紅是Day 1，次日必遇空頭抵抗。」</p>
-                        <ul class="space-y-1 ml-1">
-                            <li><span class="font-bold text-red-600">1. 強軋空：</span>抵抗失敗，隔天直接開高走高。</li>
-                            <li><span class="font-bold text-blue-600">2. 軋空盤：</span>抵抗微弱，高檔收小黑，守昨日高。</li>
-                            <li><span class="font-bold text-gray-600">3. 盤堅盤：</span>抵抗強烈，回檔深但<span class="text-red-600 font-bold">守住軋空低</span>。</li>
+                        <p>參數：<span class="font-bold text-red-600">h2 (今日最高)</span>，<span class="font-bold text-green-600">L (前三低)</span></p>
+                        <ul class="list-disc list-inside space-y-1 ml-1 font-mono">
+                            <li><span class="font-bold">一飽 (1x)：</span> h2 × 2 - L</li>
+                            <li><span class="font-bold">二吐 (2x)：</span> 一飽 + (h2 - L)</li>
+                            <li><span class="font-bold">五倍 (5x)：</span> h2 + 5 × (h2 - L)</li>
                         </ul>
                     </div>
                 </details>
 
-                <!-- Chapter 4: 賣出訊號 -->
-                <details class="group border border-red-200 rounded overflow-hidden">
-                    <summary class="flex justify-between items-center font-bold text-red-800 bg-red-50 p-3">
-                        <span>4. 離場篇：世紀鋼 (9958) 賣出邏輯</span>
-                        <span class="text-red-500 transition-transform group-open:rotate-180">▼</span>
+                <!-- Chapter 2: 防守定義 -->
+                <details class="group border border-purple-200 rounded overflow-hidden">
+                    <summary class="flex justify-between items-center font-bold text-purple-800 bg-purple-50 p-3">
+                        <span>2. 防守篇：軋空低與翻紅定義</span>
+                        <span class="text-purple-500 transition-transform group-open:rotate-180">▼</span>
                     </summary>
-                    <div class="p-3 text-xs text-slate-700 bg-white space-y-2">
-                        <p class="font-bold">符合以下三點，收回資金換股操作：</p>
-                        <ol class="list-decimal list-inside space-y-1 ml-1">
-                            <li><span class="font-bold text-red-700">趨勢轉弱：</span>均線 (EMA 8/21/55) 上漲變緩或走平。</li>
-                            <li><span class="font-bold text-red-700">結構破壞：</span>三盤跌破 + 跌破所有均線。</li>
-                            <li><span class="font-bold text-red-700">指標確認：</span>落尾日落 + 寶塔翻綠。</li>
-                        </ol>
-                        <div class="mt-2 bg-red-600 text-white p-1 rounded text-center font-bold">
-                            結論：多頭已死，果斷換股！
+                    <div class="p-3 text-xs text-slate-700 bg-white space-y-3">
+                        <p><span class="font-bold bg-indigo-100 text-indigo-800 px-1 rounded">翻紅K棒：</span> 寶塔線由綠翻紅 (收盤 > 前三高) 當天的那根K棒。</p>
+                        <p><span class="font-bold bg-purple-100 text-purple-800 px-1 rounded">軋空低：</span> 翻紅K棒的<span class="text-red-600 font-bold">最低點</span>。</p>
+                        
+                        <div class="bg-red-50 p-2 rounded border border-red-200">
+                            <p class="font-bold text-red-800 border-b border-red-200 pb-1 mb-1">💡 軋空低填哪一天？(解惑)</p>
+                            <p class="mb-1 text-slate-800 font-bold">N字戰法是操作「當下」，不是等收盤！</p>
+                            <div class="grid grid-cols-1 gap-2 mt-2">
+                                <div class="bg-yellow-50 p-2 rounded border border-yellow-200">
+                                    <p class="font-bold text-yellow-800">📌 情境 A (空手想買)</p>
+                                    <p>輸入：填 <span class="font-bold text-red-600">「今天」</span> 的盤中最低點。</p>
+                                </div>
+                                <div class="bg-green-50 p-2 rounded border border-green-200">
+                                    <p class="font-bold text-green-800">📌 情境 B (持有續抱)</p>
+                                    <p>輸入：填 <span class="font-bold text-red-600">「當初買進那天」</span> 的最低點。</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </details>
 
-                <!-- Chapter 5: 輸入指南 -->
-                <details class="group border border-blue-200 rounded overflow-hidden">
-                    <summary class="flex justify-between items-center font-bold text-blue-800 bg-blue-50 p-3">
-                        <span>5. SOP：盤中輸入指南</span>
-                        <span class="text-blue-500 transition-transform group-open:rotate-180">▼</span>
+                <!-- Chapter 3-5 (保持完整) -->
+                <details class="group border border-orange-200 rounded overflow-hidden">
+                    <summary class="flex justify-between items-center font-bold text-orange-800 bg-orange-50 p-3">
+                        <span>3. 心法篇：空頭抵抗 (Day 2)</span>
+                        <span class="text-orange-500 transition-transform group-open:rotate-180">▼</span>
                     </summary>
-                    <div class="p-3 text-xs text-slate-700 bg-white space-y-1">
-                        <p>● <span class="font-bold">收盤價：</span>輸入盤中即時跳動價。</p>
-                        <p>● <span class="font-bold">今日最高：</span>今日盤中最高點 (h2)。</p>
-                        <p>● <span class="font-bold">軋空低：</span>訊號翻紅那天的最低點 (絕對防守)。</p>
-                        <p>● <span class="font-bold">成交量：</span>盤中請輸<span class="text-red-600 font-bold">預估量</span>。</p>
-                        <p>● <span class="font-bold">前三高/低：</span>昨、前、大前天的數值。</p>
+                    <div class="p-3 text-xs text-slate-700 bg-white">
+                        <p class="font-bold">翻紅次日必遇抵抗：</p>
+                        1. 強軋空(不回頭) 2. 軋空盤(守昨高) 3. 盤堅盤(守軋空低)
                     </div>
                 </details>
-
+                
+                <details class="group border border-red-200 rounded overflow-hidden">
+                    <summary class="flex justify-between items-center font-bold text-red-800 bg-red-50 p-3">
+                        <span>4. 離場篇：賣出訊號檢核</span>
+                        <span class="text-red-500 transition-transform group-open:rotate-180">▼</span>
+                    </summary>
+                    <div class="p-3 text-xs text-slate-700 bg-white">
+                        <p class="font-bold text-red-700">世紀鋼賣出條件：</p>
+                        1. 趨勢轉弱 2. 結構跌破 3. 寶塔翻綠
+                    </div>
+                </details>
             </div>
         </div>
 
@@ -175,18 +119,18 @@
                 <input type="text" id="stockName" class="w-full p-2 border-2 border-slate-200 rounded focus:ring-2 focus:ring-slate-500 font-bold placeholder-slate-300 transition-colors" placeholder="例如：世紀鋼 (9958)">
             </div>
 
-            <!-- 1. 狀態選擇 -->
+            <!-- 1. 狀態選擇 (預設選中綠色) -->
             <div>
                 <label class="block text-slate-700 font-bold mb-2 text-sm">1. 目前寶塔線顏色 (狀態)</label>
                 <div class="grid grid-cols-2 gap-3">
-                    <button onclick="setStatus('GREEN')" id="btn-green" class="py-3 px-4 border-2 rounded-lg font-bold transition-all border-slate-200 text-slate-400 hover:bg-slate-50">
+                    <button onclick="setStatus('GREEN')" id="btn-green" class="py-3 px-4 border-2 rounded-lg font-bold transition-all border-green-500 bg-green-50 text-green-700 shadow-inner ring-2 ring-green-100 opacity-100">
                         🟩 綠色 (空手/盤整)
                     </button>
-                    <button onclick="setStatus('RED')" id="btn-red" class="py-3 px-4 border-2 rounded-lg font-bold transition-all border-slate-200 text-slate-400 hover:bg-slate-50">
+                    <button onclick="setStatus('RED')" id="btn-red" class="py-3 px-4 border-2 rounded-lg font-bold transition-all border-slate-200 text-slate-400 hover:bg-slate-50 opacity-60">
                         🟥 紅色 (持有/多方)
                     </button>
                 </div>
-                <input type="hidden" id="currentStatus" value="">
+                <input type="hidden" id="currentStatus" value="GREEN">
             </div>
 
             <!-- 2. 核心價格 -->
@@ -208,47 +152,32 @@
                     <div>
                         <label class="block text-slate-500 font-bold mb-1 text-xs">前三高 (頸線)</label>
                         <input type="number" step="0.01" id="high3d" class="w-full p-2 border border-slate-300 rounded font-mono text-sm" placeholder="輸入價格">
-                        <p class="text-[10px] text-slate-500 mt-1 font-bold bg-slate-50 p-1 rounded border border-slate-100 text-center">💡比較：昨、前、大前天</p>
+                        <p class="text-[10px] text-slate-500 mt-1 font-bold bg-slate-50 p-1 rounded border border-slate-100 text-center">💡比較：昨/前/大前</p>
                     </div>
                     
                     <!-- 前三低 -->
                     <div>
                         <label class="block text-slate-500 font-bold mb-1 text-xs">前三低 <span class="text-green-600 font-bold">(L)</span></label>
                         <input type="number" step="0.01" id="low3d" class="w-full p-2 border border-slate-300 rounded font-mono text-sm" placeholder="輸入價格">
-                        <p class="text-[10px] text-slate-500 mt-1 font-bold bg-slate-50 p-1 rounded border border-slate-100 text-center">💡比較：昨、前、大前天</p>
+                        <p class="text-[10px] text-slate-500 mt-1 font-bold bg-slate-50 p-1 rounded border border-slate-100 text-center">💡比較：昨/前/大前</p>
                     </div>
                     
-                    <!-- 軋空低欄位 -->
-                    <div class="col-span-2 bg-purple-50 p-2 rounded border border-purple-200 mt-1 relative overflow-hidden shadow-sm">
+                    <!-- 軋空低欄位 (紅色風格升級) -->
+                    <div class="col-span-2 bg-red-50 p-3 rounded-lg border-2 border-red-200 mt-2 relative overflow-hidden shadow-sm">
                          <div class="absolute right-0 top-0 text-[60px] opacity-10 pointer-events-none transform rotate-12">🛡️</div>
-                         <label class="block text-purple-900 font-black mb-1 text-xs">★ 軋空低 (訊號發動日最低點)</label>
-                        <input type="number" step="0.01" id="breakoutLow" class="w-full p-2 border-2 border-purple-300 rounded font-mono text-sm text-purple-900 font-bold bg-white" placeholder="目標價生存線">
-                        <p class="text-[10px] text-red-500 mt-1 font-bold flex items-center">
-                            <span class="mr-1">⚡</span>跌破此價位 = 攻擊失敗 (目標抵銷)
-                        </p>
+                         <div class="flex justify-between items-center mb-1">
+                             <label class="block text-purple-900 font-black mb-1 text-sm">★ 軋空低 (翻紅K棒最低點)</label>
+                             <button onclick="toggleEncyclopedia()" class="text-[10px] bg-red-600 text-white px-2 py-0.5 rounded hover:bg-red-700 cursor-pointer shadow">❓ 填哪一天？</button>
+                         </div>
+                        <input type="number" step="0.01" id="breakoutLow" class="w-full p-2 border-2 border-purple-300 rounded font-mono text-lg text-purple-900 font-bold bg-white focus:ring-2 focus:ring-purple-500" placeholder="目標價生存線">
+                        
+                        <!-- 詳細備註 (User Requested) -->
+                        <div class="mt-2 space-y-1 text-[11px] font-bold text-slate-600 bg-white/60 p-2 rounded border border-red-100">
+                            <p>👉 <span class="text-red-700">若今日剛突破(想買)：</span>填「今天盤中」最低點。</p>
+                            <p>👉 <span class="text-green-700">若已持有續抱：</span>填「當初買進那天」最低點。</p>
+                            <p class="text-red-500 mt-1 border-t border-red-100 pt-1 flex items-center"><span class="text-lg mr-1">⚡</span> 跌破此價位 = 攻擊失敗 (目標抵銷)</p>
+                        </div>
                     </div>
-                </div>
-            </div>
-
-            <!-- 賣出檢核 (世紀鋼邏輯) -->
-            <div id="sellChecklist" class="hidden bg-red-50 p-3 rounded border-2 border-red-200 mt-3">
-                <h4 class="font-bold text-red-800 text-xs mb-2 flex items-center">📉 換股操作檢核 (Sell Checklist)</h4>
-                <div class="space-y-2">
-                    <label class="flex items-center space-x-2 cursor-pointer bg-white p-2 rounded border border-red-100 hover:bg-red-50">
-                        <input type="checkbox" id="checkTrend" class="form-checkbox h-4 w-4 text-red-600 rounded">
-                        <span class="text-xs text-slate-800 font-bold">均線上漲趨勢緩 (力道減弱)</span>
-                    </label>
-                    <label class="flex items-center space-x-2 cursor-pointer bg-white p-2 rounded border border-red-100 hover:bg-red-50">
-                        <input type="checkbox" id="checkMA" class="form-checkbox h-4 w-4 text-red-600 rounded">
-                        <span class="text-xs text-slate-800 font-bold">三盤跌破所有均線 (破線)</span>
-                    </label>
-                    <label class="flex items-center space-x-2 cursor-pointer bg-white p-2 rounded border border-red-100 hover:bg-red-50">
-                        <input type="checkbox" id="checkSunset" class="form-checkbox h-4 w-4 text-red-600 rounded">
-                        <span class="text-xs text-slate-800 font-bold">落尾日落 & 寶塔翻綠 (轉空)</span>
-                    </label>
-                </div>
-                <div id="sellAdvice" class="hidden mt-2 p-3 bg-red-600 text-white text-sm font-black rounded text-center animate-pulse shadow-lg transform scale-105">
-                    🚨 條件成立：收回資金，換股操作！
                 </div>
             </div>
 
@@ -267,13 +196,54 @@
                 </div>
             </div>
 
+            <!-- 4. 強勢股判定參數 (加入回來) -->
+            <div class="bg-red-50 p-3 rounded-lg mt-4 border border-red-100">
+                <h3 class="text-sm font-black text-red-800 mb-2">★ 強勢股判定參數 (選填)</h3>
+                <div class="grid grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-[10px] text-gray-500 font-bold mb-1">昨日收盤</label>
+                        <input type="number" id="prevClose" class="w-full p-1.5 border border-red-200 rounded text-sm text-center" placeholder="昨收">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] text-gray-500 font-bold mb-1">今日最低</label>
+                        <input type="number" id="todayLow" class="w-full p-1.5 border border-red-200 rounded text-sm text-center" placeholder="今低">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] text-gray-500 font-bold mb-1">昨日最低</label>
+                        <input type="number" id="prevLow" class="w-full p-1.5 border border-red-200 rounded text-sm text-center" placeholder="昨低">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 賣出檢核 (隱藏) -->
+            <div id="sellChecklist" class="hidden bg-red-50 p-3 rounded border-2 border-red-200 mt-3">
+                <h4 class="font-bold text-red-800 text-xs mb-2 flex items-center">📉 換股操作檢核</h4>
+                <div class="space-y-2">
+                    <label class="flex items-center space-x-2 cursor-pointer bg-white p-2 rounded border border-red-100">
+                        <input type="checkbox" id="checkTrend" class="form-checkbox h-4 w-4 text-red-600 rounded">
+                        <span class="text-xs text-slate-800 font-bold">均線上漲趨勢緩</span>
+                    </label>
+                    <label class="flex items-center space-x-2 cursor-pointer bg-white p-2 rounded border border-red-100">
+                        <input type="checkbox" id="checkMA" class="form-checkbox h-4 w-4 text-red-600 rounded">
+                        <span class="text-xs text-slate-800 font-bold">三盤跌破所有均線</span>
+                    </label>
+                    <label class="flex items-center space-x-2 cursor-pointer bg-white p-2 rounded border border-red-100">
+                        <input type="checkbox" id="checkSunset" class="form-checkbox h-4 w-4 text-red-600 rounded">
+                        <span class="text-xs text-slate-800 font-bold">落尾日落 & 寶塔翻綠</span>
+                    </label>
+                </div>
+                <div id="sellAdvice" class="hidden mt-2 p-3 bg-red-600 text-white text-sm font-black rounded text-center animate-pulse shadow-lg transform scale-105">
+                    🚨 條件成立：收回資金，換股操作！
+                </div>
+            </div>
+
             <!-- 計算按鈕 -->
             <button onclick="calculateStrategy()" class="w-full bg-slate-900 hover:bg-black text-white font-bold py-4 rounded-xl shadow-lg transition-all active:scale-95 text-lg tracking-widest mt-4 border border-slate-700">
                 執行實戰推演
             </button>
 
             <!-- 結果顯示區 -->
-            <div id="resultArea" class="hidden fade-in mt-4">
+            <div id="resultArea" class="hidden fade-in mt-4 pb-10">
                 <div id="resultBox" class="p-5 rounded-xl border-l-8 shadow-md bg-white relative overflow-hidden">
                     <div class="relative z-10">
                         <div class="flex justify-between items-start mb-2">
@@ -284,10 +254,10 @@
                             <span id="resultIcon" class="text-3xl"></span>
                         </div>
 
-                        <!-- 標籤 -->
                         <div class="mb-3 flex flex-wrap gap-2">
                             <span id="trendTag" class="text-xs font-bold px-2 py-1 rounded border"></span>
                             <span id="volTag" class="text-xs font-bold px-2 py-1 rounded border"></span>
+                            <span id="strongTag" class="hidden text-xs font-bold px-2 py-1 rounded border bg-red-100 text-red-700 border-red-300">🔥 強軋空</span>
                         </div>
                         
                         <p id="resultAction" class="text-2xl font-black mb-3 border-b pb-2"></p>
@@ -318,18 +288,15 @@
                             </div>
                         </div>
 
-                        <!-- 系統推演數據 -->
-                        <div id="inferenceBox" class="hidden bg-slate-50 p-2 rounded border border-slate-200 mb-3 text-xs font-mono text-slate-600">
-                        </div>
+                        <div id="inferenceBox" class="hidden bg-slate-50 p-2 rounded border border-slate-200 mb-3 text-xs font-mono text-slate-600"></div>
 
-                        <!-- 重點叮嚀 -->
                         <div class="bg-white/60 p-3 rounded border border-slate-200 mb-4 backdrop-blur-sm shadow-sm">
                             <p class="text-[10px] text-slate-500 font-bold uppercase mb-1">戰術指引 (Advice)</p>
                             <p id="resultAdvice" class="text-sm text-slate-800 font-medium leading-relaxed"></p>
                         </div>
                         
                         <!-- 複製按鈕 -->
-                        <button onclick="copyReport()" id="copyBtn" class="w-full flex items-center justify-center space-x-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 px-4 rounded-lg transition-colors text-sm">
+                        <button onclick="copyReport()" id="copyBtn" class="w-full flex items-center justify-center space-x-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 px-4 rounded-lg transition-colors text-sm border border-slate-300 shadow-sm">
                             <span>📋 複製完整戰報</span>
                         </button>
                     </div>
@@ -342,7 +309,6 @@
     <script>
         let currentReportText = "";
 
-        // 賣出檢核連動
         const checkboxes = document.querySelectorAll('#sellChecklist input[type="checkbox"]');
         const adviceBox = document.getElementById('sellAdvice');
         
@@ -391,7 +357,9 @@
         }
 
         function calculateStrategy() {
-            // Inputs
+            // 清除之前的錯誤樣式
+            document.querySelectorAll('input').forEach(el => el.classList.remove('input-error'));
+
             const stockName = document.getElementById('stockName').value || "未輸入股名";
             const status = document.getElementById('currentStatus').value;
             const close = parseFloat(document.getElementById('closePrice').value);
@@ -401,17 +369,27 @@
             const breakoutLow = parseFloat(document.getElementById('breakoutLow').value); 
             const todayVol = parseFloat(document.getElementById('todayVol').value);
             const avgVol = parseFloat(document.getElementById('avgVol').value);
-            
-            // Sell Checks
             const isFullSell = Array.from(checkboxes).every(c => c.checked);
+            
+            // 強勢股參數
+            const prevClose = parseFloat(document.getElementById('prevClose').value);
+            const todayLow = parseFloat(document.getElementById('todayLow').value);
+            const prevLow = parseFloat(document.getElementById('prevLow').value);
 
-            if (!status || isNaN(close) || isNaN(high3d) || isNaN(L)) {
-                alert("請填寫完整價格資訊");
+            let hasError = false;
+            let errorMsg = "請檢查紅框欄位：\n";
+
+            if (!status) { errorMsg += "- 請選擇目前狀態\n"; hasError = true; }
+            if (isNaN(close)) { document.getElementById('closePrice').classList.add('input-error'); errorMsg += "- 請輸入目前價\n"; hasError = true; }
+            if (isNaN(high3d)) { document.getElementById('high3d').classList.add('input-error'); errorMsg += "- 請輸入前三高\n"; hasError = true; }
+            if (isNaN(L)) { document.getElementById('low3d').classList.add('input-error'); errorMsg += "- 請輸入前三低\n"; hasError = true; }
+
+            if (hasError) {
+                alert(errorMsg);
                 return;
             }
 
-            // === 1. 目標價計算 & 有效性驗證 ===
-            
+            // === 邏輯運算 ===
             let h2 = isNaN(todayH) ? close : todayH; 
             if(h2 < close) h2 = close;
 
@@ -420,17 +398,16 @@
             let targetReport = "";
             let isTargetValid = true;
             
-            // 檢查軋空低
             if (!isNaN(breakoutLow) && close < breakoutLow) {
                 isTargetValid = false; 
             }
 
+            // 測幅計算...
             if (gap > 0) {
                 target1 = h2 + gap;
                 target2 = h2 + (2 * gap);
                 target5 = h2 + (5 * gap);
 
-                // UI 顯示數值
                 document.getElementById('valH2').innerText = h2;
                 document.getElementById('valL').innerText = L;
                 document.getElementById('target1').innerText = formatPrice(target1);
@@ -450,39 +427,44 @@
                     invalidMsg.classList.add('hidden');
                     statusBadge.innerText = "Active";
                     statusBadge.className = "text-[10px] bg-green-200 px-1 rounded text-green-800";
-                    
-                    targetReport = `
-🎯 動態測幅 (h2=${h2})
-• 一飽 (1x)：${formatPrice(target1)}
-• 二吐 (2x)：${formatPrice(target2)}
-• 五倍 (極致)：${formatPrice(target5)}`;
+                    targetReport = `\n🎯 動態測幅 (h2=${h2})\n• 一飽(1x)：${formatPrice(target1)}\n• 二吐(2x)：${formatPrice(target2)}\n• 五倍(5x)：${formatPrice(target5)}`;
                 } else {
                     targetBox.className = "bg-gray-100 p-3 rounded border border-gray-300 mb-3 text-xs shadow-sm opacity-75";
                     targetList.classList.add('invalid-target');
                     invalidMsg.classList.remove('hidden');
                     statusBadge.innerText = "Invalid";
                     statusBadge.className = "text-[10px] bg-gray-300 px-1 rounded text-gray-700";
-                    
-                    targetReport = `
-🎯 動態測幅 (h2=${h2})
-❌ 破軋空低 (${breakoutLow})，目標抵銷失效`;
+                    targetReport = `\n🎯 動態測幅 (h2=${h2})\n❌ 破軋空低，目標抵銷失效`;
                 }
             } else {
                 document.getElementById('targetBox').classList.add('hidden');
             }
 
-            // === 2. 量價推演邏輯 ===
+            // 強勢股判斷 (NEW)
+            let isStrong = false;
+            let strongReport = "";
+            if (!isNaN(prevClose) && !isNaN(todayLow) && !isNaN(prevLow)) {
+                if (close > prevClose && todayLow > prevLow) {
+                    isStrong = true;
+                    document.getElementById('strongTag').classList.remove('hidden');
+                    strongReport = "\n🔥 型態：強軋空 (低不破低，收過昨收)";
+                } else {
+                    document.getElementById('strongTag').classList.add('hidden');
+                    strongReport = "\n🔹 型態：一般盤堅/整理";
+                }
+            } else {
+                document.getElementById('strongTag').classList.add('hidden');
+            }
+
+            // 量價推演...
             let volStatus = "一般";
             let volRatio = 0;
-            let targetAttack = 0;
-            let targetWash = 0;
-            let inferenceText = "";
             let inferenceReportText = "";
+            let inferenceText = "";
 
             if (!isNaN(avgVol) && avgVol > 0) {
-                targetAttack = Math.round(avgVol * 1.3);
-                targetWash = Math.round(avgVol * 0.8);
-                
+                let targetAttack = Math.round(avgVol * 1.3);
+                let targetWash = Math.round(avgVol * 0.8);
                 const attackMark = (todayVol >= targetAttack) ? "🔥達標" : "";
                 const washMark = (todayVol <= targetWash) ? "✅達標" : "";
                 
@@ -498,15 +480,8 @@
                             <span class="font-bold text-blue-600">${formatNumber(targetWash)}</span>
                             <span class="text-[10px] text-blue-500">${washMark}</span>
                         </div>
-                    </div>
-                    <div class="mt-1 pt-1 border-t border-slate-200 text-[10px]">
-                        今日量: <span class="font-bold">${formatNumber(todayVol)}</span> / 均量: ${formatNumber(avgVol)}
-                    </div>
-                `;
-
-                inferenceReportText = `★ 量價推演：
-• 攻擊門檻 (>1.3倍)：${formatNumber(targetAttack)} 張 ${(todayVol >= targetAttack) ? "(🔥達標)" : ""}
-• 洗盤門檻 (<0.8倍)：${formatNumber(targetWash)} 張 ${(todayVol <= targetWash) ? "(✅達標)" : ""}`;
+                    </div>`;
+                inferenceReportText = `\n★ 量價推演：\n• 攻擊門檻(1.3x)：${formatNumber(targetAttack)} ${(todayVol >= targetAttack) ? "(🔥達標)" : ""}\n• 洗盤門檻(0.8x)：${formatNumber(targetWash)} ${(todayVol <= targetWash) ? "(✅達標)" : ""}`;
 
                 if (!isNaN(todayVol)) {
                     volRatio = todayVol / avgVol;
@@ -516,12 +491,15 @@
                 }
             }
 
-            // Elements for UI
+            // 顯示結果
+            const resultArea = document.getElementById('resultArea');
+            resultArea.classList.remove('hidden');
+            resultArea.scrollIntoView({ behavior: 'smooth' });
+
             const resultBox = document.getElementById('resultBox');
             const rTitle = document.getElementById('resultTitle');
             const rAction = document.getElementById('resultAction');
             const rIcon = document.getElementById('resultIcon');
-            const bgIcon = document.getElementById('bgIcon');
             const rTrend = document.getElementById('trendTag');
             const rVol = document.getElementById('volTag');
             const rAdvice = document.getElementById('resultAdvice');
@@ -537,119 +515,77 @@
             let actionClass = "";
             let volClass = (volRatio >= 1.3) ? "bg-purple-100 text-purple-700 border-purple-300" : (volRatio <= 0.8 ? "bg-blue-100 text-blue-700 border-blue-300" : "bg-slate-100 text-slate-600 border-slate-200");
 
-            // === 核心邏輯判定 ===
-
+            // 簡單判斷邏輯
             if (status === 'GREEN') {
                 if (close > high3d) {
                     titleText = "🔥 三盤突破 (翻紅)";
                     reportTrend = "3. N字起漲 (Day 1)";
-                    if (volRatio >= 1.3) {
-                        actionText = "市價買進 (強烈建議)";
-                        reportAdvice = `紅財神確認，Day 0 買點。請記住今日最低為「軋空低」。明天若遇空頭抵抗，守住軋空低即可。`;
-                    } else if (volRatio > 0 && volRatio < 1.0) {
-                        actionText = "試單買進 (留意補量)";
-                        reportAdvice = "無量上漲，可能假突破。明日若補量則加碼，跌破今日低點則撤退。";
-                    } else {
-                        actionText = "市價買進";
-                        reportAdvice = "價格確立突破，防守今日低點。";
-                    }
+                    actionText = "市價買進";
+                    reportAdvice = "紅財神確認。守住今日低點(軋空低)。";
                     boxClass = "bg-red-50 border-red-500";
                     titleClass = "text-xl font-bold text-red-600";
                     actionClass = "text-2xl font-black text-red-700 border-b border-red-200 pb-2 mb-2";
                     rTrend.className = "text-xs font-bold px-2 py-1 rounded bg-red-100 text-red-700 border border-red-200";
                     rIcon.innerText = "🚀";
-                    bgIcon.innerText = "🚀";
                 } else {
                     titleText = "💤 盤整延續";
                     actionText = "觀望 (WAIT)";
-                    reportTrend = "空方/盤整架構";
-                    reportAdvice = `價格未過頸線 ${high3d}。保持空手。`;
+                    reportAdvice = "價格未過頸線。";
                     boxClass = "bg-green-50 border-green-500";
                     titleClass = "text-xl font-bold text-green-700";
                     actionClass = "text-2xl font-black text-green-800 border-b border-green-200 pb-2 mb-2";
                     rTrend.className = "text-xs font-bold px-2 py-1 rounded bg-green-100 text-green-700 border border-green-200";
                     rIcon.innerText = "🐢";
-                    bgIcon.innerText = "🐢";
                 }
-            } else if (status === 'RED') {
+            } else { // RED
                 if (isFullSell) {
-                    titleText = "🚨 逃命訊號 (世紀鋼模式)";
-                    reportTrend = "空頭反轉 (Major Reversal)";
-                    actionText = "收回資金，換股操作";
-                    reportAdvice = `【警示】均線趨勢緩、三盤破線、落尾日落、寶塔翻綠。多頭力竭，請果斷離場。`;
+                    titleText = "🚨 逃命訊號";
+                    actionText = "收回資金，換股";
+                    reportAdvice = "世紀鋼模式：多頭力竭，離場。";
                     boxClass = "bg-red-200 border-red-700";
                     titleClass = "text-xl font-black text-red-900";
                     actionClass = "text-2xl font-black text-red-900 border-b border-red-400 pb-2 mb-2";
-                    rTrend.className = "text-xs font-bold px-2 py-1 rounded bg-red-800 text-white border border-red-900";
                     rIcon.innerText = "📉";
-                    bgIcon.innerText = "📉";
                 } else if (close < L) {
-                    titleText = "⚠️ 三盤跌破 (翻綠)";
-                    reportTrend = "趨勢反轉 (空方)";
-                    if (volRatio >= 1.5) {
-                        actionText = "快逃 (爆量下殺)";
-                        reportAdvice = "價跌量增，主力恐慌出貨，絕對不能留。無條件停損。";
-                    } else {
-                        actionText = "無條件離場";
-                        reportAdvice = "三盤結構破壞，多單出場。";
-                    }
+                    titleText = "⚠️ 三盤跌破";
+                    actionText = "無條件離場";
+                    reportAdvice = "結構破壞。";
                     boxClass = "bg-green-100 border-green-600";
                     titleClass = "text-xl font-bold text-green-900";
                     actionClass = "text-2xl font-black text-green-900 underline border-b border-green-300 pb-2 mb-2";
-                    rTrend.className = "text-xs font-bold px-2 py-1 rounded bg-green-200 text-green-800 border border-green-300";
                     rIcon.innerText = "🏃";
-                    bgIcon.innerText = "🏃";
                 } else {
-                    // 紅色續抱邏輯
-                    let isStrong = false;
-                    if (!isNaN(prevClose) && !isNaN(todayLow) && !isNaN(prevLow)) {
-                        if (close > prevClose && todayLow > prevLow) isStrong = true;
-                    } else {
-                        if (close > high3d) isStrong = true;
-                    }
-
-                    // 檢查軋空低有效性 (警示)
-                    let warningMsg = "";
                     if (!isTargetValid) {
-                        warningMsg = `【警示】跌破軋空低 ${breakoutLow}，雖未翻綠，但攻擊失敗。建議減碼或移動停損。`;
-                        boxClass = "bg-yellow-50 border-yellow-500"; 
-                        titleText = "⚠️ 攻擊失效 (破軋空低)";
+                        titleText = "⚠️ 攻擊失效";
+                        actionText = "減碼觀望";
+                        reportAdvice = "跌破軋空低，攻擊失敗。";
+                        boxClass = "bg-yellow-50 border-yellow-500";
                         titleClass = "text-xl font-bold text-yellow-700";
-                        actionText = "減碼觀望 / 移動停損";
                         actionClass = "text-2xl font-black text-yellow-800 border-b border-yellow-300 pb-2 mb-2";
                         rIcon.innerText = "⚠️";
-                        bgIcon.innerText = "⚠️";
                     } else {
-                        if (isStrong) {
+                        if(isStrong) {
                             titleText = "🐂 強軋空盤";
-                            reportTrend = "1. 多方強勢 (主升段)";
                             actionText = "死抱不放";
+                            reportAdvice = "符合強勢股特徵(收過昨收/低不破低)，目標看五倍。";
                             boxClass = "bg-red-100 border-red-600";
                             titleClass = "text-xl font-bold text-red-700";
                             actionClass = "text-2xl font-black text-red-800 border-b border-red-300 pb-2 mb-2";
                             rIcon.innerText = "💎";
-                            bgIcon.innerText = "💎";
                         } else {
                             titleText = "✅ 多頭續抱";
-                            reportTrend = "2. 回後上漲 / 盤堅";
                             actionText = "續抱 (HOLD)";
+                            reportAdvice = "守住軋空低，目標有效。";
                             boxClass = "bg-orange-50 border-orange-400";
                             titleClass = "text-xl font-bold text-orange-600";
                             actionClass = "text-2xl font-black text-orange-700 border-b border-orange-200 pb-2 mb-2";
                             rIcon.innerText = "✊";
-                            bgIcon.innerText = "✊";
                         }
                     }
-
-                    if (warningMsg) reportAdvice = warningMsg;
-                    else if (volRatio <= 0.8) reportAdvice = `價跌量縮洗盤(空頭抵抗)，守住軋空低 ${breakoutLow}，安心續抱。`;
-                    else reportAdvice = `正處於空頭抵抗測試期。重點：只要不破軋空低，抵抗結束後仍會攻擊。`;
-                    
-                    if(!warningMsg) rTrend.className = "text-xs font-bold px-2 py-1 rounded bg-orange-100 text-orange-800 border border-orange-200";
                 }
             }
 
-            // Update UI
+            // 更新 UI
             resultBox.className = `p-5 rounded-xl border-l-8 shadow-md relative overflow-hidden ${boxClass}`;
             rStock.innerText = stockName;
             rTitle.innerText = titleText;
@@ -661,33 +597,16 @@
             rVol.className = `text-xs font-bold px-2 py-1 rounded border ${volClass}`;
             rAdvice.innerText = reportAdvice;
             
-            if (inferenceText) {
+            if(inferenceText) {
                 rInference.innerHTML = inferenceText;
                 rInference.classList.remove('hidden');
             } else {
                 rInference.classList.add('hidden');
             }
 
-            document.getElementById('resultArea').classList.remove('hidden');
-
-            // Generate Copy Text
+            // 準備複製文字
             const today = new Date().toLocaleDateString();
-            currentReportText = `【N字戰法戰報 V9.2】 ${today}
-股名：${stockName}
--------------------
-指令：${actionText}
-趨勢：${reportTrend}
-量能：${volStatus} (${volRatio.toFixed(2)}倍)
-現價：${close}
-
-${targetReport}
-
-${inferenceReportText}
-
-★ 戰術指引：
-${reportAdvice}
--------------------
-防守：不破軋空低 (${breakoutLow})，目標價才有效。`;
+            currentReportText = `【N字戰法戰報 V9.4】 ${today}\n股名：${stockName}\n-------------------\n指令：${actionText}\n量能：${volStatus}\n現價：${close}${strongReport}${targetReport}${inferenceReportText}\n\n★ 戰術指引：\n${reportAdvice}\n-------------------\n防守：不破軋空低，目標才有效。`;
             
             document.getElementById('copyBtn').innerHTML = '<span>📋 複製完整戰報</span>';
         }
