@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>石頭獲利分析戰法 V2.1｜CDP+SAR+開盤判定</title>
+    <meta name="description" content="石頭獲利分析戰法 - 專為台股當沖設計的 CDP 與 SAR 雙刀流分析工具">
+    
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* 台灣股市配色邏輯：紅漲綠跌 */
+        .text-up { color: #ef4444; } /* Red-500 */
+        .text-down { color: #22c55e; } /* Green-500 */
+        .bg-up { background-color: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); }
+        .bg-down { background-color: rgba(34, 197, 94, 0.15); border: 1px solid rgba(34, 197, 94, 0.4); }
+        .border-up { border-color: #ef4444; }
+        .border-down { border-color: #22c55e; }
+        
+        /* 基礎設定 */
+        body { 
+            font-family: 'Noto Sans TC', sans-serif; 
+            background-color: #0f172a; 
+            color: #e2e8f0; 
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        /* 玻璃擬態面板 */
+        .glass-panel { 
+            background: rgba(30, 41, 59, 0.75); 
+            backdrop-filter: blur(12px); 
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.1); 
+        }
+        
+        /* 輸入框優化 */
+        input[type="number"] { -moz-appearance: textfield; }
+        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        
+        input:focus {
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+        }
+
+        /* 卷軸美化 */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #1e293b; }
+        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+        
+        /* 動畫 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in { animation: fadeIn 0.3s ease-out forwards; }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <div class="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-in">
+        
+        <!-- 左側：輸入控制區 -->
+        <div class="glass-panel p-6 rounded-2xl shadow-2xl flex flex-col gap-5">
+            <!-- 標題與說明書按鈕 -->
+            <div class="flex justify-between items-center border-b border-gray-700 pb-4">
+                <h1 class="text-2xl font-black text-gray-100 flex items-center gap-3">
+                    <span class="w-3 h-8 bg-gradient-to-b from-red-500 to-red-700 rounded-sm shadow-lg shadow-red-500/30"></span>
+                    石頭獲利分析戰法
+                </h1>
+                <button onclick="toggleModal(true)" class="flex items-center gap-1.5 text-xs font-bold bg-gray-800 hover:bg-gray-700 text-gray-300 px-3 py-1.5 rounded-lg transition-all border border-gray-600 hover:border-gray-500 shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                    使用說明
+                </button>
+            </div>
+
+            <!-- 0. 股票名稱 -->
+            <div class="relative">
+                <label class="block text-xs font-bold text-yellow-500 mb-1 ml-1 uppercase tracking-wider">股票代號 / 名稱 (必填)</label>
+                <input type="text" id="stockSymbol" class="w-full bg-gray-900/50 border border-gray-600 focus:border-yellow-500 rounded-lg px-4 py-3 text-white outline-none font-bold text-lg placeholder-gray-600 transition-colors" placeholder="例如：台積電 2330">
+            </div>
+            
+            <!-- 1. 基準數據 -->
+            <div class="space-y-3">
+                <h2 class="text-sm font-bold text-gray-400 uppercase tracking-wider flex items-center gap-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-gray-500"></span> 1. 昨日基準 (K棒數據)
+                </h2>
+                <div class="grid grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-[10px] text-gray-500 mb-1 text-center">最高 (High)</label>
+                        <input type="number" id="prevH" class="w-full bg-gray-800 border border-gray-600 rounded px-2 py-2 text-white focus:border-red-500 outline-none text-center font-mono placeholder-gray-600 text-sm" placeholder="50.5" step="0.01">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] text-gray-500 mb-1 text-center">最低 (Low)</label>
+                        <input type="number" id="prevL" class="w-full bg-gray-800 border border-gray-600 rounded px-2 py-2 text-white focus:border-green-500 outline-none text-center font-mono placeholder-gray-600 text-sm" placeholder="48.0" step="0.01">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] text-gray-500 mb-1 text-center">收盤 (Close)</label>
+                        <input type="number" id="prevC" class="w-full bg-gray-800 border border-gray-600 rounded px-2 py-2 text-white focus:border-blue-500 outline-none text-center font-mono placeholder-gray-600 text-sm" placeholder="49.0" step="0.01">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. 今日開盤 -->
+            <div class="space-y-2">
+                <h2 class="text-sm font-bold text-blue-400 uppercase tracking-wider flex items-center gap-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span> 2. 今日開盤 (Open)
+                </h2>
+                <input type="number" id="todayOpen" class="w-full bg-gray-900/50 border border-blue-900/50 focus:border-blue-500 rounded-lg px-3 py-3 text-white text-xl font-bold text-center outline-none font-mono placeholder-gray-600 transition-colors" placeholder="今日開盤價..." step="0.01">
+            </div>
+
+            <!-- 3. 現價輸入 -->
+            <div class="space-y-3 pt-2 border-t border-gray-700/50">
+                <h2 class="text-sm font-bold text-gray-400 uppercase tracking-wider flex items-center gap-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-yellow-500"></span> 3. 目前成交價 (Price)
+                </h2>
+                <div class="relative group">
+                    <input type="number" id="currP" class="w-full bg-gray-900 border-2 border-yellow-600/70 group-hover:border-yellow-500 rounded-xl px-4 py-4 text-4xl font-black text-white text-center shadow-[0_0_20px_rgba(234,179,8,0.1)] focus:shadow-[0_0_30px_rgba(234,179,8,0.2)] transition-all outline-none" placeholder="輸入現價..." step="0.01">
+                    <div class="absolute right-5 top-1/2 -translate-y-1/2 text-gray-500 text-xs font-bold select-none border border-gray-700 px-2 py-1 rounded">TWD</div>
+                </div>
+                <button onclick="calculate()" class="w-full bg-gradient-to-r from-red-700 to-red-600 hover:from-red-600 hover:to-red-500 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-red-900/20 transform active:scale-[0.98] border border-red-500/30 flex items-center justify-center gap-2">
+                    <span>🚀</span> 立即分析戰情
+                </button>
+                <div class="text-[10px] text-gray-500 text-center">輸入數字後按 <span class="px-1.5 py-0.5 bg-gray-800 rounded border border-gray-700 text-gray-300 font-mono">Enter</span> 或點擊按鈕</div>
+            </div>
+            
+             <!-- 快速模擬 -->
+             <div class="mt-2">
+                <div class="flex gap-2">
+                    <button onclick="simulatePrice('AH')" class="flex-1 py-2 bg-gray-800/50 hover:bg-red-900/30 text-[10px] text-gray-400 hover:text-red-300 rounded border border-gray-700 hover:border-red-500/30 transition-all">模擬突破</button>
+                    <button onclick="simulatePrice('CDP')" class="flex-1 py-2 bg-gray-800/50 hover:bg-yellow-900/30 text-[10px] text-gray-400 hover:text-yellow-300 rounded border border-gray-700 hover:border-yellow-500/30 transition-all">模擬盤整</button>
+                    <button onclick="simulatePrice('AL')" class="flex-1 py-2 bg-gray-800/50 hover:bg-green-900/30 text-[10px] text-gray-400 hover:text-green-300 rounded border border-gray-700 hover:border-green-500/30 transition-all">模擬跌破</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右側：戰情顯示板 -->
+        <div class="glass-panel p-0 rounded-2xl shadow-2xl overflow-hidden flex flex-col relative min-h-[600px] border-t-4 border-t-gray-700" id="resultPanel">
+            <!-- Loading 遮罩 -->
+            <div id="loadingOverlay" class="absolute inset-0 bg-gray-900/95 z-20 flex flex-col items-center justify-center text-center p-6 backdrop-blur-sm">
+                <div class="w-16 h-1 bg-gradient-to-r from-transparent via-red-500 to-transparent mb-6 opacity-80 animate-pulse"></div>
+                <h3 class="text-2xl font-black text-white mb-3">等待戰情數據</h3>
+                <p class="text-sm text-gray-400 leading-relaxed">請在左側輸入完整資訊<br><span class="text-yellow-500/80">股票代號</span> • <span class="text-gray-500">昨日K棒</span> • <span class="text-blue-400/80">開盤價</span></p>
+            </div>
+
+            <!-- 頂部：雙重儀表 -->
+            <div class="bg-gray-900/40 p-5 border-b border-gray-700/50 grid grid-cols-2 divide-x divide-gray-700/50">
+                <!-- CDP 主趨勢 -->
+                <div class="text-center px-2 flex flex-col justify-center">
+                    <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1">CDP 主趨勢</span>
+                    <h2 id="trendText" class="text-2xl lg:text-3xl font-black mb-1 text-white tracking-tight leading-tight">---</h2>
+                    <p id="trendDesc" class="text-[10px] lg:text-xs text-gray-400 font-medium">---</p>
+                </div>
+                
+                <!-- SAR 訊號 -->
+                <div class="text-center px-4 flex flex-col items-center justify-center">
+                    <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">SAR 訊號</span>
+                    <div id="sarBox" class="w-full py-2.5 rounded-lg border border-gray-700 bg-gray-800/50 transition-all">
+                        <div id="sarSignalText" class="text-xl font-black text-gray-500">WAIT</div>
+                        <div id="sarPriceText" class="text-[10px] text-gray-400 font-mono mt-0.5 opacity-80">防守: ---</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- K棒狀態條 -->
+            <div class="bg-gray-800/30 px-5 py-3 border-b border-gray-700/50 flex justify-between items-center text-xs">
+                <div class="text-gray-400 font-medium">K 棒力道：</div>
+                <div id="kBarStatus" class="font-bold text-gray-500 font-mono">---</div>
+            </div>
+
+            <!-- 操作建議 -->
+            <div class="p-5 grid grid-cols-2 gap-4 bg-gray-900/20">
+                <div class="text-center p-3 rounded-xl border border-red-500/20 bg-red-500/5 backdrop-blur-sm">
+                    <div class="text-[10px] text-red-400/70 mb-1 uppercase tracking-wider font-bold">防守 / 加碼點</div>
+                    <div id="buyPoint" class="text-base font-bold text-red-400">---</div>
+                </div>
+                <div class="text-center p-3 rounded-xl border border-green-500/20 bg-green-500/5 backdrop-blur-sm">
+                    <div class="text-[10px] text-green-400/70 mb-1 uppercase tracking-wider font-bold">壓力 / 獲利點</div>
+                    <div id="sellPoint" class="text-base font-bold text-green-400">---</div>
+                </div>
+            </div>
+
+            <!-- CDP 階梯表 -->
+            <div class="flex-1 px-5 pb-4 overflow-y-auto">
+                <table class="w-full text-sm border-separate border-spacing-y-1">
+                    <thead>
+                        <tr class="text-gray-500 text-left text-[10px] uppercase tracking-wider">
+                            <th class="pb-2 pl-2">CDP 關卡</th>
+                            <th class="pb-2 text-right">價格</th>
+                            <th class="pb-2 text-right pr-2">位置</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cdpTable" class="font-mono">
+                        <!-- JS 生成 -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 結論區 -->
+            <div class="bg-gray-900/80 p-5 border-t border-gray-700 backdrop-blur-md">
+                 <div class="flex justify-between items-center mb-3">
+                     <h3 class="text-xs font-bold text-gray-400 flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 bg-yellow-500 rounded-full animate-pulse"></span>
+                        石頭戰法極速文稿
+                     </h3>
+                     <div class="flex gap-2">
+                        <button onclick="copyScript()" id="copyBtn" class="group text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 px-3 py-1.5 rounded-md transition-all flex items-center gap-1.5 border border-gray-600 hover:border-gray-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                            </svg>
+                            複製全文
+                        </button>
+                     </div>
+                 </div>
+                 <textarea id="outputScript" rows="5" class="w-full bg-black/40 border border-gray-700 rounded-lg p-3 text-xs text-gray-300 outline-none resize-none font-sans focus:border-gray-500 transition-colors leading-relaxed" readonly></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- 說明書 Modal -->
+    <div id="instructionModal" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 transition-opacity duration-300 opacity-0">
+        <div class="bg-gray-900 border border-gray-600 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl relative transform transition-transform duration-300 scale-95">
+            
+            <button onclick="toggleModal(false)" class="absolute top-4 right-4 text-gray-500 hover:text-white transition-colors bg-gray-800 rounded-full p-1">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+
+            <div class="p-8">
+                <h2 class="text-2xl font-black text-white mb-8 flex items-center gap-3 border-b border-gray-800 pb-4">
+                    <span class="text-3xl">📖</span> 石頭戰法操作手冊
+                </h2>
+
+                <div class="space-y-8 text-gray-300">
+                    
+                    <section>
+                        <h3 class="text-base font-bold text-yellow-500 mb-3 flex items-center gap-2">
+                            <span class="w-1 h-4 bg-yellow-500 rounded-full"></span> 1. 數據準備 (必填)
+                        </h3>
+                        <ul class="ml-4 space-y-2 text-sm text-gray-400">
+                            <li><strong class="text-gray-200">昨日 K 棒 (H/L/C)：</strong>這是地圖。決定今日的支撐與壓力位置。</li>
+                            <li><strong class="text-gray-200">今日開盤 (Open)：</strong>這是基準。決定今日多空主力是誰 (紅K主力買/黑K主力賣)。</li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <h3 class="text-base font-bold text-blue-400 mb-3 flex items-center gap-2">
+                            <span class="w-1 h-4 bg-blue-400 rounded-full"></span> 2. 三位一體判讀
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
+                            <div class="bg-gray-800 p-4 rounded-xl border border-gray-700">
+                                <div class="font-bold text-yellow-500 mb-1">CDP (關卡)</div>
+                                <div class="text-xs text-gray-400">AH/NH 是壓力，NL/AL 是支撐。判斷股價位於高檔還是低檔。</div>
+                            </div>
+                            <div class="bg-gray-800 p-4 rounded-xl border border-gray-700">
+                                <div class="font-bold text-red-400 mb-1">SAR (趨勢)</div>
+                                <div class="text-xs text-gray-400">紅燈做多，綠燈做空。這是移動停損點，也是大方向。</div>
+                            </div>
+                            <div class="bg-gray-800 p-4 rounded-xl border border-gray-700">
+                                <div class="font-bold text-green-400 mb-1">K 棒 (力道)</div>
+                                <div class="text-xs text-gray-400">實體紅K代表主力買進，實體黑K代表主力倒貨。</div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section>
+                        <h3 class="text-base font-bold text-green-400 mb-3 flex items-center gap-2">
+                            <span class="w-1 h-4 bg-green-400 rounded-full"></span> 3. 實戰必勝口訣
+                        </h3>
+                        <div class="space-y-3">
+                            <div class="bg-red-500/10 border border-red-500/30 p-4 rounded-xl flex gap-3 items-start">
+                                <span class="text-2xl">🔥</span>
+                                <div>
+                                    <h4 class="font-bold text-red-400">雙紅共振 (最強買點)</h4>
+                                    <p class="text-xs mt-1 text-gray-400">SAR 亮紅燈 + 實體紅 K。回測 CDP 支撐不破，大膽買進。</p>
+                                </div>
+                            </div>
+                            <div class="bg-green-500/10 border border-green-500/30 p-4 rounded-xl flex gap-3 items-start">
+                                <span class="text-2xl">📉</span>
+                                <div>
+                                    <h4 class="font-bold text-green-400">雙綠共振 (最強空點)</h4>
+                                    <p class="text-xs mt-1 text-gray-400">SAR 亮綠燈 + 實體黑 K。反彈 CDP 壓力不過，大膽放空。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                
+                <div class="mt-8 pt-6 border-t border-gray-800 text-center">
+                    <button onclick="toggleModal(false)" class="bg-gray-800 hover:bg-gray-700 text-white px-8 py-2 rounded-lg text-sm font-bold transition-colors">我瞭解了</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Modal Logic
+        const modal = document.getElementById('instructionModal');
+        const modalContent = modal.querySelector('div');
+
+        function toggleModal(show) {
+            if (show) {
+                modal.classList.remove('hidden');
+                // Small timeout to allow display:block to apply before opacity transition
+                setTimeout(() => {
+                    modal.classList.remove('opacity-0');
+                    modalContent.classList.remove('scale-95');
+                    modalContent.classList.add('scale-100');
+                }, 10);
+            } else {
+                modal.classList.add('opacity-0');
+                modalContent.classList.remove('scale-100');
+                modalContent.classList.add('scale-95');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                }, 300);
+            }
+        }
+
+        modal.addEventListener('click', function(e) {
+            if (e.target === this) toggleModal(false);
+        });
+
+        // Demo Data
+        document.getElementById('prevH').value = 50.5;
+        document.getElementById('prevL').value = 48.0;
+        document.getElementById('prevC').value = 49.0;
+        document.getElementById('todayOpen').value = 49.2;
+        
+        // Enter Key Listener
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') calculate();
+            });
+        });
+
+        // Simulation
+        let levels = {};
+        function simulatePrice(type) {
+            const H = parseFloat(document.getElementById('prevH').value);
+            if(isNaN(H)) { calculate(); return; } // Force basic calc to get levels if not exists
+            if(!levels.CDP) {
+                 const L = parseFloat(document.getElementById('prevL').value);
+                 const C = parseFloat(document.getElementById('prevC').value);
+                 if(isNaN(H) || isNaN(L) || isNaN(C)) return;
+                 // Quick Calc for Sim
+                 const cdp = (H + L + (2 * C)) / 4;
+                 levels = { 
+                     AH: cdp + (H - L), 
+                     NH: (2 * cdp) - L, 
+                     CDP: cdp, 
+                     NL: (2 * cdp) - H, 
+                     AL: cdp - (H - L) 
+                 };
+            }
+            
+            let p = 0;
+            const noise = (Math.random() * 0.1).toFixed(2);
+            if (type === 'AH') p = levels.AH + parseFloat(noise);
+            if (type === 'CDP') p = levels.CDP + parseFloat(noise);
+            if (type === 'AL') p = levels.AL - parseFloat(noise);
+            document.getElementById('currP').value = p.toFixed(2);
+            calculate();
+        }
+
+        // Core Calc
+        function calculateSAR(prevH, prevL, prevC) {
+            const AF = 0.02;
+            const mid = (prevH + prevL) / 2;
+            const isUptrend = prevC >= mid;
+            return isUptrend ? (prevL + AF * (prevH - prevL)) : (prevH - AF * (prevH - prevL));
+        }
+
+        function calculate() {
+            const H = parseFloat(document.getElementById('prevH').value);
+            const L = parseFloat(document.getElementById('prevL').value);
+            const C = parseFloat(document.getElementById('prevC').value);
+            const P = parseFloat(document.getElementById('currP').value);
+            const Open = parseFloat(document.getElementById('todayOpen').value); 
+            let StockName = document.getElementById('stockSymbol').value.trim();
+            if (!StockName) StockName = "標的";
+
+            if (isNaN(H) || isNaN(L) || isNaN(C) || isNaN(P) || isNaN(Open)) {
+                alert("請完整輸入所有欄位數值");
+                return;
+            }
+
+            // UI Transition
+            const overlay = document.getElementById('loadingOverlay');
+            overlay.classList.add('opacity-0');
+            setTimeout(() => overlay.classList.add('hidden'), 300);
+            
+            document.getElementById('resultPanel').classList.remove('border-t-gray-700');
+            document.getElementById('resultPanel').classList.add('border-t-yellow-500'); // Active state indication
+
+            // CDP Calc
+            const CDP = (H + L + (2 * C)) / 4;
+            const AH = CDP + (H - L);
+            const NH = (2 * CDP) - L;
+            const NL = (2 * CDP) - H;
+            const AL = CDP - (H - L);
+            levels = { AH, NH, CDP, NL, AL };
+
+            // SAR Calc
+            const sarVal = calculateSAR(H, L, C);
+            const sarSignal = P > sarVal ? "LONG" : "SHORT";
+
+            // K-Bar Logic
+            const isRedK = P > Open;
+            const diff = Math.abs(P - Open).toFixed(2);
+            const kStatusText = isRedK ? 
+                `🔥 實體紅 K (漲 ${diff})` : 
+                (P < Open ? `🥶 實體黑 K (跌 ${diff})` : `⚪ 十字線 (平盤)`);
+            const kStatusColor = isRedK ? "text-red-400" : (P < Open ? "text-green-400" : "text-gray-400");
+            
+            // Update K-Bar UI
+            const kBarEl = document.getElementById('kBarStatus');
+            kBarEl.innerText = kStatusText;
+            kBarEl.className = `font-bold font-mono text-sm ${kStatusColor}`;
+
+            // Trend Logic
+            let trend = "", trendClass = "", trendDesc = "", buySuggest = "", sellSuggest = "", strategyText = ""; 
+            
+            if (P >= AH) {
+                trend = "🔥 極強多頭"; trendClass = "text-up"; trendDesc = "突破追價，趨勢噴出";
+                buySuggest = `守穩 ${AH.toFixed(2)} 續抱`; sellSuggest = "不預設高點";
+                strategyText = `強勢突破 AH (${AH.toFixed(2)})，上方無壓力，嚴禁做空，持多單者設 ${AH.toFixed(2)} 為防守。`;
+            } else if (P >= NH) {
+                trend = "📈 偏強多方"; trendClass = "text-up"; trendDesc = "多方控盤，測試前高";
+                buySuggest = `回測 ${NH.toFixed(2)} 不破`; sellSuggest = `${AH.toFixed(2)} 附近調節`;
+                strategyText = `位於 NH-AH 之間，多方強勢。接近 ${AH.toFixed(2)} 可分批獲利，拉回 ${NH.toFixed(2)} 不破可加碼。`;
+            } else if (P >= CDP) {
+                trend = "🐂 盤整偏多"; trendClass = "text-yellow-400"; trendDesc = "多空平衡，略佔優勢";
+                buySuggest = `${CDP.toFixed(2)} 附近低接`; sellSuggest = `${NH.toFixed(2)} 遇壓賣出`;
+                strategyText = `在 CDP 之上，屬多方整理。建議在 CDP (${CDP.toFixed(2)}) 附近尋找買點，目標看 ${NH.toFixed(2)}。`;
+            } else if (P >= NL) {
+                trend = "🐻 盤整偏空"; trendClass = "text-yellow-500"; trendDesc = "弱勢整理，反彈無力";
+                buySuggest = `${NL.toFixed(2)} 有撐搶短`; sellSuggest = `${CDP.toFixed(2)} 站不上空`;
+                strategyText = `跌破 CDP，弱勢整理。反彈至 CDP (${CDP.toFixed(2)}) 不過建議減碼或試空。`;
+            } else if (P >= AL) {
+                trend = "📉 偏弱空方"; trendClass = "text-down"; trendDesc = "空方控盤，尋求支撐";
+                buySuggest = `${AL.toFixed(2)} 附近觀察`; sellSuggest = `${NL.toFixed(2)} 以前離場`;
+                strategyText = `壓在 NL 之下，空方力道強。若跌破 ${AL.toFixed(2)} 恐引發殺盤，多單應嚴格停損。`;
+            } else {
+                trend = "🧊 極弱空頭"; trendClass = "text-down"; trendDesc = "超跌區域，慎防多殺多";
+                buySuggest = "暫不接刀 (待止跌)"; sellSuggest = `反彈 ${AL.toFixed(2)} 逃命`;
+                strategyText = `已跌破 AL (${AL.toFixed(2)})，進入超賣區，切勿盲目抄底，需等待出量止跌訊號。`;
+            }
+
+            // Update Dashboards
+            const tText = document.getElementById('trendText');
+            tText.innerText = trend;
+            tText.className = `text-2xl lg:text-3xl font-black mb-1 tracking-tight leading-tight ${trendClass}`;
+            document.getElementById('trendDesc').innerText = trendDesc;
+            document.getElementById('buyPoint').innerText = buySuggest;
+            document.getElementById('sellPoint').innerText = sellSuggest;
+
+            // Update SAR UI
+            const sarBox = document.getElementById('sarBox');
+            const sarSigText = document.getElementById('sarSignalText');
+            const sarPText = document.getElementById('sarPriceText');
+            sarPText.innerText = `防守價: ${sarVal.toFixed(2)}`;
+            
+            if(sarSignal === "LONG") {
+                sarBox.className = "w-full py-2.5 rounded-lg border border-red-500/50 bg-red-900/20 transition-all shadow-[0_0_15px_rgba(239,68,68,0.2)]";
+                sarSigText.innerHTML = "🔴 多 (LONG)";
+                sarSigText.className = "text-2xl font-black text-red-500";
+            } else {
+                sarBox.className = "w-full py-2.5 rounded-lg border border-green-500/50 bg-green-900/20 transition-all shadow-[0_0_15px_rgba(34,197,94,0.2)]";
+                sarSigText.innerHTML = "🟢 空 (SHORT)";
+                sarSigText.className = "text-2xl font-black text-green-500";
+            }
+
+            // Generate Table
+            const tableBody = document.getElementById('cdpTable');
+            tableBody.innerHTML = '';
+            
+            const renderRow = (name, val, label) => {
+                const isCurrentZone = (name === 'AH' && P >= AH) ||
+                                      (name === 'NH' && P >= NH && P < AH) ||
+                                      (name === 'CDP' && P >= CDP && P < NH) ||
+                                      (name === 'NL' && P >= NL && P < CDP) ||
+                                      (name === 'AL' && P >= AL && P < NL) || 
+                                      (name === 'AL' && P < AL && name === 'AL');
+                
+                let rowClass = "border-b border-gray-800 h-10 transition-all group hover:bg-gray-800/30";
+                let valClass = "text-gray-400 font-medium";
+                let posText = "";
+                
+                // Active State Styling
+                if (isCurrentZone) {
+                    rowClass = "bg-gray-800/80 border-l-4 border-yellow-500 h-12 shadow-sm";
+                    valClass = "text-white font-bold text-lg";
+                    posText = `<span class="text-yellow-500 text-[10px] font-bold bg-yellow-500/10 px-2 py-0.5 rounded">◀ 現價區間</span>`;
+                }
+
+                // Check for exact test
+                if (Math.abs(P - val) < (val * 0.003)) {
+                     posText = `<span class="text-red-400 text-[10px] font-bold bg-red-500/10 px-2 py-0.5 rounded animate-pulse">⚡ 測試中</span>`;
+                     valClass = "text-yellow-400 font-bold text-lg";
+                }
+
+                let nameColor = "text-gray-500";
+                if(name==='CDP') nameColor = isCurrentZone ? "text-yellow-300" : "text-yellow-600";
+                if(name==='AH'||name==='NH') nameColor = isCurrentZone ? "text-red-400" : "text-red-800";
+                if(name==='AL'||name==='NL') nameColor = isCurrentZone ? "text-green-400" : "text-green-800";
+
+                return `<tr class="${rowClass}">
+                        <td class="pl-3 py-2">
+                            <div class="font-bold ${nameColor}">${name}</div>
+                            <div class="text-[10px] text-gray-600 font-normal">${label}</div>
+                        </td>
+                        <td class="text-right py-2 font-mono ${valClass}">${val.toFixed(2)}</td>
+                        <td class="text-right py-2 pr-2">${posText}</td>
+                    </tr>`;
+            };
+
+            let html = "";
+            html += renderRow("AH", AH, "追買點 / 壓力");
+            html += renderRow("NH", NH, "賣出點 / 壓力");
+            html += renderRow("CDP", CDP, "多空分界線");
+            html += renderRow("NL", NL, "買進點 / 支撐");
+            html += renderRow("AL", AL, "停損點 / 支撐");
+            tableBody.innerHTML = html;
+
+            // Generate Report
+            const extractNum = (str, fallback) => str.match(/[\d.]+/)?.[0] || fallback;
+            
+            let overallLogic = "";
+            if (sarSignal === "LONG" && isRedK) overallLogic = "雙紅共振 (趨勢多+實體紅)，強勢買訊，建議偏多操作。";
+            else if (sarSignal === "SHORT" && !isRedK) overallLogic = "雙綠共振 (趨勢空+實體黑)，強勢空訊，建議偏空操作。";
+            else if (sarSignal === "LONG" && !isRedK) overallLogic = "趨勢偏多但收黑K，短線震盪，留意拉回支撐。";
+            else if (sarSignal === "SHORT" && isRedK) overallLogic = "趨勢偏空但收紅K，短線反彈，留意上方壓力。";
+
+            const script = `【石頭獲利分析戰法】${StockName} 極速戰報 (${dateStr})
+分析標的：${StockName}
+
+一、關鍵點位
+現價：${P.toFixed(2)} (開盤：${Open.toFixed(2)})
+多空分界 (CDP)：${CDP.toFixed(2)}
+上方壓力 (NH)：${NH.toFixed(2)}
+下方支撐 (NL)：${NL.toFixed(2)}
+
+二、情勢判讀
+目前狀態：${trend}
+${trendDesc}
+
+三、進出場策略
+1. 偏多操作：若回測 ${extractNum(buySuggest, '支撐')} 不破，可考慮進場。
+2. 偏空操作：若反彈至 ${extractNum(sellSuggest, '壓力')} 無法突破，建議減碼。
+
+四、石頭戰法綜合診斷
+● SAR 訊號：${sarSignal} (防守: ${sarVal.toFixed(2)})
+● K 棒實體：${isRedK ? "紅K (多方)" : (P<Open ? "黑K (空方)" : "十字線")}
+● 綜合研判：${overallLogic}
+
+五、結論
+「${StockName} ${strategyText}」`;
+
+            document.getElementById('outputScript').value = script;
+        }
+
+        // Copy Function
+        function copyScript() {
+            const copyText = document.getElementById("outputScript");
+            if(!copyText.value) return;
+            
+            copyText.select();
+            copyText.setSelectionRange(0, 99999);
+            
+            // Visual Feedback Helper
+            const btn = document.getElementById("copyBtn");
+            const originalHTML = btn.innerHTML;
+            const successHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg> 已複製`;
+            
+            const showSuccess = () => {
+                btn.innerHTML = successHTML;
+                btn.classList.remove('bg-gray-800', 'text-gray-300', 'border-gray-600');
+                btn.classList.add('bg-green-600', 'text-white', 'border-green-500');
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                    btn.classList.add('bg-gray-800', 'text-gray-300', 'border-gray-600');
+                    btn.classList.remove('bg-green-600', 'text-white', 'border-green-500');
+                }, 2000);
+            };
+
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(copyText.value).then(showSuccess).catch(() => {
+                    document.execCommand("copy");
+                    showSuccess();
+                });
+            } else {
+                document.execCommand("copy");
+                showSuccess();
+            }
+        }
+    </script>
+</body>
+</html>
+
