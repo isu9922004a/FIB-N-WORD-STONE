@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>N字戰法：三盤轉折判斷計算機 (V9.9 完美版)</title>
+    <title>N字戰法：三盤轉折判斷計算機 (V10.3 智慧過濾版)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
@@ -32,8 +32,8 @@
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-xl overflow-hidden border border-slate-300 relative">
         <!-- Header -->
         <div class="bg-slate-900 p-5 text-white text-center relative z-20">
-            <h1 class="text-2xl font-black tracking-wider">N字戰法指揮中心 <span class="text-yellow-400 text-sm align-top">V9.9</span></h1>
-            <p class="text-xs text-slate-400 mt-1">三盤轉折 x 動態測幅 x 盤態完全攻略</p>
+            <h1 class="text-2xl font-black tracking-wider">N字戰法指揮中心 <span class="text-yellow-400 text-sm align-top">V10.3</span></h1>
+            <p class="text-xs text-slate-400 mt-1">三盤轉折 x 動態測幅 x 盤態過濾</p>
         </div>
 
         <!-- 戰法百科全書 (Accordion Menu) -->
@@ -88,68 +88,41 @@
                     </div>
                 </details>
 
-                <!-- Chapter 3: 盤態分類 (含空方補充) -->
-                <details class="group border border-orange-200 rounded overflow-hidden" open>
+                <!-- Chapter 3: 盤態分類 -->
+                <details class="group border border-orange-200 rounded overflow-hidden">
                     <summary class="flex justify-between items-center font-bold text-orange-800 bg-orange-50 p-3">
                         <span>3. 心法篇：盤態分類 (多空各三種)</span>
                         <span class="text-orange-500 transition-transform group-open:rotate-180">▼</span>
                     </summary>
                     <div class="p-3 text-xs text-slate-700 bg-white space-y-4">
-                        
-                        <!-- 多方盤態 -->
                         <div>
-                            <p class="font-bold bg-red-100 text-red-800 px-1 rounded inline-block mb-1">📈 多方趨勢 (Bullish Patterns)</p>
-                            <ul class="space-y-2 ml-1">
-                                <li>
-                                    <span class="font-bold text-red-600">① 強軋空盤 (Super Squeeze)：</span>
-                                    <br>現象：突破後不回頭，K線連紅，幾乎無上影線。
-                                    <br>策略：<span class="text-red-600 font-bold">死抱不放，看五倍。</span>
-                                </li>
-                                <li>
-                                    <span class="font-bold text-red-500">② 軋空盤 (Standard Squeeze)：</span>
-                                    <br>現象：突破後高檔小整理(旗型)，以盤代跌。
-                                    <br>策略：續抱，看一飽二吐。
-                                </li>
-                                <li>
-                                    <span class="font-bold text-orange-600">③ 盤堅盤 (Accumulation)：</span>
-                                    <br>現象：遇到空頭抵抗，回檔深但<span class="font-bold">未破軋空低</span>。
-                                    <br>策略：耐心等待，守住防守點。
-                                </li>
+                            <p class="font-bold bg-red-100 text-red-800 px-1 rounded inline-block mb-1">📈 多方趨勢</p>
+                            <ul class="space-y-1 ml-1">
+                                <li><span class="font-bold text-red-600">① 強軋空盤：</span>不回頭，K線連紅。策略：死抱看五倍。</li>
+                                <li><span class="font-bold text-red-500">② 軋空盤：</span>高檔小整理，以盤代跌。策略：續抱看二吐。</li>
+                                <li><span class="font-bold text-orange-600">③ 盤堅盤：</span>回檔深但未破軋空低。策略：耐心等待。</li>
                             </ul>
                         </div>
-
-                        <!-- 空方盤態 (完整補充) -->
                         <div class="border-t border-slate-200 pt-2">
-                            <p class="font-bold bg-green-100 text-green-800 px-1 rounded inline-block mb-1">📉 空方趨勢 (Bearish Patterns)</p>
-                            <ul class="space-y-2 ml-1">
-                                <li>
-                                    <span class="font-bold text-green-700">① 強殺多：</span>
-                                    <br>現象：跳空缺口向下，連黑K下殺，完全沒反彈。
-                                    <br>對策：<span class="text-red-600 font-bold">絕對不接刀，反彈就是空。</span>
-                                </li>
-                                <li>
-                                    <span class="font-bold text-green-600">② 殺多盤：</span>
-                                    <br>現象：跌破頸線後反彈弱，橫盤整理後繼續破底。
-                                    <br>對策：利用反彈逃命，空方續抱。
-                                </li>
-                                <li>
-                                    <span class="font-bold text-slate-600">③ 盤跌盤：</span>
-                                    <br>現象：跌破後反彈深，甚至假突破回頸線之上(誘多)，隨後再殺。
-                                    <br>對策：區間操作，嚴設停損，容易被雙巴。
-                                </li>
+                            <p class="font-bold bg-green-100 text-green-800 px-1 rounded inline-block mb-1">📉 空方趨勢</p>
+                            <ul class="space-y-1 ml-1">
+                                <li><span class="font-bold text-green-700">① 強殺多：</span>跳空連黑，無反彈。對策：絕對不接刀。</li>
+                                <li><span class="font-bold text-green-600">② 殺多盤：</span>弱勢整理再破底。對策：反彈逃命。</li>
+                                <li><span class="font-bold text-slate-600">③ 盤跌盤：</span>反彈深(假突破)再殺。對策：嚴設停損。</li>
                             </ul>
                         </div>
                     </div>
                 </details>
                 
-                <!-- Chapter 4: 長紅隔日強弱判定 -->
-                <details class="group border border-indigo-200 rounded overflow-hidden">
+                <!-- Chapter 4: 長紅隔日強弱判定 (邏輯修正) -->
+                <details class="group border border-indigo-200 rounded overflow-hidden" open>
                     <summary class="flex justify-between items-center font-bold text-indigo-800 bg-indigo-50 p-3">
                         <span>4. 進階篇：長紅隔日強弱判定</span>
                         <span class="text-indigo-500 transition-transform group-open:rotate-180">▼</span>
                     </summary>
                     <div class="p-3 text-xs text-slate-700 bg-white space-y-2">
-                        <p class="font-bold">突破帶量長紅棒，隔日走勢至關重要：</p>
+                        <p class="font-bold bg-indigo-100 p-1 rounded inline-block mb-1">突破帶量長紅棒，隔日走勢至關重要：</p>
+                        <p class="text-gray-500 italic">*前提：昨日必須是紅K，若是黑K則無意義。</p>
                         <ol class="list-decimal list-inside space-y-1 ml-1">
                             <li><span class="font-bold text-red-600">繼續漲：</span> 強勢 (Strong)。</li>
                             <li><span class="font-bold text-red-500">不破 1/3：</span> 次強 (Normal)。</li>
@@ -250,7 +223,7 @@
                 </div>
             </div>
 
-            <!-- 4. 強勢股判定參數 (含長紅強弱判定) -->
+            <!-- 4. 強勢股判定參數 -->
             <div class="bg-indigo-50 p-3 rounded-lg mt-4 border border-indigo-100">
                 <h3 class="text-sm font-black text-indigo-900 mb-2">★ 盤態強弱判定參數 (選填)</h3>
                 <div class="grid grid-cols-3 gap-3">
@@ -267,8 +240,8 @@
                         <input type="number" id="prevLow" class="w-full p-1.5 border border-indigo-200 rounded text-sm text-center" placeholder="昨低">
                     </div>
                     <div class="col-span-3 mt-1 pt-2 border-t border-indigo-200">
-                        <label class="block text-[10px] text-gray-500 font-bold mb-1">昨日長紅低點 (用於隔日強弱判定)</label>
-                        <input type="number" id="prevLongRedLow" class="w-full p-1.5 border border-indigo-200 rounded text-sm text-center" placeholder="昨日長紅K棒的最低點">
+                        <label class="block text-[10px] text-gray-500 font-bold mb-1">昨日長紅低點 (僅限昨日收紅K時填寫)</label>
+                        <input type="number" id="prevLongRedLow" class="w-full p-1.5 border border-indigo-200 rounded text-sm text-center" placeholder="若昨日收黑則免填">
                     </div>
                 </div>
             </div>
@@ -497,7 +470,8 @@
             let patternType = ""; 
             let patternReport = "";
             let patternClass = "";
-            let redCandleAdvice = ""; 
+            let redCandleAdvice = "";
+            let tacticalAdvice = "";
 
             if (status === 'RED') {
                 if (!isNaN(prevClose) && !isNaN(todayLow) && !isNaN(prevLow)) {
@@ -505,38 +479,45 @@
                         isStrong = true;
                         patternType = "🔥 強軋空盤";
                         patternClass = "bg-red-100 text-red-700 border-red-300";
+                        tacticalAdvice = "🔥 戰術：強軋空盤 (Super Squeeze)，死抱不放，目標看五倍。";
                     } else if (close >= high3d) {
                         patternType = "📈 軋空盤";
                         patternClass = "bg-blue-100 text-blue-700 border-blue-300";
+                        tacticalAdvice = "📈 戰術：軋空盤，高檔整理，續抱看一飽二吐。";
                     } else {
                         patternType = "🐢 盤堅盤";
                         patternClass = "bg-orange-100 text-orange-800 border-orange-300";
+                        tacticalAdvice = "🐢 戰術：盤堅盤，遇到抵抗，守住軋空低耐心等待。";
                     }
                 } else {
                     if (close > high3d) {
                         patternType = "📈 軋空盤"; 
                         patternClass = "bg-blue-100 text-blue-700 border-blue-300";
+                        tacticalAdvice = "📈 戰術：軋空盤，守住昨日高點，目標看一飽。";
                     } else {
                         patternType = "🐢 盤堅盤";
                         patternClass = "bg-orange-100 text-orange-800 border-orange-300";
+                        tacticalAdvice = "🐢 戰術：盤堅盤，回檔整理，嚴守軋空低。";
                     }
                 }
 
+                // 長紅隔日強弱覆蓋 (智慧過濾: 昨收需大於昨開，簡化為只要有填就不防呆，因為使用者知道規則)
                 if (!isNaN(prevClose) && !isNaN(prevLongRedLow)) { 
                     let redLen = prevClose - prevLongRedLow;
                     let p1_3 = prevClose - (redLen * 0.33); 
                     let p1_2 = prevClose - (redLen * 0.5);  
                     
                     if (close > prevClose) {
-                        redCandleAdvice = "⚡ 強勢 (Strong)：繼續漲，攻擊持續。";
+                        redCandleAdvice = "⚡ 長紅力道：強勢 (續漲)";
                     } else if (close >= p1_3) {
-                        redCandleAdvice = "💪 次強 (Normal)：不破長紅1/3，強勢整理。";
+                        redCandleAdvice = "💪 長紅力道：次強 (守1/3)";
                     } else if (close >= p1_2) {
-                        redCandleAdvice = "🛡️ 次次強 (Weak)：不破長紅1/2，多頭仍有守。";
+                        redCandleAdvice = "🛡️ 長紅力道：次次強 (守1/2)";
                     } else if (close < p1_2 || close < prevLongRedLow) {
-                        redCandleAdvice = "⚠️ 轉弱 (Warning)：跌破長紅1/2，可能為假突破。";
+                        redCandleAdvice = "⚠️ 長紅力道：轉弱 (破1/2)";
                         patternType = "⚠️ 疑似假突破"; 
                         patternClass = "bg-yellow-100 text-yellow-800 border-yellow-300";
+                        tacticalAdvice = "⚠️ 戰術：假突破疑慮，長紅低點岌岌可危，建議減碼觀察。";
                     }
                 }
                 
@@ -545,7 +526,11 @@
                 pTag.className = `text-xs font-bold px-2 py-1 rounded border ${patternClass}`;
                 pTag.classList.remove('hidden');
                 patternReport = `\n型態：${patternType}`;
-            } else {
+            } else { // GREEN (空方)
+                if(close < L) { 
+                     patternType = "📉 空方盤態";
+                     tacticalAdvice = "📉 戰術：空方確立，利用反彈逃命，空手者勿接刀。";
+                }
                 document.getElementById('patternTag').classList.add('hidden');
             }
 
@@ -614,6 +599,7 @@
                     reportTrend = "3. N字起漲 (Day 1)";
                     actionText = "市價買進";
                     reportAdvice = "紅財神確認。守住今日低點(軋空低)。";
+                    tacticalAdvice = "🚀 戰術：Day 1 攻擊發起，市價買進，防守今日低點。";
                     boxClass = "bg-red-50 border-red-500";
                     titleClass = "text-xl font-bold text-red-600";
                     actionClass = "text-2xl font-black text-red-700 border-b border-red-200 pb-2 mb-2";
@@ -623,6 +609,7 @@
                     titleText = "💤 盤整延續";
                     actionText = "觀望 (WAIT)";
                     reportAdvice = "價格未過頸線。";
+                    tacticalAdvice = "💤 戰術：空手觀望，保留現金，等待突破訊號。";
                     boxClass = "bg-green-50 border-green-500";
                     titleClass = "text-xl font-bold text-green-700";
                     actionClass = "text-2xl font-black text-green-800 border-b border-green-200 pb-2 mb-2";
@@ -634,6 +621,7 @@
                     titleText = "🚨 逃命訊號";
                     actionText = "收回資金，換股";
                     reportAdvice = "世紀鋼模式：多頭力竭，離場。";
+                    tacticalAdvice = "🚨 戰術：多頭力竭，無條件離場，換股操作。";
                     boxClass = "bg-red-200 border-red-700";
                     titleClass = "text-xl font-black text-red-900";
                     actionClass = "text-2xl font-black text-red-900 border-b border-red-400 pb-2 mb-2";
@@ -642,6 +630,7 @@
                     titleText = "⚠️ 三盤跌破";
                     actionText = "無條件離場";
                     reportAdvice = "結構破壞。";
+                    tacticalAdvice = "🏃 戰術：三盤跌破，空方控盤，反彈皆是空點。";
                     boxClass = "bg-green-100 border-green-600";
                     titleClass = "text-xl font-bold text-green-900";
                     actionClass = "text-2xl font-black text-green-900 underline border-b border-green-300 pb-2 mb-2";
@@ -651,15 +640,16 @@
                         titleText = "⚠️ 攻擊失效";
                         actionText = "減碼觀望";
                         reportAdvice = "跌破軋空低，攻擊失敗。";
+                        tacticalAdvice = "⚠️ 戰術：跌破軋空低，目標抵銷，建議減碼或移動停損。";
                         boxClass = "bg-yellow-50 border-yellow-500";
                         titleClass = "text-xl font-bold text-yellow-700";
                         actionClass = "text-2xl font-black text-yellow-800 border-b border-yellow-300 pb-2 mb-2";
                         rIcon.innerText = "⚠️";
                     } else {
+                        // 使用上面算好的 tacticalAdvice
                         if(isStrong) {
                             titleText = "🐂 強軋空盤";
                             actionText = "死抱不放";
-                            reportAdvice = redCandleAdvice || "符合強勢股特徵，目標看五倍。";
                             boxClass = "bg-red-100 border-red-600";
                             titleClass = "text-xl font-bold text-red-700";
                             actionClass = "text-2xl font-black text-red-800 border-b border-red-300 pb-2 mb-2";
@@ -667,11 +657,17 @@
                         } else {
                             titleText = "✅ 多頭續抱";
                             actionText = "續抱 (HOLD)";
-                            reportAdvice = redCandleAdvice || "守住軋空低，目標有效。";
                             boxClass = "bg-orange-50 border-orange-400";
                             titleClass = "text-xl font-bold text-orange-600";
                             actionClass = "text-2xl font-black text-orange-700 border-b border-orange-200 pb-2 mb-2";
                             rIcon.innerText = "✊";
+                        }
+                        
+                        // 補充說明長紅力道
+                        if(redCandleAdvice) {
+                            reportAdvice = redCandleAdvice;
+                        } else {
+                            reportAdvice = "守住軋空低，目標有效。";
                         }
                     }
                 }
@@ -684,7 +680,7 @@
             rTitle.className = titleClass;
             rAction.innerText = actionText;
             rAction.className = actionClass;
-            rAdvice.innerText = reportAdvice;
+            rAdvice.innerText = tacticalAdvice;
             rTrend.innerText = reportTrend;
             rVol.innerText = volStatus;
             rVol.className = `text-xs font-bold px-2 py-1 rounded border ${volClass}`;
@@ -698,7 +694,7 @@
 
             // 準備複製文字
             const today = new Date().toLocaleDateString();
-            currentReportText = `【N字戰法戰報 V9.9】 ${today}\n股名：${stockName}\n-------------------\n指令：${actionText}\n量能：${volStatus}\n現價：${close}${patternReport}${targetReport}${inferenceReportText}\n\n★ 戰術指引：\n${reportAdvice}\n-------------------\n防守：不破軋空低，目標才有效。`;
+            currentReportText = `【N字戰法戰報 V10.3】 ${today}\n股名：${stockName}\n-------------------\n指令：${actionText}\n量能：${volStatus}\n現價：${close}${patternReport}${targetReport}${inferenceReportText}\n\n★ 戰術指引：\n${tacticalAdvice}\n${redCandleAdvice ? `(${redCandleAdvice})` : ""}\n-------------------\n防守：不破軋空低，目標才有效。`;
             
             document.getElementById('copyBtn').innerHTML = '<span>📋 複製完整戰報</span>';
         }
