@@ -32,7 +32,7 @@
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-xl overflow-hidden border border-slate-300 relative">
         <!-- Header -->
         <div class="bg-slate-900 p-5 text-white text-center relative z-20">
-            <h1 class="text-2xl font-black tracking-wider">N字戰法指揮中心 <span class="text-yellow-400 text-sm align-top">V10.6</span></h1>
+            <h1 class="text-2xl font-black tracking-wider">N字戰法指揮中心 by.石頭 <span class="text-yellow-400 text-sm align-top">V10.6</span></h1>
             <p class="text-xs text-slate-400 mt-1">實戰圖解 x 盤態判讀 x 智能指引</p>
         </div>
 
@@ -58,9 +58,21 @@
                     </div>
                 </details>
 
+                <details class="group border border-indigo-200 rounded overflow-hidden">
+                    <summary class="flex justify-between items-center font-bold text-indigo-800 bg-indigo-50 p-3">
+                        <span>2. 轉折訊號：日出線 & 日落線</span>
+                        <span class="text-indigo-500 transition-transform group-open:rotate-180">▼</span>
+                    </summary>
+                    <div class="p-3 text-xs text-slate-700 bg-white space-y-2">
+                        <p><span class="font-bold text-red-600">🌅 日出線 (Sunrise)：</span>高過昨高，收盤收高。<br>用途：回檔時的止跌買訊。</p>
+                        <p><span class="font-bold text-green-600">🌇 日落線 (Sunset)：</span>低破昨低，收盤收低。<br>用途：上漲時的止漲賣訊。</p>
+                        <p class="bg-indigo-50 p-1 rounded font-bold text-center">口訣：回檔找日出，上漲防日落。</p>
+                    </div>
+                </details>
+
                 <details class="group border border-purple-200 rounded overflow-hidden">
                     <summary class="flex justify-between items-center font-bold text-purple-800 bg-purple-50 p-3">
-                        <span>2. 防守篇：軋空低 & 翻紅定義</span>
+                        <span>3. 防守篇：軋空低 & 翻紅定義</span>
                         <span class="text-purple-500 transition-transform group-open:rotate-180">▼</span>
                     </summary>
                     <div class="p-3 text-xs text-slate-700 bg-white space-y-3">
@@ -84,13 +96,45 @@
                         </div>
                     </div>
                 </details>
+                
+                <!-- NEW: 寶塔線邏輯 (第三篇) -->
+                <div class="text-xs font-black text-slate-400 uppercase tracking-widest mt-4 mb-1">第二篇：寶塔線原理與盤態</div>
+
+                <details class="group border border-blue-200 rounded overflow-hidden">
+                    <summary class="flex justify-between items-center font-bold text-blue-800 bg-blue-50 p-3">
+                        <span>4. 原理篇：寶塔線 (TOW) 邏輯詳解</span>
+                        <span class="text-blue-500 transition-transform group-open:rotate-180">▼</span>
+                    </summary>
+                    <div class="p-3 text-xs text-slate-700 bg-white space-y-3">
+                        <p>寶塔線是一種過濾噪音、追蹤趨勢的指標。它以「收盤價」為核心，忽略極端影線。</p>
+                        
+                        <div class="bg-slate-50 p-2 rounded">
+                           <p class="font-bold mb-1">🔴 紅線 (翻紅)：</p>
+                           <p>收盤價突破前三天的最高點 → <span class="font-bold text-red-600">買進訊號</span>。</p>
+                           <p class="font-bold mt-2 mb-1">🟢 綠線 (翻綠)：</p>
+                           <p>收盤價跌破前三天的最低點 → <span class="font-bold text-green-600">賣出訊號</span>。</p>
+                        </div>
+                        
+                        <div class="bg-yellow-50 p-2 rounded border border-yellow-200">
+                            <p class="font-bold text-yellow-900 border-b border-yellow-200 pb-1 mb-1">💡 為什麼觀察三天？ (參數=3)</p>
+                            <ul class="list-decimal list-inside space-y-1 text-yellow-800">
+                                <li><span class="font-bold">過濾假訊號：</span>避免「一日行情」。</li>
+                                <li><span class="font-bold">心理防線：</span>Day 1 變盤，Day 2 延續，Day 3 確立。</li>
+                                <li><span class="font-bold">操作精髓：</span>綠翻紅後，若連續三天不破 Day 1 低點，多頭確立。</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="mt-2 text-[10px] text-gray-500">
+                            *小提醒：盤整時容易紅綠交替(被巴)，需配合 MACD 或均線輔助。
+                        </div>
+                    </div>
+                </details>
 
                 <!-- Part 2: 盤態與攻擊 (依據圖片更新) -->
-                <div class="text-xs font-black text-slate-400 uppercase tracking-widest mt-4 mb-1">第二篇：盤態心法與攻擊 (圖解精華)</div>
-
+                
                 <details class="group border border-orange-200 rounded overflow-hidden">
                     <summary class="flex justify-between items-center font-bold text-orange-800 bg-orange-50 p-3">
-                        <span>3. 心法篇：六大盤態 (多空對照)</span>
+                        <span>5. 心法篇：六大盤態 (多空對照)</span>
                         <span class="text-orange-500 transition-transform group-open:rotate-180">▼</span>
                     </summary>
                     <div class="p-3 text-xs text-slate-700 bg-white space-y-4">
@@ -98,6 +142,9 @@
                         <!-- 多方盤態 (圖2-17) -->
                         <div>
                             <p class="font-bold bg-red-100 text-red-800 px-1 rounded inline-block mb-1">📈 多方趨勢 (Bullish)</p>
+                            <div class="flex items-center justify-center my-2">
+                                <div class="bg-gray-100 text-gray-400 text-[10px] p-2 rounded border border-gray-200">[圖一: 多方三盤態]</div>
+                            </div>
                             <ul class="space-y-2 ml-1">
                                 <li>
                                     <span class="font-bold text-red-600">① 強軋空盤：</span>突破後不回頭，K線連紅，幾乎無上影線。<br>
@@ -117,6 +164,9 @@
                         <!-- 空方盤態 (圖2-22) -->
                         <div class="border-t border-slate-200 pt-2">
                             <p class="font-bold bg-green-100 text-green-800 px-1 rounded inline-block mb-1">📉 空方趨勢 (Bearish)</p>
+                            <div class="flex items-center justify-center my-2">
+                                <div class="bg-gray-100 text-gray-400 text-[10px] p-2 rounded border border-gray-200">[圖二: 空方三盤態]</div>
+                            </div>
                             <ul class="space-y-2 ml-1">
                                 <li>
                                     <span class="font-bold text-green-700">① 強殺多：</span>跳空向下，連黑K，完全無反彈。<br>
@@ -135,9 +185,11 @@
                     </div>
                 </details>
                 
+                <div class="text-xs font-black text-slate-400 uppercase tracking-widest mt-4 mb-1">第三篇：實戰與離場 (SOP)</div>
+
                 <details class="group border border-green-200 rounded overflow-hidden">
                     <summary class="flex justify-between items-center font-bold text-green-800 bg-green-50 p-3">
-                        <span>4. 攻擊篇：N字測幅 (手稿公式)</span>
+                        <span>6. 攻擊篇：N字測幅 (手稿公式)</span>
                         <span class="text-green-500 transition-transform group-open:rotate-180">▼</span>
                     </summary>
                     <div class="p-3 text-xs text-slate-700 bg-white space-y-2">
@@ -152,7 +204,7 @@
 
                 <details class="group border border-indigo-200 rounded overflow-hidden">
                     <summary class="flex justify-between items-center font-bold text-indigo-800 bg-indigo-50 p-3">
-                        <span>5. 進階篇：長紅隔日強弱判定</span>
+                        <span>7. 進階篇：長紅隔日強弱判定</span>
                         <span class="text-indigo-500 transition-transform group-open:rotate-180">▼</span>
                     </summary>
                     <div class="p-3 text-xs text-slate-700 bg-white space-y-2">
@@ -167,11 +219,10 @@
                 </details>
 
                 <!-- Part 3: 實戰案例 (圖解整合) -->
-                <div class="text-xs font-black text-slate-400 uppercase tracking-widest mt-4 mb-1">第三篇：實戰案例 (看圖學戰法)</div>
-
+                
                 <details class="group border border-blue-200 rounded overflow-hidden">
                     <summary class="flex justify-between items-center font-bold text-blue-800 bg-blue-50 p-3">
-                        <span>6. 案例篇：飛宏、佳能、建緯</span>
+                        <span>8. 案例篇：飛宏、佳能、建緯</span>
                         <span class="text-blue-500 transition-transform group-open:rotate-180">▼</span>
                     </summary>
                     <div class="p-3 text-xs text-slate-700 bg-white space-y-2">
@@ -183,7 +234,7 @@
 
                 <details class="group border border-red-200 rounded overflow-hidden">
                     <summary class="flex justify-between items-center font-bold text-red-800 bg-red-50 p-3">
-                        <span>7. 離場篇：世紀鋼 (9958) 賣訊</span>
+                        <span>9. 離場篇：世紀鋼 (9958) 賣訊</span>
                         <span class="text-red-500 transition-transform group-open:rotate-180">▼</span>
                     </summary>
                     <div class="p-3 text-xs text-slate-700 bg-white space-y-2">
@@ -197,24 +248,11 @@
                     </div>
                 </details>
                 
-                <details class="group border border-gray-200 rounded overflow-hidden">
+                <!-- 輸入指南 -->
+                 <details class="group border border-gray-200 rounded overflow-hidden">
                     <summary class="flex justify-between items-center font-bold text-gray-800 bg-gray-50 p-3">
-                        <span>8. 原理篇：為什麼看三天？(寶塔線)</span>
+                        <span>10. SOP：盤中輸入指南</span>
                         <span class="text-gray-500 transition-transform group-open:rotate-180">▼</span>
-                    </summary>
-                    <div class="p-3 text-xs text-slate-700 bg-white space-y-1">
-                        <p>Q: 為什麼綠翻紅後要觀察三天？</p>
-                        <p>A: 因為寶塔線參數是 <span class="font-bold">3</span>。三天不破低，代表趨勢確立。</p>
-                        <p>Q: 綠翻紅代表什麼？</p>
-                        <p>A: 代表一根紅棒吃掉過去三根K線的跌幅 (一紅吃三黑)，是強力的反轉訊號。</p>
-                    </div>
-                </details>
-
-                 <!-- 輸入指南 -->
-                 <details class="group border border-blue-200 rounded overflow-hidden">
-                    <summary class="flex justify-between items-center font-bold text-blue-800 bg-blue-50 p-3">
-                        <span>9. SOP：盤中輸入指南</span>
-                        <span class="text-blue-500 transition-transform group-open:rotate-180">▼</span>
                     </summary>
                     <div class="p-3 text-xs text-slate-700 bg-white">
                         收盤價(跳動價)、今日最高(算目標)、軋空低(翻紅日低)、前三高/低(昨前大前)
@@ -380,7 +418,7 @@
                         <!-- N字測幅目標區 -->
                         <div id="targetBox" class="hidden bg-green-50 p-3 rounded border border-green-200 mb-3 text-xs shadow-sm transition-all">
                             <h5 id="targetHeader" class="font-bold text-green-800 border-b border-green-200 pb-1 mb-2 flex justify-between">
-                                <span>🎯 N字測幅目標 (h2=<span id="valH2"></span>, L=<span id="valL"></span>)</span>
+                                <span>🎯 動態測幅目標 (h2=<span id="valH2"></span>, L=<span id="valL"></span>)</span>
                                 <span id="targetStatusBadge" class="text-[10px] bg-green-200 px-1 rounded text-green-800">Active</span>
                             </h5>
                             <div id="targetList" class="space-y-1 font-mono text-slate-700">
@@ -622,6 +660,7 @@
                 patternReport = `\n型態：${patternType}`;
             } else { // GREEN (空方)
                 if(close < L) { 
+                     // 空方盤態簡易判斷 (可擴充)
                      patternType = "📉 空方殺多";
                      patternClass = "bg-green-100 text-green-800 border-green-300";
                      tacticalAdvice = "📉 趨勢：空方殺多。\n建議：反彈不過殺多高就是空。若持有，請立刻停損，絕不接刀。";
@@ -632,6 +671,7 @@
                      pTag.classList.remove('hidden');
                      patternReport = `\n型態：${patternType}`;
                 } else {
+                     // 盤整/觀望
                      patternType = "💤 盤跌/觀望";
                      patternClass = "bg-gray-100 text-gray-600 border-gray-300";
                      tacticalAdvice = "💤 趨勢：盤勢不明 (盤跌)。\n建議：多看少做，保留現金，等待突破訊號。";
@@ -788,7 +828,7 @@
             rTitle.className = titleClass;
             rAction.innerText = actionText;
             rAction.className = actionClass;
-            rAdvice.innerText = tacticalAdvice;
+            rAdvice.innerText = tacticalAdvice; // 使用具體的戰術指引
             rTrend.innerText = reportTrend;
             rVol.innerText = volStatus;
             rVol.className = `text-xs font-bold px-2 py-1 rounded border ${volClass}`;
