@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>N字戰法：三盤轉折判斷計算機 (V11.6 自定義擴充版)</title>
+    <title>N字戰法：三盤轉折判斷計算機 (V11.7 戰情預判強化版)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
@@ -40,8 +40,8 @@
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-xl overflow-hidden border border-slate-300 relative">
         <!-- Header -->
         <div class="bg-slate-900 p-5 text-white text-center relative z-20">
-            <h1 class="text-2xl font-black tracking-wider">N字戰法指揮中心 by.石頭 <span class="text-yellow-400 text-sm align-top">V11.6</span></h1>
-            <p class="text-xs text-slate-400 mt-1">自定義資料庫 x 盤態判讀 x 模擬演習</p>
+            <h1 class="text-2xl font-black tracking-wider">N字戰法指揮中心 by.石頭 <span class="text-yellow-400 text-sm align-top">V11.7</span></h1>
+            <p class="text-xs text-slate-400 mt-1">戰情預判 x 模擬演習 x 資料庫</p>
         </div>
 
         <!-- 戰法百科全書 (Accordion Menu) -->
@@ -242,30 +242,63 @@
                     </div>
                 </details>
 
-                <!-- NEW: 預判教學 -->
+                <!-- NEW: 預判教學 (完整版) -->
                 <details class="group border border-sky-200 rounded overflow-hidden" open>
                     <summary class="flex justify-between items-center font-bold text-sky-800 bg-sky-50 p-3">
                         <span>10. 預判篇：如何模擬未來走勢？</span>
                         <span class="text-sky-500 transition-transform group-open:rotate-180">▼</span>
                     </summary>
-                    <div class="p-3 text-xs text-slate-700 bg-white space-y-2">
+                    <div class="p-3 text-xs text-slate-700 bg-white space-y-3">
                         <p class="font-bold text-red-600 border-b border-sky-100 pb-1">Q: 怎麼預測明天？(模擬戰情室用法)</p>
-                        <ol class="list-decimal list-inside ml-1 space-y-2">
-                            <li><span class="font-bold bg-blue-100 text-blue-800 px-1 rounded">情境按鈕 (新手)：</span>
-                                <div class="pl-4 text-slate-500 mt-1">
-                                    上方藍色區塊的按鈕 (如：模擬極強)，是<span class="bg-yellow-100 text-slate-800 px-1">系統自動填入假數據</span>，按下去後請直接看最下方的「分析結果」，讓你練習「看到這種數據該怎麼做」。
-                                </div>
-                            </li>
-                            <li><span class="font-bold bg-slate-800 text-white px-1 rounded">手動預演 (老手)：</span>
-                                <ul class="list-none list-inside pl-4 text-slate-600 mt-1 space-y-1">
-                                    <li>① 填入真實的 <span class="font-bold">前三高、前三低、均量</span> (這是已知歷史)。</li>
-                                    <li>② 更改 <span class="text-blue-700 font-bold">目前價</span> (輸入：你假設明天會漲到的價格)。</li>
-                                    <li>③ 更改 <span class="text-purple-700 font-bold">成交量</span> (輸入：你預估明天的量)。</li>
-                                    <li>④ 按下黑色 <span class="font-bold bg-black text-white px-1 text-[10px] rounded">執行實戰推演</span> 按鈕。</li>
-                                </ul>
-                                <p class="text-center text-red-600 font-bold mt-1 bg-red-50 p-1">💡 結論：利用假想的明後天價格，先算出下一步策略！</p>
-                            </li>
-                        </ol>
+                        
+                        <div class="bg-blue-50 p-2 rounded border border-blue-100 mb-2">
+                            <span class="font-bold text-blue-800 block mb-1">🕹️ 情境按鈕 (新手模式)：</span>
+                            <div class="text-slate-600">
+                                點擊上方藍色區塊按鈕 (如：模擬極強)，系統會<span class="bg-yellow-100 text-slate-800 px-1 rounded">自動填入假數據</span>。請直接觀察最下方的「分析結果」，練習解讀策略。
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-50 p-2 rounded border border-slate-200">
+                            <span class="font-bold text-slate-800 block mb-1">🛠️ 手動預演 (老手模式)：</span>
+                            <p class="mb-2">請先填入真實的 <span class="font-bold">前三高、前三低、均量</span> (已知歷史)，接著修改以下欄位來模擬明日劇本：</p>
+                            
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="bg-slate-200 text-slate-700">
+                                        <th class="p-1 border border-slate-300">模擬劇本</th>
+                                        <th class="p-1 border border-slate-300">目前價 (輸入)</th>
+                                        <th class="p-1 border border-slate-300">成交量 (輸入)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="p-1 border border-slate-300 font-bold text-red-600">🚀 極強</td>
+                                        <td class="p-1 border border-slate-300 text-[10px]">大於前三高<br>(且設今日最高=目前價)</td>
+                                        <td class="p-1 border border-slate-300 text-[10px]">大於均量 1.3倍<br>(爆量攻擊)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-1 border border-slate-300 font-bold text-orange-500">🔥 突破</td>
+                                        <td class="p-1 border border-slate-300 text-[10px]">大於前三高</td>
+                                        <td class="p-1 border border-slate-300 text-[10px]">大於均量</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-1 border border-slate-300 font-bold text-green-600">💀 大跌</td>
+                                        <td class="p-1 border border-slate-300 text-[10px]">小於前三低</td>
+                                        <td class="p-1 border border-slate-300 text-[10px]">大於均量<br>(恐慌殺盤)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-1 border border-slate-300 font-bold text-gray-500">➖ 盤整</td>
+                                        <td class="p-1 border border-slate-300 text-[10px]">介於前高/前低之間</td>
+                                        <td class="p-1 border border-slate-300 text-[10px]">小於均量 0.8倍<br>(量縮整理)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            
+                            <div class="mt-2 text-center">
+                                <span class="block mb-1 text-[10px] text-slate-500">👇 最後一步 👇</span>
+                                <span class="bg-black text-white px-2 py-1 rounded text-xs font-bold shadow">點擊 [執行實戰推演]</span>
+                            </div>
+                        </div>
                     </div>
                 </details>
             </div>
@@ -346,12 +379,22 @@
                 <div class="grid grid-cols-2 gap-4 mb-3">
                     <div class="col-span-2 grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-blue-900 font-bold mb-1 text-xs">目前價 (Current)</label>
+                            <label class="block text-blue-900 font-bold mb-1 text-xs">
+                                目前價 (Current) 
+                                <span class="text-[10px] text-red-500 font-normal ml-1">← 修改此值模擬漲跌</span>
+                            </label>
                             <input type="number" step="0.01" id="closePrice" class="w-full p-2 border-2 border-blue-200 rounded focus:ring-blue-500 text-lg font-mono font-bold text-blue-900" placeholder="跳動價">
+                            <div class="text-[9px] text-slate-400 mt-1 flex space-x-2">
+                                <span>🚀 模擬極強/突破: 輸入>前三高</span>
+                                <span>💀 模擬大跌: 輸入<前三低</span>
+                            </div>
                         </div>
                         <div>
-                            <label class="block text-red-700 font-bold mb-1 text-xs">今日最高 <span class="bg-red-100 px-1 rounded">h2</span></label>
+                            <label class="block text-red-700 font-bold mb-1 text-xs">
+                                今日最高 <span class="bg-red-100 px-1 rounded">h2</span>
+                            </label>
                             <input type="number" step="0.01" id="todayHigh" class="w-full p-2 border-2 border-red-200 rounded focus:ring-red-500 text-lg font-mono font-bold text-red-700" placeholder="動態測幅用">
+                            <p class="text-[9px] text-slate-400 mt-1">※ 模擬極強時，請設與目前價相同</p>
                         </div>
                     </div>
                     
@@ -387,8 +430,15 @@
                 <h3 class="text-sm font-black text-slate-800 mb-3 border-l-4 border-purple-600 pl-2">成交量結構 (Volume)</h3>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-purple-900 font-bold mb-1 text-xs">今日成交量 (Today Vol)</label>
+                        <label class="block text-purple-900 font-bold mb-1 text-xs">
+                            今日成交量 (Today Vol)
+                            <span class="text-[10px] text-purple-500 font-normal ml-1">← 修改此值模擬量能</span>
+                        </label>
                         <input type="number" id="todayVol" class="w-full p-2 border-2 border-purple-200 rounded focus:ring-purple-500 font-mono text-lg font-bold text-purple-900" placeholder="預估量">
+                        <div class="text-[9px] text-slate-400 mt-1 flex space-x-2">
+                            <span>🔥 攻擊: 輸入>1.3倍均量</span>
+                            <span>💤 洗盤: 輸入<0.8倍均量</span>
+                        </div>
                     </div>
                     <div>
                         <label class="block text-slate-500 font-bold mb-1 text-xs">過去三日均量 (Avg Vol)</label>
