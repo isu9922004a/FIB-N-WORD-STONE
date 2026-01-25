@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>N字戰法：三盤轉折判斷計算機 (V11.5 旗艦全配版)</title>
+    <title>N字戰法：三盤轉折判斷計算機 (V11.6 自定義擴充版)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
@@ -40,8 +40,8 @@
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-xl overflow-hidden border border-slate-300 relative">
         <!-- Header -->
         <div class="bg-slate-900 p-5 text-white text-center relative z-20">
-            <h1 class="text-2xl font-black tracking-wider">N字戰法指揮中心 by.石頭 <span class="text-yellow-400 text-sm align-top">V11.5</span></h1>
-            <p class="text-xs text-slate-400 mt-1">旗艦全配資料庫 x 盤態判讀 x 模擬演習</p>
+            <h1 class="text-2xl font-black tracking-wider">N字戰法指揮中心 by.石頭 <span class="text-yellow-400 text-sm align-top">V11.6</span></h1>
+            <p class="text-xs text-slate-400 mt-1">自定義資料庫 x 盤態判讀 x 模擬演習</p>
         </div>
 
         <!-- 戰法百科全書 (Accordion Menu) -->
@@ -294,15 +294,36 @@
                 </div>
             </div>
             
-            <!-- 0. 股票代碼 -->
+            <!-- 0. 股票代碼 (含新增功能) -->
             <div>
-                <label class="block text-slate-700 font-bold mb-1 text-sm flex justify-between">
+                <label class="block text-slate-700 font-bold mb-1 text-sm flex justify-between items-center">
                     <span>股票名稱/代號</span>
                     <span class="text-[10px] bg-yellow-100 text-yellow-800 px-1 rounded">✨ 支援自動校正 (輸入1101或台泥)</span>
                 </label>
                 <!-- 加入 datalist -->
                 <input type="text" id="stockName" list="stockOptions" class="w-full p-2 border-2 border-slate-200 rounded focus:ring-2 focus:ring-slate-500 font-bold placeholder-slate-300 transition-colors" placeholder="輸入代碼或名稱 (如: 1101)">
                 <datalist id="stockOptions"></datalist>
+
+                <!-- NEW: 手動新增個股功能 -->
+                <details class="group mt-2 border border-slate-200 rounded bg-white">
+                    <summary class="text-xs font-bold text-slate-500 p-2 cursor-pointer hover:bg-slate-50 select-none flex items-center">
+                        <span class="bg-slate-200 text-slate-600 px-1.5 rounded mr-2 text-[10px]">＋</span>
+                        找不到股票？手動新增資料庫
+                    </summary>
+                    <div class="p-3 bg-slate-50 border-t border-slate-200 grid grid-cols-5 gap-2 items-end">
+                        <div class="col-span-2">
+                            <label class="block text-[10px] text-slate-500 font-bold mb-1">股票代碼</label>
+                            <input type="text" id="newStockCode" class="w-full p-1 border border-slate-300 rounded text-sm" placeholder="例如: 9999">
+                        </div>
+                        <div class="col-span-2">
+                            <label class="block text-[10px] text-slate-500 font-bold mb-1">股票名稱</label>
+                            <input type="text" id="newStockName" class="w-full p-1 border border-slate-300 rounded text-sm" placeholder="例如: 石頭科技">
+                        </div>
+                        <button onclick="addCustomStock()" class="col-span-1 bg-blue-600 text-white text-xs font-bold py-1.5 rounded hover:bg-blue-700 transition-colors shadow-sm">
+                            加入
+                        </button>
+                    </div>
+                </details>
             </div>
 
             <!-- 1. 狀態選擇 -->
@@ -496,8 +517,8 @@
     <script>
         let currentReportText = "";
         
-        // Stock Database
-        const stockDB = [
+        // Base Stock Database (Hardcoded)
+        const baseStockDB = [
             "台泥 1101", "亞泥 1102", "嘉泥 1103", "環泥 1104", "幸福 1108", "信大 1109", "東泥 1110",
             "味全 1201", "味王 1203", "大成 1210", "大飲 1213", "卜蜂 1215", "統一 1216", "愛之味 1217", "泰山 1218", "福壽 1219", "台榮 1220", "福懋油 1225", "佳格 1227", "聯華 1229", "聯華食 1231", "大統益 1232", "天仁 1233", "黑松 1234", "興泰 1235", "宏亞 1236", "鮮活果汁-KY 1256",
             "台塑 1301", "南亞 1303", "台聚 1304", "華夏 1305", "三芳 1307", "亞聚 1308", "台達化 1309", "台苯 1310", "國喬 1312", "聯成 1313", "中石化 1314", "達新 1315", "上曜 1316", "東陽 1319", "大洋 1321", "永裕 1323", "地球 1324", "恆大 1325", "台化 1326", "再生-KY 1337", "廣華-KY 1338", "昭輝 1339", "勝悅-KY 1340", "富林-KY 1341", "八貫 1342",
@@ -507,8 +528,6 @@
             "南僑 1702", "葡萄王 1707", "東鹼 1708", "和益 1709", "東聯 1710", "永光 1711", "興農 1712", "國化 1713", "和桐 1714", "長興 1717", "中纖 1718", "生達 1720", "三晃 1721", "台肥 1722", "中碳 1723", "元禎 1725", "永記 1726", "中華化 1727", "花仙子 1730", "美吾華 1731", "毛寶 1732", "五鼎 1733", "杏輝 1734", "日勝化 1735", "喬山 1736", "臺鹽 1737", "南光 1752", "寶齡富錦 1760", "中化生 1762", "勝一 1773", "展宇 1776", "和康生 1783", "科妍 1786", "神隆 1789", "美時 1795",
             "台玻 1802", "寶徠 1805", "冠軍 1806", "潤隆 1808", "中釉 1809", "和成 1810", "凱撒衛 1817",
             "士紙 1903", "正隆 1904", "華紙 1905", "寶隆 1906", "永豐餘 1907", "榮成 1909",
-            
-            // New Additions Part 2
             "中鋼 2002", "東和鋼鐵 2006", "燁興 2007", "高興昌 2008", "第一銅 2009", "春源 2010", "春雨 2012", "中鋼構 2013", "中鴻 2014", "豐興 2015", "官田鋼 2017", "美亞 2020", "聚亨 2022", "燁輝 2023", "志聯 2024", "千興 2025", "大成鋼 2027", "威致 2028", "盛餘 2029", "彰源 2030", "新光鋼 2031", "新鋼 2032", "佳大 2033", "允強 2034", "海光 2038", "上銀 2049", "川湖 2059", "橋椿 2062", "運錩 2069",
             "南港 2101", "泰豐 2102", "台橡 2103", "國際中橡 2104", "正新 2105", "建大 2106", "厚生 2107", "南帝 2108", "華豐 2109", "鑫永銓 2114", "六暉-KY 2115",
             "裕隆 2201", "中華 2204", "三陽工業 2206", "和泰車 2207", "台船 2208", "長榮鋼 2211", "裕日車 2227", "劍麟 2228", "為升 2231", "宇隆 2233", "百達-KY 2236", "英利-KY 2239", "艾姆勒 2241", "宏旭-KY 2243", "汎德永業 2247", "華勝-KY 2248", "IKKA-KY 2250", "巨鎧精密-創 2254", "鴻華先進-創 2258",
@@ -519,8 +538,6 @@
             "彰銀 2801", "台中銀 2812", "旺旺保 2816", "華票 2820", "台產 2832", "臺企銀 2834", "高雄銀 2836", "聯邦銀 2838", "遠東銀 2845", "安泰銀 2849", "新產 2850", "中再保 2851", "第一保 2852", "統一證 2855", "三商壽 2867", "華南金 2880", "富邦金 2881", "國泰金 2882", "凱基金 2883", "玉山金 2884", "元大金 2885", "兆豐金 2886", "台新新光金 2887", "國票金 2889", "永豐金 2890", "中信金 2891", "第一金 2892", "王道銀行 2897",
             "欣欣 2901", "遠百 2903", "匯僑 2904", "三商 2905", "高林 2906", "特力 2908", "統領 2910", "麗嬰房 2911", "統一超 2912", "農林 2913", "潤泰全 2915", "鼎固-KY 2923", "淘帝-KY 2929", "永邑-KY 2939", "三商家購 2945",
             "歐格 3002", "健和興 3003", "豐達科 3004", "神基 3005", "晶豪科 3006", "大立光 3008", "華立 3010", "今皓 3011", "晟銘電 3013", "聯陽 3014", "全漢 3015", "嘉晶 3016", "奇鋐 3017", "隆銘綠能 3018", "亞光 3019", "鴻名 3021", "威強電 3022", "信邦 3023", "憶聲 3024", "星通 3025", "禾伸堂 3026", "盛達 3027", "增你強 3028", "零壹 3029", "德律 3030", "佰鴻 3031", "偉訓 3032", "威健 3033", "聯詠 3034", "智原 3035", "文曄 3036", "欣興 3037", "全台 3038", "遠見 3040", "揚智 3041", "晶技 3042", "科風 3043", "健鼎 3044", "台灣大 3045", "建碁 3046", "訊舟 3047", "益登 3048", "精金 3049", "鈺德 3050", "力特 3051", "夆典 3052", "立萬利 3054", "蔚華科 3055", "富華新 3056", "喬鼎 3057", "立德 3058", "華晶科 3059", "銘異 3060", "建漢 3062", "日電貿 3090", "鴻碩 3092", "聯傑 3094", "一零四 3130", "凌航 3135", "耀登 3138", "正達 3149", "鈺寶-創 3150", "景岳 3164", "大量 3167", "眾福科 3168", "景碩 3189", "全科 3209", "晟鈦 3229", "緯創 3231", "虹冠電 3257", "昇陽 3266", "勝德 3296", "昇貿 3305", "聯德 3308", "閎暉 3311", "弘憶股 3312", "同泰 3321", "泰碩 3338", "麗清 3346", "奇偶 3356", "新日興 3376", "明泰 3380", "玉晶光 3406", "京鼎 3413", "融程電 3416", "譁裕 3419", "台端 3432", "榮創 3437", "創意 3443", "展達 3447", "聯鈞 3450", "晶睿 3454", "群創 3481", "誠研 3494", "維熹 3501", "揚明光 3504", "華擎 3515", "柏騰 3518", "安馳 3528", "晶相光 3530", "台勝科 3532", "嘉澤 3533", "晶彩科 3535", "州巧 3543", "敦泰 3545", "聯穎 3550", "嘉威 3557", "牧德 3563", "聯合再生 3576", "辛耘 3583", "通嘉 3588", "艾笛森 3591", "瑞鼎 3592", "力銘 3593", "智易 3596", "宏致 3605", "谷崧 3607", "碩天 3617", "洋華 3622", "達邁 3645", "精聯 3652", "健策 3653", "世芯-KY 3661", "貿聯-KY 3665", "圓展 3669", "TPK-KY 3673", "新至陞 3679", "達能 3686", "海華 3694", "大眾控 3701", "大聯大 3702", "欣陸 3703", "合勤控 3704", "永信 3705", "神達 3706", "上緯投控 3708", "日月光投控 3711", "永崴投控 3712", "富采 3714", "定穎投控 3715", "中化控股 3716", "聯嘉投控 3717",
-            
-            // New Additions Part 3
             "佳醫 4104", "雃博 4106", "懷特 4108", "旭富 4119", "亞諾法 4133", "麗豐-KY 4137", "國光生 4142", "全宇生技-KY 4148", "訊映 4155", "承業醫 4164", "佐登-KY 4190",
             "炎洲 4306",
             "如興 4414", "利勤 4426", "廣越 4438", "冠星-KY 4439", "宜新實業 4440", "振大環球 4441",
@@ -544,8 +561,6 @@
             "惠特 6706", "嘉基 6715", "力智 6719", "輝創 6722", "澤米 6742", "安普新 6743", "龍德造船 6753", "匯僑設計 6754", "威鋒電子 6756", "台灣虎航 6757", "志強-KY 6768", "力積電 6770", "平和環保-創 6771", "展碁國際 6776", "AES-KY 6781", "視陽 6782", "采鈺 6789", "永豐實 6790", "詠業 6792", "向榮生技 6794", "晉弘 6796", "來頡 6799",
             "富世達 6805", "森崴能源 6806", "峰源-KY 6807", "汎銓 6830", "邁科 6831", "天二科技 6834", "圓裕 6835", "台新藥 6838", "錼創科技-KY創 6854", "睿生光電 6861", "三集瑞-KY 6862", "永道-KY 6863", "雲豹能源 6869", "泓德能源 6873", "全福生技 6885", "寶綠特-KY 6887", "來億-KY 6890",
             "鑽石投資 6901", "GOGOLOOK 6902", "現觀科 6906", "創控 6909", "阜爾運通 6914", "華凌 6916", "愛派司 6918", "康霈* 6919", "嘉雨思-創 6921", "中台 6923", "榮惠-KY創 6924", "攸泰科技 6928", "青松健康 6931", "AMAX-KY 6933", "永鴻生技 6936", "天虹 6937", "兆聯實業 6944", "沛爾生醫-創 6949", "青新-創 6951", "大武山 6952", "邦睿生技-創 6955", "裕慶-KY 6957", "日盛台駿 6958", "奕力-KY 6962", "中傑-KY 6965", "成信實業*-創 6969", "威力暘-創 6988", "富威電力 6994",
-            
-            // New Additions Part 4
             "聯友金屬-創 7610", "聚賢研發-創 7631", "三商餐飲 7705", "永擎 7711", "微程式 7721", "LINEPAY 7722", "暉盛-創 7730", "金興精密 7732", "虎山 7736", "熙特爾-創 7740", "意騰-KY 7749", "新代 7750", "中華資安 7765", "鴻勁 7769", "大研生醫* 7780", "東方風能 7786", "松川精密 7788", "皇家可口 7791", "長廣 7795", "禾榮科 7799",
             "台通 8011", "矽創 8016", "尖點 8021", "昇陽半導體 8028", "雷虎 8033", "台虹 8039", "達運光電 8045", "南電 8046", "長華* 8070", "陞泰 8072", "致新 8081", "華冠 8101", "瀚荃 8103", "錸寶 8104", "凌巨 8105", "華東 8110", "至上 8112", "振樺電 8114", "福懋科 8131", "南茂 8150", "微矽電子-創 8162", "達方 8163", "無敵 8201", "勤誠 8210", "志超 8213", "明基材 8215", "寶一 8222", "菱光 8249", "富鼎 8261", "宇瞻 8271", "日友 8341", "建新國際 8367", "羅昇 8374",
             "百和興業-KY 8404", "福貞-KY 8411", "可寧衛* 8422", "金麗-KY 8429", "昶昕 8438", "威宏-KY 8442", "阿瘦 8443", "富邦媒 8454", "柏文 8462", "潤泰材 8463", "億豐 8464", "美吉吉-KY 8466", "波力-KY 8467", "山林水 8473", "台境* 8476", "東哥遊艇 8478", "政伸 8481", "商億-KY 8482", "愛爾達-創 8487", "吉源-KY 8488", "鼎炫-KY 8499",
@@ -555,30 +570,39 @@
             "台火 9902", "寶成 9904", "大華 9905", "欣巴巴 9906", "統一實 9907", "大台北 9908", "豐泰 9910", "櫻花 9911", "偉聯 9912", "美利達 9914", "中保科 9917", "欣天然 9918", "康那香 9919", "巨大 9921", "福興 9924", "新保 9925", "新海 9926", "泰銘 9927", "中視 9928", "秋雨 9929", "中聯資源 9930", "欣高 9931", "中鼎 9933", "成霖 9934", "慶豐富 9935", "全國 9937", "百和 9938", "宏全 9939", "信義 9940", "裕融 9941", "茂順 9942", "好樂迪 9943", "新麗 9944", "潤泰新 9945", "三發地產 9946", "佳龍 9955", "世紀鋼 9958"
         ];
 
-        // Init Stock Autocomplete
+        // Init Stock Autocomplete with Custom Stocks
         function initStockAutocomplete() {
             const dataList = document.getElementById('stockOptions');
             const stockInput = document.getElementById('stockName');
             
-            // Parse DB into structured data
-            const parsedStocks = stockDB.map(s => {
+            // 1. Get Custom Stocks from LocalStorage
+            let customStocks = JSON.parse(localStorage.getItem('customStocks')) || [];
+            
+            // 2. Merge Base + Custom
+            const allStocks = [...baseStockDB, ...customStocks];
+            
+            // 3. Parse DB into structured data
+            const parsedStocks = allStocks.map(s => {
                 const parts = s.split(' ');
-                // Handle cases where name might have spaces, though unlikely in this list
-                // Last part is code, rest is name
                 const code = parts[parts.length - 1];
                 const name = parts.slice(0, parts.length - 1).join(' ');
                 return { name, code, full: `${name} (${code})` };
             });
 
-            // Populate Datalist
+            // 4. Populate Datalist (Clear first)
+            dataList.innerHTML = '';
             parsedStocks.forEach(s => {
                 const option = document.createElement('option');
                 option.value = s.full;
                 dataList.appendChild(option);
             });
 
-            // Auto-correct on change
-            stockInput.addEventListener('change', function() {
+            // 5. Auto-correct on change
+            // Remove old listener to avoid duplicates if re-init
+            const newStockInput = stockInput.cloneNode(true);
+            stockInput.parentNode.replaceChild(newStockInput, stockInput);
+            
+            newStockInput.addEventListener('change', function() {
                 const val = this.value.trim();
                 if(!val) return;
                 
@@ -595,6 +619,47 @@
                     setTimeout(() => this.classList.remove('highlight-input'), 1000);
                 }
             });
+        }
+        
+        // Add Custom Stock Function
+        function addCustomStock() {
+            const codeInput = document.getElementById('newStockCode');
+            const nameInput = document.getElementById('newStockName');
+            const code = codeInput.value.trim();
+            const name = nameInput.value.trim();
+            
+            if (!code || !name) {
+                alert("請輸入完整的代號與名稱！");
+                return;
+            }
+            
+            const newEntry = `${name} ${code}`;
+            
+            // Get existing custom stocks
+            let customStocks = JSON.parse(localStorage.getItem('customStocks')) || [];
+            
+            // Check duplicate
+            if (customStocks.includes(newEntry) || baseStockDB.includes(newEntry)) {
+                alert("此股票已存在於資料庫中！");
+                return;
+            }
+            
+            // Add and Save
+            customStocks.push(newEntry);
+            localStorage.setItem('customStocks', JSON.stringify(customStocks));
+            
+            // Re-init Autocomplete
+            initStockAutocomplete();
+            
+            // Clear inputs and feedback
+            codeInput.value = '';
+            nameInput.value = '';
+            alert(`✅ 成功加入：${name} (${code})`);
+            
+            // Auto-fill the main input
+            const mainInput = document.getElementById('stockName');
+            mainInput.value = `${name} (${code})`;
+            mainInput.classList.add('highlight-input');
         }
         
         // Initialize on load
