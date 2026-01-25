@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>N字戰法：三盤轉折判斷計算機 (V11.7 戰情預判強化版)</title>
+    <title>N字戰法：三盤轉折判斷計算機 (V11.8 智能戰情推演版)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
@@ -40,8 +40,8 @@
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-xl overflow-hidden border border-slate-300 relative">
         <!-- Header -->
         <div class="bg-slate-900 p-5 text-white text-center relative z-20">
-            <h1 class="text-2xl font-black tracking-wider">N字戰法指揮中心 by.石頭 <span class="text-yellow-400 text-sm align-top">V11.7</span></h1>
-            <p class="text-xs text-slate-400 mt-1">戰情預判 x 模擬演習 x 資料庫</p>
+            <h1 class="text-2xl font-black tracking-wider">N字戰法指揮中心 by.石頭 <span class="text-yellow-400 text-sm align-top">V11.8</span></h1>
+            <p class="text-xs text-slate-400 mt-1">智能戰情推演 x 模擬演習 x 資料庫</p>
         </div>
 
         <!-- 戰法百科全書 (Accordion Menu) -->
@@ -260,44 +260,15 @@
 
                         <div class="bg-slate-50 p-2 rounded border border-slate-200">
                             <span class="font-bold text-slate-800 block mb-1">🛠️ 手動預演 (老手模式)：</span>
-                            <p class="mb-2">請先填入真實的 <span class="font-bold">前三高、前三低、均量</span> (已知歷史)，接著修改以下欄位來模擬明日劇本：</p>
+                            <p class="mb-2">請先填入真實的 <span class="font-bold">前三高、前三低、均量</span> (已知歷史)。
+                            <br><span class="text-[10px] text-blue-600 bg-blue-50 p-0.5 rounded">💡 系統會根據您輸入的基準值，自動推算模擬價量！</span></p>
                             
-                            <table class="w-full text-left border-collapse">
-                                <thead>
-                                    <tr class="bg-slate-200 text-slate-700">
-                                        <th class="p-1 border border-slate-300">模擬劇本</th>
-                                        <th class="p-1 border border-slate-300">目前價 (輸入)</th>
-                                        <th class="p-1 border border-slate-300">成交量 (輸入)</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="p-1 border border-slate-300 font-bold text-red-600">🚀 極強</td>
-                                        <td class="p-1 border border-slate-300 text-[10px]">大於前三高<br>(且設今日最高=目前價)</td>
-                                        <td class="p-1 border border-slate-300 text-[10px]">大於均量 1.3倍<br>(爆量攻擊)</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="p-1 border border-slate-300 font-bold text-orange-500">🔥 突破</td>
-                                        <td class="p-1 border border-slate-300 text-[10px]">大於前三高</td>
-                                        <td class="p-1 border border-slate-300 text-[10px]">大於均量</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="p-1 border border-slate-300 font-bold text-green-600">💀 大跌</td>
-                                        <td class="p-1 border border-slate-300 text-[10px]">小於前三低</td>
-                                        <td class="p-1 border border-slate-300 text-[10px]">大於均量<br>(恐慌殺盤)</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="p-1 border border-slate-300 font-bold text-gray-500">➖ 盤整</td>
-                                        <td class="p-1 border border-slate-300 text-[10px]">介於前高/前低之間</td>
-                                        <td class="p-1 border border-slate-300 text-[10px]">小於均量 0.8倍<br>(量縮整理)</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            
-                            <div class="mt-2 text-center">
-                                <span class="block mb-1 text-[10px] text-slate-500">👇 最後一步 👇</span>
-                                <span class="bg-black text-white px-2 py-1 rounded text-xs font-bold shadow">點擊 [執行實戰推演]</span>
-                            </div>
+                            <ul class="list-none space-y-2 text-[11px] text-slate-700 ml-1">
+                                <li>① 填入 <span class="font-bold">前三高、前三低、均量</span> (已知)。</li>
+                                <li>② 更改 <span class="font-bold text-blue-600">目前價</span> (輸入：你假設明天會漲到的價格)。</li>
+                                <li>③ 更改 <span class="font-bold text-purple-600">成交量</span> (輸入：你預估明天的量)。</li>
+                                <li>④ 按下黑色 <span class="font-bold bg-black text-white px-1 rounded">執行實戰推演</span> 按鈕。</li>
+                            </ul>
                         </div>
                     </div>
                 </details>
@@ -399,11 +370,11 @@
                     </div>
                     
                     <div>
-                        <label class="block text-slate-500 font-bold mb-1 text-xs">前三高 (頸線)</label>
+                        <label class="block text-slate-500 font-bold mb-1 text-xs">前三高 (頸線) <span class="text-[10px] bg-slate-200 text-slate-600 px-1 rounded">模擬基準</span></label>
                         <input type="number" step="0.01" id="high3d" class="w-full p-2 border border-slate-300 rounded font-mono text-sm" placeholder="昨/前/大前">
                     </div>
                     <div>
-                        <label class="block text-slate-500 font-bold mb-1 text-xs">前三低 (L)</label>
+                        <label class="block text-slate-500 font-bold mb-1 text-xs">前三低 (L) <span class="text-[10px] bg-slate-200 text-slate-600 px-1 rounded">模擬基準</span></label>
                         <input type="number" step="0.01" id="low3d" class="w-full p-2 border border-slate-300 rounded font-mono text-sm" placeholder="昨/前/大前">
                     </div>
                     
@@ -441,7 +412,7 @@
                         </div>
                     </div>
                     <div>
-                        <label class="block text-slate-500 font-bold mb-1 text-xs">過去三日均量 (Avg Vol)</label>
+                        <label class="block text-slate-500 font-bold mb-1 text-xs">過去三日均量 (Avg Vol) <span class="text-[10px] bg-slate-200 text-slate-600 px-1 rounded">模擬基準</span></label>
                         <input type="number" id="avgVol" class="w-full p-2 border border-slate-300 rounded font-mono text-sm" placeholder="輸入5T數值">
                     </div>
                 </div>
@@ -718,70 +689,87 @@
 
         // 模擬數據函數
         function simulate(type) {
-            clearInputs(false); // 不隱藏結果區
-            
-            // 基礎設定 (假設一檔股票)
-            document.getElementById('stockName').value = "模擬個股 (TEST)";
-            document.getElementById('high3d').value = 100;
-            document.getElementById('low3d').value = 90;
-            document.getElementById('avgVol').value = 1000;
-            
-            let simType = "";
+            // 1. 獲取基準值 (若使用者已輸入則使用，否則預設)
+            let h3Input = document.getElementById('high3d');
+            let l3Input = document.getElementById('low3d');
+            let avInput = document.getElementById('avgVol');
+            let nameInput = document.getElementById('stockName');
 
-            if (type === 'strong') { // 極強
-                setStatus('RED');
-                document.getElementById('closePrice').value = 108;
-                document.getElementById('todayHigh').value = 108; // 收最高
-                document.getElementById('breakoutLow').value = 98; // 遠高於軋空低
-                document.getElementById('todayVol').value = 2000; // 爆量
+            let h3 = parseFloat(h3Input.value) || 100; // 預設 100
+            let l3 = parseFloat(l3Input.value) || 90;  // 預設 90
+            let av = parseFloat(avInput.value) || 1000; // 預設 1000
+
+            // 回填 (讓使用者知道是用這些值算的)
+            h3Input.value = h3;
+            l3Input.value = l3;
+            avInput.value = av;
+            if(!nameInput.value) nameInput.value = "模擬情境演練";
+
+            // 清除舊的結果區 (但不清空輸入框)
+            document.getElementById('resultArea').classList.add('hidden');
+            
+            // 2. 根據劇本計算
+            let simClose = 0;
+            let simHigh = 0;
+            let simLowDef = 0; // breakoutLow
+            let simVol = 0;
+            let setRed = false; // 是否持有
+
+            if (type === 'strong') { // 🚀 模擬極強
+                setRed = true; // 假設已持有或極強翻紅
+                simClose = h3 * 1.05; // 突破前高 5%
+                simHigh = simClose;   // 收最高
+                simLowDef = (h3 + l3) / 2; // 防守點在中間
+                simVol = av * 1.5; // 量增 1.5倍 (攻擊量)
                 
-                // 強勢股參數
-                document.getElementById('prevClose').value = 104;
-                document.getElementById('todayLow').value = 105;
-                document.getElementById('prevLow').value = 102;
-                simType = "🚀 極強";
-                
-            } else if (type === 'break') { // 突破
-                setStatus('GREEN');
-                document.getElementById('closePrice').value = 102;
-                document.getElementById('todayHigh').value = 103;
-                document.getElementById('breakoutLow').value = 101; // 今日低當防守
-                document.getElementById('todayVol').value = 1500; // 攻擊量
-                simType = "🔥 突破";
-                
-            } else if (type === 'crash') { // 大跌
-                setStatus('RED'); // 原本持有
-                document.getElementById('closePrice').value = 85; // 破低
-                document.getElementById('todayHigh').value = 92;
-                document.getElementById('breakoutLow').value = 95; // 跌破防守點
-                document.getElementById('todayVol').value = 3000; // 恐慌量
-                simType = "💀 大跌";
-                
-            } else if (type === 'flat') { // 盤整
-                setStatus('GREEN');
-                document.getElementById('closePrice').value = 98; // 未過高
-                document.getElementById('todayHigh').value = 99;
-                document.getElementById('breakoutLow').value = 95;
-                document.getElementById('todayVol').value = 600; // 量縮
-                simType = "➖ 盤整";
+                // 進階參數 (製造強勢型態)
+                document.getElementById('prevClose').value = h3;
+                document.getElementById('todayLow').value = h3 * 1.02;
+                document.getElementById('prevLow').value = h3 * 0.98;
+
+            } else if (type === 'break') { // 🔥 模擬突破
+                setRed = false; // 翻紅第一天
+                simClose = h3 * 1.01; // 剛過高 1%
+                simHigh = simClose * 1.01;
+                simLowDef = h3 * 0.99; // 防守點設在頸線附近
+                simVol = av * 1.3; // 量增 1.3倍 (標準攻擊)
+
+            } else if (type === 'crash') { // 💀 模擬大跌
+                setRed = true; // 假設原本持有
+                simClose = l3 * 0.95; // 跌破前低 5%
+                simHigh = l3 * 0.98;
+                simLowDef = l3 * 1.02; // 早已跌破
+                simVol = av * 1.8; // 量增 1.8倍 (恐慌殺盤)
+
+            } else if (type === 'flat') { // ➖ 模擬盤整
+                setRed = false;
+                simClose = (h3 + l3) / 2; // 在區間中間
+                simHigh = simClose * 1.01;
+                simLowDef = l3;
+                simVol = av * 0.7; // 量縮 0.7倍 (整理)
             }
 
-            // 增加輸入框閃爍特效
+            // 3. 填入計算結果
+            setStatus(setRed ? 'RED' : 'GREEN');
+            document.getElementById('closePrice').value = simClose.toFixed(2);
+            document.getElementById('todayHigh').value = simHigh.toFixed(2);
+            document.getElementById('breakoutLow').value = simLowDef.toFixed(2);
+            document.getElementById('todayVol').value = Math.round(simVol);
+
+            // 4. 閃爍特效並執行
             const inputs = document.querySelectorAll('input[type="number"]');
             inputs.forEach(input => {
                 input.classList.remove('highlight-input');
-                void input.offsetWidth; // trigger reflow
+                void input.offsetWidth;
                 input.classList.add('highlight-input');
             });
             
-            // 自動執行並捲動
             setTimeout(() => {
                 calculateStrategy();
-                // 強制捲動
                 const resultArea = document.getElementById('resultArea');
                 resultArea.classList.remove('hidden');
                 resultArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }, 100);
+            }, 200);
         }
 
         const checkboxes = document.querySelectorAll('#sellChecklist input[type="checkbox"]');
