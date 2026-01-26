@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>N字戰法：三盤轉折判斷計算機 (V11.8 智能戰情推演版)</title>
+    <title>N字戰法：三盤轉折判斷計算機 (V12.3 戰略修復版)</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Markdown 解析庫 (為了漂亮顯示 AI 回傳的文字) -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
         body { font-family: 'Noto Sans TC', sans-serif; }
@@ -28,11 +30,33 @@
         }
         .highlight-input { animation: highlightPulse 1s ease-in-out; }
 
+        /* AI Loading Animation */
+        .typing-indicator span {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background-color: #4f46e5;
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out both;
+            margin: 0 2px;
+        }
+        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
         /* 摺疊選單樣式 */
         details > summary { list-style: none; cursor: pointer; transition: all 0.2s; }
         details > summary::-webkit-details-marker { display: none; }
         details[open] > summary { margin-bottom: 0.5rem; }
         details > summary:hover { background-color: #f8fafc; }
+        
+        /* Markdown Styles for AI Output */
+        .prose h3 { font-size: 1.1em; font-weight: bold; margin-top: 1em; color: #1e3a8a; }
+        .prose ul { list-style-type: disc; padding-left: 1.2em; margin-top: 0.5em; }
+        .prose strong { color: #b91c1c; }
     </style>
 </head>
 <body class="bg-slate-100 min-h-screen flex items-center justify-center p-4">
@@ -40,8 +64,8 @@
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-xl overflow-hidden border border-slate-300 relative">
         <!-- Header -->
         <div class="bg-slate-900 p-5 text-white text-center relative z-20">
-            <h1 class="text-2xl font-black tracking-wider">N字戰法指揮中心 by.石頭 <span class="text-yellow-400 text-sm align-top">V11.8</span></h1>
-            <p class="text-xs text-slate-400 mt-1">智能戰情推演 x 模擬演習 x 資料庫</p>
+            <h1 class="text-2xl font-black tracking-wider">N字戰法指揮中心 by.石頭 <span class="text-yellow-400 text-sm align-top">V12.3</span></h1>
+            <p class="text-xs text-slate-400 mt-1">✨ AI 戰略參謀 x 戰略量能推演 x 資料庫</p>
         </div>
 
         <!-- 戰法百科全書 (Accordion Menu) -->
@@ -525,7 +549,17 @@
                             <p id="resultAdvice" class="text-sm text-slate-800 font-medium leading-relaxed"></p>
                         </div>
                         
-                        <button onclick="copyReport()" id="copyBtn" class="w-full flex items-center justify-center space-x-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 px-4 rounded-lg transition-colors text-sm border border-slate-300 shadow-sm">
+                        <!-- AI Button -->
+                        <button onclick="callAIAnalyst()" id="aiBtn" class="w-full flex items-center justify-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg transition-colors text-sm shadow-md mb-2">
+                            <span>✨ AI 戰略解析</span>
+                        </button>
+
+                        <!-- AI Result Container -->
+                        <div id="aiResultArea" class="hidden bg-indigo-50 p-4 rounded-lg border border-indigo-200 text-sm text-slate-700 shadow-inner mt-3">
+                            <div id="aiContent" class="prose prose-sm max-w-none"></div>
+                        </div>
+
+                        <button onclick="copyReport()" id="copyBtn" class="w-full flex items-center justify-center space-x-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 px-4 rounded-lg transition-colors text-sm border border-slate-300 shadow-sm mt-3">
                             <span>📋 複製完整戰報</span>
                         </button>
                     </div>
@@ -536,9 +570,70 @@
     </div>
 
     <script>
-        let currentReportText = "";
+        // Make essential functions global to prevent ReferenceError in inline event handlers
+        window.toggleEncyclopedia = function() {
+            const content = document.getElementById('encyclopediaContent');
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+            } else {
+                content.classList.add('hidden');
+            }
+        };
+
+        window.clearInputs = function(hideResult = true) {
+            document.querySelectorAll('input[type="text"], input[type="number"]').forEach(input => {
+                input.value = '';
+                input.classList.remove('highlight-input');
+            });
+            document.querySelectorAll('input[type="checkbox"]').forEach(box => box.checked = false);
+            const adviceBox = document.getElementById('sellAdvice');
+            if(adviceBox) adviceBox.classList.add('hidden');
+            
+            if(hideResult) {
+                const resultArea = document.getElementById('resultArea');
+                if(resultArea) resultArea.classList.add('hidden');
+            }
+            window.setStatus('GREEN');
+            if(hideResult) {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        window.setStatus = function(status) {
+            document.getElementById('currentStatus').value = status;
+            const btnGreen = document.getElementById('btn-green');
+            const btnRed = document.getElementById('btn-red');
+            
+            btnGreen.className = "py-3 px-4 border-2 rounded-lg font-bold transition-all border-slate-200 text-slate-400 hover:bg-slate-50 opacity-60";
+            btnRed.className = "py-3 px-4 border-2 rounded-lg font-bold transition-all border-slate-200 text-slate-400 hover:bg-slate-50 opacity-60";
+
+            if(status === 'GREEN') {
+                btnGreen.className = "py-3 px-4 border-2 rounded-lg font-bold transition-all border-green-500 bg-green-50 text-green-700 shadow-inner ring-2 ring-green-100 opacity-100";
+                document.getElementById('advancedInputs').classList.add('hidden');
+                document.getElementById('sellChecklist').classList.add('hidden');
+            } else {
+                btnRed.className = "py-3 px-4 border-2 rounded-lg font-bold transition-all border-red-500 bg-red-50 text-red-700 shadow-inner ring-2 ring-red-100 opacity-100";
+                document.getElementById('advancedInputs').classList.remove('hidden');
+                document.getElementById('sellChecklist').classList.remove('hidden');
+            }
+        };
+
+        // Helper functions
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
         
-        // Base Stock Database (Hardcoded)
+        function formatPrice(num) {
+            return parseFloat(num).toFixed(2);
+        }
+
+        const apiKey = ""; // API Key provided by environment
+        let currentReportText = "";
+        let isSimulation = false;
+        let simTargetVol = 0;
+        let aiAnalysisResult = ""; // New global variable to store AI analysis
+        
+        // Base Stock Database
         const baseStockDB = [
             "台泥 1101", "亞泥 1102", "嘉泥 1103", "環泥 1104", "幸福 1108", "信大 1109", "東泥 1110",
             "味全 1201", "味王 1203", "大成 1210", "大飲 1213", "卜蜂 1215", "統一 1216", "愛之味 1217", "泰山 1218", "福壽 1219", "台榮 1220", "福懋油 1225", "佳格 1227", "聯華 1229", "聯華食 1231", "大統益 1232", "天仁 1233", "黑松 1234", "興泰 1235", "宏亞 1236", "鮮活果汁-KY 1256",
@@ -592,17 +687,13 @@
         ];
 
         // Init Stock Autocomplete with Custom Stocks
-        function initStockAutocomplete() {
+        window.initStockAutocomplete = function() {
             const dataList = document.getElementById('stockOptions');
             const stockInput = document.getElementById('stockName');
             
-            // 1. Get Custom Stocks from LocalStorage
             let customStocks = JSON.parse(localStorage.getItem('customStocks')) || [];
-            
-            // 2. Merge Base + Custom
             const allStocks = [...baseStockDB, ...customStocks];
             
-            // 3. Parse DB into structured data
             const parsedStocks = allStocks.map(s => {
                 const parts = s.split(' ');
                 const code = parts[parts.length - 1];
@@ -610,7 +701,6 @@
                 return { name, code, full: `${name} (${code})` };
             });
 
-            // 4. Populate Datalist (Clear first)
             dataList.innerHTML = '';
             parsedStocks.forEach(s => {
                 const option = document.createElement('option');
@@ -618,8 +708,6 @@
                 dataList.appendChild(option);
             });
 
-            // 5. Auto-correct on change
-            // Remove old listener to avoid duplicates if re-init
             const newStockInput = stockInput.cloneNode(true);
             stockInput.parentNode.replaceChild(newStockInput, stockInput);
             
@@ -627,7 +715,6 @@
                 const val = this.value.trim();
                 if(!val) return;
                 
-                // Find match by code or name
                 const match = parsedStocks.find(s => 
                     s.code === val || 
                     s.name === val || 
@@ -640,10 +727,9 @@
                     setTimeout(() => this.classList.remove('highlight-input'), 1000);
                 }
             });
-        }
+        };
         
-        // Add Custom Stock Function
-        function addCustomStock() {
+        window.addCustomStock = function() {
             const codeInput = document.getElementById('newStockCode');
             const nameInput = document.getElementById('newStockName');
             const code = codeInput.value.trim();
@@ -655,40 +741,30 @@
             }
             
             const newEntry = `${name} ${code}`;
-            
-            // Get existing custom stocks
             let customStocks = JSON.parse(localStorage.getItem('customStocks')) || [];
             
-            // Check duplicate
             if (customStocks.includes(newEntry) || baseStockDB.includes(newEntry)) {
                 alert("此股票已存在於資料庫中！");
                 return;
             }
             
-            // Add and Save
             customStocks.push(newEntry);
             localStorage.setItem('customStocks', JSON.stringify(customStocks));
             
-            // Re-init Autocomplete
-            initStockAutocomplete();
-            
-            // Clear inputs and feedback
+            window.initStockAutocomplete();
             codeInput.value = '';
             nameInput.value = '';
             alert(`✅ 成功加入：${name} (${code})`);
             
-            // Auto-fill the main input
             const mainInput = document.getElementById('stockName');
             mainInput.value = `${name} (${code})`;
             mainInput.classList.add('highlight-input');
-        }
+        };
         
-        // Initialize on load
-        window.addEventListener('DOMContentLoaded', initStockAutocomplete);
+        window.addEventListener('DOMContentLoaded', window.initStockAutocomplete);
 
-
-        // 模擬數據函數
-        function simulate(type) {
+        // Make simulate function global
+        window.simulate = function(type) {
             // 1. 獲取基準值 (若使用者已輸入則使用，否則預設)
             let h3Input = document.getElementById('high3d');
             let l3Input = document.getElementById('low3d');
@@ -716,45 +792,48 @@
             let setRed = false; // 是否持有
 
             if (type === 'strong') { // 🚀 模擬極強
-                setRed = true; // 假設已持有或極強翻紅
+                setRed = true; 
                 simClose = h3 * 1.05; // 突破前高 5%
                 simHigh = simClose;   // 收最高
-                simLowDef = (h3 + l3) / 2; // 防守點在中間
-                simVol = av * 1.5; // 量增 1.5倍 (攻擊量)
+                simLowDef = (h3 + l3) / 2; 
+                simVol = av * 1.5; // 量增 1.5倍
                 
-                // 進階參數 (製造強勢型態)
                 document.getElementById('prevClose').value = h3;
                 document.getElementById('todayLow').value = h3 * 1.02;
                 document.getElementById('prevLow').value = h3 * 0.98;
 
             } else if (type === 'break') { // 🔥 模擬突破
-                setRed = false; // 翻紅第一天
-                simClose = h3 * 1.01; // 剛過高 1%
+                setRed = false; 
+                simClose = h3 * 1.01; 
                 simHigh = simClose * 1.01;
-                simLowDef = h3 * 0.99; // 防守點設在頸線附近
-                simVol = av * 1.3; // 量增 1.3倍 (標準攻擊)
+                simLowDef = h3 * 0.99; 
+                simVol = av * 1.3; // 量增 1.3倍
 
             } else if (type === 'crash') { // 💀 模擬大跌
-                setRed = true; // 假設原本持有
-                simClose = l3 * 0.95; // 跌破前低 5%
+                setRed = true; 
+                simClose = l3 * 0.95; 
                 simHigh = l3 * 0.98;
-                simLowDef = l3 * 1.02; // 早已跌破
-                simVol = av * 1.8; // 量增 1.8倍 (恐慌殺盤)
+                simLowDef = l3 * 1.02; 
+                simVol = av * 1.5; // 量增 1.5倍 (恐慌殺盤)
 
             } else if (type === 'flat') { // ➖ 模擬盤整
                 setRed = false;
-                simClose = (h3 + l3) / 2; // 在區間中間
+                simClose = (h3 + l3) / 2; 
                 simHigh = simClose * 1.01;
                 simLowDef = l3;
-                simVol = av * 0.7; // 量縮 0.7倍 (整理)
+                simVol = av * 0.7; // 量縮 0.7倍
             }
 
+            // 儲存目標量以供後續顯示
+            simTargetVol = Math.round(simVol);
+            isSimulation = true;
+
             // 3. 填入計算結果
-            setStatus(setRed ? 'RED' : 'GREEN');
+            window.setStatus(setRed ? 'RED' : 'GREEN');
             document.getElementById('closePrice').value = simClose.toFixed(2);
             document.getElementById('todayHigh').value = simHigh.toFixed(2);
             document.getElementById('breakoutLow').value = simLowDef.toFixed(2);
-            document.getElementById('todayVol').value = Math.round(simVol);
+            document.getElementById('todayVol').value = simTargetVol;
 
             // 4. 閃爍特效並執行
             const inputs = document.querySelectorAll('input[type="number"]');
@@ -765,77 +844,20 @@
             });
             
             setTimeout(() => {
-                calculateStrategy();
+                window.calculateStrategy();
                 const resultArea = document.getElementById('resultArea');
                 resultArea.classList.remove('hidden');
                 resultArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }, 200);
-        }
+        };
 
-        const checkboxes = document.querySelectorAll('#sellChecklist input[type="checkbox"]');
-        const adviceBox = document.getElementById('sellAdvice');
-        
-        checkboxes.forEach(chk => {
-            chk.addEventListener('change', () => {
-                const allChecked = Array.from(checkboxes).every(c => c.checked);
-                if (allChecked) {
-                    adviceBox.classList.remove('hidden');
-                } else {
-                    adviceBox.classList.add('hidden');
-                }
-            });
-        });
+        // Make calculateStrategy global
+        window.calculateStrategy = function() {
+            // Reset AI analysis on new calculation
+            aiAnalysisResult = "";
+            document.getElementById('aiResultArea').classList.add('hidden');
+            document.getElementById('aiContent').innerHTML = '';
 
-        function toggleEncyclopedia() {
-            const content = document.getElementById('encyclopediaContent');
-            if (content.classList.contains('hidden')) {
-                content.classList.remove('hidden');
-            } else {
-                content.classList.add('hidden');
-            }
-        }
-
-        function clearInputs(hideResult = true) {
-            document.querySelectorAll('input[type="text"], input[type="number"]').forEach(input => {
-                input.value = '';
-                input.classList.remove('highlight-input');
-            });
-            document.querySelectorAll('input[type="checkbox"]').forEach(box => box.checked = false);
-            adviceBox.classList.add('hidden');
-            if(hideResult) {
-                document.getElementById('resultArea').classList.add('hidden');
-            }
-            setStatus('GREEN');
-            if(hideResult) {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-        }
-
-        function formatNumber(num) {
-            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        }
-        
-        function formatPrice(num) {
-            return parseFloat(num).toFixed(2);
-        }
-
-        function setStatus(status) {
-            document.getElementById('currentStatus').value = status;
-            document.getElementById('btn-green').className = "py-3 px-4 border-2 rounded-lg font-bold transition-all border-slate-200 text-slate-400 hover:bg-slate-50 opacity-60";
-            document.getElementById('btn-red').className = "py-3 px-4 border-2 rounded-lg font-bold transition-all border-slate-200 text-slate-400 hover:bg-slate-50 opacity-60";
-
-            if(status === 'GREEN') {
-                document.getElementById('btn-green').className = "py-3 px-4 border-2 rounded-lg font-bold transition-all border-green-500 bg-green-50 text-green-700 shadow-inner ring-2 ring-green-100 opacity-100";
-                document.getElementById('advancedInputs').classList.add('hidden');
-                document.getElementById('sellChecklist').classList.add('hidden');
-            } else {
-                document.getElementById('btn-red').className = "py-3 px-4 border-2 rounded-lg font-bold transition-all border-red-500 bg-red-50 text-red-700 shadow-inner ring-2 ring-red-100 opacity-100";
-                document.getElementById('advancedInputs').classList.remove('hidden');
-                document.getElementById('sellChecklist').classList.remove('hidden');
-            }
-        }
-
-        function calculateStrategy() {
             document.querySelectorAll('input').forEach(el => el.classList.remove('input-error'));
 
             const stockName = document.getElementById('stockName').value || "未輸入股名";
@@ -847,7 +869,7 @@
             const breakoutLow = parseFloat(document.getElementById('breakoutLow').value); 
             const todayVol = parseFloat(document.getElementById('todayVol').value);
             const avgVol = parseFloat(document.getElementById('avgVol').value);
-            const isFullSell = Array.from(checkboxes).every(c => c.checked);
+            const isFullSell = Array.from(document.querySelectorAll('#sellChecklist input[type="checkbox"]')).every(c => c.checked);
             
             const prevClose = parseFloat(document.getElementById('prevClose').value);
             const todayLow = parseFloat(document.getElementById('todayLow').value);
@@ -940,7 +962,6 @@
                         tacticalAdvice = "🐢 趨勢：多方整理 (盤堅盤)。\n依圖一所示，空頭抵抗強烈，回檔較深，但只要不破軋空低，建議耐心等待。";
                     }
                 } else {
-                    // 若無參數，簡易判斷
                     if (close > high3d) {
                         patternType = "📈 軋空盤"; 
                         patternClass = "bg-blue-100 text-blue-700 border-blue-300";
@@ -952,7 +973,6 @@
                     }
                 }
 
-                // 長紅隔日強弱覆蓋
                 if (!isNaN(prevClose) && !isNaN(prevLongRedLow)) { 
                     let redLen = prevClose - prevLongRedLow;
                     let p1_3 = prevClose - (redLen * 0.33); 
@@ -979,7 +999,6 @@
                 patternReport = `\n型態：${patternType}`;
             } else { // GREEN (空方)
                 if(close < L) { 
-                     // 圖二: 空方盤態邏輯 (這裡用簡單判斷模擬，可再細分)
                      patternType = "📉 空方殺多";
                      patternClass = "bg-green-100 text-green-800 border-green-300";
                      tacticalAdvice = "📉 趨勢：空方殺多。\n依圖二所示，空方趨勢確立 (強殺多/殺多盤)，反彈不過殺多高就是空。若持有，請立刻停損，絕不接刀。";
@@ -1040,7 +1059,6 @@
             // 顯示結果
             const resultArea = document.getElementById('resultArea');
             resultArea.classList.remove('hidden');
-            // resultArea.scrollIntoView({ behavior: 'smooth' }); // 改由 simulate 控制或手動觸發時控制
 
             const resultBox = document.getElementById('resultBox');
             const rTitle = document.getElementById('resultTitle');
@@ -1052,8 +1070,6 @@
             const rStock = document.getElementById('stockBadge');
             const rInference = document.getElementById('inferenceBox');
 
-            let reportTrend = "";
-            let reportAdvice = "";
             let titleText = "";
             let actionText = "";
             let boxClass = "";
@@ -1140,6 +1156,13 @@
                 }
             }
 
+            // 新增：如果是模擬模式，強制加入量能提醒
+            if (isSimulation) {
+                tacticalAdvice += `\n\n<span class="text-red-600 font-bold bg-yellow-100 px-1 rounded">🔥 明日關鍵：</span>開盤後請緊盯成交量，若預估量能未達 <span class="font-bold text-purple-700">${formatNumber(simTargetVol)} 張</span>，則此劇本可能失效。`;
+                // 重置狀態以免影響下一次非模擬操作
+                isSimulation = false;
+            }
+
             // 更新 UI
             resultBox.className = `p-5 rounded-xl border-l-8 shadow-md relative overflow-hidden ${boxClass}`;
             rStock.innerText = stockName;
@@ -1147,7 +1170,7 @@
             rTitle.className = titleClass;
             rAction.innerText = actionText;
             rAction.className = actionClass;
-            rAdvice.innerText = tacticalAdvice; // 使用具體的戰術指引
+            rAdvice.innerHTML = tacticalAdvice.replace(/\n/g, '<br>'); // 改用 innerHTML 以支援 HTML 標籤
             rTrend.innerText = reportTrend;
             rVol.innerText = volStatus;
             rVol.className = `text-xs font-bold px-2 py-1 rounded border ${volClass}`;
@@ -1159,17 +1182,97 @@
                 rInference.classList.add('hidden');
             }
 
-            // 準備複製文字
+            // 準備複製文字 (移除 HTML 標籤)
+            const cleanAdvice = tacticalAdvice.replace(/<[^>]*>/g, '');
             const today = new Date().toLocaleDateString();
-            currentReportText = `「嗨，我是石頭，我的N字戰法分析系統希望能讓你勝率💯」\n\n戰報分析結果：\nN字戰法指揮中心 by.石頭 V10.9 (${today})\n股名：${stockName}\n-------------------\n指令：${actionText}\n量能：${volStatus}\n現價：${close}${patternReport}${targetReport}${inferenceReportText}\n本檔「${stockName}」${volRatio >= 1.3 ? "攻擊量能達標 (符合1.3倍)" : (volRatio <= 0.8 ? "量縮洗盤達標 (符合0.8倍)" : "量能溫和")}\n\n★ 戰術指引：\n${tacticalAdvice}\n${redCandleAdvice ? `(${redCandleAdvice})` : ""}\n-------------------\n防守：不破軋空低，目標才有效。`;
+            currentReportText = `「嗨，我是石頭，我的N字戰法分析系統希望能讓你勝率💯」\n\n戰報分析結果：\nN字戰法指揮中心 by.石頭 V10.9 (${today})\n股名：${stockName}\n-------------------\n指令：${actionText}\n量能：${volStatus}\n現價：${close}${patternReport}${targetReport}${inferenceReportText}\n本檔「${stockName}」${volRatio >= 1.3 ? "攻擊量能達標 (符合1.3倍)" : (volRatio <= 0.8 ? "量縮洗盤達標 (符合0.8倍)" : "量能溫和")}\n\n★ 戰術指引：\n${cleanAdvice}\n${redCandleAdvice ? `(${redCandleAdvice})` : ""}\n-------------------\n防守：不破軋空低，目標才有效。`;
             
-            document.getElementById('copyBtn').innerHTML = '<span>📋 複製完整戰報</span>';
-        }
+            // Add AI Analysis to copy text if available
+            if (aiAnalysisResult) {
+                currentReportText += `\n\n【✨ AI 戰略解析】\n${aiAnalysisResult}`;
+            }
 
-        function copyReport() {
-            if (!currentReportText) return;
+            document.getElementById('copyBtn').innerHTML = '<span>📋 複製完整戰報</span>';
+        };
+
+        window.callAIAnalyst = async function() {
+            const aiArea = document.getElementById('aiResultArea');
+            const aiContent = document.getElementById('aiContent');
+            aiArea.classList.remove('hidden');
+            aiContent.innerHTML = `<div class="flex items-center space-x-2 text-indigo-600 font-bold"><div class="typing-indicator"><span></span><span></span><span></span></div><span>AI 戰略顧問正在分析中...</span></div>`;
+
+            // Prepare Data
+            const stockName = document.getElementById('stockName').value || "未知個股";
+            const close = document.getElementById('closePrice').value;
+            const h3 = document.getElementById('high3d').value;
+            const l3 = document.getElementById('low3d').value;
+            const vol = document.getElementById('todayVol').value;
+            const pattern = document.getElementById('patternTag').innerText;
+            const trend = document.getElementById('trendTag').innerText;
+            const volStat = document.getElementById('volTag').innerText;
+
+            const prompt = `你是一位精通『N字戰法』的股市操盤手教練。
+請根據以下數據進行簡短有力的分析：
+股票：${stockName}
+現價：${close}
+型態：${pattern}
+趨勢階段：${trend}
+前三高(壓力)：${h3}
+前三低(支撐)：${l3}
+量能狀態：${volStat} (成交量: ${vol})
+
+請提供：
+1. **主力心理分析**：主力現在在想什麼？(例如：誘空、洗盤、出貨、強攻)
+2. **操作建議**：給散戶的一句話 (嚴肅且專業，請用第二人稱「你」)。
+
+請用繁體中文回答，語氣專業、果斷，像一個身經百戰的教練。不要解釋 N字戰法是什麼，直接針對這檔股票講重點。`;
+
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: prompt }] }]
+                    })
+                });
+
+                const data = await response.json();
+                const text = data.candidates[0].content.parts[0].text;
+                
+                // Store AI text for copyReport
+                aiAnalysisResult = text;
+                
+                // Update copy text immediately in case user clicks copy right after AI loads
+                // Re-run calculateStrategy logic for text generation is complex, so we just append to current global
+                // But better to let user re-click copy if they want.
+                // Actually, let's update the global text variable right here for convenience
+                // We need to re-construct the base text first or just append if not already there.
+                // Simplest is to just store it in aiAnalysisResult (done) and next time user clicks copy, calculateStrategy will pick it up?
+                // Wait, calculateStrategy clears aiAnalysisResult at start.
+                // So flow is: User clicks AI -> aiAnalysisResult is set. User clicks Copy -> copyReport uses currentReportText.
+                // Issue: currentReportText is set inside calculateStrategy.
+                // Fix: Update copyReport to dynamically append aiAnalysisResult to currentReportText when clicked, instead of baking it in.
+                
+                // Render Markdown
+                aiContent.innerHTML = marked.parse(text);
+
+            } catch (error) {
+                console.error("AI Error:", error);
+                aiContent.innerHTML = `<span class="text-red-500 font-bold">⚠️ AI 連線失敗，請檢查網路或稍後再試。</span>`;
+            }
+        };
+
+        window.copyReport = function() {
+            // Re-construct text to ensure AI result is included if present
+            // We use the last generated report text and append AI result
+            let finalText = currentReportText;
+            if (aiAnalysisResult && !finalText.includes("【✨ AI 戰略解析】")) {
+                 finalText += `\n\n【✨ AI 戰略解析】\n${aiAnalysisResult}`;
+            }
+
+            if (!finalText) return;
             const textarea = document.createElement('textarea');
-            textarea.value = currentReportText;
+            textarea.value = finalText;
             document.body.appendChild(textarea);
             textarea.select();
             document.execCommand('copy');
@@ -1177,7 +1280,7 @@
             const btn = document.getElementById('copyBtn');
             btn.innerHTML = '<span class="text-green-600">✅ 已複製到剪貼簿！</span>';
             setTimeout(() => btn.innerHTML = '<span>📋 複製完整戰報</span>', 2000);
-        }
+        };
     </script>
 </body>
 </html>
