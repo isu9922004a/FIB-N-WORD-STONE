@@ -3,245 +3,245 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>N字戰法觀察報告生成器</title>
-    <meta name="theme-color" content="#1a202c">
+    <title>N字戰法報告轉換器 Pro</title>
+    
+    <!-- PWA 設定 -->
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#0f172a">
+    <link rel="apple-touch-icon" href="./icon-192.png">
+
+    <!-- 載入核心庫 (CDN) -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- 字型 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
     <style>
-        :root {
-            --bg-color: #f7fafc;
-            --card-bg: #ffffff;
-            --primary: #2b6cb0;
-            --text-main: #2d3748;
-            --text-sec: #718096;
-            --border: #e2e8f0;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            margin: 0;
-            padding: 20px;
-            line-height: 1.6;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        h1 {
-            font-size: 1.5rem;
-            text-align: center;
-            color: var(--primary);
-            margin-bottom: 20px;
-            font-weight: 700;
-        }
-
-        .card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--text-sec);
-        }
-
-        textarea {
-            width: 100%;
-            height: 150px;
-            padding: 12px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            resize: vertical;
-            font-size: 14px;
-            box-sizing: border-box;
-            font-family: monospace;
-        }
-
-        button {
-            display: block;
-            width: 100%;
-            background-color: var(--primary);
-            color: white;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-            margin-top: 10px;
-        }
-
-        button:active {
-            transform: scale(0.98);
-        }
-
-        #outputArea {
-            white-space: pre-wrap;
-            font-family: "PingFang TC", "Microsoft JhengHei", serif;
-            color: #1a202c;
-            line-height: 1.8;
-            display: none; /* Hidden by default */
-        }
-
-        .copy-btn {
-            background-color: #48bb78;
-            margin-top: 10px;
-            display: none;
-        }
-
-        .footer-note {
-            text-align: center;
-            font-size: 12px;
-            color: #a0aec0;
-            margin-top: 30px;
-        }
+        body { font-family: 'Noto Sans TC', sans-serif; background-color: #0f172a; user-select: none; -webkit-tap-highlight-color: transparent; }
+        textarea { user-select: text; }
+        /* 自定義捲軸 */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #1e293b; }
+        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
     </style>
 </head>
 <body>
+    <div id="root"></div>
 
-<div class="container">
-    <h1>N字戰法轉化器 (Institutional)</h1>
-    
-    <div class="card">
-        <label for="inputRaw">輸入原始操盤數據：</label>
-        <textarea id="inputRaw" placeholder="請貼上「傑克.史東」或「石頭」的原始 N 字戰法文字..."></textarea>
-        <button onclick="generateReport()">轉化為觀察報告</button>
-    </div>
+    <!-- 主程式邏輯 -->
+    <script type="text/babel">
+        const { useState, useEffect } = React;
 
-    <div class="card" id="resultCard" style="display:none;">
-        <label>生成結果：</label>
-        <div id="outputArea"></div>
-        <button class="copy-btn" id="copyBtn" onclick="copyResult()">複製結果</button>
-    </div>
+        // 內建 SVG 圖示 (解決引用錯誤)
+        const Icons = {
+            Sparkles: ({className}) => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>,
+            FileText: ({className}) => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>,
+            ArrowDown: () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>,
+            Loader2: () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="animate-spin"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>,
+            Copy: () => <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>,
+            Check: () => <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5"/></svg>,
+            Info: () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+        };
 
-    <div class="footer-note">
-        Generated for N-Wave Strategy Analysis
-    </div>
-</div>
+        function App() {
+            const [inputText, setInputText] = useState('');
+            const [outputText, setOutputText] = useState('');
+            const [isLoading, setIsLoading] = useState(false);
+            const [mode, setMode] = useState('regex'); 
+            const [isCopied, setIsCopied] = useState(false);
+            const [isOnline, setIsOnline] = useState(navigator.onLine);
 
-<script>
-    function cleanText(text) {
-        // 移除所有 emoji
-        return text.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '');
-    }
+            // 監測網路狀態
+            useEffect(() => {
+                const handleOnline = () => setIsOnline(true);
+                const handleOffline = () => setIsOnline(false);
+                window.addEventListener('online', handleOnline);
+                window.addEventListener('offline', handleOffline);
+                return () => {
+                    window.removeEventListener('online', handleOnline);
+                    window.removeEventListener('offline', handleOffline);
+                };
+            }, []);
 
-    function extractValue(text, regex) {
-        const match = text.match(regex);
-        return match ? match[1].trim() : null;
-    }
+            const handleCopy = async () => {
+                if (!outputText) return;
+                try {
+                    await navigator.clipboard.writeText(outputText);
+                    setIsCopied(true);
+                    setTimeout(() => setIsCopied(false), 2000);
+                } catch (err) {
+                    console.error('複製失敗:', err);
+                }
+            };
 
-    function generateReport() {
-        const raw = document.getElementById('inputRaw').value;
-        if (!raw) return;
+            const generateReportRegex = () => {
+                if (!inputText.trim()) {
+                    setOutputText("請先輸入原始資料...");
+                    return;
+                }
+                try {
+                    const nameMatch = inputText.match(/股名[：:]\s*([^\d\n]+)(\d{4})?/);
+                    const codeMatch = inputText.match(/股名[：:]\s*[^\d\n]+(\d{4})/);
+                    const priceMatch = inputText.match(/(?:現價|收盤)[：:]\s*([\d,.]+)/);
+                    const boxMatch = inputText.match(/箱體區間[：:]\s*([\d,.]+).*?~.*?([\d,.]+)/);
+                    const supportMatch = inputText.match(/(?:防守|支撐).*?[：:]?.*?([\d,.]+)/);
+                    
+                    let estVolMatch = inputText.match(/預估量\s*>\s*([\d,]+)/);
+                    let confirmVolMatch = inputText.match(/成交量\s*[≥>]\s*([\d,]+)/);
 
-        // 1. 提取關鍵數據
-        const stockNameMatch = raw.match(/股名：(.*?)(?:\n|$)/);
-        const stockName = stockNameMatch ? stockNameMatch[1].trim() : "未知標的";
-        
-        const price = extractValue(raw, /現價：\s*([\d,.]+)/) || "----";
-        const boxTop = extractValue(raw, /箱體區間.*[~-]\s*([\d,.]+)\s*\(頂\)/) || extractValue(raw, /突破\s*([\d,.]+)/);
-        const boxBottom = extractValue(raw, /箱體區間.*：\s*([\d,.]+)\s*\(底\)/) || extractValue(raw, /跌破\s*([\d,.]+)/);
-        
-        const defense = extractValue(raw, /防守.*：\s*([\d,.]+)/) || boxBottom;
-        const avgVol = extractValue(raw, /均量.*量\s*([\d,.]+)\)/);
-        const attackVol = extractValue(raw, /攻擊門檻.*：([\d,.]+)/);
-        const washVol = extractValue(raw, /洗盤門檻.*：([\d,.]+)/);
-        
-        // 判斷盤態 (模擬盤整 vs 極強/盤堅)
-        let mode = "consolidation"; // 預設盤整
-        if (raw.includes("模擬極強") || raw.includes("盤堅盤") || raw.includes("強軋空")) {
-            mode = "trend"; // 趨勢盤
+                    const stockName = nameMatch ? nameMatch[1].trim() : "該標的";
+                    const stockCode = codeMatch ? codeMatch[1] : "----";
+                    const price = priceMatch ? priceMatch[1] : "---";
+                    const boxLow = boxMatch ? boxMatch[1] : (supportMatch ? supportMatch[1] : "下檔支撐");
+                    const boxHigh = boxMatch ? boxMatch[2] : "上檔壓力";
+                    const estVol = estVolMatch ? estVolMatch[1] : "特定量能";
+                    const confirmVol = confirmVolMatch ? confirmVolMatch[1] : estVol; 
+
+                    const disclaimer = `【免責聲明】本人未持有證券投資顧問相關證照，所載內容僅屬個人技術分析學習紀錄與心得分享，不代表任何買賣建議或獲利保證；過去績效亦不代表未來表現，投資涉及風險，請務必獨立思考、審慎評估並自負盈虧。`;
+                    const para1 = `針對${stockName}（${stockCode}）的技術面觀察顯示，該標的目前正處於明確的箱型整理階段，整體型態定調為「盤整整理」。當前股價位於 ${price} 元，主要的波動區間被定義在下檔支撐 ${boxLow} 元與上檔壓力 ${boxHigh} 元之間。在價格未有效突破此區間邊界之前，市場操作指令應維持空手，因為現況被視為無效的時間成本消耗區。技術面強調，防守要點 ${boxLow} 元（箱體底部）為維持整理格局的關鍵，一旦該點位失守，則下行風險將大幅增加。`;
+                    const para2 = `從量價結構來看，近期成交量呈現持續萎縮狀態，反映出市場人氣暫時退潮，籌碼正在進行深度的沉澱與整理。技術分析通常將這種極致量縮視為趨勢即將變盤的前兆，但變盤方向尚未確認。若要確立多頭攻勢，則必須觀察到強力的「點火訊號」：首先，預估量能必須放大至 ${estVol} 張以上，並且成功突破箱頂壓力 ${boxHigh} 元；而更為強勢的突破確認條件，則要求成交量能達到 ${confirmVol} 張，且收盤價必須強勢站穩 ${boxHigh} 元之上。在滿足這些帶量條件之前，貿然介入僅會增加資金的機會成本。`;
+                    const para3 = `戰略分析推演顯示，在長時間的價格盤整過程中，市場主要的力道正在透過磨盤方式，讓缺乏耐心的散戶離場，進行籌碼吸納。因此，核心戰術結論是耐心等待，直到出現第一根帶量紅 K 棒確立方向。在整理期間，資金效率是首要考量，因此應持續保持觀望，並將注意力集中於量能是否能在關鍵壓力位上得到有效釋放，作為重新評估型態定調的依據。`;
+                    const warning = `⚠️ 再次提醒：\n以上純屬個人學習心得，每個人的分析方法、風險承受度都不同，請勿作為投資依據。建議諮詢專業投顧或自行深入研究後再做決定。`;
+
+                    setOutputText(`${disclaimer}\n\n${para1}\n\n${para2}\n\n${para3}\n\n${warning}`);
+                    setMode('regex');
+                } catch (e) {
+                    setOutputText("解析錯誤，請嘗試使用「AI 智能生成」功能，或檢查原始資料格式。");
+                }
+            };
+
+            const generateReportAI = async () => {
+                if (!isOnline) {
+                    setOutputText("⚠️ 目前處於離線狀態，AI 功能暫時無法使用。\n請檢查網路連線，或改用左側的「直接生成 (Regex)」功能。");
+                    return;
+                }
+                if (!inputText.trim()) {
+                    setOutputText("請先輸入原始資料...");
+                    return;
+                }
+
+                setIsLoading(true);
+                setMode('ai');
+                setOutputText("正在連線 Gemini AI 進行深度分析與排版優化...\n(請稍候約 3-5 秒)");
+
+                // ⚠️ 注意：請在此處填入您的 API Key，或確保環境已注入
+                const apiKey = ""; 
+                
+                const systemPrompt = `你是一位極度客觀、嚴謹的「市場技術面觀察員」。你的職責是將輸入的原始操盤數據（如 N 字戰法筆記）轉化為一份冷靜、合規的【技術面學習筆記】。開頭必須嚴格包含此免責聲明，不可修改：「【免責聲明】本人未持有證券投資顧問相關證照，所載內容僅屬個人技術分析學習紀錄與心得分享，不代表任何買賣建議或獲利保證；過去績效亦不代表未來表現，投資涉及風險，請務必獨立思考、審慎評估並自負盈虧。」\n\n**寫作風格要求**：\n1. 第一段 (現況與區間)：描述「箱型整理」，定義區間，強調突破前「空手」（無效時間成本），強調防守要點（失守則風險大增）。\n2. 第二段 (量價與訊號)：描述量縮為「人氣退潮/籌碼沉澱」，提及「極致量縮」。定義「點火訊號」與「確認條件」。\n3. 第三段 (心理與戰略)：描述「磨盤」清洗浮額，戰術是「耐心等待第一根帶量紅 K 棒」。結論：資金效率優先，持續觀望。\n\n**禁語替換**：\n- 「買進/進場」 → 「確立多頭攻勢」。\n- 「賣出/觀望/睡覺」 → 「無效的時間成本消耗區」。\n- 移除所有「傑克」、「教練」等非專業用語。\n\n最後一段報告結束後，必須換行加上這句警語：\n⚠️ 再次提醒：\n以上純屬個人學習心得，每個人的分析方法、風險承受度都不同，請勿作為投資依據。建議諮詢專業投顧或自行深入研究後再做決定。`;
+
+                try {
+                    // 若有填寫 API Key，則附加在 URL 後方
+                    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+
+                    const response = await fetch(
+                        url,
+                        {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                contents: [{ parts: [{ text: inputText }] }],
+                                systemInstruction: { parts: [{ text: systemPrompt }] }
+                            })
+                        }
+                    );
+                    const data = await response.json();
+                    if (data.error) throw new Error(data.error.message);
+                    const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                    if (aiText) setOutputText(aiText);
+                    else throw new Error("AI 回傳內容為空");
+                } catch (error) {
+                    setOutputText(`AI 生成失敗：${error.message}\n\n建議：請檢查網路連線，或填寫正確的 API Key，或改用左側的「直接生成 (Regex)」按鈕。`);
+                } finally {
+                    setIsLoading(false);
+                }
+            };
+
+            return (
+                <div className="min-h-screen text-slate-200 font-sans p-4 md:p-6 flex flex-col items-center pb-20">
+                    <header className="mb-6 text-center space-y-2">
+                        <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-cyan-400">
+                            N 字戰法報告轉換器 Pro
+                        </h1>
+                        <p className="text-slate-400 text-xs flex justify-center items-center gap-2">
+                            <Icons.Sparkles className="text-yellow-400" /> 
+                            Powered by Gemini AI
+                        </p>
+                    </header>
+
+                    <div className="w-full max-w-4xl space-y-6">
+                        {/* 輸入區 */}
+                        <div className="bg-slate-800 rounded-xl p-5 shadow-xl border border-slate-700">
+                            <div className="flex justify-between items-center mb-3">
+                                <label className="text-slate-300 font-bold text-sm flex items-center gap-2">
+                                    <Icons.FileText className="text-emerald-400" />
+                                    步驟 1：輸入原始筆記
+                                </label>
+                                {!isOnline && (
+                                    <span className="text-xs text-red-400 bg-red-900/20 px-2 py-0.5 rounded border border-red-900/50">
+                                        離線模式
+                                    </span>
+                                )}
+                            </div>
+                            <textarea
+                                className="w-full h-40 bg-slate-900/50 border border-slate-600 rounded-lg p-3 text-sm text-slate-200 focus:outline-none focus:border-emerald-500 font-mono resize-none transition-all"
+                                placeholder="在此貼上史東筆記..."
+                                value={inputText}
+                                onChange={(e) => setInputText(e.target.value)}
+                            />
+                        </div>
+
+                        {/* 按鈕區 */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <button onClick={generateReportRegex} disabled={isLoading} className="flex justify-center items-center gap-2 bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-all active:scale-95 disabled:opacity-50">
+                                <Icons.ArrowDown /> 直接生成 (Regex)
+                                <span className="text-xs bg-slate-800 px-2 py-0.5 rounded text-slate-400 font-normal">離線可用</span>
+                            </button>
+                            <button onClick={generateReportAI} disabled={isLoading || !isOnline} className={`flex justify-center items-center gap-2 font-bold py-3 px-6 rounded-lg shadow-lg transition-all active:scale-95 ${!isOnline ? 'bg-slate-700 opacity-50 cursor-not-allowed text-slate-400' : 'bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white'}`}>
+                                {isLoading ? <><Icons.Loader2 /> 分析中...</> : <><Icons.Sparkles className={isOnline ? "text-yellow-300" : "text-slate-500"} /> AI 智能生成</>}
+                            </button>
+                        </div>
+
+                        {/* 輸出區 */}
+                        <div className={`bg-slate-800 rounded-xl p-5 shadow-xl border transition-all duration-500 ${mode === 'ai' ? 'border-indigo-500/50 shadow-indigo-500/10' : 'border-slate-700'}`}>
+                            <div className="flex justify-between items-center mb-3">
+                                <label className="text-slate-300 font-bold text-sm flex items-center gap-2">
+                                    <Icons.FileText className={mode === 'ai' ? "text-indigo-400" : "text-emerald-400"} />
+                                    步驟 2：獲取專業報告
+                                </label>
+                                <button onClick={handleCopy} disabled={!outputText} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all ${isCopied ? 'bg-emerald-600 text-white' : !outputText ? 'bg-slate-700 text-slate-500 cursor-not-allowed' : 'bg-slate-700 hover:bg-slate-600 text-slate-200'}`}>
+                                    {isCopied ? <Icons.Check /> : <Icons.Copy />}
+                                    {isCopied ? '已複製' : '複製報告'}
+                                </button>
+                            </div>
+                            <textarea
+                                className={`w-full h-80 bg-slate-900/50 border rounded-lg p-4 text-sm text-slate-200 focus:outline-none font-mono resize-none transition-all leading-relaxed ${mode === 'ai' ? 'border-indigo-500/30 focus:border-indigo-500' : 'border-slate-600 focus:border-emerald-500'}`}
+                                readOnly
+                                value={outputText}
+                                placeholder="報告將顯示於此..."
+                            />
+                        </div>
+                    </div>
+                </div>
+            );
         }
 
-        // 判斷型態定調
-        let trendStatus = "籌碼沉澱期";
-        if (raw.includes("盤堅盤")) trendStatus = "緩步趨堅的主升段格局";
-        if (raw.includes("強軋空")) trendStatus = "軋空主升段";
-        if (raw.includes("模擬盤整")) trendStatus = "籌碼沉澱期";
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
 
-        // 目標價 (僅針對趨勢盤)
-        const target1 = extractValue(raw, /一飽.*：\s*([\d,.]+)/);
-        const target2 = extractValue(raw, /二吐.*：\s*([\d,.]+)/);
-        const target5 = extractValue(raw, /五倍.*：\s*([\d,.]+)/);
-
-        // --- 生成文本 ---
-
-        // 固定免責聲明
-        let output = `【免責聲明】本人未持有證券投資顧問相關證照，所載內容僅屬個人技術分析學習紀錄與心得分享，不代表任何買賣建議或獲利保證；過去績效亦不代表未來表現，投資涉及風險，請務必獨立思考、審慎評估並自負盈虧。\n\n`;
-
-        // 標題
-        output += `【${stockName} 技術面學習筆記】\n\n`;
-
-        // 第一段：現況
-        output += `${stockName.split(/\d/)[0]}（${stockName.match(/\d+/)}）`;
-        output += `當前市場價格收於 ${price} 元，依據盤態診斷結果，技術結構屬於${mode === 'trend' ? '明確的多頭趨勢' : '箱型震盪整理'}格局。`;
-        
-        if (mode === 'consolidation') {
-            output += `股價波動區間明確界定於 ${boxBottom || '支撐'} 元之底部支撐與 ${boxTop || '壓力'} 元之頂部壓力之間。量能呈現收斂，反映市場觀望。`;
-        } else {
-            output += `此型態特徵在於股價處於主升段，行進過程伴隨震盪換手。目前的結構性絕對防守價位設定於 ${defense} 元，此為維繫整體上升架構之核心基準。`;
+        // 註冊 Service Worker (啟用離線功能)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./service-worker.js')
+                    .then(reg => console.log('SW 註冊成功', reg))
+                    .catch(err => console.log('SW 註冊失敗', err));
+            });
         }
-        
-        output += `只要收盤價能維持於此防守點之上，型態定調為${trendStatus}，整體趨勢並未改變。\n\n`;
-
-        // 第二段：量價
-        output += `觀察量價互動與關鍵價位，以五日平均成交量 ${avgVol} 張為計算基準，當前有效的攻擊量能門檻設定於 ${attackVol} 張。`;
-        
-        if (mode === 'trend') {
-            output += `若成交量能持續擴張並達到攻擊門檻，將視為極強鎖攻訊號，有助於股價依據測幅原理依序挑戰 ${target1 || '前高'} 元、${target2 || '波段目標'} 元${target5 ? `，乃至波段終極目標 ${target5} 元` : ''}。`;
-            output += `反之，若成交量縮減至 ${washVol} 張以下，在不跌破 ${defense} 元防守點的前提下，應解讀為籌碼沉澱之健康換手。\n\n`;
-        } else {
-            output += `若欲改變現狀，成交量能必須顯著放大至 ${attackVol} 張以上，方具備推升價格跨越箱體頂部之動能。`;
-            output += `當前若量能低於 ${avgVol} 張，顯示動能銜接尚未達成，市場主力傾向於透過時間換取空間，藉此消化短線浮額。\n\n`;
-        }
-
-        // 第三段：推演
-        output += `針對後市情境推演，`;
-        if (mode === 'trend') {
-            output += `若預估量能穩定維持在 ${attackVol} 張以上且價格持續推升，則確立多頭攻勢延續；`;
-            output += `風險預警機制顯示，若單日成交量異常暴增（如2.0倍均量）且收黑 K 線，或是出現連續出量但價格高點停滯之背離現象，則暗示高檔籌碼鬆動。`;
-            output += `一旦收盤價確認跌破 ${defense} 元，即觸發盤勢降級條件，顯示原始動能已無法支撐當前型態，下行風險將隨之大增。`;
-        } else {
-            output += `若價格能以帶量姿態（>${attackVol}張）突破關鍵壓力位，則視為確立多頭攻勢，盤整結束。`;
-            output += `反之，若成交量持續低迷且股價維持在區間內，則該區域應定義為無效的時間成本消耗區。`;
-            output += `必須警惕的是，若價格放量跌破 ${defense} 元，則技術型態將趨於弱化，下行風險將隨之大增。`;
-        }
-
-        output += `\n\n⚠️ 再次提醒\n以上純屬個人學習心得，每個人的分析方法、風險承受度都不同，請勿作為投資依據。建議諮詢專業投顧或自行深入研究後再做決定！`;
-
-        // 顯示結果
-        const outputDiv = document.getElementById('outputArea');
-        outputDiv.innerText = output;
-        document.getElementById('resultCard').style.display = 'block';
-        outputDiv.style.display = 'block';
-        document.getElementById('copyBtn').style.display = 'block';
-        
-        // 滾動到結果
-        document.getElementById('resultCard').scrollIntoView({behavior: "smooth"});
-    }
-
-    function copyResult() {
-        const outputText = document.getElementById('outputArea').innerText;
-        navigator.clipboard.writeText(outputText).then(() => {
-            const btn = document.getElementById('copyBtn');
-            const originalText = btn.innerText;
-            btn.innerText = "已複製！";
-            btn.style.backgroundColor = "#2f855a";
-            setTimeout(() => {
-                btn.innerText = originalText;
-                btn.style.backgroundColor = "#48bb78";
-            }, 2000);
-        });
-    }
-</script>
-
+    </script>
 </body>
 </html>
+
+
