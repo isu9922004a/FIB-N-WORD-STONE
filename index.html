@@ -1,14 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FileText, ArrowDown, Sparkles, Loader2, Info, Copy, Check } from 'lucide-react';
 
-export default function AIConverterLayout() {
+export default function App() {
   const [inputText, setInputText] = useState('');
   const [outputText, setOutputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [mode, setMode] = useState('regex'); // 'regex' or 'ai'
+  const [mode, setMode] = useState('regex'); 
   const [isCopied, setIsCopied] = useState(false);
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
 
-  // --- 複製功能 ---
+  // 監測網路狀態 (PWA 專用優化)
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
+
   const handleCopy = async () => {
     if (!outputText) return;
     try {
@@ -20,28 +32,21 @@ export default function AIConverterLayout() {
     }
   };
 
-  // --- 模式 1：本地規則生成 (Regex - 修正排版版) ---
   const generateReportRegex = () => {
     if (!inputText.trim()) {
       setOutputText("請先輸入原始資料...");
       return;
     }
-
     try {
-      // 1. 提取關鍵數據
       const nameMatch = inputText.match(/股名[：:]\s*([^\d\n]+)(\d{4})?/);
       const codeMatch = inputText.match(/股名[：:]\s*[^\d\n]+(\d{4})/);
       const priceMatch = inputText.match(/(?:現價|收盤)[：:]\s*([\d,.]+)/);
       const boxMatch = inputText.match(/箱體區間[：:]\s*([\d,.]+).*?~.*?([\d,.]+)/);
       const supportMatch = inputText.match(/(?:防守|支撐).*?[：:]?.*?([\d,.]+)/);
       
-      // 提取攻擊量 (嘗試抓取兩個量能門檻)
-      // 邏輯：抓取 "預估量 > X" 作為第一門檻，抓取 "成交量 >= Y" 作為確認門檻
-      // 若抓不到第二個，就用第一個代替
       let estVolMatch = inputText.match(/預估量\s*>\s*([\d,]+)/);
       let confirmVolMatch = inputText.match(/成交量\s*[≥>]\s*([\d,]+)/);
 
-      // 2. 變數賦值
       const stockName = nameMatch ? nameMatch[1].trim() : "該標的";
       const stockCode = codeMatch ? codeMatch[1] : "----";
       const price = priceMatch ? priceMatch[1] : "---";
@@ -49,9 +54,8 @@ export default function AIConverterLayout() {
       const boxHigh = boxMatch ? boxMatch[2] : "上檔壓力";
       
       const estVol = estVolMatch ? estVolMatch[1] : "特定量能";
-      const confirmVol = confirmVolMatch ? confirmVolMatch[1] : estVol; // 若無第二門檻，沿用第一門檻
+      const confirmVol = confirmVolMatch ? confirmVolMatch[1] : estVol; 
 
-      // 3. 構建報告 (依照新版排版)
       const disclaimer = `【免責聲明】本人未持有證券投資顧問相關證照，所載內容僅屬個人技術分析學習紀錄與心得分享，不代表任何買賣建議或獲利保證；過去績效亦不代表未來表現，投資涉及風險，請務必獨立思考、審慎評估並自負盈虧。`;
       
       const para1 = `針對${stockName}（${stockCode}）的技術面觀察顯示，該標的目前正處於明確的箱型整理階段，整體型態定調為「盤整整理」。當前股價位於 ${price} 元，主要的波動區間被定義在下檔支撐 ${boxLow} 元與上檔壓力 ${boxHigh} 元之間。在價格未有效突破此區間邊界之前，市場操作指令應維持空手，因為現況被視為無效的時間成本消耗區。技術面強調，防守要點 ${boxLow} 元（箱體底部）為維持整理格局的關鍵，一旦該點位失守，則下行風險將大幅增加。`;
@@ -69,8 +73,12 @@ export default function AIConverterLayout() {
     }
   };
 
-  // --- 模式 2：Gemini AI 生成 (Prompt 更新) ---
   const generateReportAI = async () => {
+    if (!isOnline) {
+      setOutputText("⚠️ 目前處於離線狀態，AI 功能暫時無法使用。\n請檢查網路連線，或改用左側的「直接生成 (Regex)」功能。");
+      return;
+    }
+
     if (!inputText.trim()) {
       setOutputText("請先輸入原始資料...");
       return;
@@ -93,27 +101,13 @@ export default function AIConverterLayout() {
     請閱讀輸入的原始資料，撰寫一份【純敘事型】的觀察報告。
     
     **寫作風格要求**：
-    1.  **第一段 (現況與區間)**：
-        - 描述該標的處於「箱型整理」或「盤整整理」。
-        - 定義波動區間（下檔支撐與上檔壓力）。
-        - 強調在突破前應維持「空手」，因為這是「無效的時間成本消耗區」。
-        - 強調防守要點（箱底）的重要性，失守則「下行風險大幅增加」。
-    
-    2.  **第二段 (量價與訊號)**：
-        - 描述量能萎縮代表「人氣退潮」與「籌碼沉澱」。
-        - 提及「極致量縮」為變盤前兆。
-        - 定義「點火訊號」：預估量能需放大至特定張數且突破箱頂。
-        - 定義「確認條件」：成交量達更高標準且收盤站穩壓力位。
-        - 強調未滿足條件前介入會增加「機會成本」。
-
-    3.  **第三段 (心理與戰略)**：
-        - 描述市場力道透過「磨盤」清洗浮額（散戶）。
-        - 核心戰術是「耐心等待第一根帶量紅 K 棒」。
-        - 結論：考量資金效率，持續觀望，等待量能釋放再重新評估。
+    1.  **第一段 (現況與區間)**：描述「箱型整理」或「盤整整理」，定義區間，強調突破前「空手」（無效時間成本），強調防守要點（失守則風險大增）。
+    2.  **第二段 (量價與訊號)**：描述量縮為「人氣退潮/籌碼沉澱」，提及「極致量縮」為前兆。定義「點火訊號」與「確認條件」。強調未滿足條件前介入增加「機會成本」。
+    3.  **第三段 (心理與戰略)**：描述「磨盤」清洗浮額，戰術是「耐心等待第一根帶量紅 K 棒」。結論：資金效率優先，持續觀望。
 
     **禁語替換**：
-    - 「買進/進場」 -> 改為「確立多頭攻勢」或「點火訊號」。
-    - 「賣出/觀望/睡覺」 -> 改為「無效的時間成本消耗區」或「保持觀望」。
+    - 「買進/進場」 → 「確立多頭攻勢」。
+    - 「賣出/觀望/睡覺」 → 「無效的時間成本消耗區」。
     - 移除所有「傑克」、「教練」等非專業用語。
     </task>
 
@@ -141,9 +135,7 @@ export default function AIConverterLayout() {
 
       const data = await response.json();
       
-      if (data.error) {
-        throw new Error(data.error.message);
-      }
+      if (data.error) throw new Error(data.error.message);
 
       const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text;
       if (aiText) {
@@ -160,69 +152,62 @@ export default function AIConverterLayout() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 text-slate-200 font-sans p-6 flex flex-col items-center">
+    <div className="min-h-screen bg-slate-900 text-slate-200 font-sans p-6 flex flex-col items-center select-none">
       <header className="mb-6 text-center space-y-2">
         <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-cyan-400">
           N 字戰法報告轉換器 Pro
         </h1>
         <p className="text-slate-400 text-xs flex justify-center items-center gap-2">
           <Sparkles size={12} className="text-yellow-400" /> 
-          Powered by Gemini AI (v2.5)
+          Powered by Gemini AI
         </p>
       </header>
 
       <div className="w-full max-w-4xl space-y-6">
-        
-        {/* 輸入區 */}
         <div className="bg-slate-800 rounded-xl p-5 shadow-xl border border-slate-700">
           <div className="flex justify-between items-center mb-3">
              <label className="text-slate-300 font-bold text-sm flex items-center gap-2">
                <FileText size={16} className="text-emerald-400"/>
                步驟 1：輸入原始筆記
              </label>
-             <span className="text-xs text-slate-500">支援模糊格式與不完整數據</span>
+             {!isOnline && (
+               <span className="text-xs text-red-400 bg-red-900/20 px-2 py-0.5 rounded border border-red-900/50">
+                 離線模式
+               </span>
+             )}
           </div>
           <textarea
-            className="w-full h-40 bg-slate-900/50 border border-slate-600 rounded-lg p-3 text-sm text-slate-200 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 font-mono resize-none transition-all"
+            className="w-full h-40 bg-slate-900/50 border border-slate-600 rounded-lg p-3 text-sm text-slate-200 focus:outline-none focus:border-emerald-500 font-mono resize-none transition-all"
             placeholder="在此貼上史東筆記..."
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
           />
         </div>
 
-        {/* 按鈕區 */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <button 
             onClick={generateReportRegex}
             disabled={isLoading}
-            className="flex justify-center items-center gap-2 bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex justify-center items-center gap-2 bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-all active:scale-95 disabled:opacity-50"
           >
             <ArrowDown size={18} />
             直接生成 (Regex)
-            <span className="text-xs bg-slate-800 px-2 py-0.5 rounded text-slate-400 font-normal">快速版</span>
+            <span className="text-xs bg-slate-800 px-2 py-0.5 rounded text-slate-400 font-normal">離線可用</span>
           </button>
 
           <button 
             onClick={generateReportAI}
-            disabled={isLoading}
-            className="flex justify-center items-center gap-2 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition-all active:scale-95 disabled:opacity-80 disabled:cursor-wait"
+            disabled={isLoading || !isOnline}
+            className={`flex justify-center items-center gap-2 font-bold py-3 px-6 rounded-lg shadow-lg transition-all active:scale-95 ${!isOnline ? 'bg-slate-700 opacity-50 cursor-not-allowed text-slate-400' : 'bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white'}`}
           >
             {isLoading ? (
-              <>
-                <Loader2 size={18} className="animate-spin" />
-                正在分析中...
-              </>
+              <><Loader2 size={18} className="animate-spin" /> 分析中...</>
             ) : (
-              <>
-                <Sparkles size={18} className="text-yellow-300" />
-                AI 智能生成 (推薦)
-                <span className="text-xs bg-indigo-800/50 px-2 py-0.5 rounded text-indigo-200 font-normal border border-indigo-400/30">Gemini</span>
-              </>
+              <><Sparkles size={18} className={isOnline ? "text-yellow-300" : "text-slate-500"} /> AI 智能生成</>
             )}
           </button>
         </div>
 
-        {/* 輸出區 */}
         <div className={`bg-slate-800 rounded-xl p-5 shadow-xl border transition-all duration-500 ${mode === 'ai' ? 'border-indigo-500/50 shadow-indigo-500/10' : 'border-slate-700'}`}>
            <div className="flex justify-between items-center mb-3">
              <div className="flex items-center gap-2">
@@ -230,30 +215,16 @@ export default function AIConverterLayout() {
                  <FileText size={16} className={mode === 'ai' ? "text-indigo-400" : "text-emerald-400"}/>
                  步驟 2：獲取專業報告
                </label>
-               {mode === 'ai' && outputText && !isLoading && (
-                 <span className="hidden sm:flex text-xs text-indigo-300 items-center gap-1 animate-pulse">
-                   <Sparkles size={10} /> AI 已優化文筆
-                 </span>
-               )}
              </div>
-             
-             {/* 複製按鈕 */}
              <button
                 onClick={handleCopy}
                 disabled={!outputText}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
-                  isCopied 
-                    ? 'bg-emerald-600 text-white' 
-                    : !outputText 
-                      ? 'bg-slate-700 text-slate-500 cursor-not-allowed'
-                      : 'bg-slate-700 hover:bg-slate-600 text-slate-200'
-                }`}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all ${isCopied ? 'bg-emerald-600 text-white' : !outputText ? 'bg-slate-700 text-slate-500 cursor-not-allowed' : 'bg-slate-700 hover:bg-slate-600 text-slate-200'}`}
              >
                 {isCopied ? <Check size={14} /> : <Copy size={14} />}
                 {isCopied ? '已複製' : '複製報告'}
              </button>
            </div>
-           
           <textarea
             className={`w-full h-80 bg-slate-900/50 border rounded-lg p-4 text-sm text-slate-200 focus:outline-none font-mono resize-none transition-all leading-relaxed ${mode === 'ai' ? 'border-indigo-500/30 focus:border-indigo-500' : 'border-slate-600 focus:border-emerald-500'}`}
             readOnly
@@ -261,17 +232,8 @@ export default function AIConverterLayout() {
             placeholder="報告將顯示於此..."
           />
         </div>
-        
-        <div className="bg-slate-800/50 rounded-lg p-3 flex gap-3 text-xs text-slate-400 border border-slate-700/50">
-           <Info size={16} className="shrink-0 mt-0.5" />
-           <p>
-             <strong>小撇步：</strong>已根據您的需求更新排版邏輯。現在生成的報告會嚴格遵循「現況定義 → 量價訊號 → 戰略推演」的三段式結構，並包含「極致量縮」、「時間成本消耗區」等關鍵字。
-           </p>
-        </div>
-
       </div>
     </div>
   );
 }
-
 
