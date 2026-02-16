@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FileText, ArrowDown, Sparkles, Loader2, Info, Copy, Check } from 'lucide-react';
 
-export default function AIConverterFinal() {
+export default function AIConverterLayout() {
   const [inputText, setInputText] = useState('');
   const [outputText, setOutputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -20,7 +20,7 @@ export default function AIConverterFinal() {
     }
   };
 
-  // --- 模式 1：本地規則生成 (Regex) ---
+  // --- 模式 1：本地規則生成 (Regex - 修正排版版) ---
   const generateReportRegex = () => {
     if (!inputText.trim()) {
       setOutputText("請先輸入原始資料...");
@@ -35,8 +35,11 @@ export default function AIConverterFinal() {
       const boxMatch = inputText.match(/箱體區間[：:]\s*([\d,.]+).*?~.*?([\d,.]+)/);
       const supportMatch = inputText.match(/(?:防守|支撐).*?[：:]?.*?([\d,.]+)/);
       
-      let attackVolMatch = inputText.match(/預估量\s*>\s*([\d,]+)/);
-      if (!attackVolMatch) attackVolMatch = inputText.match(/攻擊門檻.*?：\s*([\d,]+)/);
+      // 提取攻擊量 (嘗試抓取兩個量能門檻)
+      // 邏輯：抓取 "預估量 > X" 作為第一門檻，抓取 "成交量 >= Y" 作為確認門檻
+      // 若抓不到第二個，就用第一個代替
+      let estVolMatch = inputText.match(/預估量\s*>\s*([\d,]+)/);
+      let confirmVolMatch = inputText.match(/成交量\s*[≥>]\s*([\d,]+)/);
 
       // 2. 變數賦值
       const stockName = nameMatch ? nameMatch[1].trim() : "該標的";
@@ -44,24 +47,29 @@ export default function AIConverterFinal() {
       const price = priceMatch ? priceMatch[1] : "---";
       const boxLow = boxMatch ? boxMatch[1] : (supportMatch ? supportMatch[1] : "下檔支撐");
       const boxHigh = boxMatch ? boxMatch[2] : "上檔壓力";
-      const attackVol = attackVolMatch ? attackVolMatch[1] : "特定攻擊量";
+      
+      const estVol = estVolMatch ? estVolMatch[1] : "特定量能";
+      const confirmVol = confirmVolMatch ? confirmVolMatch[1] : estVol; // 若無第二門檻，沿用第一門檻
 
-      // 3. 構建報告
+      // 3. 構建報告 (依照新版排版)
       const disclaimer = `【免責聲明】本人未持有證券投資顧問相關證照，所載內容僅屬個人技術分析學習紀錄與心得分享，不代表任何買賣建議或獲利保證；過去績效亦不代表未來表現，投資涉及風險，請務必獨立思考、審慎評估並自負盈虧。`;
-      const title = `【${stockName} (${stockCode}) 技術面學習筆記】`;
-      const para1 = `${stockName} 目前技術型態呈現典型的箱型震盪走勢，市場交投氣氛隨著量能變化而有所波動。股價結構嚴格受限於特定區間內運行，下方技術支撐確立於 ${boxLow} 元，而上方關鍵壓力位則位於 ${boxHigh} 元。現階段的整理現象反映了市場籌碼正處於沉澱期，買賣雙方力道暫時達到平衡狀態。在當前收盤價 ${price} 元的基礎上，盤勢方向尚未出現明確指引，整體技術面處於等待表態的過渡階段。`;
-      const para2 = `從量價結構的數學邏輯判讀，若要改變當前的盤整慣性，需密切監控量能是否有效放大。有效的攻擊量能門檻設定為 ${attackVol} 張，此為挑戰箱頂 ${boxHigh} 元所需的動能基礎。在此量能未達標前，任何價格波動皆視為區間內的無效震盪。技術防守點位嚴格設定於箱底 ${boxLow} 元，此為維持當前整理架構的關鍵防線，一旦失守將破壞型態完整性。`;
-      const para3 = `展望後續情境推演，若盤中成交量能有效放大並配合價格強勢站上 ${boxHigh} 元，技術面上將視為多頭發起攻勢的訊號，盤整格局宣告結束。反之，若量能持續低迷且價格受制於區間內，則該標的仍處於資金機會成本較高的等待區，此時過早介入恐面臨時間價值的耗損。需留意極致量縮往往是變盤前兆，目前的型態定調為籌碼沉澱期，操作邏輯應以關鍵點位突破確認後再行佈局，避免資金陷入無效的時間消耗。`;
-      const warning = `⚠️ 再次提醒：\n以上純屬個人學習心得，每個人的分析方法、風險承受度都不同，\n請勿作為投資依據。建議諮詢專業投顧或自行深入研究後再做決定。`;
+      
+      const para1 = `針對${stockName}（${stockCode}）的技術面觀察顯示，該標的目前正處於明確的箱型整理階段，整體型態定調為「盤整整理」。當前股價位於 ${price} 元，主要的波動區間被定義在下檔支撐 ${boxLow} 元與上檔壓力 ${boxHigh} 元之間。在價格未有效突破此區間邊界之前，市場操作指令應維持空手，因為現況被視為無效的時間成本消耗區。技術面強調，防守要點 ${boxLow} 元（箱體底部）為維持整理格局的關鍵，一旦該點位失守，則下行風險將大幅增加。`;
 
-      setOutputText(`${disclaimer}\n\n${title}\n\n${para1}\n\n${para2}\n\n${para3}\n\n${warning}`);
+      const para2 = `從量價結構來看，近期成交量呈現持續萎縮狀態，反映出市場人氣暫時退潮，籌碼正在進行深度的沉澱與整理。技術分析通常將這種極致量縮視為趨勢即將變盤的前兆，但變盤方向尚未確認。若要確立多頭攻勢，則必須觀察到強力的「點火訊號」：首先，預估量能必須放大至 ${estVol} 張以上，並且成功突破箱頂壓力 ${boxHigh} 元；而更為強勢的突破確認條件，則要求成交量能達到 ${confirmVol} 張，且收盤價必須強勢站穩 ${boxHigh} 元之上。在滿足這些帶量條件之前，貿然介入僅會增加資金的機會成本。`;
+
+      const para3 = `戰略分析推演顯示，在長時間的價格盤整過程中，市場主要的力道正在透過磨盤方式，讓缺乏耐心的散戶離場，進行籌碼吸納。因此，核心戰術結論是耐心等待，直到出現第一根帶量紅 K 棒確立方向。在整理期間，資金效率是首要考量，因此應持續保持觀望，並將注意力集中於量能是否能在關鍵壓力位上得到有效釋放，作為重新評估型態定調的依據。`;
+
+      const warning = `⚠️ 再次提醒：\n以上純屬個人學習心得，每個人的分析方法、風險承受度都不同，請勿作為投資依據。建議諮詢專業投顧或自行深入研究後再做決定。`;
+
+      setOutputText(`${disclaimer}\n\n${para1}\n\n${para2}\n\n${para3}\n\n${warning}`);
       setMode('regex');
     } catch (e) {
       setOutputText("解析錯誤，請嘗試使用「AI 智能生成」功能，或檢查原始資料格式。");
     }
   };
 
-  // --- 模式 2：Gemini AI 生成 ---
+  // --- 模式 2：Gemini AI 生成 (Prompt 更新) ---
   const generateReportAI = async () => {
     if (!inputText.trim()) {
       setOutputText("請先輸入原始資料...");
@@ -70,7 +78,7 @@ export default function AIConverterFinal() {
 
     setIsLoading(true);
     setMode('ai');
-    setOutputText("正在連線 Gemini AI 進行深度分析與改寫...\n(請稍候約 3-5 秒)");
+    setOutputText("正在連線 Gemini AI 進行深度分析與排版優化...\n(請稍候約 3-5 秒)");
 
     const apiKey = ""; // 執行環境會自動填入
     const systemPrompt = `
@@ -83,20 +91,36 @@ export default function AIConverterFinal() {
 
     <task>
     請閱讀輸入的原始資料，撰寫一份【純敘事型】的觀察報告。
-    1. **過濾雜訊**：移除所有非專業用語（如「傑克」、「睡覺」、「刪自選」、「教練說」）。
-    2. **數據轉化**：將股價、箱體區間、關鍵量能轉化為流暢的文字描述。
-    3. **避險修辭替換**：
-        - 「買進/進場」改為「確立多頭攻勢」。
-        - 「賣出/觀望」改為「無效的時間成本消耗區」或「下行風險大增」。
-        - 「評級」改為「型態定調」。
-    4. **格式**：嚴格禁止使用表格或列點。必須是連貫的三段式散文（現況、量價、推演）。
+    
+    **寫作風格要求**：
+    1.  **第一段 (現況與區間)**：
+        - 描述該標的處於「箱型整理」或「盤整整理」。
+        - 定義波動區間（下檔支撐與上檔壓力）。
+        - 強調在突破前應維持「空手」，因為這是「無效的時間成本消耗區」。
+        - 強調防守要點（箱底）的重要性，失守則「下行風險大幅增加」。
+    
+    2.  **第二段 (量價與訊號)**：
+        - 描述量能萎縮代表「人氣退潮」與「籌碼沉澱」。
+        - 提及「極致量縮」為變盤前兆。
+        - 定義「點火訊號」：預估量能需放大至特定張數且突破箱頂。
+        - 定義「確認條件」：成交量達更高標準且收盤站穩壓力位。
+        - 強調未滿足條件前介入會增加「機會成本」。
+
+    3.  **第三段 (心理與戰略)**：
+        - 描述市場力道透過「磨盤」清洗浮額（散戶）。
+        - 核心戰術是「耐心等待第一根帶量紅 K 棒」。
+        - 結論：考量資金效率，持續觀望，等待量能釋放再重新評估。
+
+    **禁語替換**：
+    - 「買進/進場」 -> 改為「確立多頭攻勢」或「點火訊號」。
+    - 「賣出/觀望/睡覺」 -> 改為「無效的時間成本消耗區」或「保持觀望」。
+    - 移除所有「傑克」、「教練」等非專業用語。
     </task>
 
     <mandatory_closing>
     最後一段報告結束後，必須換行加上這句警語：
     ⚠️ 再次提醒：
-    以上純屬個人學習心得，每個人的分析方法、風險承受度都不同，
-    請勿作為投資依據。建議諮詢專業投顧或自行深入研究後再做決定。
+    以上純屬個人學習心得，每個人的分析方法、風險承受度都不同，請勿作為投資依據。建議諮詢專業投顧或自行深入研究後再做決定。
     </mandatory_closing>
     `;
 
@@ -143,7 +167,7 @@ export default function AIConverterFinal() {
         </h1>
         <p className="text-slate-400 text-xs flex justify-center items-center gap-2">
           <Sparkles size={12} className="text-yellow-400" /> 
-          Powered by Gemini AI
+          Powered by Gemini AI (v2.5)
         </p>
       </header>
 
@@ -174,8 +198,8 @@ export default function AIConverterFinal() {
             className="flex justify-center items-center gap-2 bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <ArrowDown size={18} />
-            直接生成 (快速版)
-            <span className="text-xs bg-slate-800 px-2 py-0.5 rounded text-slate-400 font-normal">Regex</span>
+            直接生成 (Regex)
+            <span className="text-xs bg-slate-800 px-2 py-0.5 rounded text-slate-400 font-normal">快速版</span>
           </button>
 
           <button 
@@ -208,7 +232,7 @@ export default function AIConverterFinal() {
                </label>
                {mode === 'ai' && outputText && !isLoading && (
                  <span className="hidden sm:flex text-xs text-indigo-300 items-center gap-1 animate-pulse">
-                   <Sparkles size={10} /> AI 已優化
+                   <Sparkles size={10} /> AI 已優化文筆
                  </span>
                )}
              </div>
@@ -241,7 +265,7 @@ export default function AIConverterFinal() {
         <div className="bg-slate-800/50 rounded-lg p-3 flex gap-3 text-xs text-slate-400 border border-slate-700/50">
            <Info size={16} className="shrink-0 mt-0.5" />
            <p>
-             <strong>小撇步：</strong>點擊右上角的「複製報告」按鈕即可一鍵複製內容。「直接生成」速度最快，適合格式標準的筆記；「AI 智能生成」則能讀懂雜亂資訊，推薦優先使用。
+             <strong>小撇步：</strong>已根據您的需求更新排版邏輯。現在生成的報告會嚴格遵循「現況定義 → 量價訊號 → 戰略推演」的三段式結構，並包含「極致量縮」、「時間成本消耗區」等關鍵字。
            </p>
         </div>
 
@@ -249,3 +273,5 @@ export default function AIConverterFinal() {
     </div>
   );
 }
+
+
