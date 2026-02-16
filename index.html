@@ -1,4 +1,81 @@
-<system_instruction>
+import React, { useState } from 'react';
+import { Copy, Terminal, FileText, Play, RotateCcw } from 'lucide-react';
+
+export default function App() {
+  const [inputText, setInputText] = useState('');
+  const [outputText, setOutputText] = useState('');
+  const [mode, setMode] = useState('generator'); // 'generator' (Local JS) or 'prompt' (System Prompt)
+  const [copyStatus, setCopyStatus] = useState('複製');
+
+  // 範例資料 (長榮)
+  const exampleData = `3. 【模擬盤整】(觀望等待)
+嗨，我是傑克.史東，希望我的 N 字戰法分析系統能讓你大幅提升勝率📈💯
+傑克.史東 N 字戰法指揮中心 V21.0
+股名：長榮2603
+【一、個股現況分析】
+📌 操作指令：【 觀望 / 空手 】
+⚡ 量能狀態： 量縮整理 (人氣退潮)
+💰 當前現價： 186.00
+📦 箱體區間： 184.00 (底) ~ 195.30 (頂)
+⚠️ 防守要點： 箱底支撐 (箱體底) 184.00 不可破
+【二、明日開盤・量能作戰劇本】
+🔴 劇本 A (點火攻擊)： 預估量 > 6,448 張且過箱頂，進場。
+🟢 劇本 B (持續盤整)： 觀望。`;
+
+  // 核心邏輯：本地解析器 (模擬 AI 的語氣轉換)
+  const generateReport = () => {
+    if (!inputText.trim()) {
+      setOutputText("請先輸入原始資料...");
+      return;
+    }
+
+    try {
+      // 1. 提取關鍵數據 (Regex)
+      const nameMatch = inputText.match(/股名[：:]\s*([^\d\n]+)(\d{4})?/);
+      const codeMatch = inputText.match(/股名[：:]\s*[^\d\n]+(\d{4})/);
+      const priceMatch = inputText.match(/(?:現價|收盤)[：:]\s*([\d,.]+)/);
+      const boxMatch = inputText.match(/箱體區間[：:]\s*([\d,.]+).*?~.*?([\d,.]+)/);
+      const supportMatch = inputText.match(/(?:防守|支撐).*?[：:]?.*?([\d,.]+)/);
+      
+      // 提取攻擊量 (處理不同格式)
+      let attackVolMatch = inputText.match(/預估量\s*>\s*([\d,]+)/);
+      if (!attackVolMatch) attackVolMatch = inputText.match(/攻擊門檻.*?：\s*([\d,]+)/);
+
+      // 提取洗盤量/均量
+      let avgVolMatch = inputText.match(/均量.*?([\d,]+)/);
+      
+      // 2. 變數賦值 (若抓不到則使用通用描述)
+      const stockName = nameMatch ? nameMatch[1].trim() : "該標的";
+      const stockCode = codeMatch ? codeMatch[1] : "----";
+      const price = priceMatch ? priceMatch[1] : "---";
+      const boxLow = boxMatch ? boxMatch[1] : (supportMatch ? supportMatch[1] : "下檔支撐");
+      const boxHigh = boxMatch ? boxMatch[2] : "上檔壓力";
+      const attackVol = attackVolMatch ? attackVolMatch[1] : "特定攻擊量";
+      // const avgVol = avgVolMatch ? avgVolMatch[1] : "平均量能"; // 未使用到，先註解
+
+      // 3. 構建報告 (模板組裝)
+      const disclaimer = `【免責聲明】本人未持有證券投資顧問相關證照，所載內容僅屬個人技術分析學習紀錄與心得分享，不代表任何買賣建議或獲利保證；過去績效亦不代表未來表現，投資涉及風險，請務必獨立思考、審慎評估並自負盈虧。`;
+      
+      const title = `【${stockName} (${stockCode}) 技術面學習筆記】`;
+
+      const para1 = `${stockName} 目前技術型態呈現典型的箱型震盪走勢，市場交投氣氛隨著量能變化而有所波動。股價結構嚴格受限於特定區間內運行，下方技術支撐確立於 ${boxLow} 元，而上方關鍵壓力位則位於 ${boxHigh} 元。現階段的整理現象反映了市場籌碼正處於沉澱期，買賣雙方力道暫時達到平衡狀態。在當前收盤價 ${price} 元的基礎上，盤勢方向尚未出現明確指引，整體技術面處於等待表態的過渡階段。`;
+
+      const para2 = `從量價結構的數學邏輯判讀，若要改變當前的盤整慣性，需密切監控量能是否有效放大。有效的攻擊量能門檻設定為 ${attackVol} 張，此為挑戰箱頂 ${boxHigh} 元所需的動能基礎。在此量能未達標前，任何價格波動皆視為區間內的無效震盪。技術防守點位嚴格設定於箱底 ${boxLow} 元，此為維持當前整理架構的關鍵防線，一旦失守將破壞型態完整性。`;
+
+      const para3 = `展望後續情境推演，若盤中成交量能有效放大並配合價格強勢站上 ${boxHigh} 元，技術面上將視為多頭發起攻勢的訊號，盤整格局宣告結束。反之，若量能持續低迷且價格受制於區間內，則該標的仍處於資金機會成本較高的等待區，此時過早介入恐面臨時間價值的耗損。需留意極致量縮往往是變盤前兆，目前的型態定調為籌碼沉澱期，操作邏輯應以關鍵點位突破確認後再行佈局，避免資金陷入無效的時間消耗。`;
+
+      const warning = `⚠️ 再次提醒：\n以上純屬個人學習心得，每個人的分析方法、風險承受度都不同，\n請勿作為投資依據。建議諮詢專業投顧或自行深入研究後再做決定。`;
+
+      setOutputText(`${disclaimer}\n\n${title}\n\n${para1}\n\n${para2}\n\n${para3}\n\n${warning}`);
+      
+    } catch (e) {
+      setOutputText("解析錯誤，請確認原始資料格式是否正確。\n錯誤訊息：" + e.message);
+    }
+  };
+
+  // 產生 AI 指令 (System Prompt)
+  const generatePrompt = () => {
+    const prompt = `<system_instruction>
     <role>
     你是一位極度客觀、嚴謹的「市場技術面觀察員」。你的職責是將輸入的原始操盤數據（如 N 字戰法筆記）轉化為一份冷靜、合規的【技術面學習筆記】。
     你嚴格遵守「不提供投資建議」的原則，僅描述市場現象與數學邏輯推演。
@@ -9,45 +86,20 @@
     「【免責聲明】本人未持有證券投資顧問相關證照，所載內容僅屬個人技術分析學習紀錄與心得分享，不代表任何買賣建議或獲利保證；過去績效亦不代表未來表現，投資涉及風險，請務必獨立思考、審慎評估並自負盈虧。」
     </mandatory_opening>
 
-    <logic_mapping>
-    **盤態定義映射規則（第一段現況描述專用）：**
-    若原始資料提及以下盤態，必須將其轉化為對應的法人敘述（嚴禁使用條列式，需融入段落）：
-
-    [多方架構]
-    1. **盤堅盤** → 標註為「（⭐️ 盤堅盤）」，描述為：「股價行進間伴隨 N 字回測以測試支撐，意味著空頭抵抗力道尚存，需透過反覆洗盤消化賣壓，屬穩健推升格局。」
-    2. **軋空盤** → 標註為「（⭐️⭐️ 軋空盤）」，描述為：「股價於高檔進行強勢整理，以時間換取空間（以盤代跌），顯示籌碼鎖定良好，空頭抵抗力道轉弱，蓄勢待發。」
-    3. **強軋空盤** → 標註為「（⭐️⭐️⭐️ 強軋空盤）」，描述為：「多頭動能極強，呈現噴出不回頭之勢，空頭抵抗完全失敗，主力控盤態度堅決，為最強勢之多頭型態。」
-
-    [空方架構]
-    1. **盤跌盤** → 標註為「（⚠️ 盤跌盤）」，描述為：「雖有多頭抵抗試圖反彈，但高點逐步降低，整體趨勢仍受制於空方架構，呈現緩步盤跌。」
-    2. **殺多盤** → 標註為「（⚠️⚠️ 殺多盤）」，描述為：「多頭抵抗宣告失敗，反彈無力僅留上影線，籌碼面面臨停損賣壓，修正壓力加劇。」
-    3. **強殺多** → 標註為「（⚠️⚠️⚠️ 強殺多）」，描述為：「空方完全主導盤勢，多頭放棄抵抗（常見跳空缺口），股價呈現加速趕底之崩跌樣態。」
-    </logic_mapping>
-
     <task>
     請閱讀輸入的原始資料，撰寫一份【純敘事型】的觀察報告。
     
     執行步驟：
-    1. **過濾雜訊**：移除所有非專業用語（如「傑克」、「睡覺」、「刪自選」、「教練說」、「大幅提升勝率」）。
-    2. **數據轉化**：將股價、箱體區間、關鍵量能轉化為流暢的文字描述。
-    3. **盤態植入**：根據上述 `<logic_mapping>`，在第一段準確描述目前的技術盤態。
-    4. **避險修辭替換 (Strict Compliance)**：
+    1. **過濾雜訊**：移除所有非專業用語（如「傑克」、「睡覺」、「刪自選」、「教練說」）。
+    2. **數據轉化**：將股價、箱體區間、關鍵量能轉化為文字描述。
+    3. **避險修辭替換 (Strict Compliance)**：
         - 將「分析研報」改為「觀察報告」或「學習筆記」。
-        - 將「投資建議/操作建議/操作指令」改為「技術分析邏輯」或「視角觀察」。
-        - 將「買進/進場/Buy」改為「確立多頭攻勢」或「出現轉強訊號」（只描述現象）。
-        - 將「賣出/空手/觀望/Sleep」改為「無效的時間成本消耗區」或「下行風險大增」。
+        - 將「投資建議/操作建議」改為「技術分析邏輯」或「視角觀察」。
+        - 將「買進/進場」改為「確立多頭攻勢」或「出現轉強訊號」（只描述現象）。
+        - 將「賣出/空手/觀望」改為「無效的時間成本消耗區」或「下行風險大增」。
         - 將「評級」改為「型態定調」。
-    5. **格式清理**：移除所有粗體符號（**），移除所有表格與列點。
+    4. **格式清理**：移除所有粗體符號（**），移除所有表格與列點。
     </task>
-
-    <constraints_and_format>
-    - **風格**：法人機構筆觸 (Institutional Tone)，使用第三人稱，極度冷靜。
-    - **排版**：**嚴格禁止使用表格、條列式或粗體符號**。必須是連貫的三段式散文。
-    - **結構**：
-        - 第一段（現況）：概述股價、**明確定義盤態（引用上述定義）**、籌碼沉澱狀況。
-        - 第二段（量價）：分析攻擊量能門檻與支撐壓力位。
-        - 第三段（推演）：依據筆記中的劇本推演未來情境（若...則...），並給出最後的型態定調。
-    </constraints_and_format>
 
     <mandatory_closing>
     最後一段報告結束後，必須換行加上這句警語：
@@ -61,7 +113,7 @@
 
     【[股名] ([代號]) 技術面學習筆記】
 
-    [第一段：現況描述與盤態定義]
+    [第一段：現況描述與籌碼背景]
     
     [第二段：量能與關鍵價位分析]
 
@@ -72,3 +124,111 @@
     請勿作為投資依據。建議諮詢專業投顧或自行深入研究後再做決定。
     </output_template>
 </system_instruction>
+
+---
+請將以下資料轉化：
+${inputText}`;
+    setOutputText(prompt);
+  };
+
+  const handleCopy = () => {
+    if (!outputText) return;
+    navigator.clipboard.writeText(outputText);
+    setCopyStatus('已複製！');
+    setTimeout(() => setCopyStatus('複製'), 2000);
+  };
+
+  const handleModeChange = (newMode) => {
+    setMode(newMode);
+    setOutputText('');
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-900 text-slate-200 font-sans p-4 md:p-8 flex flex-col items-center">
+      <header className="mb-8 text-center space-y-2">
+        <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400">
+          N字戰法報告轉換器
+        </h1>
+        <p className="text-slate-400 text-sm">將傑克史東筆記轉化為法人級技術觀察報告</p>
+      </header>
+
+      <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-6 h-full">
+        {/* 左側輸入區 */}
+        <div className="bg-slate-800/50 backdrop-blur-md border border-slate-700/50 rounded-xl p-4 flex flex-col h-[600px] shadow-xl">
+          <div className="flex justify-between items-center mb-4">
+            <label className="text-emerald-400 font-bold flex items-center text-sm">
+              <span className="w-2 h-2 bg-emerald-400 rounded-full mr-2"></span>
+              原始資料輸入 (Raw Data)
+            </label>
+            <button 
+              onClick={() => setInputText(exampleData)}
+              className="text-xs text-slate-400 hover:text-white underline flex items-center gap-1 transition-colors"
+            >
+              <RotateCcw size={12} />
+              載入範例
+            </button>
+          </div>
+          <textarea
+            className="flex-1 w-full bg-slate-900/50 border border-slate-700 rounded-lg p-4 text-sm text-slate-300 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 font-mono transition-all resize-none"
+            placeholder="請在此貼上 傑克.史東 的 N 字戰法原始文字..."
+            value={inputText}
+            onChange={(e) => setInputText(e.target.value)}
+          />
+        </div>
+
+        {/* 右側輸出區 */}
+        <div className="bg-slate-800/50 backdrop-blur-md border border-slate-700/50 rounded-xl p-4 flex flex-col h-[600px] shadow-xl">
+          <div className="flex justify-between items-center mb-4">
+            <div className="flex bg-slate-800/80 rounded-lg p-1 gap-1">
+              <button 
+                onClick={() => handleModeChange('generator')}
+                className={`flex items-center gap-1 px-3 py-1.5 text-xs rounded-md transition-all ${mode === 'generator' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-400 hover:text-white hover:bg-slate-700/50'}`}
+              >
+                <FileText size={14} />
+                直接生成報告
+              </button>
+              <button 
+                onClick={() => handleModeChange('prompt')}
+                className={`flex items-center gap-1 px-3 py-1.5 text-xs rounded-md transition-all ${mode === 'prompt' ? 'bg-purple-600 text-white shadow-sm' : 'text-slate-400 hover:text-white hover:bg-slate-700/50'}`}
+              >
+                <Terminal size={14} />
+                產生 AI Prompt
+              </button>
+            </div>
+            <button 
+              onClick={handleCopy}
+              disabled={!outputText}
+              className={`flex items-center gap-1 px-3 py-1.5 text-xs rounded-md transition-colors ${!outputText ? 'bg-slate-800 text-slate-600 cursor-not-allowed' : 'bg-slate-700 hover:bg-slate-600 text-white'}`}
+            >
+              <Copy size={14} />
+              {copyStatus}
+            </button>
+          </div>
+          
+          <div className="relative flex-1">
+            <textarea
+              className="w-full h-full bg-slate-900/50 border border-slate-700 rounded-lg p-4 text-sm text-slate-300 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 font-mono transition-all resize-none"
+              readOnly
+              value={outputText}
+              placeholder={mode === 'generator' ? "點擊下方「開始轉換」按鈕生成報告..." : "點擊下方按鈕生成給 AI 的指令..."}
+            />
+          </div>
+
+          <div className="mt-4">
+            <button 
+              onClick={mode === 'generator' ? generateReport : generatePrompt}
+              className={`w-full py-3 rounded-lg font-bold text-white shadow-lg transition-all active:scale-[0.98] flex justify-center items-center gap-2 ${mode === 'generator' ? 'bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400' : 'bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-500 hover:to-purple-400'}`}
+            >
+              <Play size={18} fill="currentColor" />
+              {mode === 'generator' ? '立即轉換為觀察報告' : '生成 AI 指令 (複製給 Gemini)'}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <footer className="mt-8 text-center text-xs text-slate-600">
+        <p>本工具僅為文字處理輔助，不構成任何投資建議。</p>
+      </footer>
+    </div>
+  );
+}
