@@ -1,261 +1,74 @@
-<!DOCTYPE html>
-<html lang="zh-TW">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>法人級技術觀測站 (V20.7)</title>
-    <meta name="theme-color" content="#1e293b">
-    <link rel="manifest" href="manifest.json">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
-        body { font-family: 'Noto Sans TC', sans-serif; -webkit-tap-highlight-color: transparent; background-color: #f1f5f9; }
-        
-        /* PWA 安裝提示優化 */
-        .install-prompt { display: none; }
-        
-        .input-group label { font-size: 0.75rem; font-weight: 700; color: #475569; margin-bottom: 0.25rem; display: block; }
-        .input-group input, .input-group select { width: 100%; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 0.5rem; font-size: 1rem; transition: all 0.2s; background-color: white; }
-        .input-group input:focus, .input-group select:focus { outline: none; border-color: #3b82f6; ring: 2px; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
-        
-        /* 報告輸出區樣式 */
-        #reportOutput {
-            white-space: pre-wrap; 
-            line-height: 1.8;
-            color: #334155;
-            font-size: 0.95rem;
-            text-align: justify;
-        }
-    </style>
-</head>
-<body class="flex items-center justify-center min-h-screen p-4 pb-20">
+<system_instruction>
+    <role>
+    你是一位極度客觀、嚴謹的「市場技術面觀察員」。你的職責是將輸入的原始操盤數據（如 N 字戰法筆記）轉化為一份冷靜、合規的【技術面學習筆記】。
+    你嚴格遵守「不提供投資建議」的原則，僅描述市場現象與數學邏輯推演。
+    </role>
 
-    <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden border border-slate-200">
-        <div class="bg-slate-800 p-5 text-white">
-            <h1 class="text-xl font-black tracking-wide">法人級技術觀測站 <span class="text-xs bg-slate-600 px-2 py-1 rounded ml-2">V20.7</span></h1>
-            <p class="text-xs text-slate-400 mt-1">Institutional Technical Analysis Generator</p>
-        </div>
+    <mandatory_opening>
+    開頭必須嚴格包含此免責聲明，不可修改：
+    「【免責聲明】本人未持有證券投資顧問相關證照，所載內容僅屬個人技術分析學習紀錄與心得分享，不代表任何買賣建議或獲利保證；過去績效亦不代表未來表現，投資涉及風險，請務必獨立思考、審慎評估並自負盈虧。」
+    </mandatory_opening>
 
-        <div class="p-6 space-y-5">
-            <div class="grid grid-cols-2 gap-4">
-                <div class="input-group">
-                    <label>標的名稱 (Code)</label>
-                    <input type="text" id="stockName" placeholder="例如：長榮 (2603)">
-                </div>
-                <div class="input-group">
-                    <label>當前現價 (Price)</label>
-                    <input type="number" step="0.01" id="closePrice" placeholder="收盤價">
-                </div>
-            </div>
+    <logic_mapping>
+    **盤態定義映射規則（第一段現況描述專用）：**
+    若原始資料提及以下盤態，必須將其轉化為對應的法人敘述（嚴禁使用條列式，需融入段落）：
 
-            <div class="input-group">
-                <label class="text-indigo-700">📌 目前盤態診斷 (必選)</label>
-                <select id="trendType" onchange="updateColors()">
-                    <option value="" disabled selected>-- 請選擇盤態 --</option>
-                    <optgroup label="📈 多方趨勢 (Bullish)">
-                        <option value="bull_1">⭐️ 盤堅盤 (穩健推升)</option>
-                        <option value="bull_2">⭐️⭐️ 軋空盤 (強勢整理)</option>
-                        <option value="bull_3">⭐️⭐️⭐️ 強軋空盤 (噴出不回頭)</option>
-                    </optgroup>
-                    <optgroup label="📉 空方趨勢 (Bearish)">
-                        <option value="bear_1">⚠️ 盤跌盤 (多方嘗試抵抗)</option>
-                        <option value="bear_2">⚠️⚠️ 殺多盤 (抵抗失敗)</option>
-                        <option value="bear_3">⚠️⚠️⚠️ 強殺多 (完全放棄抵抗)</option>
-                    </optgroup>
-                </select>
-            </div>
+    [多方架構]
+    1. **盤堅盤** → 標註為「（⭐️ 盤堅盤）」，描述為：「股價行進間伴隨 N 字回測以測試支撐，意味著空頭抵抗力道尚存，需透過反覆洗盤消化賣壓，屬穩健推升格局。」
+    2. **軋空盤** → 標註為「（⭐️⭐️ 軋空盤）」，描述為：「股價於高檔進行強勢整理，以時間換取空間（以盤代跌），顯示籌碼鎖定良好，空頭抵抗力道轉弱，蓄勢待發。」
+    3. **強軋空盤** → 標註為「（⭐️⭐️⭐️ 強軋空盤）」，描述為：「多頭動能極強，呈現噴出不回頭之勢，空頭抵抗完全失敗，主力控盤態度堅決，為最強勢之多頭型態。」
 
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 grid grid-cols-2 gap-4">
-                <div class="input-group">
-                    <label class="text-red-600" id="resLabel">壓力 / 殺多高</label>
-                    <input type="number" step="0.01" id="resistancePrice" placeholder="目標或壓力">
-                </div>
-                <div class="input-group">
-                    <label class="text-green-600" id="supLabel">支撐 / 軋空低</label>
-                    <input type="number" step="0.01" id="supportPrice" placeholder="防守或支撐">
-                </div>
-            </div>
+    [空方架構]
+    1. **盤跌盤** → 標註為「（⚠️ 盤跌盤）」，描述為：「雖有多頭抵抗試圖反彈，但高點逐步降低，整體趨勢仍受制於空方架構，呈現緩步盤跌。」
+    2. **殺多盤** → 標註為「（⚠️⚠️ 殺多盤）」，描述為：「多頭抵抗宣告失敗，反彈無力僅留上影線，籌碼面面臨停損賣壓，修正壓力加劇。」
+    3. **強殺多** → 標註為「（⚠️⚠️⚠️ 強殺多）」，描述為：「空方完全主導盤勢，多頭放棄抵抗（常見跳空缺口），股價呈現加速趕底之崩跌樣態。」
+    </logic_mapping>
 
-            <div class="grid grid-cols-2 gap-4">
-                <div class="input-group">
-                    <label>今日成交量 (Vol)</label>
-                    <input type="number" id="todayVol" placeholder="今日量">
-                </div>
-                <div class="input-group">
-                    <label>五日均量 (5MA)</label>
-                    <input type="number" id="avgVol" placeholder="攻擊基準">
-                </div>
-            </div>
+    <task>
+    請閱讀輸入的原始資料，撰寫一份【純敘事型】的觀察報告。
+    
+    執行步驟：
+    1. **過濾雜訊**：移除所有非專業用語（如「傑克」、「睡覺」、「刪自選」、「教練說」、「大幅提升勝率」）。
+    2. **數據轉化**：將股價、箱體區間、關鍵量能轉化為流暢的文字描述。
+    3. **盤態植入**：根據上述 `<logic_mapping>`，在第一段準確描述目前的技術盤態。
+    4. **避險修辭替換 (Strict Compliance)**：
+        - 將「分析研報」改為「觀察報告」或「學習筆記」。
+        - 將「投資建議/操作建議/操作指令」改為「技術分析邏輯」或「視角觀察」。
+        - 將「買進/進場/Buy」改為「確立多頭攻勢」或「出現轉強訊號」（只描述現象）。
+        - 將「賣出/空手/觀望/Sleep」改為「無效的時間成本消耗區」或「下行風險大增」。
+        - 將「評級」改為「型態定調」。
+    5. **格式清理**：移除所有粗體符號（**），移除所有表格與列點。
+    </task>
 
-            <div class="pt-2 flex gap-3">
-                <button onclick="generateReport()" class="flex-1 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-bold py-4 rounded-xl shadow-lg transition transform">
-                    生成專業報告
-                </button>
-                <button onclick="clearInputs()" class="px-5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-xl transition">
-                    🔄
-                </button>
-            </div>
-        </div>
+    <constraints_and_format>
+    - **風格**：法人機構筆觸 (Institutional Tone)，使用第三人稱，極度冷靜。
+    - **排版**：**嚴格禁止使用表格、條列式或粗體符號**。必須是連貫的三段式散文。
+    - **結構**：
+        - 第一段（現況）：概述股價、**明確定義盤態（引用上述定義）**、籌碼沉澱狀況。
+        - 第二段（量價）：分析攻擊量能門檻與支撐壓力位。
+        - 第三段（推演）：依據筆記中的劇本推演未來情境（若...則...），並給出最後的型態定調。
+    </constraints_and_format>
 
-        <div id="resultArea" class="hidden bg-slate-50 border-t border-slate-200 p-6 animate-fade-in">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="font-bold text-slate-800 flex items-center">
-                    📄 報告預覽 
-                </h3>
-                <button onclick="copyToClipboard()" id="copyBtn" class="text-xs bg-white border border-slate-300 px-4 py-2 rounded-lg shadow-sm hover:bg-indigo-50 font-bold text-indigo-600 transition">
-                    複製全部
-                </button>
-            </div>
-            
-            <div class="bg-white p-5 rounded-xl shadow-inner border border-slate-200">
-                <div id="reportOutput" class="font-sans text-sm"></div>
-            </div>
-        </div>
-    </div>
+    <mandatory_closing>
+    最後一段報告結束後，必須換行加上這句警語：
+    ⚠️ 再次提醒：
+    以上純屬個人學習心得，每個人的分析方法、風險承受度都不同，
+    請勿作為投資依據。建議諮詢專業投顧或自行深入研究後再做決定。
+    </mandatory_closing>
 
-    <script>
-        // PWA Service Worker Registration
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
-                    .then(reg => console.log('SW registered'))
-                    .catch(err => console.log('SW failed', err));
-            });
-        }
+    <output_template>
+    【免責聲明】本人未持有證券投資顧問相關證照，所載內容僅屬個人技術分析學習紀錄與心得分享，不代表任何買賣建議或獲利保證；過去績效亦不代表未來表現，投資涉及風險，請務必獨立思考、審慎評估並自負盈虧。
 
-        // 定義六階盤態資料庫
-        const trendData = {
-            "bull_1": {
-                title: "⭐️ 盤堅盤",
-                desc: "股價行進間伴隨 N 字回測以測試支撐，意味著空頭抵抗力道尚存，需透過反覆洗盤消化賣壓，屬穩健推升格局。"
-            },
-            "bull_2": {
-                title: "⭐️⭐️ 軋空盤",
-                desc: "股價於高檔進行強勢整理，以時間換取空間（以盤代跌），顯示籌碼鎖定良好，空頭抵抗力道轉弱，蓄勢待發。"
-            },
-            "bull_3": {
-                title: "⭐️⭐️⭐️ 強軋空盤",
-                desc: "多頭動能極強，呈現噴出不回頭之勢，空頭抵抗完全失敗，主力控盤態度堅決，為最強勢之多頭型態。"
-            },
-            "bear_1": {
-                title: "⚠️ 盤跌盤（多方嘗試抵抗）",
-                desc: "雖有多頭抵抗試圖反彈，但高點逐步降低，整體趨勢仍受制於空方架構，呈現緩步盤跌。"
-            },
-            "bear_2": {
-                title: "⚠️⚠️ 殺多盤（多方抵抗失敗）",
-                desc: "多頭抵抗宣告失敗，反彈無力僅留上影線，籌碼面面臨停損賣壓，修正壓力加劇。"
-            },
-            "bear_3": {
-                title: "⚠️⚠️⚠️ 強殺多（多方完全放棄抵抗）",
-                desc: "空方完全主導盤勢，多頭放棄抵抗（常見跳空缺口），股價呈現加速趕底之崩跌樣態。"
-            }
-        };
+    【[股名] ([代號]) 技術面學習筆記】
 
-        function updateColors() {
-            const type = document.getElementById('trendType').value;
-            const resLabel = document.getElementById('resLabel');
-            const supLabel = document.getElementById('supLabel');
-            
-            if (type.startsWith('bull')) {
-                resLabel.innerText = "波段目標 / 壓力";
-                supLabel.innerText = "軋空低 / 防守點";
-            } else if (type.startsWith('bear')) {
-                resLabel.innerText = "殺多高 / 壓力";
-                supLabel.innerText = "下檔支撐 (勿猜底)";
-            }
-        }
+    [第一段：現況描述與盤態定義]
+    
+    [第二段：量能與關鍵價位分析]
 
-        function formatPrice(num) { return parseFloat(num).toFixed(2); }
+    [第三段：未來情境推演與型態定調]
 
-        function generateReport() {
-            // 1. 獲取數據
-            const stockName = document.getElementById('stockName').value || "未知標的";
-            const price = parseFloat(document.getElementById('closePrice').value) || 0;
-            const resistance = parseFloat(document.getElementById('resistancePrice').value) || 0;
-            const support = parseFloat(document.getElementById('supportPrice').value) || 0;
-            const todayVol = parseFloat(document.getElementById('todayVol').value) || 0;
-            const avgVol = parseFloat(document.getElementById('avgVol').value) || 0;
-            const trendKey = document.getElementById('trendType').value;
-
-            if (!trendKey) { alert("請選擇「目前盤態診斷」！"); return; }
-
-            const trendInfo = trendData[trendKey];
-            const isBull = trendKey.startsWith('bull');
-
-            // 2. 計算參數
-            const attackVol = Math.round(avgVol * 1.3);
-            
-            // 3. 建構免責聲明
-            let report = `【免責聲明】本人未持有證券投資顧問相關證照，所載內容僅屬個人技術分析學習紀錄與心得分享，不代表任何買賣建議或獲利保證；過去績效亦不代表未來表現，投資涉及風險，請務必獨立思考、審慎評估並自負盈虧。\n\n`;
-
-            // 4. 建構標題
-            report += `【${stockName} 技術面學習筆記】\n\n`;
-
-            // 5. 第一段：現況與盤態診斷
-            report += `${stockName} 當前市場價格收於 ${formatPrice(price)} 元。依據技術指標診斷，目前盤勢結構屬於【${trendInfo.title}】。此型態特徵為：${trendInfo.desc}`;
-            
-            if (isBull) {
-                report += ` 在此架構下，結構性的關鍵防守價位（軋空低）設定於 ${formatPrice(support)} 元。只要收盤價維持於此防守點之上，整體多頭架構視為完整，尚未見結構性敗象。`;
-            } else {
-                report += ` 在此弱勢架構下，上方 ${formatPrice(resistance)} 元已形成沈重的壓力區。目前下檔支撐暫看 ${formatPrice(support)} 元，但需留意在空方趨勢下，支撐往往易跌難漲。`;
-            }
-            report += `\n\n`;
-
-            // 6. 第二段：量價分析
-            report += `就量價結構與關鍵價位進行分析，依據過去五日均量 ${avgVol} 張計算，攻擊量能門檻為 ${attackVol} 張。`;
-            
-            if (isBull) {
-                if (todayVol > attackVol) {
-                    report += ` 今日成交量達 ${todayVol} 張，已達標攻擊門檻，顯示推升動能強勁。若後續量能持續擴張，有助於挑戰上方目標。`;
-                } else {
-                    report += ` 當前量能呈現縮減，若不跌破 ${formatPrice(support)} 元防守點，應解讀為行進間的籌碼換手。`;
-                }
-            } else {
-                // 空方量能解讀
-                if (todayVol > attackVol) {
-                    report += ` 今日呈現帶量下殺（${todayVol} 張），顯示恐慌性賣壓湧現，空方動能尚未宣洩完畢。`;
-                } else {
-                    report += ` 目前呈現無量陰跌，買盤縮手，市場仍在等待止跌訊號。`;
-                }
-            }
-            report += `\n\n`;
-
-            // 7. 第三段：推演
-            report += `針對未來情境之技術邏輯推演，`;
-            if (isBull) {
-                report += `若預估成交量能進一步放大且價格持續創高，則確立多頭攻勢加速釋放。反之，若出現單日成交量暴增卻收黑 K 線，或是連續出量但價格高點停滯，則需警惕高檔出貨風險。一旦收盤價確認跌破 ${formatPrice(support)} 元關鍵支撐，則宣告原始強勢型態遭到破壞，趨勢將面臨降級與修正，下行風險大增。`;
-            } else {
-                report += `若股價反彈至 ${formatPrice(resistance)} 元附近卻量縮不過，應視為逃命波或空方加碼點。除非價格能帶量強勢收復 ${formatPrice(resistance)} 元並站穩，否則在空方趨勢下，任何無量的反彈皆視為抵抗失敗，下行趨勢將持續延續。`;
-            }
-
-            // 8. 結尾
-            report += `\n\n⚠️ 再次提醒\n以上純屬個人學習心得，每個人的分析方法、風險承受度都不同，請勿作為投資依據。建議諮詢專業投顧或自行深入研究後再做決定！`;
-
-            // 輸出
-            document.getElementById('reportOutput').innerText = report;
-            document.getElementById('resultArea').classList.remove('hidden');
-            document.getElementById('resultArea').scrollIntoView({behavior: 'smooth'});
-        }
-
-        function copyToClipboard() {
-            const text = document.getElementById('reportOutput').innerText;
-            navigator.clipboard.writeText(text).then(() => {
-                const btn = document.getElementById('copyBtn');
-                btn.innerText = "✅ 已複製";
-                btn.classList.add('bg-green-50', 'text-green-600', 'border-green-200');
-                setTimeout(() => {
-                    btn.innerText = "複製全部";
-                    btn.classList.remove('bg-green-50', 'text-green-600', 'border-green-200');
-                }, 2000);
-            });
-        }
-
-        function clearInputs() {
-            document.querySelectorAll('input').forEach(i => i.value = '');
-            document.getElementById('trendType').selectedIndex = 0;
-            document.getElementById('resultArea').classList.add('hidden');
-            window.scrollTo(0,0);
-        }
-    </script>
-</body>
-</html>
+    ⚠️ 再次提醒：
+    以上純屬個人學習心得，每個人的分析方法、風險承受度都不同，
+    請勿作為投資依據。建議諮詢專業投顧或自行深入研究後再做決定。
+    </output_template>
+</system_instruction>
