@@ -3,245 +3,259 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>N字戰法觀察報告生成器</title>
-    <meta name="theme-color" content="#1a202c">
+    <title>法人級技術觀測站 (V20.7)</title>
+    <meta name="theme-color" content="#1e293b">
+    <link rel="manifest" href="manifest.json">
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        :root {
-            --bg-color: #f7fafc;
-            --card-bg: #ffffff;
-            --primary: #2b6cb0;
-            --text-main: #2d3748;
-            --text-sec: #718096;
-            --border: #e2e8f0;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            margin: 0;
-            padding: 20px;
-            line-height: 1.6;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        h1 {
-            font-size: 1.5rem;
-            text-align: center;
-            color: var(--primary);
-            margin-bottom: 20px;
-            font-weight: 700;
-        }
-
-        .card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--text-sec);
-        }
-
-        textarea {
-            width: 100%;
-            height: 150px;
-            padding: 12px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            resize: vertical;
-            font-size: 14px;
-            box-sizing: border-box;
-            font-family: monospace;
-        }
-
-        button {
-            display: block;
-            width: 100%;
-            background-color: var(--primary);
-            color: white;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-            margin-top: 10px;
-        }
-
-        button:active {
-            transform: scale(0.98);
-        }
-
-        #outputArea {
-            white-space: pre-wrap;
-            font-family: "PingFang TC", "Microsoft JhengHei", serif;
-            color: #1a202c;
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
+        body { font-family: 'Noto Sans TC', sans-serif; -webkit-tap-highlight-color: transparent; background-color: #f1f5f9; }
+        
+        /* PWA 安裝提示優化 */
+        .install-prompt { display: none; }
+        
+        .input-group label { font-size: 0.75rem; font-weight: 700; color: #475569; margin-bottom: 0.25rem; display: block; }
+        .input-group input, .input-group select { width: 100%; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 0.5rem; font-size: 1rem; transition: all 0.2s; background-color: white; }
+        .input-group input:focus, .input-group select:focus { outline: none; border-color: #3b82f6; ring: 2px; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+        
+        /* 報告輸出區樣式 */
+        #reportOutput {
+            white-space: pre-wrap; 
             line-height: 1.8;
-            display: none; /* Hidden by default */
-        }
-
-        .copy-btn {
-            background-color: #48bb78;
-            margin-top: 10px;
-            display: none;
-        }
-
-        .footer-note {
-            text-align: center;
-            font-size: 12px;
-            color: #a0aec0;
-            margin-top: 30px;
+            color: #334155;
+            font-size: 0.95rem;
+            text-align: justify;
         }
     </style>
 </head>
-<body>
+<body class="flex items-center justify-center min-h-screen p-4 pb-20">
 
-<div class="container">
-    <h1>N字戰法轉化器 (Institutional)</h1>
-    
-    <div class="card">
-        <label for="inputRaw">輸入原始操盤數據：</label>
-        <textarea id="inputRaw" placeholder="請貼上「傑克.史東」或「石頭」的原始 N 字戰法文字..."></textarea>
-        <button onclick="generateReport()">轉化為觀察報告</button>
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden border border-slate-200">
+        <div class="bg-slate-800 p-5 text-white">
+            <h1 class="text-xl font-black tracking-wide">法人級技術觀測站 <span class="text-xs bg-slate-600 px-2 py-1 rounded ml-2">V20.7</span></h1>
+            <p class="text-xs text-slate-400 mt-1">Institutional Technical Analysis Generator</p>
+        </div>
+
+        <div class="p-6 space-y-5">
+            <div class="grid grid-cols-2 gap-4">
+                <div class="input-group">
+                    <label>標的名稱 (Code)</label>
+                    <input type="text" id="stockName" placeholder="例如：長榮 (2603)">
+                </div>
+                <div class="input-group">
+                    <label>當前現價 (Price)</label>
+                    <input type="number" step="0.01" id="closePrice" placeholder="收盤價">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label class="text-indigo-700">📌 目前盤態診斷 (必選)</label>
+                <select id="trendType" onchange="updateColors()">
+                    <option value="" disabled selected>-- 請選擇盤態 --</option>
+                    <optgroup label="📈 多方趨勢 (Bullish)">
+                        <option value="bull_1">⭐️ 盤堅盤 (穩健推升)</option>
+                        <option value="bull_2">⭐️⭐️ 軋空盤 (強勢整理)</option>
+                        <option value="bull_3">⭐️⭐️⭐️ 強軋空盤 (噴出不回頭)</option>
+                    </optgroup>
+                    <optgroup label="📉 空方趨勢 (Bearish)">
+                        <option value="bear_1">⚠️ 盤跌盤 (多方嘗試抵抗)</option>
+                        <option value="bear_2">⚠️⚠️ 殺多盤 (抵抗失敗)</option>
+                        <option value="bear_3">⚠️⚠️⚠️ 強殺多 (完全放棄抵抗)</option>
+                    </optgroup>
+                </select>
+            </div>
+
+            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 grid grid-cols-2 gap-4">
+                <div class="input-group">
+                    <label class="text-red-600" id="resLabel">壓力 / 殺多高</label>
+                    <input type="number" step="0.01" id="resistancePrice" placeholder="目標或壓力">
+                </div>
+                <div class="input-group">
+                    <label class="text-green-600" id="supLabel">支撐 / 軋空低</label>
+                    <input type="number" step="0.01" id="supportPrice" placeholder="防守或支撐">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div class="input-group">
+                    <label>今日成交量 (Vol)</label>
+                    <input type="number" id="todayVol" placeholder="今日量">
+                </div>
+                <div class="input-group">
+                    <label>五日均量 (5MA)</label>
+                    <input type="number" id="avgVol" placeholder="攻擊基準">
+                </div>
+            </div>
+
+            <div class="pt-2 flex gap-3">
+                <button onclick="generateReport()" class="flex-1 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-bold py-4 rounded-xl shadow-lg transition transform">
+                    生成專業報告
+                </button>
+                <button onclick="clearInputs()" class="px-5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-xl transition">
+                    🔄
+                </button>
+            </div>
+        </div>
+
+        <div id="resultArea" class="hidden bg-slate-50 border-t border-slate-200 p-6 animate-fade-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-bold text-slate-800 flex items-center">
+                    📄 報告預覽 
+                </h3>
+                <button onclick="copyToClipboard()" id="copyBtn" class="text-xs bg-white border border-slate-300 px-4 py-2 rounded-lg shadow-sm hover:bg-indigo-50 font-bold text-indigo-600 transition">
+                    複製全部
+                </button>
+            </div>
+            
+            <div class="bg-white p-5 rounded-xl shadow-inner border border-slate-200">
+                <div id="reportOutput" class="font-sans text-sm"></div>
+            </div>
+        </div>
     </div>
 
-    <div class="card" id="resultCard" style="display:none;">
-        <label>生成結果：</label>
-        <div id="outputArea"></div>
-        <button class="copy-btn" id="copyBtn" onclick="copyResult()">複製結果</button>
-    </div>
-
-    <div class="footer-note">
-        Generated for N-Wave Strategy Analysis
-    </div>
-</div>
-
-<script>
-    function cleanText(text) {
-        // 移除所有 emoji
-        return text.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '');
-    }
-
-    function extractValue(text, regex) {
-        const match = text.match(regex);
-        return match ? match[1].trim() : null;
-    }
-
-    function generateReport() {
-        const raw = document.getElementById('inputRaw').value;
-        if (!raw) return;
-
-        // 1. 提取關鍵數據
-        const stockNameMatch = raw.match(/股名：(.*?)(?:\n|$)/);
-        const stockName = stockNameMatch ? stockNameMatch[1].trim() : "未知標的";
-        
-        const price = extractValue(raw, /現價：\s*([\d,.]+)/) || "----";
-        const boxTop = extractValue(raw, /箱體區間.*[~-]\s*([\d,.]+)\s*\(頂\)/) || extractValue(raw, /突破\s*([\d,.]+)/);
-        const boxBottom = extractValue(raw, /箱體區間.*：\s*([\d,.]+)\s*\(底\)/) || extractValue(raw, /跌破\s*([\d,.]+)/);
-        
-        const defense = extractValue(raw, /防守.*：\s*([\d,.]+)/) || boxBottom;
-        const avgVol = extractValue(raw, /均量.*量\s*([\d,.]+)\)/);
-        const attackVol = extractValue(raw, /攻擊門檻.*：([\d,.]+)/);
-        const washVol = extractValue(raw, /洗盤門檻.*：([\d,.]+)/);
-        
-        // 判斷盤態 (模擬盤整 vs 極強/盤堅)
-        let mode = "consolidation"; // 預設盤整
-        if (raw.includes("模擬極強") || raw.includes("盤堅盤") || raw.includes("強軋空")) {
-            mode = "trend"; // 趨勢盤
+    <script>
+        // PWA Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('SW registered'))
+                    .catch(err => console.log('SW failed', err));
+            });
         }
 
-        // 判斷型態定調
-        let trendStatus = "籌碼沉澱期";
-        if (raw.includes("盤堅盤")) trendStatus = "緩步趨堅的主升段格局";
-        if (raw.includes("強軋空")) trendStatus = "軋空主升段";
-        if (raw.includes("模擬盤整")) trendStatus = "籌碼沉澱期";
+        // 定義六階盤態資料庫
+        const trendData = {
+            "bull_1": {
+                title: "⭐️ 盤堅盤",
+                desc: "股價行進間伴隨 N 字回測以測試支撐，意味著空頭抵抗力道尚存，需透過反覆洗盤消化賣壓，屬穩健推升格局。"
+            },
+            "bull_2": {
+                title: "⭐️⭐️ 軋空盤",
+                desc: "股價於高檔進行強勢整理，以時間換取空間（以盤代跌），顯示籌碼鎖定良好，空頭抵抗力道轉弱，蓄勢待發。"
+            },
+            "bull_3": {
+                title: "⭐️⭐️⭐️ 強軋空盤",
+                desc: "多頭動能極強，呈現噴出不回頭之勢，空頭抵抗完全失敗，主力控盤態度堅決，為最強勢之多頭型態。"
+            },
+            "bear_1": {
+                title: "⚠️ 盤跌盤（多方嘗試抵抗）",
+                desc: "雖有多頭抵抗試圖反彈，但高點逐步降低，整體趨勢仍受制於空方架構，呈現緩步盤跌。"
+            },
+            "bear_2": {
+                title: "⚠️⚠️ 殺多盤（多方抵抗失敗）",
+                desc: "多頭抵抗宣告失敗，反彈無力僅留上影線，籌碼面面臨停損賣壓，修正壓力加劇。"
+            },
+            "bear_3": {
+                title: "⚠️⚠️⚠️ 強殺多（多方完全放棄抵抗）",
+                desc: "空方完全主導盤勢，多頭放棄抵抗（常見跳空缺口），股價呈現加速趕底之崩跌樣態。"
+            }
+        };
 
-        // 目標價 (僅針對趨勢盤)
-        const target1 = extractValue(raw, /一飽.*：\s*([\d,.]+)/);
-        const target2 = extractValue(raw, /二吐.*：\s*([\d,.]+)/);
-        const target5 = extractValue(raw, /五倍.*：\s*([\d,.]+)/);
-
-        // --- 生成文本 ---
-
-        // 固定免責聲明
-        let output = `【免責聲明】本人未持有證券投資顧問相關證照，所載內容僅屬個人技術分析學習紀錄與心得分享，不代表任何買賣建議或獲利保證；過去績效亦不代表未來表現，投資涉及風險，請務必獨立思考、審慎評估並自負盈虧。\n\n`;
-
-        // 標題
-        output += `【${stockName} 技術面學習筆記】\n\n`;
-
-        // 第一段：現況
-        output += `${stockName.split(/\d/)[0]}（${stockName.match(/\d+/)}）`;
-        output += `當前市場價格收於 ${price} 元，依據盤態診斷結果，技術結構屬於${mode === 'trend' ? '明確的多頭趨勢' : '箱型震盪整理'}格局。`;
-        
-        if (mode === 'consolidation') {
-            output += `股價波動區間明確界定於 ${boxBottom || '支撐'} 元之底部支撐與 ${boxTop || '壓力'} 元之頂部壓力之間。量能呈現收斂，反映市場觀望。`;
-        } else {
-            output += `此型態特徵在於股價處於主升段，行進過程伴隨震盪換手。目前的結構性絕對防守價位設定於 ${defense} 元，此為維繫整體上升架構之核心基準。`;
-        }
-        
-        output += `只要收盤價能維持於此防守點之上，型態定調為${trendStatus}，整體趨勢並未改變。\n\n`;
-
-        // 第二段：量價
-        output += `觀察量價互動與關鍵價位，以五日平均成交量 ${avgVol} 張為計算基準，當前有效的攻擊量能門檻設定於 ${attackVol} 張。`;
-        
-        if (mode === 'trend') {
-            output += `若成交量能持續擴張並達到攻擊門檻，將視為極強鎖攻訊號，有助於股價依據測幅原理依序挑戰 ${target1 || '前高'} 元、${target2 || '波段目標'} 元${target5 ? `，乃至波段終極目標 ${target5} 元` : ''}。`;
-            output += `反之，若成交量縮減至 ${washVol} 張以下，在不跌破 ${defense} 元防守點的前提下，應解讀為籌碼沉澱之健康換手。\n\n`;
-        } else {
-            output += `若欲改變現狀，成交量能必須顯著放大至 ${attackVol} 張以上，方具備推升價格跨越箱體頂部之動能。`;
-            output += `當前若量能低於 ${avgVol} 張，顯示動能銜接尚未達成，市場主力傾向於透過時間換取空間，藉此消化短線浮額。\n\n`;
-        }
-
-        // 第三段：推演
-        output += `針對後市情境推演，`;
-        if (mode === 'trend') {
-            output += `若預估量能穩定維持在 ${attackVol} 張以上且價格持續推升，則確立多頭攻勢延續；`;
-            output += `風險預警機制顯示，若單日成交量異常暴增（如2.0倍均量）且收黑 K 線，或是出現連續出量但價格高點停滯之背離現象，則暗示高檔籌碼鬆動。`;
-            output += `一旦收盤價確認跌破 ${defense} 元，即觸發盤勢降級條件，顯示原始動能已無法支撐當前型態，下行風險將隨之大增。`;
-        } else {
-            output += `若價格能以帶量姿態（>${attackVol}張）突破關鍵壓力位，則視為確立多頭攻勢，盤整結束。`;
-            output += `反之，若成交量持續低迷且股價維持在區間內，則該區域應定義為無效的時間成本消耗區。`;
-            output += `必須警惕的是，若價格放量跌破 ${defense} 元，則技術型態將趨於弱化，下行風險將隨之大增。`;
+        function updateColors() {
+            const type = document.getElementById('trendType').value;
+            const resLabel = document.getElementById('resLabel');
+            const supLabel = document.getElementById('supLabel');
+            
+            if (type.startsWith('bull')) {
+                resLabel.innerText = "波段目標 / 壓力";
+                supLabel.innerText = "軋空低 / 防守點";
+            } else if (type.startsWith('bear')) {
+                resLabel.innerText = "殺多高 / 壓力";
+                supLabel.innerText = "下檔支撐 (勿猜底)";
+            }
         }
 
-        output += `\n\n⚠️ 再次提醒\n以上純屬個人學習心得，每個人的分析方法、風險承受度都不同，請勿作為投資依據。建議諮詢專業投顧或自行深入研究後再做決定！`;
+        function formatPrice(num) { return parseFloat(num).toFixed(2); }
 
-        // 顯示結果
-        const outputDiv = document.getElementById('outputArea');
-        outputDiv.innerText = output;
-        document.getElementById('resultCard').style.display = 'block';
-        outputDiv.style.display = 'block';
-        document.getElementById('copyBtn').style.display = 'block';
-        
-        // 滾動到結果
-        document.getElementById('resultCard').scrollIntoView({behavior: "smooth"});
-    }
+        function generateReport() {
+            // 1. 獲取數據
+            const stockName = document.getElementById('stockName').value || "未知標的";
+            const price = parseFloat(document.getElementById('closePrice').value) || 0;
+            const resistance = parseFloat(document.getElementById('resistancePrice').value) || 0;
+            const support = parseFloat(document.getElementById('supportPrice').value) || 0;
+            const todayVol = parseFloat(document.getElementById('todayVol').value) || 0;
+            const avgVol = parseFloat(document.getElementById('avgVol').value) || 0;
+            const trendKey = document.getElementById('trendType').value;
 
-    function copyResult() {
-        const outputText = document.getElementById('outputArea').innerText;
-        navigator.clipboard.writeText(outputText).then(() => {
-            const btn = document.getElementById('copyBtn');
-            const originalText = btn.innerText;
-            btn.innerText = "已複製！";
-            btn.style.backgroundColor = "#2f855a";
-            setTimeout(() => {
-                btn.innerText = originalText;
-                btn.style.backgroundColor = "#48bb78";
-            }, 2000);
-        });
-    }
-</script>
+            if (!trendKey) { alert("請選擇「目前盤態診斷」！"); return; }
 
+            const trendInfo = trendData[trendKey];
+            const isBull = trendKey.startsWith('bull');
+
+            // 2. 計算參數
+            const attackVol = Math.round(avgVol * 1.3);
+            
+            // 3. 建構免責聲明
+            let report = `【免責聲明】本人未持有證券投資顧問相關證照，所載內容僅屬個人技術分析學習紀錄與心得分享，不代表任何買賣建議或獲利保證；過去績效亦不代表未來表現，投資涉及風險，請務必獨立思考、審慎評估並自負盈虧。\n\n`;
+
+            // 4. 建構標題
+            report += `【${stockName} 技術面學習筆記】\n\n`;
+
+            // 5. 第一段：現況與盤態診斷
+            report += `${stockName} 當前市場價格收於 ${formatPrice(price)} 元。依據技術指標診斷，目前盤勢結構屬於【${trendInfo.title}】。此型態特徵為：${trendInfo.desc}`;
+            
+            if (isBull) {
+                report += ` 在此架構下，結構性的關鍵防守價位（軋空低）設定於 ${formatPrice(support)} 元。只要收盤價維持於此防守點之上，整體多頭架構視為完整，尚未見結構性敗象。`;
+            } else {
+                report += ` 在此弱勢架構下，上方 ${formatPrice(resistance)} 元已形成沈重的壓力區。目前下檔支撐暫看 ${formatPrice(support)} 元，但需留意在空方趨勢下，支撐往往易跌難漲。`;
+            }
+            report += `\n\n`;
+
+            // 6. 第二段：量價分析
+            report += `就量價結構與關鍵價位進行分析，依據過去五日均量 ${avgVol} 張計算，攻擊量能門檻為 ${attackVol} 張。`;
+            
+            if (isBull) {
+                if (todayVol > attackVol) {
+                    report += ` 今日成交量達 ${todayVol} 張，已達標攻擊門檻，顯示推升動能強勁。若後續量能持續擴張，有助於挑戰上方目標。`;
+                } else {
+                    report += ` 當前量能呈現縮減，若不跌破 ${formatPrice(support)} 元防守點，應解讀為行進間的籌碼換手。`;
+                }
+            } else {
+                // 空方量能解讀
+                if (todayVol > attackVol) {
+                    report += ` 今日呈現帶量下殺（${todayVol} 張），顯示恐慌性賣壓湧現，空方動能尚未宣洩完畢。`;
+                } else {
+                    report += ` 目前呈現無量陰跌，買盤縮手，市場仍在等待止跌訊號。`;
+                }
+            }
+            report += `\n\n`;
+
+            // 7. 第三段：推演
+            report += `針對未來情境之技術邏輯推演，`;
+            if (isBull) {
+                report += `若預估成交量能進一步放大且價格持續創高，則確立多頭攻勢加速釋放。反之，若出現單日成交量暴增卻收黑 K 線，或是連續出量但價格高點停滯，則需警惕高檔出貨風險。一旦收盤價確認跌破 ${formatPrice(support)} 元關鍵支撐，則宣告原始強勢型態遭到破壞，趨勢將面臨降級與修正，下行風險大增。`;
+            } else {
+                report += `若股價反彈至 ${formatPrice(resistance)} 元附近卻量縮不過，應視為逃命波或空方加碼點。除非價格能帶量強勢收復 ${formatPrice(resistance)} 元並站穩，否則在空方趨勢下，任何無量的反彈皆視為抵抗失敗，下行趨勢將持續延續。`;
+            }
+
+            // 8. 結尾
+            report += `\n\n⚠️ 再次提醒\n以上純屬個人學習心得，每個人的分析方法、風險承受度都不同，請勿作為投資依據。建議諮詢專業投顧或自行深入研究後再做決定！`;
+
+            // 輸出
+            document.getElementById('reportOutput').innerText = report;
+            document.getElementById('resultArea').classList.remove('hidden');
+            document.getElementById('resultArea').scrollIntoView({behavior: 'smooth'});
+        }
+
+        function copyToClipboard() {
+            const text = document.getElementById('reportOutput').innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = document.getElementById('copyBtn');
+                btn.innerText = "✅ 已複製";
+                btn.classList.add('bg-green-50', 'text-green-600', 'border-green-200');
+                setTimeout(() => {
+                    btn.innerText = "複製全部";
+                    btn.classList.remove('bg-green-50', 'text-green-600', 'border-green-200');
+                }, 2000);
+            });
+        }
+
+        function clearInputs() {
+            document.querySelectorAll('input').forEach(i => i.value = '');
+            document.getElementById('trendType').selectedIndex = 0;
+            document.getElementById('resultArea').classList.add('hidden');
+            window.scrollTo(0,0);
+        }
+    </script>
 </body>
 </html>
