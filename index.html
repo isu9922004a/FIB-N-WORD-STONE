@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>N字戰法轉換器 Pro v4.7</title>
+    <title>N字戰法轉換器 Pro v5.0</title>
     
     <!-- PWA Setup -->
     <link rel="manifest" href="./manifest.json">
@@ -80,65 +80,88 @@
             const processRegex = () => {
                 if (!input.trim()) return;
                 try {
-                    // 1. 基礎數值解析
+                    // 1. 基礎數值
                     const name = (input.match(/股名[：:]\s*([^\d\n\s]+)/) || [])[1] || "該標的";
                     const code = (input.match(/(\d{4})/) || [])[1] || "----";
                     const rawPrice = (input.match(/(?:現價|收盤|最新)[：:]\s*([\d,.]+)/) || [])[1] || "0";
                     const currentPrice = parseFloat(rawPrice.replace(/,/g, '')) || 0;
 
-                    // 2. v4.7 價格智能雷達 (Price Radar)
+                    // 2. 價格智能雷達 (保留 v4.7 邏輯)
                     let bLow = null;
                     let bHigh = null;
 
-                    // 搜集全文所有數字 (排除日期、編號)
                     const findAllCandidatePrices = () => {
                         const candidates = [];
-                        const regex = /(?<!\d\.)\b(\d{2,5}(?:\.\d{1,2})?)\b/g; // 抓取 2位數~5位數的數字 (排除個位數)
+                        const regex = /(?<!\d\.)\b(\d{2,5}(?:\.\d{1,2})?)\b/g;
                         let match;
                         while ((match = regex.exec(input)) !== null) {
                             const val = parseFloat(match[1]);
-                            // 過濾：數字必須在現價的 ±30% 範圍內，且不能等於現價
-                            // 這能有效過濾掉成交量(太大) 和 編號(太小)
                             if (currentPrice > 0 && val >= currentPrice * 0.7 && val <= currentPrice * 1.3 && Math.abs(val - currentPrice) > 0.1) {
                                 candidates.push(val);
                             }
                         }
                         return candidates;
                     };
-
                     const candidates = findAllCandidatePrices();
 
-                    // A. 標準區間 (最優先)
                     const rangeMatch = input.match(/箱體(?:區間)?[：:]\s*([\d,.]+)[^~]*~\s*([\d,.]+)/);
                     if (rangeMatch) {
-                        const v1 = parseFloat(rangeMatch[1]);
-                        const v2 = parseFloat(rangeMatch[2]);
-                        if (v1 > 10) bLow = v1;
-                        if (v2 > 10) bHigh = v2;
+                        if (parseFloat(rangeMatch[1]) > 5) bLow = rangeMatch[1];
+                        if (parseFloat(rangeMatch[2]) > 5) bHigh = rangeMatch[2];
                     }
 
-                    // B. 雷達搜索補償 (若 A 失敗)
-                    // 找一個比現價大的最小值 -> 當作壓力
+                    if (!bLow) bLow = (input.match(/(?:支撐|防守|箱底)[^:\d\n]*[:]?\s*([\d,.]+)/) || [])[1];
+                    if (!bHigh) bHigh = (input.match(/(?:壓力|箱頂)[^:\d\n]*[:]?\s*([\d,.]+)/) || [])[1];
+
+                    // 劇本區補救
+                    if (!bHigh) {
+                        const breakoutMatch = input.match(/突破\s*([\d,.]+)/);
+                        if (breakoutMatch && parseFloat(breakoutMatch[1]) > 5) bHigh = breakoutMatch[1];
+                    }
+
+                    // 雷達最終補救
                     if (!bHigh && candidates.length > 0) {
                         const potentialHighs = candidates.filter(p => p > currentPrice).sort((a, b) => a - b);
                         if (potentialHighs.length > 0) bHigh = potentialHighs[0];
                     }
-                    // 找一個比現價小的最大值 -> 當作支撐
                     if (!bLow && candidates.length > 0) {
                         const potentialLows = candidates.filter(p => p < currentPrice).sort((a, b) => b - a);
                         if (potentialLows.length > 0) bLow = potentialLows[0];
                     }
 
-                    // 最終防呆 (若真的連雷達都掃不到)
                     if (!bLow) bLow = "關鍵支撐";
                     if (!bHigh) bHigh = "關鍵壓力";
 
-                    // 3. 量能數據
-                    const vol1 = (input.match(/(?:預估量|攻擊量|門檻)[^:\d\n]*[:>]\s*([\d,]+)/) || [])[1] || "特定量能";
-                    const vol2Raw = (input.match(/(?:成交量|確認|條件|收盤)[^:\d\n]*[≥>=]\s*([\d,]+)/) || [])[1];
-                    const vol2 = vol2Raw || (vol1 !== "特定量能" ? vol1 : "更高量能");
+                    // 3. 量能數據 (v5.0 核心修正：寬容模式)
+                    let vol1 = "特定量能";
+                    let vol2 = "更高量能";
 
-                    // 4. 盤態單一鎖定
+                    // 正則解釋：允許標籤和冒號之間有任意字符 (.*?)，例如 "攻擊門檻(1.3x)"
+                    // [>:\s] 是分隔符
+                    const estVolMatch = input.match(/預估量.*?[:>]\s*([\d,]+)/); 
+                    const attackThresholdMatch = input.match(/攻擊門檻.*?[:：]\s*([\d,]+)/);
+
+                    // 點火訊號 (vol1)：預估量 > 攻擊門檻
+                    if (estVolMatch) {
+                        vol1 = estVolMatch[1];
+                    } else if (attackThresholdMatch) {
+                        vol1 = attackThresholdMatch[1];
+                    }
+
+                    // 確認條件 (vol2)：攻擊門檻 > 成交量
+                    if (attackThresholdMatch) {
+                        vol2 = attackThresholdMatch[1];
+                    } else {
+                        const confirmMatch = input.match(/成交量.*?[≥>=]\s*([\d,]+)/);
+                        if (confirmMatch) vol2 = confirmMatch[1];
+                    }
+
+                    // 智能回補：如果 vol2 還是預設值，就用 vol1
+                    if (vol2 === "更高量能" && vol1 !== "特定量能") {
+                        vol2 = vol1;
+                    }
+
+                    // 4. 盤態單一鎖定 (v4.4 邏輯)
                     let hintList = "";
                     const definitiveMatch = input.match(/判定本檔個股目前屬於[：:]\s*([^\n]+)/);
                     let targetText = definitiveMatch ? definitiveMatch[1] : input;
@@ -173,7 +196,7 @@
 
                     setOutput(`${disclaimer}\n\n${title}\n\n${para1}\n\n${para2}\n\n${para3}${patternBlock}\n\n${warning}`);
                 } catch (e) {
-                    setOutput("資料格式解析異常。請確認原始數據格式。");
+                    setOutput(`解析異常：${e.message}。請確認原始數據包含完整價位與量能。`);
                 }
             };
 
@@ -188,7 +211,7 @@
                 任務：將輸入數據轉化為合規的【技術面學習筆記】。
                 
                 核心指令：
-                1. **數值修復**：若原始資料抓不到「上檔壓力」或「確認量能」，請根據上下文邏輯推斷，務必填入具體數字，禁止輸出「2.」或「更高標準」。
+                1. **數據完整性**：若原始資料缺少「確認量能」，請直接使用「預估量」的數值，**絕對禁止**輸出「更高量能」或「2.」等佔位符。
                 2. 風格：三段連貫散文，禁粗體。
                 3. 定義庫：${JSON.stringify(MARKET_PATTERNS)}。
                 
@@ -217,7 +240,7 @@
                 <div className="min-h-screen p-4 md:p-8 flex flex-col items-center">
                     <header className="w-full max-w-4xl text-center mb-8">
                         <h1 className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-cyan-400 tracking-tighter">N 字戰法報告轉換器 Pro</h1>
-                        <p className="text-slate-500 text-[10px] mt-2 font-mono tracking-widest uppercase">Institutional Technical Report Engine v4.7</p>
+                        <p className="text-slate-500 text-[10px] mt-2 font-mono tracking-widest uppercase">Institutional Technical Report Engine v5.0</p>
                     </header>
 
                     <main className="w-full max-w-4xl space-y-6">
@@ -264,14 +287,14 @@
                             <div className="mt-4 p-3 bg-slate-900/30 rounded-xl border border-slate-800 flex gap-2">
                                 <Icons.Info />
                                 <p className="text-[10px] text-slate-500 leading-normal">
-                                    v4.7 更新：新增「價格雷達」，能自動掃描全文補抓遺漏的壓力/支撐位。
+                                    v5.0 升級：新增「寬容模式」量能搜索，解決「(1.3x)」干擾導致數值抓取失敗的問題。
                                 </p>
                             </div>
                         </div>
                     </main>
 
                     <footer className="mt-10 text-[9px] text-slate-600 uppercase tracking-[0.2em] text-center">
-                        Market Intelligence Module • Pro v4.7 • Developed for Learning Only
+                        Market Intelligence Module • Pro v5.0 • Developed for Learning Only
                     </footer>
                 </div>
             );
@@ -288,3 +311,5 @@
     </script>
 </body>
 </html>
+
+
