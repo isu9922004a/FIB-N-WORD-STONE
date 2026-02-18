@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>N字戰法轉換器 Pro v5.0</title>
+    <title>N字戰法轉換器 Pro v5.1</title>
     
     <!-- PWA Setup -->
     <link rel="manifest" href="./manifest.json">
@@ -80,13 +80,13 @@
             const processRegex = () => {
                 if (!input.trim()) return;
                 try {
-                    // 1. 基礎數值
+                    // 1. 基礎數值解析
                     const name = (input.match(/股名[：:]\s*([^\d\n\s]+)/) || [])[1] || "該標的";
                     const code = (input.match(/(\d{4})/) || [])[1] || "----";
                     const rawPrice = (input.match(/(?:現價|收盤|最新)[：:]\s*([\d,.]+)/) || [])[1] || "0";
                     const currentPrice = parseFloat(rawPrice.replace(/,/g, '')) || 0;
 
-                    // 2. 價格智能雷達 (保留 v4.7 邏輯)
+                    // 2. 價格智能雷達
                     let bLow = null;
                     let bHigh = null;
 
@@ -132,23 +132,19 @@
                     if (!bLow) bLow = "關鍵支撐";
                     if (!bHigh) bHigh = "關鍵壓力";
 
-                    // 3. 量能數據 (v5.0 核心修正：寬容模式)
+                    // 3. 量能數據 (寬容模式)
                     let vol1 = "特定量能";
                     let vol2 = "更高量能";
 
-                    // 正則解釋：允許標籤和冒號之間有任意字符 (.*?)，例如 "攻擊門檻(1.3x)"
-                    // [>:\s] 是分隔符
                     const estVolMatch = input.match(/預估量.*?[:>]\s*([\d,]+)/); 
                     const attackThresholdMatch = input.match(/攻擊門檻.*?[:：]\s*([\d,]+)/);
 
-                    // 點火訊號 (vol1)：預估量 > 攻擊門檻
                     if (estVolMatch) {
                         vol1 = estVolMatch[1];
                     } else if (attackThresholdMatch) {
                         vol1 = attackThresholdMatch[1];
                     }
 
-                    // 確認條件 (vol2)：攻擊門檻 > 成交量
                     if (attackThresholdMatch) {
                         vol2 = attackThresholdMatch[1];
                     } else {
@@ -156,12 +152,11 @@
                         if (confirmMatch) vol2 = confirmMatch[1];
                     }
 
-                    // 智能回補：如果 vol2 還是預設值，就用 vol1
                     if (vol2 === "更高量能" && vol1 !== "特定量能") {
                         vol2 = vol1;
                     }
 
-                    // 4. 盤態單一鎖定 (v4.4 邏輯)
+                    // 4. 盤態單一鎖定
                     let hintList = "";
                     const definitiveMatch = input.match(/判定本檔個股目前屬於[：:]\s*([^\n]+)/);
                     let targetText = definitiveMatch ? definitiveMatch[1] : input;
@@ -186,12 +181,16 @@
                     }
                     const patternBlock = hintList ? `\n\n【盤態重點提示】\n${hintList}` : "";
 
-                    // 5. 報告生成
+                    // 5. 報告生成 (v5.1 邏輯修正：戰術推演標題與結論)
                     const disclaimer = `【免責聲明】本人未持有證券投資顧問相關證照，所載內容僅屬個人技術分析學習紀錄與心得分享，不代表任何買賣建議或獲利保證；過去績效亦不代表未來表現，投資涉及風險，請務必獨立思考、審慎評估並自負盈虧。`;
                     const title = `【${name}${code} 技術面學習筆記】`;
                     const para1 = `針對${name}（${code}）的技術面觀察顯示，該標的目前正處於明確的箱型整理階段，整體型態定調為「盤整整理」。當前股價位於 ${rawPrice} 元，主要的波動區間被定義在下檔支撐 ${bLow} 元與上檔壓力 ${bHigh} 元之間。在價格未有效突破此區間邊界之前，市場操作指令應維持空手，因為現況被視為無效的時間成本消耗區。技術面強調，防守要點 ${bLow} 元（箱體底部）為維持整理格局的關鍵，一旦該點位失守，則下行風險將大幅增加。`;
                     const para2 = `從量價結構來看，近期成交量呈現持續萎縮狀態，反映出市場人氣暫時退潮，籌碼正在進行深度的沉澱與整理。技術分析通常將這種極致量縮視為趨勢即將變盤的前兆，但變盤方向尚未確認。若要確立多頭攻勢，則必須觀察到強力的「點火訊號」：首先，預估量能必須放大至 ${vol1} 張以上，並且成功突破箱頂壓力 ${bHigh} 元；而更為強勢的突破確認條件，則要求成交量能達到 ${vol2} 張，且收盤價必須強勢站穩 ${bHigh} 元之上。在滿足這些帶量條件之前，貿然介入僅會增加資金的機會成本。`;
-                    const para3 = `戰略分析推演顯示，在長時間的價格盤整過程中，市場主要的力道正在透過磨盤方式，讓缺乏耐心的散戶離場，進行籌碼吸納。因此，核心戰術結論是耐心等待，直到出現第一根帶量紅 K 棒確立方向。在整理期間，資金效率是首要考量，因此應持續保持觀望，並將注意力集中於量能是否能在關鍵壓力位上得到有效釋放，作為重新評估型態定調的依據。`;
+                    
+                    // 修改點 1: 標題改為「針對未來情境之技術邏輯推演」
+                    // 修改點 2: 結論改為「突破 xxx 元且帶量收穩」
+                    const para3 = `針對未來情境之技術邏輯推演，在長時間的價格盤整過程中，市場主要的力道正在透過磨盤方式，讓缺乏耐心的散戶離場，進行籌碼吸納。因此，核心戰術結論是耐心等待，直到出現突破${bHigh}元且帶量收穩確立方向。在整理期間，資金效率是首要考量，因此應持續保持觀望，並將注意力集中於量能是否能在關鍵壓力位上得到有效釋放，作為重新評估型態定調的依據。`;
+                    
                     const warning = `⚠️ 再次提醒：\n以上純屬個人學習心得，每個人的分析方法、風險承受度都不同，請勿作為投資依據。建議諮詢專業投顧或自行深入研究後再做決定。`;
 
                     setOutput(`${disclaimer}\n\n${title}\n\n${para1}\n\n${para2}\n\n${para3}${patternBlock}\n\n${warning}`);
@@ -211,11 +210,13 @@
                 任務：將輸入數據轉化為合規的【技術面學習筆記】。
                 
                 核心指令：
-                1. **數據完整性**：若原始資料缺少「確認量能」，請直接使用「預估量」的數值，**絕對禁止**輸出「更高量能」或「2.」等佔位符。
+                1. **數值修復**：若原始資料缺少「確認量能」，使用「預估量」數值。
                 2. 風格：三段連貫散文，禁粗體。
-                3. 定義庫：${JSON.stringify(MARKET_PATTERNS)}。
+                3. 第三段標題必須為「針對未來情境之技術邏輯推演」。
+                4. 第三段結論必須使用格式：「突破 [箱頂壓力] 元且帶量收穩」。
+                5. 定義庫：${JSON.stringify(MARKET_PATTERNS)}。
                 
-                結構：開頭免責聲明 -> 現況(含區間) -> 量價(含點火訊號) -> 戰略(含資金效率) -> 【盤態重點提示】(僅一項) -> 結尾警語。`;
+                結構：開頭免責聲明 -> 現況(含區間) -> 量價(含點火訊號) -> 針對未來情境之技術邏輯推演(結論：突破壓力且帶量收穩) -> 【盤態重點提示】(僅一項) -> 結尾警語。`;
 
                 try {
                     const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
@@ -240,7 +241,7 @@
                 <div className="min-h-screen p-4 md:p-8 flex flex-col items-center">
                     <header className="w-full max-w-4xl text-center mb-8">
                         <h1 className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-cyan-400 tracking-tighter">N 字戰法報告轉換器 Pro</h1>
-                        <p className="text-slate-500 text-[10px] mt-2 font-mono tracking-widest uppercase">Institutional Technical Report Engine v5.0</p>
+                        <p className="text-slate-500 text-[10px] mt-2 font-mono tracking-widest uppercase">Institutional Technical Report Engine v5.1</p>
                     </header>
 
                     <main className="w-full max-w-4xl space-y-6">
@@ -287,14 +288,14 @@
                             <div className="mt-4 p-3 bg-slate-900/30 rounded-xl border border-slate-800 flex gap-2">
                                 <Icons.Info />
                                 <p className="text-[10px] text-slate-500 leading-normal">
-                                    v5.0 升級：新增「寬容模式」量能搜索，解決「(1.3x)」干擾導致數值抓取失敗的問題。
+                                    v5.1 更新：修正戰略推演標題，並強化「突破 + 帶量收穩」的動態戰術指引。
                                 </p>
                             </div>
                         </div>
                     </main>
 
                     <footer className="mt-10 text-[9px] text-slate-600 uppercase tracking-[0.2em] text-center">
-                        Market Intelligence Module • Pro v5.0 • Developed for Learning Only
+                        Market Intelligence Module • Pro v5.1 • Developed for Learning Only
                     </footer>
                 </div>
             );
