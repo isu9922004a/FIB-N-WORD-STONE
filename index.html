@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>N字戰法轉換器 Pro v6.0</title>
+    <title>N字戰法轉換器 Pro v7.0</title>
     
     <!-- PWA Setup -->
     <link rel="manifest" href="./manifest.json">
@@ -93,23 +93,9 @@
                     const rawPrice = (input.match(/(?:現價|收盤|最新)[：:]\s*([\d,.]+)/) || [])[1] || "0";
                     const currentPrice = parseFloat(rawPrice.replace(/,/g, '')) || 0;
 
-                    // 2. 價格智能雷達 
+                    // 2. 價格智能雷達
                     let bLow = null;
                     let bHigh = null;
-
-                    const findAllCandidatePrices = () => {
-                        const candidates = [];
-                        const regex = /(?<!\d\.)\b(\d{2,5}(?:\.\d{1,2})?)\b/g;
-                        let match;
-                        while ((match = regex.exec(input)) !== null) {
-                            const val = parseFloat(match[1]);
-                            if (currentPrice > 0 && val >= currentPrice * 0.7 && val <= currentPrice * 1.3 && Math.abs(val - currentPrice) > 0.1) {
-                                candidates.push(val);
-                            }
-                        }
-                        return candidates;
-                    };
-                    const candidates = findAllCandidatePrices();
 
                     const rangeMatch = input.match(/箱體(?:區間)?[：:]\s*([\d,.]+)[^~]*~\s*([\d,.]+)/);
                     if (rangeMatch) {
@@ -117,31 +103,16 @@
                         if (parseFloat(rangeMatch[2]) > 5) bHigh = rangeMatch[2];
                     }
 
-                    if (!bLow) bLow = (input.match(/(?:支撐|防守|箱底)[^:\d\n]*[:]?\s*([\d,.]+)/) || [])[1];
-                    if (!bHigh) bHigh = (input.match(/(?:壓力|箱頂)[^:\d\n]*[:]?\s*([\d,.]+)/) || [])[1];
-
-                    if (!bHigh) {
-                        const breakoutMatch = input.match(/突破\s*([\d,.]+)/);
-                        if (breakoutMatch && parseFloat(breakoutMatch[1]) > 5) bHigh = breakoutMatch[1];
-                    }
-
-                    if (!bHigh && candidates.length > 0) {
-                        const potentialHighs = candidates.filter(p => p > currentPrice).sort((a, b) => a - b);
-                        if (potentialHighs.length > 0) bHigh = potentialHighs[0];
-                    }
-                    if (!bLow && candidates.length > 0) {
-                        const potentialLows = candidates.filter(p => p < currentPrice).sort((a, b) => b - a);
-                        if (potentialLows.length > 0) bLow = potentialLows[0];
-                    }
+                    if (!bLow) bLow = (input.match(/(?:支撐|防守|箱底|軋空低)[^:\d\n]*[:]?\s*([\d,.]+)/) || [])[1];
+                    if (!bHigh) bHigh = (input.match(/(?:壓力|箱頂|目標|一飽)[^:\d\n]*[:]?\s*([\d,.]+)/) || [])[1];
 
                     if (!bLow) bLow = "關鍵支撐";
                     if (!bHigh) bHigh = "關鍵壓力";
 
-                    // 3. v6.0 量能數據防呆與智能配對 (解決時間09:15導致抓出15的Bug)
+                    // 3. 量能數據防呆
                     let vol1 = "特定量能";
                     let vol2 = "更高量能";
 
-                    // 過濾器：排除小於 100 的數字 (如時間的15) 或是剛好等於現價的數字
                     const extractValidVol = (regex) => {
                         const matches = [...input.matchAll(regex)];
                         for (const m of matches) {
@@ -152,36 +123,24 @@
                         return null;
                     };
 
-                    // 使用單行匹配 [^\n]*? 避免跨行抓到錯誤數字
                     const attackThresholdMatch = extractValidVol(/攻擊門檻[^\n]*?[:：]\s*([\d,]+)/g); 
                     const estVolMatch = extractValidVol(/預估量[^\n]*?[:>]\s*([\d,]+)/g); 
                     const confirmMatch = extractValidVol(/成交量[^\n]*?[≥>=]\s*([\d,]+)/g);
 
-                    // 語意配對：
-                    // vol1 (短線攻擊門檻) 理應對應「攻擊門檻」，若無則退而求其次用「預估量」
-                    if (attackThresholdMatch) {
-                        vol1 = attackThresholdMatch;
-                    } else if (estVolMatch) {
-                        vol1 = estVolMatch;
-                    }
+                    if (attackThresholdMatch) vol1 = attackThresholdMatch;
+                    else if (estVolMatch) vol1 = estVolMatch;
 
-                    // vol2 (更強勢確認條件) 尋找更大的數字
                     if (estVolMatch && attackThresholdMatch) {
                         const v1Num = parseInt(vol1.replace(/,/g, ''), 10);
                         const estNum = parseInt(estVolMatch.replace(/,/g, ''), 10);
-                        // 如果劇本預估量 > 攻擊門檻，就把更大的當作確認條件
                         vol2 = estNum > v1Num ? estVolMatch : attackThresholdMatch;
-                    } else if (attackThresholdMatch) {
-                        vol2 = attackThresholdMatch;
-                    } else if (confirmMatch) {
-                        vol2 = confirmMatch;
-                    } else if (estVolMatch) {
-                        vol2 = estVolMatch;
-                    }
+                    } else if (attackThresholdMatch) vol2 = attackThresholdMatch;
+                    else if (confirmMatch) vol2 = confirmMatch;
+                    else if (estVolMatch) vol2 = estVolMatch;
 
                     if (vol2 === "更高量能" && vol1 !== "特定量能") vol2 = vol1;
 
-                    // 4. 盤態聖旨鎖定機制
+                    // 4. 盤態聖旨鎖定機制 (決定文字走向的核心)
                     let hintList = "";
                     let targetText = "";
                     
@@ -189,29 +148,56 @@
                     if (definitiveMatch) {
                         targetText = definitiveMatch[1]; 
                     } else {
-                        targetText = input.substring(0, 50);
+                        targetText = input.substring(0, 100); // 擴大掃描範圍
                     }
 
                     for (const [key, desc] of Object.entries(MARKET_PATTERNS)) {
                         if (targetText.includes(key)) {
                             if (key === "軋空" && targetText.includes("強軋空")) continue;
                             if (key === "殺多" && targetText.includes("強殺多")) continue;
-                            
                             hintList = desc; 
                             break; 
                         }
                     }
                     const patternBlock = hintList ? `\n\n【盤態重點提示】\n${hintList}` : "";
 
-                    // 5. 報告生成
+                    // ==========================================
+                    // 5. V7.0 動態語意路由 (Dynamic Narrative Engine)
+                    // ==========================================
+                    
+                    // 判定市場熱度與方向
+                    const isStrong = input.includes("極強") || input.includes("攻擊量") || targetText.includes("軋空") || targetText.includes("突破") || input.includes("死抱不放");
+                    const isWeak = targetText.includes("殺多") || targetText.includes("盤跌") || input.includes("停損");
+                    
+                    let para1, para2, para3;
+
+                    if (isStrong) {
+                        // 🟢【強勢攻擊/軋空模式】(符合盛群、台達電的噴出圖形)
+                        para1 = `針對${name}（${code}）的技術面觀察顯示，該標的目前正處於「強勢多頭發動」階段，整體型態展現出極強的上攻企圖。當前股價位於 ${rawPrice} 元，已強勢表態並進入攻擊區間。下檔支撐防線已上移至 ${bLow} 元（關鍵防守位），上檔短期目標觀察 ${bHigh} 元。在價格維持在防守位之上時，市場操作指令應順勢偏多，此為獲利極大化的關鍵時刻。技術面強調，只要守穩 ${bLow} 元，軋空或推升的結構就不會被破壞，屬於極度強勢的偏多格局。`;
+                        
+                        para2 = `從量價結構來看，近期成交量已明顯放大，展現出強勁的「攻擊量能」，反映市場買盤湧入，主力控盤態度堅決。當前量能已滿足攻擊標準，多方動能正在積極釋放中。若要延續此強勢攻勢，必須持續觀察量能是否能穩紮穩打：以前一日的 5 日均量 × 1.3 倍作為基礎攻擊門檻（約 ${vol1} 張）；而更為強勁的續攻條件，則要求成交量能達到 ${vol2} 張以上。在量價配合良好的情況下，不應預設高點，以免過早被洗出場。`;
+                        
+                        para3 = `針對未來情境之技術邏輯推演，在強勢噴出或盤堅的過程中，最容易犯的錯誤便是「因為怕高而過早獲利了結」。因此，核心戰術結論是「順勢抱牢（Hold）」，直到收盤價出現爆量卻無法創高，或是有效跌破結構防守 ${bLow} 元時，方視為趨勢轉弱的訊號。在強勢期間，應將注意力集中於防守點是否被跌破，只要收盤未破防守，盤中的震盪皆可視為強勢洗盤或換手。`;
+                    
+                    } else if (isWeak) {
+                        // 🔴【弱勢修正模式】
+                        para1 = `針對${name}（${code}）的技術面觀察顯示，該標的目前面臨沉重的修正壓力，整體型態定調為「弱勢偏空」。當前股價位於 ${rawPrice} 元，下檔支撐退守至 ${bLow} 元，而上檔壓力則沉積於 ${bHigh} 元。在價格未能站回壓力區間前，市場操作應極度保守。技術面強調，防守要點 ${bLow} 元一旦跌破，將引發進一步的停損賣壓。目前趨勢由空方主導，屬於風險較高的修正格局。`;
+                        
+                        para2 = `從量價結構來看，若下跌伴隨出量，顯示賣壓正在湧現；若反彈無量，則反映多方承接意願低迷。在量價結構未見明顯「止跌回穩」訊號前，任何反彈皆應視為逃命波。若要扭轉劣勢，成交量必須放大至 ${vol2} 張以上，並且收盤價強勢站回 ${bHigh} 元之上，才能化解破底危機。在滿足這些條件之前，貿然摸底將承受極大風險。`;
+                        
+                        para3 = `針對未來情境之技術推演，在空方趨勢中，首要任務是資金安全與風險控管。因此，核心戰術結論是「嚴格停損並保持觀望」。若持有部位，應在反彈觸及壓力位 ${bHigh} 元或跌破防守位 ${bLow} 元時果斷減碼。在底部型態確實打底完成前，請耐心等待趨勢明朗，避免接落下的刀子。`;
+                    
+                    } else {
+                        // 🟡【震盪盤整模式】(原本的預設模板)
+                        para1 = `針對${name}（${code}）的技術面觀察顯示，該標的目前正處於蓄勢待發的整理階段，整體型態定調為「箱型盤整或震盪走堅」。當前股價位於 ${rawPrice} 元，主要的波動區間被定義在下檔支撐 ${bLow} 元與上檔壓力 ${bHigh} 元之間。在價格未有效表態之前，市場操作指令應保持耐心。技術面強調，防守要點 ${bLow} 元為維持多方架構的關鍵，一旦該點位失守，整理時間將被迫拉長。值得注意的是，目前股價行進間伴隨回測以測試支撐，屬於偏強的洗盤整理。`;
+                        
+                        para2 = `從量價結構來看，近期成交量呈現相對量縮或量增換手的交替狀態，反映籌碼正在進行深度的沉澱與重新分配，方向即將表態。當前若要確立多頭發動攻勢，必須觀察到強力的「點火訊號」：以前一日的 5 日均量 × 1.3 倍作為短線攻擊的突破門檻（約 ${vol1} 張），並成功突破箱頂壓力 ${bHigh} 元；而更為強勢的確認條件，則要求成交量達到 ${vol2} 張，且收盤價站穩 ${bHigh} 元。在帶量突破之前，應以低接高拋的區間策略為主。`;
+                        
+                        para3 = `針對未來情境之技術邏輯推演，在價格震盪磨盤的過程中，市場正透過洗盤讓籌碼沉澱。因此，核心戰術結論是耐心等待，直到收盤價有效站穩 ${bHigh} 元，且帶量（>${vol2}張）突破未出現長上影反轉訊號，方視為確立新一波方向。在操作上，應將注意力集中於量能是否能在關鍵壓力位得到有效釋放，並嚴守 ${bLow} 元的防守紀律。`;
+                    }
+
                     const disclaimer = `【免責聲明】本人未持有證券投資顧問相關證照，所載內容僅屬個人技術分析學習紀錄與心得分享，不代表任何買賣建議或獲利保證；過去績效亦不代表未來表現，投資涉及風險，請務必獨立思考、審慎評估並自負盈虧。`;
                     const title = `【${name}${code} 技術面學習筆記】`;
-                    const para1 = `針對${name}（${code}）的技術面觀察顯示，該標的目前正處於明確的箱型整理階段，整體型態定調為「盤整整理」。當前股價位於 ${rawPrice} 元，主要的波動區間被定義在下檔支撐 ${bLow} 元與上檔壓力 ${bHigh} 元之間。在價格未有效突破此區間邊界之前，市場操作指令應維持空手，因為現況被視為無效的時間成本消耗區。技術面強調，防守要點 ${bLow} 元（箱體底部）為維持整理格局的關鍵，一旦該點位失守，則下行風險將大幅增加。值得注意的是，目前均線仍維持多頭排列，結構未破，屬於偏強整理而非弱勢盤整。`;
-                    
-                    const para2 = `從量價結構來看，近期成交量呈現持續萎縮狀態，反映出市場人氣暫時退潮，籌碼正在進行深度的沉澱與整理，屬於多空換手與籌碼重新分配階段，方向仍需量能確認。當前量能未達攻擊標準，顯示多方動能暫時休兵。若要確立多頭攻勢，則必須觀察到強力的「點火訊號」：以前一日的 5 日均量 × 1.3 倍作為短線攻擊的突破門檻（約 ${vol1} 張），並且成功突破箱頂壓力 ${bHigh} 元；而更為強勢的突破確認條件，則要求成交量能達到 ${vol2} 張，且收盤價必須強勢站穩 ${bHigh} 元之上。在滿足這些帶量條件之前，貿然介入僅會增加資金的機會成本。`;
-                    
-                    const para3 = `針對未來情境之技術邏輯推演，在長時間的價格盤整過程中，市場主要的力道正在透過磨盤方式，讓缺乏耐心的散戶離場，進行籌碼吸納。因此，核心戰術結論是耐心等待，直到收盤價有效站穩 ${bHigh} 元兩日以上，且帶量（>${vol2}張）突破未出現長上影反轉訊號，方視為確立方向。在整理期間，資金效率是首要考量，因此應持續保持觀望，並將注意力集中於量能是否能在關鍵壓力位上得到有效釋放，作為重新評估型態定調的依據。`;
-                    
                     const warning = `⚠️ 再次提醒：\n以上純屬個人學習心得，每個人的分析方法、風險承受度都不同，請勿作為投資依據。建議諮詢專業投顧或自行深入研究後再做決定。`;
 
                     setOutput(`${disclaimer}\n\n${title}\n\n${para1}\n\n${para2}\n\n${para3}${patternBlock}\n\n${warning}`);
@@ -233,11 +219,11 @@
                 核心指令：
                 1. **數值過濾防呆**：抓取量能時，禁止抓取時間格式(如 09:15) 的數字。請確實尋找大於 100 的真實成交量。
                 2. **盤態鎖定**：請嚴格尋找「判定本檔個股目前屬於：」這句話並引用定義。若無，則看標題。嚴禁被劇本區的假設性盤態誤導。
-                3. **戰術量化**：第三段結論：「收盤價有效站穩 [箱頂壓力] 元兩日以上，且帶量（>[確認量能]張）突破未出現長上影反轉訊號」。
-                4. **量能定義**：第二段：「前一日 5 日均量 × 1.3 倍」。
+                3. **語氣連貫**：必須根據該股目前的「盤勢型態」與「量能狀態」（如：極強攻擊量、突破等），來動態決定內文要寫「強勢突破、量增」還是「整理、量縮」。不可全部套用箱型整理。
+                4. **量能定義**：第二段請精準帶入：「前一日 5 日均量 × 1.3 倍的短線攻擊門檻約 XXX 張」。
                 5. **定義庫**：${JSON.stringify(MARKET_PATTERNS)}。
                 
-                結構：開頭免責聲明 -> 現況(含偏強整理) -> 量價(含多空換手) -> 戰略(含精準突破) -> 【盤態重點提示】(單一鎖定) -> 結尾警語。`;
+                結構：開頭免責聲明 -> 現況描述(動態判定強弱) -> 量價結構(動態判定量增縮) -> 戰術推演 -> 【盤態重點提示】(單一鎖定) -> 結尾警語。`;
 
                 try {
                     const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
@@ -262,7 +248,7 @@
                 <div className="min-h-screen p-4 md:p-8 flex flex-col items-center">
                     <header className="w-full max-w-4xl text-center mb-8">
                         <h1 className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-cyan-400 tracking-tighter">N 字戰法報告轉換器 Pro</h1>
-                        <p className="text-slate-500 text-[10px] mt-2 font-mono tracking-widest uppercase">Institutional Technical Report Engine v6.0</p>
+                        <p className="text-slate-500 text-[10px] mt-2 font-mono tracking-widest uppercase">Institutional Technical Report Engine v7.0</p>
                     </header>
 
                     <main className="w-full max-w-4xl space-y-6">
@@ -289,7 +275,7 @@
 
                         <div className="grid grid-cols-2 gap-4">
                             <button onClick={processRegex} className="bg-slate-700 hover:bg-slate-600 text-white font-bold py-4 rounded-2xl shadow-lg transition-all active:scale-95 text-sm">
-                                直接生成 (快速版)
+                                直接生成 (動態語意版)
                             </button>
                             <button onClick={processAI} disabled={isLoading} className="bg-gradient-to-r from-indigo-600 to-violet-600 hover:opacity-90 text-white font-bold py-4 rounded-2xl shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2 text-sm">
                                 {isLoading ? <Icons.Loader /> : <><Icons.Sparkles /> AI 智能生成</>}
@@ -318,14 +304,14 @@
                             <div className="mt-4 p-3 bg-slate-900/30 rounded-xl border border-slate-800 flex gap-2">
                                 <Icons.Info />
                                 <p className="text-[10px] text-slate-500 leading-normal">
-                                    v6.0 終極修復：加入數值過濾器，完美避開時間 (如 09:15) 造成的抓取誤判。同時優化「量能語意配對」，使數據邏輯更嚴謹。
+                                    v7.0 更新：導入「動態語意路由引擎」，能根據報告中的「極強」、「攻擊量」、「殺多」等關鍵字，自動將內文切換為「強勢攻擊」、「震盪整理」或「弱勢修正」三種截然不同的專業論述，解決圖文不符的問題。
                                 </p>
                             </div>
                         </div>
                     </main>
 
                     <footer className="mt-10 text-[9px] text-slate-600 uppercase tracking-[0.2em] text-center">
-                        Market Intelligence Module • Pro v6.0 • Developed for Learning Only
+                        Market Intelligence Module • Pro v7.0 • Developed for Learning Only
                     </footer>
                 </div>
             );
