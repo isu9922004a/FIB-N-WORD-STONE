@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>N字戰法轉換器 Pro v11.0</title>
+    <title>N字戰法轉換器 Pro v11.9 精準解析版</title>
     
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -25,18 +25,23 @@
         const { useState } = React;
 
         const Icons = {
-            Sparkles: () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-yellow-400"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>,
+            Sparkles: () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-300"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>,
             File: () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>,
             Copy: () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>,
-            Check: () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5"/></svg>,
-            Trash: () => <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+            Check: () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
         };
 
         const MARKET_PATTERNS = {
-            "強軋空": "⭐️⭐️⭐️ 強軋空盤：多頭動能極強，呈現噴出不回頭之勢，空頭抵抗完全失敗，主力控盤態度堅決。",
-            "軋空": "⭐️⭐️ 軋空盤：股價於高檔進行強勢整理，以時間換取空間，顯示籌碼鎖定良好，蓄勢待發。",
+            // 多方盤態
+            "強軋空": "⭐️ 強軋空盤：多頭動能極強，呈現噴出不回頭之勢，空頭抵抗完全失敗，主力控盤態度堅決。",
+            "軋空": "⭐️ 軋空盤：股價於高檔進行強勢整理，以時間換取空間，顯示籌碼鎖定良好，蓄勢待發。",
             "盤堅": "⭐️ 盤堅盤：股價行進間伴隨 N 字回測以測試支撐，意味著空頭抵抗力道尚存，需透過反覆洗盤消化賣壓，屬穩健推升格局。",
-            "盤整": "💤 盤整盤：股價受限於箱型區間震盪，多空力道均衡，量能通常萎縮，市場等待表態。"
+            // 盤整盤態
+            "盤整": "💤 盤整盤：股價受限於箱型區間震盪，多空力道均衡，量能通常萎縮，市場等待表態。",
+            // 空方盤態
+            "強殺多": "⚠️ 強殺多盤：空方完全控盤，多頭放棄抵抗，常伴隨跳空缺口，崩跌速度極快，屬極弱勢格局。",
+            "殺多": "⚠️ 殺多盤：多頭抵抗失敗，反彈無力（僅留上影線），弱勢整理後易續跌，賣壓沉重。",
+            "盤跌": "⚠️ 盤跌盤：多頭仍有抵抗，反彈幅度較大，但整體趨勢高點不過、低點屢破，呈現緩步向下格局。"
         };
 
         function App() {
@@ -47,76 +52,143 @@
             const processReport = () => {
                 if (!input.trim()) return;
                 try {
-                    // 解析基本資料
-                    const name = (input.match(/股名[：:]\s*([^\d\n\s]+)/) || [])[1] || "該標的";
-                    const code = (input.match(/(\d{4})/) || [])[1] || "----";
-                    const rawPrice = (input.match(/(?:現價|收盤|最新)[：:]\s*([\d,.]+)/) || [])[1] || "0";
-                    const curP = parseFloat(rawPrice.replace(/,/g, '')) || 0;
-
-                    // 智慧價格定位
-                    const findPrice = (keys) => {
-                        for (let k of keys) {
-                            const reg = new RegExp(`${k}[^：:]*?[：:]\\s*(?:\\d[Nn]\\s*\\()?([\\d,.]+)\\)?`, 'i');
-                            const m = input.match(reg);
-                            if (m) {
-                                const val = parseFloat(m[1].replace(/,/g, ''));
-                                if (val > 0.1) return m[1];
-                            }
+                    // 1. 三向趨勢雷達 (精準版：避免被內文的「跌破」字眼干擾，改看大標題與盤態)
+                    let trendType = "BULL"; // 預設多頭
+                    
+                    if (/模擬大跌|C波崩盤|強殺多|殺多盤|空方主跌段/i.test(input)) {
+                        trendType = "BEAR";
+                    } else if (/模擬盤整|第4波整理|箱型區間/i.test(input)) {
+                        trendType = "SIDEWAYS";
+                    } else if (/模擬極強|軋空|盤堅/i.test(input)) {
+                        trendType = "BULL";
+                    } else {
+                        // 備用判定：從內文明確的「盤勢型態：」後方抓取
+                        const pTypeMatch = input.match(/盤勢型態[：:]\s*([^\n]+)/);
+                        if (pTypeMatch) {
+                            const txt = pTypeMatch[1];
+                            if (/殺多|盤跌/i.test(txt)) trendType = "BEAR";
+                            else if (/盤整|橫盤|觀望/i.test(txt)) trendType = "SIDEWAYS";
+                            else trendType = "BULL";
                         }
-                        return null;
-                    };
-
-                    const bLow = findPrice(["防守", "支撐", "箱底", "軋空低"]) || "關鍵位";
-                    // 保留 bHigh 用於盤整盤的區間描述，但在強勢盤中將隱藏此具體數字
-                    const bHigh = findPrice(["目標", "壓力", "箱頂", "一飽", "二吐", "5N", "1N", "測幅"]) || "壓力位";
-
-                    // 量能解析
-                    const getVol = (regex) => {
-                        const m = [...input.matchAll(regex)];
-                        for (let x of m) {
-                            const v = parseInt(x[1].replace(/,/g, ''), 10);
-                            if (v > 100) return x[1];
-                        }
-                        return null;
-                    };
-                    const vol1 = getVol(/攻擊門檻[^\n]*?[:：]\s*([\d,]+)/g) || getVol(/預估量[^\n]*?[:>]\s*([\d,]+)/g) || "特定量能";
-                    const vol2 = getVol(/成交量[^\n]*?[≥>=]\s*([\d,]+)/g) || getVol(/預估量[^\n]*?[:>]\s*([\d,]+)/g) || vol1;
-
-                    // 盤態鎖定
-                    let patternHint = "";
-                    let targetArea = input.match(/判定本檔個股目前屬於[：:]\s*([^\n]+)/)?.[1] || input.substring(0, 150);
-                    for (let [k, d] of Object.entries(MARKET_PATTERNS)) {
-                        if (targetArea.includes(k)) { patternHint = d; break; }
                     }
 
-                    const isStrong = input.includes("極強") || input.includes("攻擊量") || targetArea.includes("軋空") || input.includes("突破");
+                    // 2. 基礎數據解析
+                    const nameMatch = input.match(/股名[：:\s]*([^\d\n\s(（]+)/);
+                    const name = nameMatch ? nameMatch[1].trim() : "該標的";
+                    
+                    const codeMatch = input.match(/(\d{4})/);
+                    const code = codeMatch ? codeMatch[1] : "";
+                    const codeDisplay = code ? `（${code}）` : "";
+                    const titleCodeDisplay = code ? `${code} ` : "";
 
+                    const rawPrice = (input.match(/(?:現價|收盤|最新|當前現價)[：:\s]*([\d,.]+)/) || [])[1] || "0";
+
+                    // 3. 智慧價格區間定位 (升級版：過濾掉 5N 這種倍數代號)
+                    let bLow = "關鍵位";
+                    let bHigh = "壓力位";
+
+                    const boxMatch = input.match(/(?:箱體區間|區間)[^\d\n]*([\d,.]+)[^\d\n]+([\d,.]+)/);
+                    if (boxMatch && trendType === "SIDEWAYS") {
+                        bLow = boxMatch[1];
+                        bHigh = boxMatch[2];
+                    } else {
+                        const extractPrice = (keywords) => {
+                            for (let kw of keywords) {
+                                // 正則優化：跳過如 "5N (" 這樣的干擾字元，直接抓括號後或冒號後的真實數字
+                                const reg = new RegExp(`${kw}[^\\n]{0,20}?[：:]?\\s*(?:\\d+[Nn]\\s*\\()?\\s*([\\d,]+(?:\\.\\d+)?)`, 'i');
+                                const match = input.match(reg);
+                                if (match) {
+                                    const val = parseFloat(match[1].replace(/,/g, ''));
+                                    // 確保抓出來的不是版號(23.1)或小於10的不合理數字
+                                    if (val > 10 && val !== 23.1 && val !== 11.8) return match[1];
+                                }
+                            }
+                            return null;
+                        };
+                        bLow = extractPrice(["防守", "軋空低", "箱底", "支撐", "箱體底", "PR="]) || "關鍵位";
+                        bHigh = extractPrice(["壓力", "殺多高", "箱頂", "目標", "一飽"]) || "壓力位";
+                    }
+
+                    // 4. 智慧量能解析
+                    let vol1Str = null;
+                    const volMatch = input.match(/攻擊門檻[^\n]*?[：:]\s*([\d,]+)/i);
+                    if (volMatch) {
+                        vol1Str = volMatch[1];
+                    } else {
+                        const scriptMatch = input.match(/劇本\s*[A-Z][^\n]*?預估量[^\d]*([\d,]+)/i);
+                        if (scriptMatch) vol1Str = scriptMatch[1];
+                    }
+
+                    let vol1 = "特定量能";
+                    let vol2 = "更高量能";
+
+                    if (vol1Str) {
+                        let v1Num = parseInt(vol1Str.replace(/,/g, ''), 10);
+                        if (v1Num > 10) {
+                            vol1 = v1Num.toLocaleString();
+                            vol2 = Math.round((v1Num / 1.3) * 1.5).toLocaleString();
+                        }
+                    }
+
+                    // 5. 盤態自動偵測 (對應文末盤態重點)
+                    let patternHint = MARKET_PATTERNS["盤堅"];
+                    const pMatch = input.match(/(?:判定本檔個股目前屬於|盤勢型態)[：:]\s*([^\n]+)/);
+                    if (pMatch) {
+                        const txt = pMatch[1];
+                        if (txt.includes("強殺多")) patternHint = MARKET_PATTERNS["強殺多"];
+                        else if (txt.includes("殺多")) patternHint = MARKET_PATTERNS["殺多"];
+                        else if (txt.includes("盤跌")) patternHint = MARKET_PATTERNS["盤跌"];
+                        else if (txt.includes("強軋空")) patternHint = MARKET_PATTERNS["強軋空"];
+                        else if (txt.includes("軋空")) patternHint = MARKET_PATTERNS["軋空"];
+                        else if (txt.includes("盤堅")) patternHint = MARKET_PATTERNS["盤堅"];
+                        else if (txt.includes("盤整") || txt.includes("橫盤") || txt.includes("觀望")) patternHint = MARKET_PATTERNS["盤整"];
+                    } else {
+                        if (trendType === "SIDEWAYS") patternHint = MARKET_PATTERNS["盤整"];
+                        if (trendType === "BEAR") patternHint = MARKET_PATTERNS["盤跌"];
+                    }
+
+                    // 6. 組合合規報告文本
                     const disclaimer = `【免責聲明】本人未持有證券投資顧問相關證照，所載內容僅屬個人技術分析學習紀錄與心得分享，不代表任何買賣建議或獲利保證；過去績效亦不代表未來表現，投資涉及風險，請務必獨立思考、審慎評估並自負盈虧。`;
-                    const title = `【${name}${code} 技術面學習筆記】`;
+                    const title = `【${name}${titleCodeDisplay}技術面學習筆記】`;
                     
                     let p1, p2, p3;
-                    if (isStrong) {
-                        // v11.0 調整：將具體的目標價替換為合規的「測試中長期壓力區」描述
-                        p1 = `針對${name}（${code}）的技術面觀察顯示，該標的目前正處於「強勢多頭發動」階段，整體型態展現出極強的上攻企圖。當前股價位於 ${rawPrice} 元，已強勢表態並進入攻擊區間。下檔支撐防線已上移至 ${bLow} 元（關鍵防守位），若延續攻擊量結構，上方將逐步測試中長期壓力區，但實際幅度仍需依量價配合確認。在價格維持在防守位之上時，結構維持強勢架構，若依趨勢交易邏輯觀察，多方控盤結構尚未破壞。`;
+
+                    if (trendType === "SIDEWAYS") {
+                        p1 = `針對${name}${codeDisplay}的技術面觀察顯示，該標的目前正處於「箱型區間整理」階段，整體型態定調為籌碼沉澱與多空換手。當前股價位於 ${rawPrice} 元，主要波動區間大致落在下檔支撐 ${bLow} 元與上檔壓力 ${bHigh} 元之間。在價格未有效帶量突破此區間邊界前，趨勢方向尚未完全明朗，若依技術交易邏輯觀察，目前現況宜視為中性整理。`;
+                        p2 = `從量價結構來看，近期成交量通常呈現萎縮或不規律狀態，反映出市場人氣暫時退潮，資金正在進行深度的觀望與換手。若要確立新一輪的明確攻勢，必須觀察到強而有力的點火訊號：例如成交量顯著放大至基礎攻擊門檻（約 ${vol1} 張）以上，且收盤價能實質站穩壓力區 ${bHigh} 元。在滿足帶量突破條件前，應避免過度積極追價。`;
+                        p3 = `針對未來情境之技術邏輯推演，在價格盤整過程中，核心戰術為「維持觀望」或「嚴守區間」。操作上應密切關注量能是否能在關鍵轉折位有效釋放。首要任務為守住下檔關鍵防守 ${bLow} 元，一旦跌破則整理可能轉弱；反之，若能帶量突破上檔壓力 ${bHigh} 元，多方控盤結構方能進一步表態。`;
+                        
+                    } else if (trendType === "BEAR") {
+                        p1 = `針對${name}${codeDisplay}的技術面觀察顯示，該標的目前正處於「空方弱勢向下」階段，整體型態展現出明顯的走弱跡象。當前股價位於 ${rawPrice} 元，已跌破關鍵支撐並進入弱勢區間。上檔壓力防線目前確認於 ${bHigh} 元（關鍵防守位），若延續空方量價結構，下方支撐仍需反覆測試，實際跌幅需依量價配合確認。在價格維持在壓力位之下時，結構維持弱勢架構，若依趨勢交易邏輯觀察，空方控盤結構尚未改變。`;
+                        p2 = `從量價結構來看，近期跌勢中若伴隨成交量放大，展現出「帶量下殺」特徵，反映市場賣壓湧出。若要觀察是否止跌反轉，必須留意量能與關鍵價位：若反彈量能不足（低於約 ${vol1} 張的基礎門檻），且無法站穩 ${bHigh} 元，則容易形成弱勢反彈（死貓跳）。在量價未能扭轉且未站上壓力位前，應避免盲目猜底。`;
+                        p3 = `針對未來情境之技術邏輯推演，在弱勢下跌的過程中，核心戰術結論是空方控盤結構尚未破壞，直到收盤價出現帶量突破且站穩上檔防守壓力 ${bHigh} 元時，方視為趨勢止跌轉強。在弱勢期間，未有效突破壓力前，盤中的反彈皆視為空方換手或逃命波。`;
+                        
+                    } else {
+                        // 強勢股 (BULL)
+                        p1 = `針對${name}${codeDisplay}的技術面觀察顯示，該標的目前正處於「強勢多頭發動」階段，整體型態展現出極強的上攻企圖。當前股價位於 ${rawPrice} 元，已強勢表態並進入攻擊區間。下檔支撐防線已上移至 ${bLow} 元（關鍵防守位），若延續攻擊量結構，上方將逐步測試中長期壓力區，但實際幅度仍需依量價配合確認。在價格維持在防守位之上時，結構維持強勢架構，若依趨勢交易邏輯觀察，多方控盤結構尚未破壞。`;
                         p2 = `從量價結構來看，近期成交量已明顯放大，展現出強勁的「攻擊量能」，反映市場買盤湧入。若要延續此強勢攻勢，必須持續觀察量能：以前一日的 5 日均量 × 1.3 倍作為基礎攻擊門檻（約 ${vol1} 張）；而更為強勁的續攻條件，則要求成交量能達到 ${vol2} 張以上。在量價配合良好的情況下，不應預設高點。`;
                         p3 = `針對未來情境之技術邏輯推演，在強勢噴出的過程中，核心戰術結論是多方控盤結構尚未破壞，直到收盤價出現爆量卻無法創高，或是有效跌破結構防守 ${bLow} 元時，方視為趨勢轉弱。在強勢期間，收盤未破防守前，盤中震盪皆視為換手。`;
-                    } else {
-                        // 盤整盤仍保留區間的實質數字描述，因其屬於歷史支撐壓力範疇，較無預測爭議
-                        p1 = `針對${name}（${code}）的技術面觀察顯示，該標的目前正處於「箱型整理」階段，整體型態定調為多空換手。當前股價位於 ${rawPrice} 元，主要波動區間定義在下檔支撐 ${bLow} 元與上檔壓力 ${bHigh} 元之間。在價格未有效突破此區間邊界之前，結構維持強勢架構（相對大盤），若依趨勢交易邏輯觀察，此現況被視為籌碼沉澱區。`;
-                        p2 = `從量價結構來看，近期成交量呈現萎縮狀態，反映出市場人氣暫時退潮，籌碼正在進行深度的整理。若要確立多頭攻勢，則必須觀察到強力的點火訊號：以前一日的 5 日均量 × 1.3 倍作為突破門檻（約 ${vol1} 張），且收盤價站穩 ${bHigh} 元之上。在滿足帶量條件前，應避免盲目介入。`;
-                        p3 = `針對未來情境之技術邏輯推演，在價格盤整過程中，應持續保持觀望並將注意力集中於量能是否能在關鍵壓力位得到有效釋放。核心戰術結論是守住關鍵防守 ${bLow} 元，待帶量（>${vol2}張）突破壓力位 ${bHigh} 元後，多方控盤結構方能進一步表態。`;
                     }
 
                     const warning = `⚠️ 再次提醒：\n以上純屬個人學習心得，每個人的分析方法、風險承受度都不同，請勿作為投資依據。建議諮詢專業投顧或自行深入研究後再做決定。`;
 
-                    setOutput(`${disclaimer}\n\n${title}\n\n${p1}\n\n${p2}\n\n${p3}\n\n【盤態重點提示】\n${patternHint || "⭐️ 盤整盤：方向未明，等待表態。"}\n\n${warning}`);
+                    setOutput(`${disclaimer}\n\n${title}\n\n${p1}\n\n${p2}\n\n${p3}\n\n【盤態重點提示】\n${patternHint}\n\n${warning}`);
                 } catch (e) {
                     setOutput("解析錯誤，請確認原始數據格式。");
                 }
             };
 
             const copyToClipboard = async () => {
-                await navigator.clipboard.writeText(output);
+                try {
+                    await navigator.clipboard.writeText(output);
+                } catch (err) {
+                    const textArea = document.createElement("textarea");
+                    textArea.value = output;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand("copy");
+                    document.body.removeChild(textArea);
+                }
                 setIsCopied(true);
                 setTimeout(() => setIsCopied(false), 2000);
             };
@@ -124,31 +196,51 @@
             return (
                 <div className="min-h-screen p-4 md:p-8 flex flex-col items-center">
                     <header className="w-full max-w-4xl text-center mb-6">
-                        <h1 className="text-3xl font-extrabold text-emerald-400 tracking-tight">N 字戰法轉換器 v11.0</h1>
-                        <p className="text-slate-500 text-[11px] mt-1 font-mono uppercase tracking-[0.2em]">Compliance & Safety Narrative Engine</p>
+                        <h1 className="text-3xl font-extrabold text-emerald-400 tracking-tight">N 字戰法轉換器 v11.9</h1>
+                        <p className="text-slate-500 text-[11px] mt-1 font-mono uppercase tracking-[0.2em]">Compliance Engine (Smart Regex Version)</p>
                     </header>
                     <main className="w-full max-w-4xl space-y-4">
                         <div className="bg-slate-800 rounded-2xl p-4 border border-slate-700 shadow-xl">
-                            <textarea className="w-full h-40 bg-slate-900/50 border border-slate-700 rounded-xl p-4 text-sm text-slate-300 outline-none focus:border-emerald-500 font-mono transition-all" value={input} onChange={(e) => setInput(e.target.value)} placeholder="貼上原始數據數據..." />
+                            <textarea 
+                                className="w-full h-40 bg-slate-900/50 border border-slate-700 rounded-xl p-4 text-sm text-slate-300 outline-none focus:border-emerald-500 font-mono transition-all resize-y" 
+                                value={input} 
+                                onChange={(e) => setInput(e.target.value)} 
+                                placeholder="貼上多方、空方或盤整原始數據 (已修復跌破誤判與5N數字擷取問題)..." 
+                            />
                         </div>
-                        <button onClick={processReport} className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-4 rounded-xl shadow-lg transition-all active:scale-95">生成專業邏輯報告 (v11.0 合規版)</button>
+                        <button 
+                            onClick={processReport} 
+                            className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-4 rounded-xl shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2"
+                        >
+                            <Icons.Sparkles /> 轉換為標準合規學習筆記
+                        </button>
                         <div className="bg-slate-800 rounded-2xl p-4 border border-slate-700 relative shadow-2xl">
                             <div className="flex justify-between items-center mb-3">
-                                <span className="text-cyan-400 font-bold text-xs uppercase tracking-widest">技術分析觀察報告</span>
-                                <button onClick={copyToClipboard} disabled={!output} className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all ${isCopied ? 'bg-white text-emerald-600' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}`}>
-                                    {isCopied ? '已複製' : '複製內容'}
+                                <span className="text-emerald-400 font-bold text-xs uppercase tracking-widest flex items-center gap-2">
+                                    <Icons.File /> 技術分析觀察報告
+                                </span>
+                                <button 
+                                    onClick={copyToClipboard} 
+                                    disabled={!output} 
+                                    className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all flex items-center gap-2 ${isCopied ? 'bg-white text-emerald-600' : 'bg-slate-700 text-slate-300 hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed'}`}
+                                >
+                                    {isCopied ? <><Icons.Check /> 已複製</> : <><Icons.Copy /> 複製內容</>}
                                 </button>
                             </div>
-                            <textarea className="w-full h-[540px] bg-slate-900/50 border border-slate-700 rounded-xl p-6 text-[14px] text-slate-200 outline-none leading-relaxed" readOnly value={output} />
+                            <textarea 
+                                className="w-full h-[540px] bg-slate-900/50 border border-slate-700 rounded-xl p-6 text-[14px] text-slate-200 outline-none focus:border-emerald-500 font-sans leading-relaxed transition-all resize-y shadow-inner" 
+                                value={output} 
+                                readOnly 
+                                placeholder="生成的合規報告將顯示於此..." 
+                            />
                         </div>
                     </main>
                 </div>
             );
         }
+
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
     </script>
 </body>
 </html>
-
-
