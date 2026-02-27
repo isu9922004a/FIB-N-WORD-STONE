@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>N字戰法轉換器 Pro v11.9 精準解析版</title>
+    <title>N字戰法轉換器 Pro v12.0 高檔整理升級版</title>
     
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -36,8 +36,8 @@
             "強軋空": "⭐️ 強軋空盤：多頭動能極強，呈現噴出不回頭之勢，空頭抵抗完全失敗，主力控盤態度堅決。",
             "軋空": "⭐️ 軋空盤：股價於高檔進行強勢整理，以時間換取空間，顯示籌碼鎖定良好，蓄勢待發。",
             "盤堅": "⭐️ 盤堅盤：股價行進間伴隨 N 字回測以測試支撐，意味著空頭抵抗力道尚存，需透過反覆洗盤消化賣壓，屬穩健推升格局。",
-            // 盤整盤態
-            "盤整": "💤 盤整盤：股價受限於箱型區間震盪，多空力道均衡，量能通常萎縮，市場等待表態。",
+            // 盤整盤態 (v12.0 升級為高檔整理思維)
+            "盤整": "💤 中繼整理：屬多頭趨勢延伸段，高檔量縮震盪屬健康換手現象，待帶量突破壓力後有機會續攻。",
             // 空方盤態
             "強殺多": "⚠️ 強殺多盤：空方完全控盤，多頭放棄抵抗，常伴隨跳空缺口，崩跌速度極快，屬極弱勢格局。",
             "殺多": "⚠️ 殺多盤：多頭抵抗失敗，反彈無力（僅留上影線），弱勢整理後易續跌，賣壓沉重。",
@@ -52,22 +52,21 @@
             const processReport = () => {
                 if (!input.trim()) return;
                 try {
-                    // 1. 三向趨勢雷達 (精準版：避免被內文的「跌破」字眼干擾，改看大標題與盤態)
-                    let trendType = "BULL"; // 預設多頭
+                    // 1. 三向趨勢雷達
+                    let trendType = "BULL"; 
                     
                     if (/模擬大跌|C波崩盤|強殺多|殺多盤|空方主跌段/i.test(input)) {
                         trendType = "BEAR";
-                    } else if (/模擬盤整|第4波整理|箱型區間/i.test(input)) {
+                    } else if (/模擬盤整|第4波整理|箱型區間|橫盤/i.test(input)) {
                         trendType = "SIDEWAYS";
                     } else if (/模擬極強|軋空|盤堅/i.test(input)) {
                         trendType = "BULL";
                     } else {
-                        // 備用判定：從內文明確的「盤勢型態：」後方抓取
                         const pTypeMatch = input.match(/盤勢型態[：:]\s*([^\n]+)/);
                         if (pTypeMatch) {
                             const txt = pTypeMatch[1];
                             if (/殺多|盤跌/i.test(txt)) trendType = "BEAR";
-                            else if (/盤整|橫盤|觀望/i.test(txt)) trendType = "SIDEWAYS";
+                            else if (/盤整|橫盤|觀望|中繼/i.test(txt)) trendType = "SIDEWAYS";
                             else trendType = "BULL";
                         }
                     }
@@ -83,7 +82,7 @@
 
                     const rawPrice = (input.match(/(?:現價|收盤|最新|當前現價)[：:\s]*([\d,.]+)/) || [])[1] || "0";
 
-                    // 3. 智慧價格區間定位 (升級版：過濾掉 5N 這種倍數代號)
+                    // 3. 智慧價格區間定位
                     let bLow = "關鍵位";
                     let bHigh = "壓力位";
 
@@ -94,13 +93,11 @@
                     } else {
                         const extractPrice = (keywords) => {
                             for (let kw of keywords) {
-                                // 正則優化：跳過如 "5N (" 這樣的干擾字元，直接抓括號後或冒號後的真實數字
                                 const reg = new RegExp(`${kw}[^\\n]{0,20}?[：:]?\\s*(?:\\d+[Nn]\\s*\\()?\\s*([\\d,]+(?:\\.\\d+)?)`, 'i');
                                 const match = input.match(reg);
                                 if (match) {
                                     const val = parseFloat(match[1].replace(/,/g, ''));
-                                    // 確保抓出來的不是版號(23.1)或小於10的不合理數字
-                                    if (val > 10 && val !== 23.1 && val !== 11.8) return match[1];
+                                    if (val > 10 && val !== 23.1 && val !== 12.0) return match[1];
                                 }
                             }
                             return null;
@@ -130,7 +127,7 @@
                         }
                     }
 
-                    // 5. 盤態自動偵測 (對應文末盤態重點)
+                    // 5. 盤態自動偵測
                     let patternHint = MARKET_PATTERNS["盤堅"];
                     const pMatch = input.match(/(?:判定本檔個股目前屬於|盤勢型態)[：:]\s*([^\n]+)/);
                     if (pMatch) {
@@ -154,17 +151,19 @@
                     let p1, p2, p3;
 
                     if (trendType === "SIDEWAYS") {
-                        p1 = `針對${name}${codeDisplay}的技術面觀察顯示，該標的目前正處於「箱型區間整理」階段，整體型態定調為籌碼沉澱與多空換手。當前股價位於 ${rawPrice} 元，主要波動區間大致落在下檔支撐 ${bLow} 元與上檔壓力 ${bHigh} 元之間。在價格未有效帶量突破此區間邊界前，趨勢方向尚未完全明朗，若依技術交易邏輯觀察，目前現況宜視為中性整理。`;
-                        p2 = `從量價結構來看，近期成交量通常呈現萎縮或不規律狀態，反映出市場人氣暫時退潮，資金正在進行深度的觀望與換手。若要確立新一輪的明確攻勢，必須觀察到強而有力的點火訊號：例如成交量顯著放大至基礎攻擊門檻（約 ${vol1} 張）以上，且收盤價能實質站穩壓力區 ${bHigh} 元。在滿足帶量突破條件前，應避免過度積極追價。`;
-                        p3 = `針對未來情境之技術邏輯推演，在價格盤整過程中，核心戰術為「維持觀望」或「嚴守區間」。操作上應密切關注量能是否能在關鍵轉折位有效釋放。首要任務為守住下檔關鍵防守 ${bLow} 元，一旦跌破則整理可能轉弱；反之，若能帶量突破上檔壓力 ${bHigh} 元，多方控盤結構方能進一步表態。`;
+                        // 🟢 v12.0 升級：多頭中繼整理專屬合規文本 (導入健康量縮與高檔強勢震盪邏輯)
+                        p1 = `針對${name}${codeDisplay}的技術面觀察顯示，該標的目前正處於「多頭趨勢中繼整理」階段，整體型態定調為高檔強勢震盪與籌碼換手。當前股價位於 ${rawPrice} 元，主要波動區間大致落在下檔支撐 ${bLow} 元與上檔壓力 ${bHigh} 元之間。在均線多頭架構未遭破壞的結構下，若依趨勢交易邏輯觀察，目前現況宜視為多方主升段後的健康整理。`;
+                        p2 = `從量價結構來看，近期整理期間成交量呈現萎縮狀態，此高檔量縮屬健康現象，反映出市場賣壓減輕、籌碼穩定沉澱。若要確立趨勢有機會續攻，必須觀察到強而有力的點火訊號：例如成交量顯著放大至基礎攻擊門檻（約 ${vol1} 張）以上，且收盤價能實質站穩壓力區 ${bHigh} 元。在滿足帶量突破條件前，應耐心等待表態，避免過度積極追價。`;
+                        p3 = `針對未來情境之技術邏輯推演，在強勢盤整過程中，核心戰術為「嚴守區間、等待突破」。操作上應密切關注量能是否能在關鍵轉折位有效釋放。若帶量突破上檔壓力 ${bHigh} 元，多方控盤結構方能進一步表態續攻；反之，若跌破下檔關鍵防守 ${bLow} 區間，則中繼整理時間可能拉長。`;
                         
                     } else if (trendType === "BEAR") {
+                        // 🔴 弱勢股(空方)專屬合規文本
                         p1 = `針對${name}${codeDisplay}的技術面觀察顯示，該標的目前正處於「空方弱勢向下」階段，整體型態展現出明顯的走弱跡象。當前股價位於 ${rawPrice} 元，已跌破關鍵支撐並進入弱勢區間。上檔壓力防線目前確認於 ${bHigh} 元（關鍵防守位），若延續空方量價結構，下方支撐仍需反覆測試，實際跌幅需依量價配合確認。在價格維持在壓力位之下時，結構維持弱勢架構，若依趨勢交易邏輯觀察，空方控盤結構尚未改變。`;
                         p2 = `從量價結構來看，近期跌勢中若伴隨成交量放大，展現出「帶量下殺」特徵，反映市場賣壓湧出。若要觀察是否止跌反轉，必須留意量能與關鍵價位：若反彈量能不足（低於約 ${vol1} 張的基礎門檻），且無法站穩 ${bHigh} 元，則容易形成弱勢反彈（死貓跳）。在量價未能扭轉且未站上壓力位前，應避免盲目猜底。`;
                         p3 = `針對未來情境之技術邏輯推演，在弱勢下跌的過程中，核心戰術結論是空方控盤結構尚未破壞，直到收盤價出現帶量突破且站穩上檔防守壓力 ${bHigh} 元時，方視為趨勢止跌轉強。在弱勢期間，未有效突破壓力前，盤中的反彈皆視為空方換手或逃命波。`;
                         
                     } else {
-                        // 強勢股 (BULL)
+                        // 🔵 強勢股 (多方) 專屬合規文本
                         p1 = `針對${name}${codeDisplay}的技術面觀察顯示，該標的目前正處於「強勢多頭發動」階段，整體型態展現出極強的上攻企圖。當前股價位於 ${rawPrice} 元，已強勢表態並進入攻擊區間。下檔支撐防線已上移至 ${bLow} 元（關鍵防守位），若延續攻擊量結構，上方將逐步測試中長期壓力區，但實際幅度仍需依量價配合確認。在價格維持在防守位之上時，結構維持強勢架構，若依趨勢交易邏輯觀察，多方控盤結構尚未破壞。`;
                         p2 = `從量價結構來看，近期成交量已明顯放大，展現出強勁的「攻擊量能」，反映市場買盤湧入。若要延續此強勢攻勢，必須持續觀察量能：以前一日的 5 日均量 × 1.3 倍作為基礎攻擊門檻（約 ${vol1} 張）；而更為強勁的續攻條件，則要求成交量能達到 ${vol2} 張以上。在量價配合良好的情況下，不應預設高點。`;
                         p3 = `針對未來情境之技術邏輯推演，在強勢噴出的過程中，核心戰術結論是多方控盤結構尚未破壞，直到收盤價出現爆量卻無法創高，或是有效跌破結構防守 ${bLow} 元時，方視為趨勢轉弱。在強勢期間，收盤未破防守前，盤中震盪皆視為換手。`;
@@ -196,8 +195,8 @@
             return (
                 <div className="min-h-screen p-4 md:p-8 flex flex-col items-center">
                     <header className="w-full max-w-4xl text-center mb-6">
-                        <h1 className="text-3xl font-extrabold text-emerald-400 tracking-tight">N 字戰法轉換器 v11.9</h1>
-                        <p className="text-slate-500 text-[11px] mt-1 font-mono uppercase tracking-[0.2em]">Compliance Engine (Smart Regex Version)</p>
+                        <h1 className="text-3xl font-extrabold text-emerald-400 tracking-tight">N 字戰法轉換器 v12.0</h1>
+                        <p className="text-slate-500 text-[11px] mt-1 font-mono uppercase tracking-[0.2em]">Compliance Engine (Bullish Continuation Upgrade)</p>
                     </header>
                     <main className="w-full max-w-4xl space-y-4">
                         <div className="bg-slate-800 rounded-2xl p-4 border border-slate-700 shadow-xl">
@@ -205,7 +204,7 @@
                                 className="w-full h-40 bg-slate-900/50 border border-slate-700 rounded-xl p-4 text-sm text-slate-300 outline-none focus:border-emerald-500 font-mono transition-all resize-y" 
                                 value={input} 
                                 onChange={(e) => setInput(e.target.value)} 
-                                placeholder="貼上多方、空方或盤整原始數據 (已修復跌破誤判與5N數字擷取問題)..." 
+                                placeholder="貼上多方、空方或盤整原始數據 (盤整模組已升級為高檔強勢整理邏輯)..." 
                             />
                         </div>
                         <button 
@@ -244,3 +243,5 @@
     </script>
 </body>
 </html>
+
+
