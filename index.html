@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>N字戰法轉換器 Pro v14.4 雙網解析版</title>
+    <title>N字戰法轉換器 Pro v14.7 大師邏輯校正版</title>
     
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -29,6 +29,16 @@
             File: () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>,
             Copy: () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>,
             Check: () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+        };
+
+        const MARKET_PATTERNS = {
+            "強軋空": "⭐️ 強軋空盤：多頭動能極強，呈現噴出不回頭之勢，空頭抵抗完全失敗，主力控盤態度堅決。",
+            "軋空": "⭐️ 軋空盤：股價於高檔進行強勢整理，以時間換取空間，顯示籌碼鎖定良好，蓄勢待發。",
+            "盤堅": "⭐️ 盤堅盤：股價行進間伴隨 N 字回測以測試支撐，意味著空頭抵抗力道尚存，屬多頭波段推升格局。",
+            "盤整": "💤 中繼整理：屬多頭趨勢延伸段，高檔量縮震盪屬良性換手現象，待帶量突破壓力後有機會續攻主升段。",
+            "強殺多": "⚠️ 強殺多盤：空方完全控盤，多頭放棄抵抗，常伴隨跳空缺口，崩跌速度極快，屬極弱勢格局。",
+            "殺多": "⚠️ 殺多盤：多頭抵抗失敗，反彈無力（僅留上影線），弱勢整理後易續跌，賣壓沉重。",
+            "盤跌": "⚠️ 盤跌盤：多頭仍有抵抗，反彈幅度較大，但整體趨勢高點不過、低點屢破，呈現緩步向下格局。"
         };
 
         function App() {
@@ -68,53 +78,66 @@
                     const rawPriceStr = (input.match(/(?:現價|收盤|最新|當前現價)[：:\s]*([\d,.]+)/) || [])[1] || "0";
                     const rawPrice = parseFloat(rawPriceStr.replace(/,/g, ''));
 
-                    // 3. 多維度價位雷達 (V14.4 支援 V41 版 1N, 2N, 5N 解析)
+                    // 3. 多維度價位雷達 (V14.7 防重複與頸線抓取升級)
+                    let boxLow = null;
+                    let boxHigh = null;
+                    const boxMatch = input.match(/(?:箱體區間|區間)[^\d\n]*([\d,.]+)[^\d\n]+([\d,.]+)/);
+                    if (boxMatch) {
+                        boxLow = parseFloat(boxMatch[1].replace(/,/g, '')).toString();
+                        boxHigh = parseFloat(boxMatch[2].replace(/,/g, '')).toString();
+                    }
+
                     const extractPrice = (keywords) => {
                         for (let kw of keywords) {
                             const reg = new RegExp(`${kw}[^\\n0-9]{0,20}?([\\d,]+(?:\\.\\d+)?)`, 'i');
                             const match = input.match(reg);
                             if (match) {
                                 const val = parseFloat(match[1].replace(/,/g, ''));
-                                if (val > 10 && val !== 14.3 && val !== 14.4 && val !== 41) {
-                                    // 回傳格式化整數或小數
-                                    return val % 1 === 0 ? val.toString() : val.toFixed(0); 
+                                if (val > 10 && ![14.3, 14.4, 14.5, 14.6, 14.7, 41, 43].includes(val)) {
+                                    return val.toString(); 
                                 }
                             }
                         }
                         return null;
                     };
                     
-                    // 提取支撐防守
-                    let sup1 = extractPrice(["結構防守", "短支撐", "短線轉弱", "支撐", "箱底"]) || "關鍵位";
-                    
-                    // 智慧推算 EMA13 (若沒給，用支撐位往下推算約 1.5%)
+                    let sup1 = extractPrice(["結構防守", "短支撐", "短線轉弱", "支撐", "箱底"]) || boxLow || "關鍵位";
                     let sup2 = extractPrice(["關鍵防守", "結構破壞", "EMA13"]);
                     if (!sup2 && sup1 !== "關鍵位") {
-                        sup2 = Math.round(parseFloat(sup1) * 0.984).toString();
+                        sup2 = (parseFloat(sup1) * 0.984).toFixed(1).replace(/\.0$/, ''); 
                     } else if (!sup2) {
                         sup2 = "防守位";
                     }
 
-                    // 提取斐波那契壓力 (V41格式)
                     let n1 = extractPrice(["一飽", "1N"]);
                     let n5 = extractPrice(["五倍", "5N", "二吐", "2N"]);
                     
-                    let res1 = extractPrice(["整理壓力", "短壓", "箱頂", "壓力"]) || n1 || "壓力位";
-                    let res2 = extractPrice(["前高壓力", "前高", "殺多高", "主壓", "目標"]) || n5 || res1;
+                    let res1 = extractPrice(["整理壓力", "短壓", "箱頂", "壓力", "高於"]) || boxHigh || n1 || "壓力位";
+                    let res2 = extractPrice(["前高壓力", "前高", "殺多高", "主壓", "次壓", "頸線", "目標"]) || n5 || res1;
 
-                    // 4. 量能提取進化 (支援 V41 劇本 A 解析)
+                    // V14.7: 處理前高壓力與整理壓力重複的問題 (大師邏輯：避免無效標示)
+                    let displayRes2 = res2;
+                    if (res1 === res2 && res1 !== "壓力位") {
+                        displayRes2 = `待確認 (實戰需配合圖面抓出次壓/頸線)`;
+                    } else if (res1 !== res2) {
+                        displayRes2 = `約 ${res2}`;
+                    } else {
+                        displayRes2 = `約 壓力位`;
+                    }
+
+                    // 4. 量能提取進化
                     let volMatch = input.match(/(?:劇本\s*A|攻擊門檻|突破量|大於|≥|約)[^\n\d]*?([1-9]\d{0,3}(?:,\d{3})+|[1-9]\d{3,})/i);
                     let vol1 = volMatch ? volMatch[1].replace(/,/g, '') : "特定量能";
                     if (vol1 !== "特定量能") vol1 = parseInt(vol1).toLocaleString();
 
-                    // 5. 組合合規與格式化文本 (完全套用 V14.3 完美格式)
+                    // 5. 組合報告文本 (V14.7 導入 MACD 與 均量覆盤邏輯)
                     const disclaimer = `【免責聲明】本人未持有證券投資顧問相關證照，所載內容僅屬個人技術分析學習紀錄與心得分享，不代表任何買賣建議或獲利保證；過去績效亦不代表未來表現，投資涉及風險，請務必獨立思考、審慎評估並自負盈虧。`;
                     
                     const title = `🏆 ${name} ${codeBracket.replace(/[（）]/g, '')} 技術面學習筆記`;
                     
                     let section1_desc = "";
                     let section1_action = "";
-                    let section2_price = `📊 關鍵價位結構\n• 現價：約 ${rawPriceStr}\n• 下檔支撐：${sup1}（EMA8區間）\n• 關鍵防守：${sup2}（EMA13）\n• 整理壓力：約 ${res1}\n• 前高壓力：約 ${res2}`;
+                    let section2_price = `📊 關鍵價位結構\n• 現價：約 ${rawPriceStr}\n• 下檔支撐：${sup1}（EMA8區間）\n• 關鍵防守：${sup2}（EMA13）\n• 整理壓力：約 ${res1}\n• 前高壓力：${displayRes2}`;
                     let section3_vol = "";
                     let section4_scenarios = "";
                     let hint = "";
@@ -122,19 +145,21 @@
                     if (trendType === "SIDEWAYS") {
                         section1_desc = `目前盤態屬於「多頭主升段後之高檔中繼整理」，均線維持多頭排列（EMA8 > EMA13 > EMA21），且回檔量縮，屬典型良性換手結構，顯示籌碼穩定沉澱中。`;
                         section1_action = `惟依據 N 字戰法觀察，目前尚未出現明確「三盤突破 + 量起」之轉折訊號，故短線操作仍以觀望為主，等待攻擊訊號確認。`;
-                        section3_vol = `📊 量價結構\n\n上攻段具備明確放量，回檔過程量能萎縮，屬健康修正。\n後續若欲啟動新一波攻擊，需觀察成交量是否放大至 ${vol1} 張以上，並搭配突破關鍵壓力區。`;
-                        section4_scenarios = `📊 三大情境推演\n\n🟢 強勢續攻（N字進場點）\n• 條件：三盤突破 + 帶量（≥${vol1}張）突破 ${res1}，挑戰 ${res2}\n• 行為：可考慮順勢進場\n\n🟡 區間整理（現況）\n• 範圍：${sup1} ~ ${res1}\n• 特性：量縮震盪、籌碼沉澱\n• 行為：觀望為主，不預設方向\n\n🔴 轉弱警訊\n• 條件：跌破 ${sup2}（EMA13）且帶量\n• 結果：結構轉弱，整理時間拉長`;
+                        // V14.7: 寫入 MACD 動能收斂與 5T/10T 均量基準
+                        section3_vol = `📊 量價結構\n\n上攻段具備明確放量，回檔過程量能萎縮（若配合 MACD 柱狀體收斂或翻綠），屬健康換手修正。\n惟短線動能尚未轉正前，進場時機宜保守。後續若欲啟動新一波攻擊，需觀察成交量是否放大至 ${vol1} 張以上（參考 5T/10T 均量基準），並搭配突破關鍵壓力區。`;
+                        // V14.7: 寫入大師行為準則與 N 字目標預估
+                        section4_scenarios = `📊 三大情境推演\n\n🟢 強勢續攻（N字進場點）\n• 條件：三盤突破 + 帶量（≥${vol1}張）突破整理區 ${res1}，挑戰頸線（突破後可估算 N 字目標位設定停利）\n• 行為：等量增價揚、實質突破壓力區後再行動，紀律優先\n\n🟡 區間整理（現況）\n• 範圍：${sup1} ~ ${res1}\n• 特性：量縮震盪、籌碼沉澱\n• 行為：觀望為主，不預設方向\n\n🔴 轉弱警訊\n• 條件：跌破 ${sup2}（EMA13）且帶量\n• 結果：結構轉弱，整理時間拉長`;
                         hint = `💤 屬多頭趨勢中的中繼整理階段，結構未破壞但尚未出現攻擊訊號，策略以「等待轉折確認」為核心。`;
                     } else if (trendType === "BEAR") {
                         section1_desc = `目前盤態屬於「空方主跌段後之弱勢探底」，均線呈現空頭排列且反彈無力，屬典型弱勢結構，顯示賣壓持續沉重。`;
                         section1_action = `依據 N 字戰法觀察，目前處於空方控盤，任何反彈若無實質「量起 + 站穩壓力」，皆應視為逃命波，操作以防守或空手觀望為主。`;
-                        section3_vol = `📊 量價結構\n\n下跌段具備明確放量，反彈過程量能萎縮，屬弱勢反彈（死貓跳）。\n後續若欲止跌轉強，需觀察成交量是否放大至 ${vol1} 張以上，並搭配三盤突破站穩壓力區。`;
+                        section3_vol = `📊 量價結構\n\n下跌段具備明確放量，反彈過程量能萎縮，屬弱勢反彈（死貓跳）。\n後續若欲止跌轉強，需觀察成交量是否放大至 ${vol1} 張以上（參考均量基準），並搭配三盤突破站穩壓力區。`;
                         section4_scenarios = `📊 三大情境推演\n\n🔴 弱勢續跌（現況）\n• 條件：量縮反彈不過 ${res1}，再度跌破 ${sup1}\n• 行為：空方趨勢延續，切勿摸底\n\n🟡 弱勢整理\n• 範圍：${sup1} ~ ${res1}\n• 特性：低檔震盪、賣壓消化\n• 行為：觀望為主，等待落底訊號\n\n🟢 止跌轉強（反彈契機）\n• 條件：三盤突破 + 帶量（≥${vol1}張）突破 ${res2}\n• 結果：結構轉強，進入打底階段`;
                         hint = `⚠️ 屬空方控盤的弱勢探底階段，策略以「保守觀望、避開破底風險」為核心。`;
                     } else {
                         section1_desc = `目前盤態屬於「強勢多頭發動」，整體型態展現出極強的上攻企圖，均線維持多頭發散，屬強勢波段推升格局。`;
                         section1_action = `依據 N 字戰法觀察，目前已出現明確攻擊訊號，短線操作可順勢偏多，但須提防過熱乖離與獲利了結賣壓。`;
-                        section3_vol = `📊 量價結構\n\n近期成交量已明顯放大，展現出強勁的「攻擊量能」，反映市場買盤湧入。\n後續若欲延續此強勢攻勢，需觀察成交量是否能維持在 ${vol1} 張以上，並持續推升。`;
+                        section3_vol = `📊 量價結構\n\n近期成交量已明顯放大，展現出強勁的「攻擊量能」，反映市場買盤湧入。\n後續若欲延續此強勢攻勢，需觀察成交量是否能維持在 ${vol1} 張以上（參考 5T 均量倍數），並持續推升。`;
                         section4_scenarios = `📊 三大情境推演\n\n🟢 強勢續攻（現況）\n• 條件：帶量（≥${vol1}張）突破 ${res1} / 挑戰 ${res2}\n• 行為：順勢操作，移動停利\n\n🟡 區間整理\n• 範圍：${sup1} ~ ${res1}\n• 特性：高檔量縮震盪、消化獲利了結賣壓\n• 行為：守住支撐可續抱\n\n🔴 轉弱警訊\n• 條件：跌破 ${sup2} 且帶量\n• 結果：多頭結構破壞，視為趨勢轉弱`;
                         hint = `⭐️ 屬多頭強勢攻擊階段，順勢偏多操作，唯須嚴守移動停利點。`;
                     }
@@ -163,8 +188,8 @@
             return (
                 <div className="min-h-screen p-4 md:p-8 flex flex-col items-center">
                     <header className="w-full max-w-4xl text-center mb-6">
-                        <h1 className="text-3xl font-extrabold text-emerald-400 tracking-tight">N 字戰法轉換器 V14.4</h1>
-                        <p className="text-slate-500 text-[11px] mt-1 font-mono uppercase tracking-[0.2em]">Ultimate Dual-Net Data Engine</p>
+                        <h1 className="text-3xl font-extrabold text-emerald-400 tracking-tight">N 字戰法轉換器 V14.7</h1>
+                        <p className="text-slate-500 text-[11px] mt-1 font-mono uppercase tracking-[0.2em]">Master Logic Calibration (MACD & Neckline)</p>
                     </header>
                     <main className="w-full max-w-4xl space-y-4">
                         <div className="bg-slate-800 rounded-2xl p-4 border border-slate-700 shadow-xl">
@@ -172,19 +197,19 @@
                                 className="w-full h-40 bg-slate-900/50 border border-slate-700 rounded-xl p-4 text-sm text-slate-300 outline-none focus:border-emerald-500 font-mono transition-all resize-y" 
                                 value={input} 
                                 onChange={(e) => setInput(e.target.value)} 
-                                placeholder="貼上 V41 雙網版原始報告 (系統將自動提取測幅與劇本量能)..." 
+                                placeholder="貼上您的原始報告內容 (V14.7 已修復壓力重複問題，並導入 MACD 與均量輔助邏輯)..." 
                             />
                         </div>
                         <button 
                             onClick={processReport} 
                             className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-4 rounded-xl shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2"
                         >
-                            <Icons.Sparkles /> 生成 V14.4 終極實戰筆記
+                            <Icons.Sparkles /> 生成 V14.7 大師邏輯校正版
                         </button>
                         <div className="bg-slate-800 rounded-2xl p-4 border border-slate-700 relative shadow-2xl">
                             <div className="flex justify-between items-center mb-3">
                                 <span className="text-emerald-400 font-bold text-xs uppercase tracking-widest flex items-center gap-2">
-                                    <Icons.File /> 技術面學習筆記
+                                    <Icons.File /> 技術面實戰交易腳本
                                 </span>
                                 <button 
                                     onClick={copyToClipboard} 
