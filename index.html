@@ -402,7 +402,7 @@ body{
 
     <p>月線波段條件判斷＋固定倍數目標價＋費波那契 N字分析</p>
 
-    <span class="version-pill">前端 V3.2.7｜ABC價位隨文顯示版｜新手小白友善版｜V2.9.5 相容｜費波那契核心 第2.4版</span>
+    <span class="version-pill">前端 V3.2.8｜目標分流＋進場品質版｜ABC價位隨文顯示｜新手小白友善版｜V2.9.5 相容｜費波那契核心 第2.4版</span>
 
   </div>
 
@@ -674,7 +674,7 @@ body{
 
       <div class="section-title">⑥ 一鍵複製分析報告</div>
 
-      <div class="hint">會依 V3.2.7 ABC價位隨文顯示框架整理：先看結論、ABC、新進／續抱／加碼／獲利、轉弱條件、價格作戰地圖、下一交易日3種劇本、進階技術資料、歷史N字、小白懶人包與石頭少爺判讀。</div>
+      <div class="hint">會依 V3.2.8 目標分流＋進場品質框架整理：先看結論、ABC、新進／續抱／加碼／獲利、轉弱條件、價格作戰地圖、下一交易日3種劇本、進階技術資料、歷史N字、小白懶人包與石頭少爺判讀。</div>
 
       <div class="copy-actions">
 
@@ -690,7 +690,7 @@ body{
 
 </main>
 
-<footer class="footer">石頭少爺 Agent｜GitHub V3.2.7 ABC價位隨文顯示版｜V2.9.5 相容｜費波那契核心 第2.4版<br>技術分析僅供研究與決策參考，不構成投資建議。</footer>
+<footer class="footer">石頭少爺 Agent｜GitHub V3.2.8 目標分流＋進場品質版｜V2.9.5 相容｜費波那契核心 第2.4版<br>技術分析僅供研究與決策參考，不構成投資建議。</footer>
 
 <script>
 
@@ -700,7 +700,7 @@ const FRONTEND_REPORT_VERSION="2026-08-20-report-v3.2.6-multidimensional-state-m
 
 const TARGET_MULTIPLIERS=[3,3.5,4,4.5,5,5.5,6,6.5,7,7.5,8,8.5,9,9.5,10];
 
-// V3.2.7：沿用 V3.2.6 多維狀態機，新增 ABC 當下價位隨文顯示。
+// V3.2.8：沿用 V3.2.7 ABC價位隨文顯示，新增 Fib／固定倍數目標分流與 ENTRY_QUALITY。
 
 // 1.5% 只用來分類「突破後是否正在回測 B」，不是 Fibonacci 公式。
 
@@ -709,6 +709,14 @@ const B_RETEST_TOLERANCE_PCT_V326=1.5;
 const TARGET_NEAR_PCT_V326=5;
 
 const TARGET_APPROACHING_PCT_V326=15;
+
+// V3.2.8 進場位置分類參數：只用於報告風險分級，不是買賣公式。
+
+const ENTRY_MA_GAP_POOR_PCT_V328=20;
+
+const ENTRY_MA_GAP_WATCH_PCT_V328=10;
+
+const ENTRY_RSI_WATCH_V328=70;
 
 // 股票中文名稱：
 
@@ -10482,6 +10490,142 @@ function targetZoneMetaV326(key){
 
 }
 
+function getFixedTargetZoneV328(report,fixed,monthlyStatus){
+
+  const close=n(report?.close),high=n(report?.dailyHigh),p=n(fixed?.p);
+
+  if(monthlyStatus!=="PASS"||p===null||close===null||p<=0)return {key:"NONE",distancePct:null};
+
+  if(close>p)return {key:"OVER_TARGET",distancePct:((p-close)/close)*100};
+
+  if(close===p||(high!==null&&high>=p))return {key:"REACHED",distancePct:((p-close)/close)*100};
+
+  const d=((p-close)/close)*100;
+
+  if(d<=TARGET_NEAR_PCT_V326)return {key:"NEAR",distancePct:d};
+
+  if(d<=TARGET_APPROACHING_PCT_V326)return {key:"APPROACHING",distancePct:d};
+
+  return {key:"FAR",distancePct:d};
+
+}
+
+function fixedTargetZoneMetaV328(key,fixed){
+
+  const m=fixed?.m??"-";
+
+  const map={
+
+    NONE:{icon:"➖",label:"目前無可用月線固定倍數目標"},
+
+    FAR:{icon:"🟢",label:`距月線${m}×固定倍數仍遠`},
+
+    APPROACHING:{icon:"🟡",label:`月線${m}×固定倍數已較接近`},
+
+    NEAR:{icon:"⚠️",label:`月線${m}×固定倍數已很接近`},
+
+    REACHED:{icon:"🏆",label:`盤中／收盤已觸及月線${m}×固定倍數`},
+
+    OVER_TARGET:{icon:"🏆",label:`收盤已站上月線${m}×固定倍數`}
+
+  };
+
+  return map[key]||map.NONE;
+
+}
+
+function getEntryQualityV328(report,s,monthlyStatus,nStatus,nPhase,ab,fibTargetZone,fixedTargetZone,quality){
+
+  const gap=n(s?.maCtx?.gapPct),rsi=n(report?.dailyRsi);
+
+  if(monthlyStatus!=="PASS")return "LOCKED";
+
+  if(nStatus==="failed")return "LOCKED";
+
+  if(nStatus!=="confirmed")return "WAIT_STRUCTURE";
+
+  if(nPhase==="WEAKENING")return "POOR";
+
+  const fibHard=["NEAR","REACHED","OVER_TARGET"].includes(fibTargetZone?.key);
+
+  const fixedHard=["NEAR","REACHED","OVER_TARGET"].includes(fixedTargetZone?.key);
+
+  const gapPoor=gap!==null&&gap>=ENTRY_MA_GAP_POOR_PCT_V328;
+
+  if(fibHard||fixedHard||gapPoor||s?.overheated||s?.poorRR)return "POOR";
+
+  const fibApproach=fibTargetZone?.key==="APPROACHING";
+
+  const fixedApproach=fixedTargetZone?.key==="APPROACHING";
+
+  const gapWatch=gap!==null&&gap>=ENTRY_MA_GAP_WATCH_PCT_V328;
+
+  const rsiWatch=rsi!==null&&rsi>=ENTRY_RSI_WATCH_V328;
+
+  if(nPhase==="RETESTING"&&quality==="HEALTHY"&&!fibApproach&&!fixedApproach&&!gapWatch&&!rsiWatch)return "BETTER";
+
+  if(fibApproach||fixedApproach||gapWatch||rsiWatch||quality!=="HEALTHY"||nPhase==="EXTENDING")return "WATCH";
+
+  return "WATCH";
+
+}
+
+function entryQualityMetaV328(key){
+
+  const map={
+
+    LOCKED:{icon:"🔴",label:"LOCKED｜波段Gate未開啟／不啟用新進"},
+
+    WAIT_STRUCTURE:{icon:"🟡",label:"WAIT_STRUCTURE｜等待N字結構完成"},
+
+    POOR:{icon:"🔴",label:"POOR｜目前新進位置不漂亮"},
+
+    WATCH:{icon:"🟡",label:"WATCH｜可觀察，但不宜追價"},
+
+    BETTER:{icon:"🟢",label:"BETTER｜回測後位置較改善，仍需量價確認"}
+
+  };
+
+  return map[key]||map.WATCH;
+
+}
+
+function entryQualityReasonsV328(report,s,monthlyStatus,nStatus,nPhase,fibTargetZone,fixedTargetZone,quality,fixed){
+
+  const reasons=[];
+
+  const gap=n(s?.maCtx?.gapPct),rsi=n(report?.dailyRsi);
+
+  if(monthlyStatus!=="PASS")reasons.push(`MONTHLY_STATUS=${monthlyStatus}`);
+
+  if(nStatus!=="confirmed")reasons.push(`N_STATUS=${String(nStatus||"").toUpperCase()}，正式N字尚未完成`);
+
+  if(nPhase==="WEAKENING")reasons.push("已跌回B下方，突破品質轉弱");
+
+  if(fibTargetZone?.key==="APPROACHING")reasons.push("Fib 1.618已進入APPROACHING");
+
+  if(["NEAR","REACHED","OVER_TARGET"].includes(fibTargetZone?.key))reasons.push(`Fib 1.618=${fibTargetZone.key}`);
+
+  if(fixedTargetZone?.key==="APPROACHING"&&fixed?.m!==undefined)reasons.push(`月線${fixed.m}×固定倍數已進入APPROACHING`);
+
+  if(["NEAR","REACHED","OVER_TARGET"].includes(fixedTargetZone?.key)&&fixed?.m!==undefined)reasons.push(`月線${fixed.m}×固定倍數=${fixedTargetZone.key}`);
+
+  if(gap!==null&&gap>=ENTRY_MA_GAP_POOR_PCT_V328)reasons.push(`日20MA正乖離 ${fmtSignedPct(gap)} 偏大`);
+
+  else if(gap!==null&&gap>=ENTRY_MA_GAP_WATCH_PCT_V328)reasons.push(`日20MA正乖離 ${fmtSignedPct(gap)} 已擴大`);
+
+  if(rsi!==null&&rsi>=80)reasons.push(`RSI ${fmt(rsi)} 過熱`);
+
+  else if(rsi!==null&&rsi>=ENTRY_RSI_WATCH_V328)reasons.push(`RSI ${fmt(rsi)} 偏高`);
+
+  if(quality!=="HEALTHY")reasons.push(`STRUCTURE_QUALITY=${quality}`);
+
+  if(nPhase==="EXTENDING"&&reasons.length===0)reasons.push("已處突破後延伸，優先等回測而非追價");
+
+  return reasons;
+
+}
+
 function getStructureQualityV326(report,s,nStatus,nPhase,ab){
 
   const pos=ab?.positionZone||"UNKNOWN";
@@ -11308,11 +11452,23 @@ function buildReportTextV326(report){
 
   const targetMeta=targetZoneMetaV326(targetZone.key);
 
+  const fixed=s.fixed?.next||null;
+
+  const fixedTargetZone=getFixedTargetZoneV328(report,fixed,monthlyStatus);
+
+  const fixedTargetMeta=fixedTargetZoneMetaV328(fixedTargetZone.key,fixed);
+
   const quality=getStructureQualityV326(report,s,nStatus,nPhase,ab);
 
   const qualityMeta=structureQualityMetaV326(quality);
 
   const posMeta=positionZoneMetaV326(ab?.positionZone||"UNKNOWN");
+
+  const entryQuality=getEntryQualityV328(report,s,monthlyStatus,nStatus,nPhase,ab,targetZone,fixedTargetZone,quality);
+
+  const entryQualityMeta=entryQualityMetaV328(entryQuality);
+
+  const entryReasons=entryQualityReasonsV328(report,s,monthlyStatus,nStatus,nPhase,targetZone,fixedTargetZone,quality,fixed);
 
   const volumeContext=volumeContextV326(report,s,nStatus,ab,targetZone);
 
@@ -11324,7 +11480,7 @@ function buildReportTextV326(report){
 
   const ma=n(s.maCtx.value),rsi=n(report.dailyRsi),vol=n(s.volume.latestRatio);
 
-  const target=n(s.fib.target1618),fixed=s.fixed?.next||null;
+  const target=n(s.fib.target1618);
 
   const ret618=n(s.fib.retracement?.["0.618"]),ret764=n(s.fib.retracement?.["0.764"]);
 
@@ -11332,7 +11488,7 @@ function buildReportTextV326(report){
 
   const formingAboveB=nStatus==="forming"&&ab?.positionZone==="ABOVE_B";
 
-  // V3.2.7：目前這組 A／B／C 只要出現在敘述裡，就盡量把判定價位帶在旁邊。
+  // V3.2.8：保留ABC價位隨文顯示；新增Fib／固定倍數目標分流與ENTRY_QUALITY。
 
   const aNow=A!==null?`A＝${fmt(A)} 元`:"A＝尚未形成";
 
@@ -11398,7 +11554,7 @@ function buildReportTextV326(report){
 
   };
 
-  lines.push("📘 石頭少爺分析助手｜V3.2.7 新手小白友善版（ABC價位隨文顯示版）");
+  lines.push("📘 石頭少爺分析助手｜V3.2.8 新手小白友善版（目標分流＋進場品質版）");
 
   lines.push(`報告產出時間：${reportGeneratedAt()}`);
 
@@ -11428,7 +11584,11 @@ function buildReportTextV326(report){
 
   lines.push(`${qualityMeta.icon} STRUCTURE_QUALITY：${qualityMeta.label}`);
 
-  if(nStatus==="confirmed")lines.push(`${targetMeta.icon} TARGET_ZONE：${targetZone.key}｜${targetMeta.label}${targetZone.distancePct!==null?`｜距1.618 ${fmtSignedPct(targetZone.distancePct)}`:""}`);
+  if(nStatus==="confirmed")lines.push(`${targetMeta.icon} FIB_TARGET_ZONE：${targetZone.key}｜${targetMeta.label}${targetZone.distancePct!==null?`｜距1.618 ${fmtSignedPct(targetZone.distancePct)}`:""}`);
+
+  if(monthlyStatus==="PASS"&&fixed)lines.push(`${fixedTargetMeta.icon} FIXED_TARGET_ZONE：${fixedTargetZone.key}｜${fixedTargetMeta.label}${fixedTargetZone.distancePct!==null?`｜距${fixed.m}× ${fmtSignedPct(fixedTargetZone.distancePct)}`:""}`);
+
+  lines.push(`${entryQualityMeta.icon} ENTRY_QUALITY：${entryQuality}｜${entryQualityMeta.label}${entryReasons.length?`｜${entryReasons.slice(0,3).join("；")}`:""}`);
 
   if(nStatus==="confirmed")lines.push(`🟢 完整N字：已確認（${abcNow}）｜${bNow}已突破`);
 
@@ -11496,17 +11656,23 @@ function buildReportTextV326(report){
 
       lines.push("🟡 加碼：等待回測確認，不在尚未守穩前搶先加碼。");
 
-    }else if(["NEAR","REACHED","OVER_TARGET"].includes(targetZone.key)||s.overheated||s.poorRR||s.nearFixed){
+    }else if(entryQuality==="POOR"){
 
-      lines.push("🔴 新進場：位置吸引力偏低／接近目標區｜方向強不代表現在好買，不追價。");
+      lines.push(`🔴 新進場：目前位置吸引力偏低｜${entryReasons.length?entryReasons.join("；"):"方向強不代表現在好買"}；不追價。`);
 
-      lines.push("🟡 加碼：暫不積極加碼｜目標區與高檔風險優先。");
+      lines.push(`🟡 加碼：暫不積極加碼｜${fixed&&fixedTargetZone.key==="APPROACHING"?`月線${fixed.m}×＝${fmt(fixed.p)} 元已較接近；`:""}優先等待B ${fmt(B)} 元附近健康回測與乖離收斂。`);
+
+    }else if(entryQuality==="WATCH"){
+
+      lines.push(`🟡 新進場：可觀察但不追價｜${entryReasons.length?entryReasons.join("；"):"完整N字已確認但仍優先等回測"}。`);
+
+      lines.push(`🟡 加碼：等待B ${fmt(B)} 元附近回測守穩與量價改善。`);
 
     }else{
 
-      lines.push(`🟡 新進場：完整N字已確認｜優先等B ${fmt(B)} 元附近健康回測再評估。`);
+      lines.push(`🟢 新進場觀察：回測後位置較改善｜仍需B ${fmt(B)} 元守穩與量價確認，不等同自動買進。`);
 
-      lines.push("🟡 加碼：等待回測守穩與量價改善，不因單日創高追價。");
+      lines.push("🟡 加碼：僅在回測確認與量價改善後再評估，不因單日反彈直接加碼。");
 
     }
 
@@ -11714,9 +11880,9 @@ function buildReportTextV326(report){
 
   const map=[]; const add=(p,t)=>{if(n(p)!==null)map.push({p:n(p),t});};
 
-  if(nStatus==="confirmed"&&target!==null)add(target,`🎯 ${fmt(target)} 元｜目前N字1.618正式目標｜TARGET_ZONE=${targetZone.key}`);
+  if(nStatus==="confirmed"&&target!==null)add(target,`🎯 ${fmt(target)} 元｜目前N字1.618正式目標｜FIB_TARGET_ZONE=${targetZone.key}`);
 
-  if(fixed&&monthlyStatus==="PASS")add(fixed.p,`📌 ${fmt(fixed.p)} 元｜月線${fixed.m}×下一固定倍數`);
+  if(fixed&&monthlyStatus==="PASS")add(fixed.p,`📌 ${fmt(fixed.p)} 元｜月線${fixed.m}×下一固定倍數｜FIXED_TARGET_ZONE=${fixedTargetZone.key}`);
 
   add(close,`📍 ${fmt(close)} 元｜目前收盤價`);
 
@@ -11844,7 +12010,7 @@ function buildReportTextV326(report){
 
   if(vol!==null)lines.push(`【最新相對量】${fmt(vol,2)} 倍｜${volumeContext}`);
 
-  lines.push(`【多維狀態】POSITION_ZONE=${ab?.positionZone||"UNKNOWN"}｜TARGET_ZONE=${targetZone.key}｜STRUCTURE_QUALITY=${quality}`);
+  lines.push(`【多維狀態】POSITION_ZONE=${ab?.positionZone||"UNKNOWN"}｜FIB_TARGET_ZONE=${targetZone.key}｜FIXED_TARGET_ZONE=${fixedTargetZone.key}｜STRUCTURE_QUALITY=${quality}｜ENTRY_QUALITY=${entryQuality}`);
 
   lines.push("");
 
@@ -11866,7 +12032,7 @@ function buildReportTextV326(report){
 
     if(ret764!==null)lines.push(`0.764深度風控參考：${fmt(ret764)} 元`);
 
-    lines.push(`1.618正式目標：${fmt(target)} 元｜TARGET_ZONE=${targetZone.key}`);
+    lines.push(`1.618正式目標：${fmt(target)} 元｜FIB_TARGET_ZONE=${targetZone.key}`);
 
   }else if(nStatus==="abc_ready")lines.push("正式1.618尚未啟用；B突破確認後才啟用。若C被收盤跌破但A守住，回退WAIT_C。");
 
@@ -11884,7 +12050,7 @@ function buildReportTextV326(report){
 
   }
 
-  if(fixed&&monthlyStatus==="PASS")lines.push(`【固定倍數】下一關：${fixed.m}×＝${fmt(fixed.p)} 元｜距現價 ${fmtSignedPct(signedDistancePct(fixed.p,close))}`);
+  if(fixed&&monthlyStatus==="PASS")lines.push(`【固定倍數】下一關：${fixed.m}×＝${fmt(fixed.p)} 元｜距現價 ${fmtSignedPct(signedDistancePct(fixed.p,close))}｜FIXED_TARGET_ZONE=${fixedTargetZone.key}`);
 
   buildGoldSectionV326(lines,report,s,ab,nStatus,nPhase,cLife);
 
@@ -11892,7 +12058,7 @@ function buildReportTextV326(report){
 
   const failed=s.fib?.lastFailedFib,completed=s.fib?.lastCompletedFib;
 
-  if(nStatus==="confirmed"&&target!==null)lines.push(`🎯 目前這一組N字正式1.618：${fmt(target)} 元｜TARGET_ZONE=${targetZone.key}｜以下歷史紀錄不參與目前目標計算。`);
+  if(nStatus==="confirmed"&&target!==null)lines.push(`🎯 目前這一組N字正式1.618：${fmt(target)} 元｜FIB_TARGET_ZONE=${targetZone.key}｜以下歷史紀錄不參與目前目標計算。`);
 
   lines.push("⚠️ 歷史N字不等於目前訊號；歷史目標不得直接套用到目前結構。");
 
@@ -11912,13 +12078,17 @@ function buildReportTextV326(report){
 
   lines.push(`${qualityMeta.icon} STRUCTURE_QUALITY：${quality}`);
 
+  lines.push(`${entryQualityMeta.icon} ENTRY_QUALITY：${entryQuality}`);
+
   if(nStatus==="confirmed"){
 
     lines.push(`🔥 B＝${fmt(B)} 元：已突破；第一層看突破有效性。`);
 
     if(C!==null)lines.push(`🟠 C＝${fmt(C)} 元：本組實際回檔低點。`);
 
-    if(target!==null)lines.push(`${targetMeta.icon} 1.618＝${fmt(target)} 元｜TARGET_ZONE=${targetZone.key}`);
+    if(target!==null)lines.push(`${targetMeta.icon} 1.618＝${fmt(target)} 元｜FIB_TARGET_ZONE=${targetZone.key}`);
+
+    if(fixed&&monthlyStatus==="PASS")lines.push(`${fixedTargetMeta.icon} 月線${fixed.m}×＝${fmt(fixed.p)} 元｜FIXED_TARGET_ZONE=${fixedTargetZone.key}`);
 
   }else if(nStatus==="abc_ready")lines.push(`🟡 ${cNow}已形成；守住${cNow}並等待${bNow}完整收盤突破。`);
 
@@ -11942,9 +12112,13 @@ function buildReportTextV326(report){
 
     lines.push(`🟢 短線N字：完整確認｜${nPhase}。`);
 
-    lines.push(`${targetMeta.icon} 目標距離：TARGET_ZONE=${targetZone.key}${target!==null?`｜1.618 ${fmt(target)} 元`:""}。`);
+    lines.push(`${targetMeta.icon} Fib目標距離：FIB_TARGET_ZONE=${targetZone.key}${target!==null?`｜1.618 ${fmt(target)} 元`:""}。`);
 
-    lines.push(`📌 操作重點：${["NEAR","REACHED","OVER_TARGET"].includes(targetZone.key)?"不追高並提高獲利保護":"優先看B回測能否守穩"}。`);
+    if(fixed&&monthlyStatus==="PASS")lines.push(`${fixedTargetMeta.icon} 固定倍數距離：FIXED_TARGET_ZONE=${fixedTargetZone.key}｜${fixed.m}× ${fmt(fixed.p)} 元。`);
+
+    lines.push(`${entryQualityMeta.icon} 新進品質：ENTRY_QUALITY=${entryQuality}｜${entryQualityMeta.label}。`);
+
+    lines.push(`📌 操作重點：${entryQuality==="POOR"?"不追價，等待乖離收斂或B附近健康回測":entryQuality==="BETTER"?"回測位置改善，但仍需量價確認":"優先看B回測能否守穩"}。`);
 
   }else if(nStatus==="abc_ready"){
 
@@ -11976,6 +12150,12 @@ function buildReportTextV326(report){
 
   lines.push(`${qualityMeta.icon} 結構品質：${qualityMeta.label}`);
 
+  if(nStatus==="confirmed")lines.push(`${targetMeta.icon} Fib目標：FIB_TARGET_ZONE=${targetZone.key}${target!==null?`｜1.618＝${fmt(target)} 元`:""}`);
+
+  if(monthlyStatus==="PASS"&&fixed)lines.push(`${fixedTargetMeta.icon} 固定倍數目標：FIXED_TARGET_ZONE=${fixedTargetZone.key}｜${fixed.m}×＝${fmt(fixed.p)} 元`);
+
+  lines.push(`${entryQualityMeta.icon} 新進品質：ENTRY_QUALITY=${entryQuality}｜${entryQualityMeta.label}`);
+
   if(nStatus==="confirmed"){
 
     if(targetZone.key==="NEAR")lines.push(`⚠️ 目前距1.618僅 ${fmt(targetZone.distancePct,2)}%；不宜追高，已有部位提高獲利保護。`);
@@ -11996,7 +12176,7 @@ function buildReportTextV326(report){
 
   lineSection(lines,"⚙️ 版本資訊");
 
-  lines.push("前端報告版本：第3.2.7版（ABC價位隨文顯示｜延續V3.2.6多維狀態機）");
+  lines.push("前端報告版本：第3.2.8版（Fib／固定倍數目標分流＋ENTRY_QUALITY｜保留ABC價位隨文顯示）");
 
   lines.push(`後端分析版本：${report.version||"-"}`);
 
@@ -12010,9 +12190,17 @@ function buildReportTextV326(report){
 
   lines.push("POSITION_ZONE：ABOVE_B／BETWEEN_B_0236／BETWEEN_0236_0382／BETWEEN_0382_0500／BETWEEN_0500_0618／BETWEEN_0618_0764／BELOW_0764／BELOW_A。");
 
-  lines.push(`TARGET_ZONE：NONE／FAR／APPROACHING（≤${TARGET_APPROACHING_PCT_V326}%）／NEAR（≤${TARGET_NEAR_PCT_V326}%）／REACHED／OVER_TARGET。`);
+  lines.push(`FIB_TARGET_ZONE：NONE／FAR／APPROACHING（≤${TARGET_APPROACHING_PCT_V326}%）／NEAR（≤${TARGET_NEAR_PCT_V326}%）／REACHED／OVER_TARGET；只描述正式N字1.618距離。`);
+
+  lines.push(`FIXED_TARGET_ZONE：NONE／FAR／APPROACHING（≤${TARGET_APPROACHING_PCT_V326}%）／NEAR（≤${TARGET_NEAR_PCT_V326}%）／REACHED／OVER_TARGET；只描述月線下一固定倍數距離。`);
 
   lines.push("STRUCTURE_QUALITY：HEALTHY／MIXED／WEAK；POSITION_ZONE只描述位置，品質再搭配MA20斜率、是否站上MA20與量能判讀。");
+
+  lines.push(`ENTRY_QUALITY：LOCKED／WAIT_STRUCTURE／POOR／WATCH／BETTER；綜合月線Gate、N字階段、Fib／固定倍數目標距離、MA20正乖離與RSI，只作新進位置品質分級，不是自動買賣訊號。`);
+
+  lines.push("V3.2.8目標分流：Fib 1.618與月線固定倍數各自判斷距離，禁止再用單一『接近目標區』混寫兩套目標。");
+
+  lines.push("V3.2.8進場品質：STRUCTURE_QUALITY回答『結構有沒有壞』；ENTRY_QUALITY回答『現在的新進位置漂不漂亮』，兩者可以同時為HEALTHY與POOR。");
 
   lines.push("完整N字確認後：目前這組A／B／C在報告敘述中會同步附上判定價位；B＝第一層突破有效性、C＝本組實際回檔低點、MA20＝短線趨勢健康度、0.618／0.764＝回落風控、A＝長週期重大失效觀察。");
 
@@ -12026,9 +12214,11 @@ function buildReportTextV326(report){
 
     const pos=ab?.mode==="extension"?`現價高於B ${fmt(B)} 元、高出B ${fmt(ab.aboveBAmount)} 元（相當於A→B波段 +${fmt(ab.valuePct,2)}%）`:`現價已回到B ${fmt(B)} 元下方`;
 
-    const targetText=target!==null?`TARGET_ZONE=${targetZone.key}、1.618=${fmt(target)}元`:"目前無正式1.618";
+    const targetText=target!==null?`FIB_TARGET_ZONE=${targetZone.key}、1.618=${fmt(target)}元`:"目前無正式1.618";
 
-    summary=`${formatStockNameWithCode(report.name,report.code)}目前是「${monthlyText}、CONFIRMED / ${nPhase}、${pos}、${targetText}、STRUCTURE_QUALITY=${quality}」；${["NEAR","REACHED","OVER_TARGET"].includes(targetZone.key)?"接近／進入目標區，不追高並提高獲利保護":"優先觀察B回測與量價健康度"}。`;
+    const fixedText=fixed&&monthlyStatus==="PASS"?`FIXED_TARGET_ZONE=${fixedTargetZone.key}、${fixed.m}×=${fmt(fixed.p)}元`:"固定倍數目前不可用";
+
+    summary=`${formatStockNameWithCode(report.name,report.code)}目前是「${monthlyText}、CONFIRMED / ${nPhase}、${pos}、${targetText}、${fixedText}、STRUCTURE_QUALITY=${quality}、ENTRY_QUALITY=${entryQuality}」；${entryQuality==="POOR"?"趨勢可強但新進位置不漂亮，不追價，優先等待乖離收斂或B附近健康回測":entryQuality==="BETTER"?"回測後位置較改善，但仍需量價確認":"優先觀察B回測與量價健康度"}。`;
 
   }else if(nStatus==="abc_ready"){
 
@@ -12340,7 +12530,7 @@ async function analyzeStock(){
 
     set("stockName",hasRealStockName(name,code)?name:`股票代號 ${code}`);
 
-    set("stockMeta",`${code}｜${market}｜${source}｜後端分析 ${version}｜前端 V3.2.7`);
+    set("stockMeta",`${code}｜${market}｜${source}｜後端分析 ${version}｜前端 V3.2.8`);
 
     set("closeDate",`最新交易日：${datefmt(closeDate)}`);
 
