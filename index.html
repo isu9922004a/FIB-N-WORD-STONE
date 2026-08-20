@@ -402,7 +402,7 @@ body{
 
     <p>月線波段條件判斷＋固定倍數目標價＋費波那契 N字分析</p>
 
-    <span class="version-pill">前端 V3.3.2｜全中文白話顯示＋隱藏版本資訊｜目標分流＋ABC價位隨文顯示｜新手小白友善版｜V2.9.5 相容｜費波那契核心 第2.4版</span>
+    <span class="version-pill">前端 V3.3.3｜中文去重＋逐層修復｜全中文白話＋隱藏版本資訊｜目標分流＋ABC價位隨文顯示｜新手小白友善版｜V2.9.5 相容｜費波那契核心 第2.4版</span>
 
   </div>
 
@@ -674,7 +674,7 @@ body{
 
       <div class="section-title">⑥ 一鍵複製分析報告</div>
 
-      <div class="hint">會依 V3.3.2 全中文白話顯示框架整理：先看結論、ABC、新進／續抱／加碼／獲利、轉弱條件、價格作戰地圖、下一交易日3種劇本、進階技術資料、歷史N字、小白懶人包與石頭少爺判讀。</div>
+      <div class="hint">會依 V3.3.3 中文去重與逐層修復框架整理：先看結論、ABC、新進／續抱／加碼／獲利、轉弱條件、價格作戰地圖、下一交易日3種劇本、進階技術資料、歷史N字、小白懶人包與石頭少爺判讀。</div>
 
       <div class="copy-actions">
 
@@ -690,17 +690,17 @@ body{
 
 </main>
 
-<footer class="footer">石頭少爺 Agent｜GitHub V3.3.2 隱藏版本資訊版｜V2.9.5 相容｜費波那契核心 第2.4版<br>技術分析僅供研究與決策參考，不構成投資建議。</footer>
+<footer class="footer">石頭少爺 Agent｜GitHub V3.3.3 中文去重與逐層修復版｜V2.9.5 相容｜費波那契核心 第2.4版<br>技術分析僅供研究與決策參考，不構成投資建議。</footer>
 
 <script>
 
 const API_BASE_URL="https://shitou-agent-fib-api.d318426.workers.dev";
 
-const FRONTEND_REPORT_VERSION="2026-08-20-report-v3.2.6-multidimensional-state-machine";
+const FRONTEND_REPORT_VERSION="2026-08-20-report-v3.3.3-zh-dedup-layered-repair";
 
 const TARGET_MULTIPLIERS=[3,3.5,4,4.5,5,5.5,6,6.5,7,7.5,8,8.5,9,9.5,10];
 
-// V3.3.2：沿用 V3.3.1 核心狀態機與中文顯示；分析報告不再輸出版本資訊區塊。
+// V3.3.3：沿用既有核心狀態機；中文顯示去重，FORMING極深回檔加入逐層修復價位。
 
 // 1.5% 只用來分類「突破後是否正在回測 B」，不是 Fibonacci 公式。
 
@@ -1772,7 +1772,7 @@ function fibStatusInfo(status){
 
     case "forming":
 
-      return {text:"🟡 A、B形成中",cls:"fib-status forming"};
+      return {text:"🟡 A、B已形成｜等待有效C",cls:"fib-status forming"};
 
     case "abc_ready":
 
@@ -9970,7 +9970,7 @@ function nStatusTextV325(status,phase){
 
   const map={
 
-    forming:"🟡 FORMING｜A、B已形成，等待有效C",
+    forming:"🟡 FORMING｜A、B已形成",
 
     abc_ready:"🟡 ABC_READY｜A、B、C已形成，等待收盤突破B",
 
@@ -10160,7 +10160,7 @@ function buildGoldSectionV325(lines,report,s,ab,nStatus,nPhase){
 
 }
 
-// V3.3.2 使用者可見文字中文化沿用 V3.3.1；只處理最後輸出的報告文字，不改內部狀態機值。
+// V3.3.3 使用者可見文字中文化：只處理最後輸出的報告文字，不改內部狀態機值；新增重複中文收斂。
 
 function localizeReportTextV331(text){
 
@@ -10294,7 +10294,7 @@ function localizeReportTextV331(text){
 
     .replace(/N字狀態：ABC完成待突破｜N字階段：等待突破B/g,"N字狀態：ABC已形成｜目前階段：等待突破B")
 
-    .replace(/N字狀態：形成中｜N字階段：等待有效C/g,"N字狀態：A、B形成中｜目前階段：等待有效C")
+    .replace(/N字狀態：形成中｜N字階段：等待有效C/g,"N字狀態：A、B已形成｜目前階段：等待有效C")
 
     .replace(/N字狀態：結構失效｜N字階段：結構失效/g,"N字狀態：結構失效")
 
@@ -10312,7 +10312,7 @@ function localizeReportTextV331(text){
 
     .replace(/ABC完成待突破\s*\/\s*等待突破B/g,"ABC已形成／等待突破B")
 
-    .replace(/形成中\s*\/\s*等待有效C/g,"A、B形成中／等待有效C")
+    .replace(/形成中\s*\/\s*等待有效C/g,"A、B已形成｜等待有效C")
 
     .replace(/進ABC完成待突破/g,"進入ABC已形成待突破階段")
 
@@ -10340,7 +10340,23 @@ function localizeReportTextV331(text){
 
     .replace(/ABC完成待突破 \/ 等待突破B/g,"ABC已形成／等待突破B")
 
-    .replace(/A、B形成中 \/ 等待有效C/g,"A、B形成中／等待有效C");
+    .replace(/A、B形成中 \/ 等待有效C/g,"A、B已形成｜等待有效C")
+
+    .replace(/A、B形成中/g,"A、B已形成")
+
+    .replace(/A、B已形成／等待有效C｜等待有效C/g,"A、B已形成｜等待有效C")
+
+    .replace(/A、B已形成｜等待有效C｜等待有效C/g,"A、B已形成｜等待有效C")
+
+    .replace(/價格位置：([^｜\n]+)｜\1(?=｜|\n|$)/g,"價格位置：$1")
+
+    .replace(/價格位置：([^（\n]+)（\1）/g,"價格位置：$1")
+
+    .replace(/月線狀態：([^｜\n]+)｜\1(?=｜|\n|$)/g,"月線狀態：$1")
+
+    .replace(/短線N字：A、B已形成[／｜]等待有效C｜等待有效C/g,"短線N字：A、B已形成｜等待有效C")
+
+    .replace(/形成中｜A、B已形成｜等待有效C｜等待C形成/g,"形成中｜A、B已形成｜等待有效C");
 
   return out;
 
@@ -10820,7 +10836,7 @@ function entryQualityReasonsV328(report,s,monthlyStatus,nStatus,nPhase,fibTarget
 
 function entryQualityImproveTextV329(report,s,monthlyStatus,nStatus,nPhase,ab,fibTargetZone,fixedTargetZone,quality,fixed){
 
-  const B=n(s?.fib?.B),gap=n(s?.maCtx?.gapPct),rsi=n(report?.dailyRsi);
+  const B=n(s?.fib?.B),gap=n(s?.maCtx?.gapPct),rsi=n(report?.dailyRsi),ma=n(s?.maCtx?.value);
 
   if(monthlyStatus==="PENDING")return "先等月線正式確認，再評估波段新進。";
 
@@ -10830,7 +10846,27 @@ function entryQualityImproveTextV329(report,s,monthlyStatus,nStatus,nPhase,ab,fi
 
   if(nStatus==="failed")return "先等待新的A／B／C結構，不沿用舊費波那契結構。";
 
-  if(nStatus==="forming")return "先形成有效C，再觀察後續是否完成B突破確認。";
+  if(nStatus==="forming"){
+
+    if(ab?.positionZone==="BELOW_0764"){
+
+      const ret764=n(ab?.levels?.["0.764"]);
+
+      const steps=["先確認目前價格是否真正止跌並形成有效C"];
+
+      if(ret764!==null)steps.push(`C成立後先看能否重新收復0.764＝${fmt(ret764)} 元`);
+
+      if(ma!==null)steps.push(`再觀察日20MA＝${fmt(ma)} 元能否收復並改善短線趨勢`);
+
+      if(B!==null)steps.push(`最後才看B＝${fmt(B)} 元是否完成日K收盤突破確認`);
+
+      return steps.join("；")+"。";
+
+    }
+
+    return B!==null?`先形成有效C，再觀察後續是否完成B＝${fmt(B)} 元的日K收盤突破確認。`:"先形成有效C，再觀察後續是否完成B突破確認。";
+
+  }
 
   if(nStatus==="abc_ready")return B!==null?`守住目前C並等待完整日K收盤突破B＝${fmt(B)} 元。`:"守住目前C並等待B完整收盤突破。";
 
@@ -10956,7 +10992,7 @@ function nStatusTextV326(status,phase){
 
   const map={
 
-    forming:"🟡 FORMING｜A、B已形成，等待有效C",
+    forming:"🟡 FORMING｜A、B已形成",
 
     abc_ready:"🟡 ABC_READY｜A、B、C已形成，等待收盤突破B",
 
@@ -11740,7 +11776,7 @@ function buildReportTextV326(report){
 
   const formingAboveB=nStatus==="forming"&&ab?.positionZone==="ABOVE_B";
 
-  // V3.3.2：保留ABC價位隨文顯示、目標分流、新進改善條件與中文白話；隱藏報告版本資訊區塊。
+  // V3.3.3：保留ABC價位隨文顯示、目標分流與隱藏版本資訊；中文去重並補極深回檔逐層修復。
 
   const aNow=A!==null?`A＝${fmt(A)} 元`:"A＝尚未形成";
 
@@ -11806,7 +11842,7 @@ function buildReportTextV326(report){
 
   };
 
-  lines.push("📘 石頭少爺分析助手｜V3.3.2 新手小白友善版（全中文白話＋隱藏版本資訊版）");
+  lines.push("📘 石頭少爺分析助手｜V3.3.3 新手小白友善版（中文去重＋逐層修復版）");
 
   lines.push(`報告產出時間：${reportGeneratedAt()}`);
 
@@ -11914,7 +11950,7 @@ function buildReportTextV326(report){
 
       lines.push(`🔴 新進場：目前位置吸引力偏低｜${entryReasons.length?entryReasons.join("；"):"方向強不代表現在好買"}；不追價。`);
 
-      lines.push(`🟡 加碼：暫不積極加碼｜等待高檔整理、乖離收斂，或B＝${fmt(B)} 元附近出現健康回測；${fixed&&["APPROACHING","NEAR"].includes(fixedTargetZone.key)?`同時留意月線${fixed.m}×＝${fmt(fixed.p)} 元壓力。`:"量價確認後再評估。"}`);
+      lines.push(`🟡 加碼：暫不積極加碼｜等待高檔整理、乖離收斂，或B＝${fmt(B)} 元附近出現健康回測；${fixed&&["APPROACHING","NEAR"].includes(fixedTargetZone.key)?`同時觀察月線${fixed.m}×＝${fmt(fixed.p)} 元附近的價格反應。`:"量價確認後再評估。"}`);
 
     }else if(entryQuality==="WATCH"){
 
