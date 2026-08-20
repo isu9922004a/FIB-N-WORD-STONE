@@ -402,7 +402,7 @@ body{
 
     <p>月線波段條件判斷＋固定倍數目標價＋費波那契 N字分析</p>
 
-    <span class="version-pill">前端 V3.3.0｜中文狀態顯示版｜目標分流＋ABC價位隨文顯示｜新手小白友善版｜V2.9.5 相容｜費波那契核心 第2.4版</span>
+    <span class="version-pill">前端 V3.3.1｜全中文白話顯示版｜目標分流＋ABC價位隨文顯示｜新手小白友善版｜V2.9.5 相容｜費波那契核心 第2.4版</span>
 
   </div>
 
@@ -674,7 +674,7 @@ body{
 
       <div class="section-title">⑥ 一鍵複製分析報告</div>
 
-      <div class="hint">會依 V3.3.0 中文狀態顯示框架整理：先看結論、ABC、新進／續抱／加碼／獲利、轉弱條件、價格作戰地圖、下一交易日3種劇本、進階技術資料、歷史N字、小白懶人包與石頭少爺判讀。</div>
+      <div class="hint">會依 V3.3.1 全中文白話顯示框架整理：先看結論、ABC、新進／續抱／加碼／獲利、轉弱條件、價格作戰地圖、下一交易日3種劇本、進階技術資料、歷史N字、小白懶人包與石頭少爺判讀。</div>
 
       <div class="copy-actions">
 
@@ -690,7 +690,7 @@ body{
 
 </main>
 
-<footer class="footer">石頭少爺 Agent｜GitHub V3.3.0 中文狀態顯示版｜V2.9.5 相容｜費波那契核心 第2.4版<br>技術分析僅供研究與決策參考，不構成投資建議。</footer>
+<footer class="footer">石頭少爺 Agent｜GitHub V3.3.1 全中文白話顯示版｜V2.9.5 相容｜費波那契核心 第2.4版<br>技術分析僅供研究與決策參考，不構成投資建議。</footer>
 
 <script>
 
@@ -700,7 +700,7 @@ const FRONTEND_REPORT_VERSION="2026-08-20-report-v3.2.6-multidimensional-state-m
 
 const TARGET_MULTIPLIERS=[3,3.5,4,4.5,5,5.5,6,6.5,7,7.5,8,8.5,9,9.5,10];
 
-// V3.3.0：沿用 V3.2.9 多維狀態機；內部狀態碼不變，使用者可見的結構品質／新進品質改為中文顯示。
+// V3.3.1：沿用 V3.3.0 核心狀態機；內部英文狀態碼不變，但所有使用者可見狀態改為中文白話。
 
 // 1.5% 只用來分類「突破後是否正在回測 B」，不是 Fibonacci 公式。
 
@@ -2816,7 +2816,7 @@ function tacticalOneSentence(report){
 
   if(n(fib.A)!==null&&n(fib.B)!==null){
 
-    return "➖ 盤整等待：目前已有A→B，但還沒有有效C；這不是看空，而是等待下一個完整Fib N字結構。";
+    return "➖ 盤整等待：目前已有A→B，但還沒有有效C；這不是看空，而是等待下一個完整費波那契N字 N字結構。";
 
   }
 
@@ -3516,7 +3516,7 @@ function buildCurrentFocusLines(report,fixed,rsiInfo,rrInfo){
 
   lines.push("");
 
-  lines.push("【🔥 戰術突破 vs 📐 Fib確認｜較早訊號 vs 完整幾何確認】");
+  lines.push("【🔥 戰術突破 vs 📐 費波那契確認｜較早訊號 vs 完整幾何確認】");
 
   if(t.tacticalActive?.breakoutDate){
 
@@ -3594,11 +3594,11 @@ function buildCurrentFocusLines(report,fixed,rsiInfo,rrInfo){
 
   if(fib?.status==="confirmed"&&n(fib?.target1618)!==null){
 
-    lines.push(`🎯 Fib 1.618 主目標：${fmt(fib.target1618)} 元${fibDistInfo?`（距現價 ${fibDistInfo.text}）`:""}`);
+    lines.push(`🎯 費波那契1.618 主目標：${fmt(fib.target1618)} 元${fibDistInfo?`（距現價 ${fibDistInfo.text}）`:""}`);
 
   }else if(fib?.status==="forming"&&n(fib?.target1618)!==null){
 
-    lines.push(`🎯 Fib 1.618 預估目標：${fmt(fib.target1618)} 元${fibDistInfo?`（距現價 ${fibDistInfo.text}，尚未確認）`:"（尚未確認）"}`);
+    lines.push(`🎯 費波那契1.618 預估目標：${fmt(fib.target1618)} 元${fibDistInfo?`（距現價 ${fibDistInfo.text}，尚未確認）`:"（尚未確認）"}`);
 
   }else if(n(fib?.A)!==null&&n(fib?.B)!==null&&n(fib?.C)===null&&bInfo){
 
@@ -4546,7 +4546,7 @@ function buildNextDayScenarioLines(report){
 
   }else if(t.primaryType==="tactical"&&t.tacticalActive?.breakoutDate){
 
-    lines.push(`🔥 Fib尚未confirmed，目前先以 ${datefmt(t.tacticalActive.breakoutDate)} 的戰術N字突破作短線觀察；正式 Fib 1.618 仍需等待有效C後 Close > B。`);
+    lines.push(`🔥 Fib尚未confirmed，目前先以 ${datefmt(t.tacticalActive.breakoutDate)} 的戰術N字突破作短線觀察；正式 費波那契1.618 仍需等待有效C後 Close > B。`);
 
     lines.push("");
 
@@ -4770,13 +4770,13 @@ function buildBeginnerQuestionsLines(report,rsiInfo,rrInfo){
 
     lines.push("❓ Q2：站上 C→B 的 0.236，是不是就是買點？");
 
-    lines.push("不是。0.236只代表C後初步回升；越往0.382、0.500、0.618、0.764收復，回升程度越高，但正式Fib N字仍要完成日K收盤突破B。");
+    lines.push("不是。0.236只代表C後初步回升；越往0.382、0.500、0.618、0.764收復，回升程度越高，但正式費波那契N字 N字仍要完成日K收盤突破B。");
 
     lines.push("");
 
     lines.push("❓ Q3：forming 的 1.618 可以直接當正式目標嗎？");
 
-    lines.push("還不行。forming階段的1.618只是預估值；只有完成日K收盤突破B後，才升級成正式Fib延伸目標。");
+    lines.push("還不行。forming階段的1.618只是預估值；只有完成日K收盤突破B後，才升級成正式費波那契N字延伸目標。");
 
   }else{
 
@@ -4848,7 +4848,7 @@ function buildMarketBehaviorLines(report,fixed,rsiInfo,rrInfo){
 
   lines.push("");
 
-  lines.push("【🔥 戰術突破／📐 Fib確認時間軸】");
+  lines.push("【🔥 戰術突破／📐 費波那契確認時間軸】");
 
   if(t.tacticalActive?.breakoutDate){
 
@@ -5126,7 +5126,7 @@ function buildBeginnerThreeSentenceLines(report,fixed,rsiInfo,rrInfo){
 
     const subtype=t?.subtype?.label?`，目前盤態為${t.subtype.icon||""}${t.subtype.label}`:"";
 
-    lines.push(`2. 📐 Fib N字已完成B確認：${datefmt(fib.breakoutDate)} 收盤 ${fmt(fib.breakoutClose)} 元 > B ${fmt(fib.B)} 元${subtype}。🔥較早的戰術突破是另一套較敏感的訊號，不與Fib確認混用。`);
+    lines.push(`2. 📐 Fib N字已完成B確認：${datefmt(fib.breakoutDate)} 收盤 ${fmt(fib.breakoutClose)} 元 > B ${fmt(fib.B)} 元${subtype}。🔥較早的戰術突破是另一套較敏感的訊號，不與費波那契確認混用。`);
 
   }else if(t?.tacticalActive?.breakoutDate){
 
@@ -5138,7 +5138,7 @@ function buildBeginnerThreeSentenceLines(report,fixed,rsiInfo,rrInfo){
 
   }else{
 
-    lines.push("2. ⚪ 目前沒有新的完整Fib N字確認，先等待新的有效價格結構。 ");
+    lines.push("2. ⚪ 目前沒有新的完整費波那契N字 N字確認，先等待新的有效價格結構。 ");
 
   }
 
@@ -6750,7 +6750,7 @@ function shortStructureV321(report,s){
 
     const ageText=/^戰術/.test(age.label)?age.label:`戰術${age.label}`;
 
-    return {icon:age.key==="today"?"🔥":"🚩",label:`${ageText}｜完整Fib尚未建立`,key:`tactical-${age.key}`};
+    return {icon:age.key==="today"?"🔥":"🚩",label:`${ageText}｜完整費波那契N字尚未建立`,key:`tactical-${age.key}`};
 
   }
 
@@ -6870,7 +6870,7 @@ function currentStrategyStateV321(report){
 
   else if(base.confirmed){out.addIcon="🟡";out.addLabel="暫不積極加碼，等待條件改善";}
 
-  else{out.addIcon="🔴";out.addLabel="完整Fib尚未確認，暫不主動加碼";}
+  else{out.addIcon="🔴";out.addLabel="完整費波那契N字尚未確認，暫不主動加碼";}
 
   return out;
 
@@ -6932,7 +6932,7 @@ function buildStrategyQuickLinesV321(report,s){
 
     const above=n(report.close)!==null&&n(s.fib.B)!==null&&report.close>s.fib.B;
 
-    lines.push(`⚪ 核心N字：A→B已有、C尚未形成${above?"｜現價雖高於B，仍不能倒推成Fib確認":""}`);
+    lines.push(`⚪ 核心N字：A→B已有、C尚未形成${above?"｜現價雖高於B，仍不能倒推成費波那契確認":""}`);
 
   }else{
 
@@ -7010,7 +7010,7 @@ function buildUnheldStrategyLinesV321(report,s){
 
     lines.push("🔴 中長期波段布局目前鎖定：月線條件尚未成立，不把短線戰術突破或反彈直接升級成波段建倉訊號。");
 
-    if(s.forming)lines.push(`🟡 短線Fib其實已完成A→B→C；現在缺的是完整日線收盤突破B＝${fmt(s.fib.B)} 元，但即使之後確認，月線Gate未恢復前仍不開波段布局。`);
+    if(s.forming)lines.push(`🟡 短線費波那契結構其實已完成A→B→C；現在缺的是完整日線收盤突破B＝${fmt(s.fib.B)} 元，但即使之後確認，月線門檻未恢復前仍不開波段布局。`);
 
     else if(s.hasAB&&n(s.fib.C)===null&&n(report.close)!==null&&n(s.fib.B)!==null&&report.close>s.fib.B)lines.push(`🔥 現價已高於候選B＝${fmt(s.fib.B)} 元，但C尚未形成，仍屬無C強勢延伸，不是Fib confirmed。`);
 
@@ -7094,9 +7094,9 @@ function buildUnheldStrategyLinesV321(report,s){
 
     if(B!==null&&close!==null&&close>B){
 
-      lines.push(`🔥 現價已高於候選前高B＝${fmt(B)} 元，但有效C尚未形成；這是「無C強勢延伸」，不能倒推成正式Fib突破。`);
+      lines.push(`🔥 現價已高於候選前高B＝${fmt(B)} 元，但有效C尚未形成；這是「無C強勢延伸」，不能倒推成正式費波那契N字突破。`);
 
-      lines.push("⚠️ B目前只能作候選前高／價格回踩參考，不是正式Fib支撐，也沒有正式1.618與0.764可用。");
+      lines.push("⚠️ B目前只能作候選前高／價格回踩參考，不是正式費波那契N字支撐，也沒有正式1.618與0.764可用。");
 
       if(s.overheated||s.maExtended)lines.push("🔴 目前位置已有追價風險；優先等高檔整理、新的有效C或新的戰術結構，再重新評估。");
 
@@ -7116,7 +7116,7 @@ function buildUnheldStrategyLinesV321(report,s){
 
   if(s.tacticalActive){
 
-    lines.push(`🔥 戰術趨勢仍有效：${datefmt(s.tacticalEvent.breakoutDate)} 已突破前三高 ${fmt(s.tacticalEvent.neckline)} 元；但目前沒有新的完整Fib結構。`);
+    lines.push(`🔥 戰術趨勢仍有效：${datefmt(s.tacticalEvent.breakoutDate)} 已突破前三高 ${fmt(s.tacticalEvent.neckline)} 元；但目前沒有新的完整費波那契N字結構。`);
 
     if(s.overheated)lines.push(`🔴 RSI ${fmt(s.rsi)} 已過熱，未持有者現在不追價。`);
 
@@ -7190,7 +7190,7 @@ function buildHeldStrategyLinesV321(report,s){
 
   if(s.forming){
 
-    lines.push("🟡 A→B→C已形成，但完整Fib尚未正式確認；原有部位可依短線結構觀察，暫不積極加碼。");
+    lines.push("🟡 A→B→C已形成，但完整費波那契N字尚未正式確認；原有部位可依短線結構觀察，暫不積極加碼。");
 
     if(s.cState?.key==="below-c")lines.push(`⚠️ 現價已低於目前C＝${fmt(s.fib.C)} 元，回檔可能仍在延伸；先看新C／止穩。`);
 
@@ -7206,13 +7206,13 @@ function buildHeldStrategyLinesV321(report,s){
 
   if(s.tacticalActive){
 
-    lines.push("🟢 戰術多方結構目前仍可觀察，但完整Fib尚未確認；原有部位與『新加碼』分開處理。");
+    lines.push("🟢 戰術多方結構目前仍可觀察，但完整費波那契N字尚未確認；原有部位與『新加碼』分開處理。");
 
     const B=n(s.fib.B),close=n(report.close);
 
     if(B!==null){
 
-      if(close!==null&&close>B&&n(s.fib.C)===null)lines.push(`🟡 候選B＝${fmt(B)} 元可作價格回踩參考，但因C不存在，不能稱正式Fib回測支撐。`);
+      if(close!==null&&close>B&&n(s.fib.C)===null)lines.push(`🟡 候選B＝${fmt(B)} 元可作價格回踩參考，但因C不存在，不能稱正式費波那契N字回測支撐。`);
 
       else lines.push(`🎯 B＝${fmt(B)} 元目前是上方候選前高／確認門檻，不是回測支撐。`);
 
@@ -7230,7 +7230,7 @@ function buildHeldStrategyLinesV321(report,s){
 
   }
 
-  lines.push("🟡 月線條件仍成立，但短線沒有有效戰術突破／完整Fib，原有部位可觀察，暫不加碼。");
+  lines.push("🟡 月線條件仍成立，但短線沒有有效戰術突破／完整費波那契N字，原有部位可觀察，暫不加碼。");
 
   if(s.maCtx.value!==null){
 
@@ -7252,7 +7252,7 @@ function buildAddRulesLinesV321(report,s){
 
   if(report.entry!==true){
 
-    lines.push("🔴 波段加碼目前鎖定：月線條件未成立。短線戰術突破、回測守住或單日大漲，都不能越過這個月線Gate。");
+    lines.push("🔴 波段加碼目前鎖定：月線條件未成立。短線戰術突破、回測守住或單日大漲，都不能越過這個月線門檻。");
 
     lines.push("📌 重新開啟波段加碼的必要前提：未來月K收盤重新站回『當時的月20MA』以上。");
 
@@ -7314,7 +7314,7 @@ function buildAddRulesLinesV321(report,s){
 
     const B=n(s.fib.B),close=n(report.close);
 
-    if(B!==null&&close!==null&&close>B)lines.push(`⚠️ 現價雖已高於候選B ${fmt(B)} 元，但C尚未形成，依規則仍不能視為Fib確認；不要因『已過B』就啟動Fib加碼。`);
+    if(B!==null&&close!==null&&close>B)lines.push(`⚠️ 現價雖已高於候選B ${fmt(B)} 元，但C尚未形成，依規則仍不能視為費波那契確認；不要因『已過B』就啟動Fib加碼。`);
 
     else lines.push("➖ 目前A→B已有但C尚未形成；先等有效C，再等由C回升正式突破B。 ");
 
@@ -7322,7 +7322,7 @@ function buildAddRulesLinesV321(report,s){
 
   }
 
-  lines.push("➖ 目前沒有完整短線多方確認，不列出主動加碼訊號；先等新的戰術突破或完整Fib結構。 ");
+  lines.push("➖ 目前沒有完整短線多方確認，不列出主動加碼訊號；先等新的戰術突破或完整費波那契N字結構。 ");
 
   return lines;
 
@@ -7410,7 +7410,7 @@ function buildProfitPlanLinesV321(report,s){
 
     const above=pctVsBaseV321(close,completed.target1618);
 
-    lines.push(`${tag}上一組Fib 1.618：${fmt(completed.target1618)} 元｜完成日 ${datefmt(completed.completedDate)}${above!==null?`｜現價相對舊1.618 ${fmtSignedPct(above)}`:""}。`);
+    lines.push(`${tag}上一組費波那契1.618：${fmt(completed.target1618)} 元｜完成日 ${datefmt(completed.completedDate)}${above!==null?`｜現價相對舊1.618 ${fmtSignedPct(above)}`:""}。`);
 
     lines.push("⚠️ 該組N字生命週期已完成；舊1.618不能再當新的正式目標或支撐。 ");
 
@@ -7432,9 +7432,9 @@ function buildProfitPlanLinesV321(report,s){
 
     const below=s.fixed?.targetData?.filter(x=>x.p>close&&x.p<=target).slice(-1)[0];
 
-    if(below&&Math.abs(target-below.p)/target<=0.08)lines.push(`🏆 主要獲利觀察區：約 ${fmt(below.p)}～${fmt(target)} 元（${below.m}×固定關卡＋Fib 1.618）。`);
+    if(below&&Math.abs(target-below.p)/target<=0.08)lines.push(`🏆 主要獲利觀察區：約 ${fmt(below.p)}～${fmt(target)} 元（${below.m}×固定關卡＋費波那契1.618）。`);
 
-    else lines.push(`🏆 Fib 1.618主要目標：${fmt(target)} 元。`);
+    else lines.push(`🏆 費波那契1.618主要目標：${fmt(target)} 元。`);
 
     if(s.profitProtection)lines.push("⚠️ 目前已出現位置／動能／量能警戒，策略偏向續抱同時提高分批獲利保護，而不是追價加碼。 ");
 
@@ -7446,7 +7446,7 @@ function buildProfitPlanLinesV321(report,s){
 
   if(s.profitProtection){
 
-    lines.push("⚠️ 目前沒有新的正式Fib目標，但短線位置／動能／量能已提高獲利保護警戒。 ");
+    lines.push("⚠️ 目前沒有新的正式費波那契N字目標，但短線位置／動能／量能已提高獲利保護警戒。 ");
 
     const rs=[];
 
@@ -7486,13 +7486,13 @@ function buildProfitPlanLinesV321(report,s){
 
     }else{
 
-      lines.push("⚪ 現價已高於候選B，但C不存在，因此沒有新的正式Fib 1.618；先等新結構，不硬設定不存在的正式停利價。 ");
+      lines.push("⚪ 現價已高於候選B，但C不存在，因此沒有新的正式費波那契N字 1.618；先等新結構，不硬設定不存在的正式停利價。 ");
 
     }
 
   }else{
 
-    lines.push("➖ 目前沒有新的正式Fib目標；若RSI未過熱、量能無異常，現在更重要的是等待新結構，而不是硬找停利價。 ");
+    lines.push("➖ 目前沒有新的正式費波那契N字目標；若RSI未過熱、量能無異常，現在更重要的是等待新結構，而不是硬找停利價。 ");
 
   }
 
@@ -7548,7 +7548,7 @@ function buildWeaknessPlanLinesV321(report,s){
 
     const B=n(s.fib.B),A=n(s.fib.A);
 
-    if(B!==null&&close!==null&&close>B)lines.push(`🟡 B＝${fmt(B)} 元目前只是候選前高／價格回踩參考；因C不存在，它不是正式Fib支撐。`);
+    if(B!==null&&close!==null&&close>B)lines.push(`🟡 B＝${fmt(B)} 元目前只是候選前高／價格回踩參考；因C不存在，它不是正式費波那契N字支撐。`);
 
     else if(B!==null)lines.push(`🎯 B＝${fmt(B)} 元在現價上方，是候選壓力／未來結構觀察；目前不是『回到B就轉弱』的問題。`);
 
@@ -7716,7 +7716,7 @@ function buildPriceMapLinesV321(report,s){
 
   if(s.confirmed){
 
-    addMapItemV321(items,"🏆",s.fib.target1618,"Fib 1.618主目標");
+    addMapItemV321(items,"🏆",s.fib.target1618,"費波那契1.618主目標");
 
     addMapItemV321(items,"📍",report.close,"目前收盤價",false);
 
@@ -7764,7 +7764,7 @@ function buildPriceMapLinesV321(report,s){
 
     const B=n(s.fib.B),above=B!==null&&close!==null&&close>B;
 
-    addMapItemV321(items,"🎯",B,above?"候選前高B／價格回踩參考（非正式Fib支撐）":"候選前高B／未來結構觀察");
+    addMapItemV321(items,"🎯",B,above?"候選前高B／價格回踩參考（非正式費波那契N字支撐）":"候選前高B／未來結構觀察");
 
     addMapItemV321(items,"📍",report.close,"目前收盤價",false);
 
@@ -7850,7 +7850,7 @@ function buildScenarioV321Lines(report,s){
 
       arr.push({icon:"➖",title:"整理",text:"量能縮小、RSI降溫，但核心支撐未破 → 視為整理，不等於轉空。"});
 
-      arr.push({icon:"⚠️",title:"品質降級",text:`跌出B回測區並失守短線防守 → 短線品質下降；正式Fib失敗仍依0.764／A核心規則。`});
+      arr.push({icon:"⚠️",title:"品質降級",text:`跌出B回測區並失守短線防守 → 短線品質下降；正式費波那契N字失敗仍依0.764／A核心規則。`});
 
     }
 
@@ -7868,7 +7868,7 @@ function buildScenarioV321Lines(report,s){
 
     else if(s.cState?.key==="near-c")arr.push({icon:"🟡",title:"C區止穩",text:`維持C ${fmt(C)} 元附近、不再快速破低、量能逐步正常 → 可能進入止穩，但仍要等後續回升。`});
 
-    else arr.push({icon:"🔥",title:"C後回升延續",text:`${next?`站上下一回升位 ${fmt(next.price)} 元並`:"價格"}收盤品質健康 → 回升品質改善；正式Fib仍要最後突破B ${fmt(B)} 元。`});
+    else arr.push({icon:"🔥",title:"C後回升延續",text:`${next?`站上下一回升位 ${fmt(next.price)} 元並`:"價格"}收盤品質健康 → 回升品質改善；正式費波那契N字仍要最後突破B ${fmt(B)} 元。`});
 
     arr.push({icon:"🎯",title:"挑戰B確認",text:`完整日線收盤 > B ${fmt(B)} 元 → 才由forming升級為confirmed，正式啟用Fib目標／風控。`});
 
@@ -7888,7 +7888,7 @@ function buildScenarioV321Lines(report,s){
 
       arr.push({icon:"🛡️",title:"高檔整理形成新C",text:"價格高檔整理、RSI與量能降溫、不快速破低 → 有利後續形成可確認的回檔低點C。"});
 
-      arr.push({icon:"🟡",title:"回踩候選B",text:`回到B ${fmt(B)} 元附近可作價格回踩觀察；因C尚未形成，B仍不是正式Fib支撐。`});
+      arr.push({icon:"🟡",title:"回踩候選B",text:`回到B ${fmt(B)} 元附近可作價格回踩觀察；因C尚未形成，B仍不是正式費波那契N字支撐。`});
 
     }else{
 
@@ -8038,7 +8038,7 @@ function buildHistoryV321Lines(report,s){
 
   lines.push("⚠️ 歷史N字不等於目前訊號；若上一組剛完成，主策略區會另外提升提示。 ");
 
-  if(failed)lines.push(`🔴 上一組失敗：${fmt(failed.A)}／${fmt(failed.B)}／${fmt(failed.C)}｜Fib確認 ${datefmt(failed.fibBreakoutDate||failed.breakoutDate)}｜失敗 ${datefmt(failed.failedDate)}`);
+  if(failed)lines.push(`🔴 上一組失敗：${fmt(failed.A)}／${fmt(failed.B)}／${fmt(failed.C)}｜費波那契確認 ${datefmt(failed.fibBreakoutDate||failed.breakoutDate)}｜失敗 ${datefmt(failed.failedDate)}`);
 
   if(completed){
 
@@ -8084,7 +8084,7 @@ function buildRememberLinesV321(report,s){
 
   }else if(s.hasAB){
 
-    lines.push(`🎯 候選B ${fmt(s.fib.B)} 元｜${n(report.close)>n(s.fib.B)?"價格回踩參考、非正式Fib支撐":"上方候選壓力／未來觀察"}`);
+    lines.push(`🎯 候選B ${fmt(s.fib.B)} 元｜${n(report.close)>n(s.fib.B)?"價格回踩參考、非正式費波那契N字支撐":"上方候選壓力／未來觀察"}`);
 
     if(s.maCtx.value!==null)lines.push(`🟡 MA20 ${fmt(s.maCtx.value)} 元｜${s.maCtx.above===true?"目前已站上":"第一修復觀察"}`);
 
@@ -8096,7 +8096,7 @@ function buildRememberLinesV321(report,s){
 
     if(s.tacticalActive)lines.push(`🔥 戰術頸線 ${fmt(s.tacticalEvent.neckline)} 元`);
 
-    else lines.push("⚪ 目前沒有新的近端正式Fib／戰術價位");
+    else lines.push("⚪ 目前沒有新的近端正式費波那契N字／戰術價位");
 
   }
 
@@ -8110,7 +8110,7 @@ function buildFinalReadingV321(report,s){
 
   if(report.entry!==true){
 
-    lines.push("🔴 月線波段資格目前未成立，所以波段建倉／加碼維持鎖定；短線戰術訊號可以存在，但不能越過月線Gate。 ");
+    lines.push("🔴 月線波段資格目前未成立，所以波段建倉／加碼維持鎖定；短線戰術訊號可以存在，但不能越過月線門檻。 ");
 
   }else{
 
@@ -8242,7 +8242,7 @@ function buildReportTextV321(report){
 
   lines.push("");
 
-  lines.push("前端報告版本：第3.2.1版（狀態感知動態策略｜月線Gate｜MA20乖離｜量價情境｜生命週期強化）");
+  lines.push("前端報告版本：第3.2.1版（狀態感知動態策略｜月線門檻｜MA20乖離｜量價情境｜生命週期強化）");
 
   lines.push(`後端分析版本：${report.version||"-"}`);
 
@@ -9018,7 +9018,7 @@ function buildUnheldLinesV323(report,s){
 
   }else if(s.tacticalActive){
 
-    lines.push("🟡 戰術面已轉強，但完整Fib尚未確認；未持有者以回測／整理後再攻為優先，不因單日突破直接追價。");
+    lines.push("🟡 戰術面已轉強，但完整費波那契N字尚未確認；未持有者以回測／整理後再攻為優先，不因單日突破直接追價。");
 
   }else{
 
@@ -9104,7 +9104,7 @@ function buildAddLinesV323(report,s){
 
   }else if(s.confirmed){
 
-    lines.push("🟡 完整Fib已確認，但目前仍需等待更好的回測、量能、RSI或風險報酬條件，不主動追價加碼。");
+    lines.push("🟡 完整費波那契N字已確認，但目前仍需等待更好的回測、量能、RSI或風險報酬條件，不主動追價加碼。");
 
   }else{
 
@@ -9126,11 +9126,11 @@ function buildProfitLinesV323(report,s){
 
     const dist=signedDistancePct(s.fib.target1618,report.close);
 
-    lines.push(`🎯 正式Fib 1.618目標：${fmt(s.fib.target1618)} 元${dist!==null?`｜距現價 ${fmtSignedPct(dist)}`:""}。`);
+    lines.push(`🎯 正式費波那契N字 1.618目標：${fmt(s.fib.target1618)} 元${dist!==null?`｜距現價 ${fmtSignedPct(dist)}`:""}。`);
 
   }else{
 
-    lines.push("➖ 目前沒有新的正式Fib目標（1.618目標價尚未產生）。");
+    lines.push("➖ 目前沒有新的正式費波那契N字目標（1.618目標價尚未產生）。");
 
   }
 
@@ -9292,7 +9292,7 @@ function buildScenarioLinesV323(report,s){
 
     const neck=n(s.tacticalEvent.neckline),def=n(s.t.tacticalDefense?.level??s.tacticalEvent.defense);
 
-    lines.push(`🟢 劇本一｜戰術續強：價格維持${neck!==null?`頸線 ${fmt(neck)} 元`:"前三高頸線"}上方且量價健康 → 戰術多方延續，仍等完整Fib。`);
+    lines.push(`🟢 劇本一｜戰術續強：價格維持${neck!==null?`頸線 ${fmt(neck)} 元`:"前三高頸線"}上方且量價健康 → 戰術多方延續，仍等完整費波那契N字。`);
 
     lines.push(`➖ 劇本二｜健康整理：回測${ma!==null?`MA20 ${fmt(ma)} 元／`:""}${neck!==null?`頸線 ${fmt(neck)} 元`:"戰術支撐"}附近量縮守住 → 可能以盤代跌。`);
 
@@ -9438,7 +9438,7 @@ function buildHistoryLinesV323(report,s){
 
   const completed=s.fib?.lastCompletedFib;
 
-  if(failed)lines.push(`🔴 上一組失敗：${fmt(failed.A)}／${fmt(failed.B)}／${fmt(failed.C)}｜Fib確認 ${datefmt(failed.fibBreakoutDate||failed.breakoutDate)}｜失敗 ${datefmt(failed.failedDate)}`);
+  if(failed)lines.push(`🔴 上一組失敗：${fmt(failed.A)}／${fmt(failed.B)}／${fmt(failed.C)}｜費波那契確認 ${datefmt(failed.fibBreakoutDate||failed.breakoutDate)}｜失敗 ${datefmt(failed.failedDate)}`);
 
   if(completed)lines.push(`🏆 上一組完成：${fmt(completed.A)}／${fmt(completed.B)}／${fmt(completed.C)}｜🔥戰術突破 ${datefmt(completed.tacticalBreakoutDate)}｜📐前高確認 ${datefmt(completed.fibBreakoutDate||completed.breakoutDate)}｜1.618 ${fmt(completed.target1618)}｜完成 ${datefmt(completed.completedDate)}`);
 
@@ -9474,7 +9474,7 @@ function buildRememberLinesV323(report,s){
 
   }else{
 
-    lines.push("⚪ 目前沒有新的近端正式Fib／戰術價位");
+    lines.push("⚪ 目前沒有新的近端正式費波那契N字／戰術價位");
 
   }
 
@@ -9522,7 +9522,7 @@ function buildFinalReadingLinesV323(report,s){
 
   if(monthlyDataUnavailable(report)){
 
-    lines.push("🟡 官方月線資料暫不可用；本次不把『缺資料』誤判成月線失效，短線Fib／戰術N字仍可分開參考。");
+    lines.push("🟡 官方月線資料暫不可用；本次不把『缺資料』誤判成月線失效，短線費波那契結構／戰術N字仍可分開參考。");
 
   }else if(monthlyPassUnconfirmed(report)){
 
@@ -10160,6 +10160,192 @@ function buildGoldSectionV325(lines,report,s,ab,nStatus,nPhase){
 
 }
 
+// V3.3.1 使用者可見文字中文化：只處理最後輸出的報告文字，不改內部狀態機值。
+
+function localizeReportTextV331(text){
+
+  let out=String(text??"");
+
+  const direct=[
+
+    [/MONTHLY_STATUS/g,"月線狀態"],
+
+    [/N_STATUS/g,"N字狀態"],
+
+    [/N_PHASE/g,"N字階段"],
+
+    [/POSITION_ZONE/g,"價格位置"],
+
+    [/FIB_TARGET_ZONE/g,"費波那契目標距離"],
+
+    [/FIXED_TARGET_ZONE/g,"固定倍數目標距離"],
+
+    [/STRUCTURE_QUALITY/g,"結構品質"],
+
+    [/ENTRY_QUALITY/g,"新進品質"],
+
+    [/\bFib\b/g,"費波那契"],
+
+    [/\bGate\b/g,"門檻"],
+
+    [/ENTRY改善條件/g,"新進改善條件"]
+
+  ];
+
+  for(const [re,to] of direct)out=out.replace(re,to);
+
+  // 先翻較長的狀態碼，避免被較短字串部分命中。
+
+  const tokens=[
+
+    ["BETWEEN_0618_0764","0.618～0.764偏深回檔區"],
+
+    ["BETWEEN_0500_0618","0.500～0.618中深回檔區"],
+
+    ["BETWEEN_0382_0500","0.382～0.500中段整理區"],
+
+    ["BETWEEN_0236_0382","0.236～0.382淺回檔強勢區"],
+
+    ["BETWEEN_B_0236","B～0.236極淺回檔區"],
+
+    ["WAIT_BREAKOUT","等待突破B"],
+
+    ["WAIT_STRUCTURE","等待新結構"],
+
+    ["OVER_TARGET","已超越目標"],
+
+    ["APPROACHING","已較接近"],
+
+    ["ABC_READY","ABC完成待突破"],
+
+    ["UNAVAILABLE","資料暫不可用"],
+
+    ["CONFIRMED","完整確認"],
+
+    ["WEAKENING","轉弱中"],
+
+    ["RETESTING","回測確認中"],
+
+    ["EXTENDING","延伸中"],
+
+    ["FORMING","形成中"],
+
+    ["FAILED","結構失效"],
+
+    ["WAIT_C","等待有效C"],
+
+    ["ABOVE_B","B上方突破／延伸區"],
+
+    ["BELOW_0764","0.764以下極深回檔區"],
+
+    ["BELOW_A","A下方結構失效區"],
+
+    ["PENDING","待確認"],
+
+    ["OVER_TARGET","已超越目標"],
+
+    ["REACHED","已觸及"],
+
+    ["NEAR","很接近"],
+
+    ["FAR","仍遠"],
+
+    ["NONE","無"],
+
+    ["PASS","成立"],
+
+    ["FAIL","未成立"],
+
+    ["HEALTHY","健康"],
+
+    ["MIXED","品質混合／仍待確認"],
+
+    ["WEAK","偏弱／風控優先"],
+
+    ["LOCKED","暫停新進"],
+
+    ["POOR","位置不佳"],
+
+    ["WATCH","可觀察但不宜追價"],
+
+    ["BETTER","新進條件改善"],
+
+    ["UNKNOWN","資料不足"]
+
+  ];
+
+  for(const [from,to] of tokens){
+
+    out=out.replace(new RegExp(`\\b${from}\\b`,"g"),to);
+
+  }
+
+  // 幾個狀態碼中文化後容易重複的顯示，順手收斂成白話。
+
+  out=out
+
+    .replace(/價格位置：B上方突破／延伸區｜B上方突破／延伸區/g,"價格位置：B上方突破／延伸區")
+
+    .replace(/費波那契目標距離：仍遠｜距1\.618仍遠/g,"費波那契目標距離：仍遠")
+
+    .replace(/固定倍數目標距離：已較接近｜([^\n｜]+)已較接近/g,"固定倍數目標距離：已較接近｜$1")
+
+    .replace(/N字狀態：完整確認｜N字階段：延伸中/g,"N字狀態：完整確認｜目前階段：延伸中")
+
+    .replace(/N字狀態：ABC完成待突破｜N字階段：等待突破B/g,"N字狀態：ABC已形成｜目前階段：等待突破B")
+
+    .replace(/N字狀態：形成中｜N字階段：等待有效C/g,"N字狀態：A、B形成中｜目前階段：等待有效C")
+
+    .replace(/N字狀態：結構失效｜N字階段：結構失效/g,"N字狀態：結構失效")
+
+    .replace(/N字階段維持延伸中/g,"N字階段維持延伸中")
+
+    .replace(/N字階段轉轉弱中/g,"N字階段轉為轉弱中")
+
+    .replace(/N字階段轉回測確認中/g,"N字階段轉為回測確認中")
+
+    .replace(/回延伸中/g,"回到延伸中")
+
+    .replace(/回等待有效C/g,"回到等待有效C")
+
+    .replace(/回形成中\s*\/\s*等待有效C/g,"回到形成中／等待有效C")
+
+    .replace(/ABC完成待突破\s*\/\s*等待突破B/g,"ABC已形成／等待突破B")
+
+    .replace(/形成中\s*\/\s*等待有效C/g,"A、B形成中／等待有效C")
+
+    .replace(/進ABC完成待突破/g,"進入ABC已形成待突破階段")
+
+    .replace(/費波那契仍不完整確認/g,"費波那契N字仍未完整確認")
+
+    .replace(/候選結構結構失效/g,"候選結構失效")
+
+    .replace(/月線狀態=/g,"月線狀態：")
+
+    .replace(/N字狀態=/g,"N字狀態：")
+
+    .replace(/N字階段=/g,"N字階段：")
+
+    .replace(/價格位置=/g,"價格位置：")
+
+    .replace(/費波那契目標距離=/g,"費波那契目標距離：")
+
+    .replace(/固定倍數目標距離=/g,"固定倍數目標距離：")
+
+    .replace(/結構品質=/g,"結構品質：")
+
+    .replace(/新進品質=/g,"新進品質：")
+
+    .replace(/完整確認 \/ 延伸中/g,"完整確認／延伸中")
+
+    .replace(/ABC完成待突破 \/ 等待突破B/g,"ABC已形成／等待突破B")
+
+    .replace(/A、B形成中 \/ 等待有效C/g,"A、B形成中／等待有效C");
+
+  return out;
+
+}
+
 // ============================================================
 
 // V3.2.6 多維狀態機：月線 / N字 / 價格位置 / 目標距離 / 結構品質
@@ -10608,9 +10794,9 @@ function entryQualityReasonsV328(report,s,monthlyStatus,nStatus,nPhase,fibTarget
 
   if(nPhase==="WEAKENING")reasons.push("已跌回B下方，突破品質轉弱");
 
-  if(fibTargetZone?.key==="APPROACHING")reasons.push("Fib 1.618已進入APPROACHING");
+  if(fibTargetZone?.key==="APPROACHING")reasons.push("費波那契1.618已進入APPROACHING");
 
-  if(["NEAR","REACHED","OVER_TARGET"].includes(fibTargetZone?.key))reasons.push(`Fib 1.618=${fibTargetZone.key}`);
+  if(["NEAR","REACHED","OVER_TARGET"].includes(fibTargetZone?.key))reasons.push(`費波那契1.618=${fibTargetZone.key}`);
 
   if(fixedTargetZone?.key==="APPROACHING"&&fixed?.m!==undefined)reasons.push(`月線${fixed.m}×固定倍數已進入APPROACHING`);
 
@@ -10640,9 +10826,9 @@ function entryQualityImproveTextV329(report,s,monthlyStatus,nStatus,nPhase,ab,fi
 
   if(monthlyStatus==="UNAVAILABLE")return "先等官方月線資料恢復並完成資格判定，再評估波段新進。";
 
-  if(monthlyStatus==="FAIL")return "先等月線條件重新成立；短線轉強不直接覆蓋月線Gate。";
+  if(monthlyStatus==="FAIL")return "先等月線條件重新成立；短線轉強不直接覆蓋月線門檻。";
 
-  if(nStatus==="failed")return "先等待新的A／B／C結構，不沿用舊Fib。";
+  if(nStatus==="failed")return "先等待新的A／B／C結構，不沿用舊費波那契結構。";
 
   if(nStatus==="forming")return "先形成有效C，再觀察後續是否完成B突破確認。";
 
@@ -10674,7 +10860,7 @@ function entryQualityImproveTextV329(report,s,monthlyStatus,nStatus,nPhase,ab,fi
 
   }else if(["APPROACHING","NEAR","REACHED","OVER_TARGET"].includes(fibTargetZone?.key)){
 
-    paths.push("Fib 1.618目標壓力消化後再重新評估");
+    paths.push("費波那契1.618目標壓力消化後再重新評估");
 
   }
 
@@ -10746,7 +10932,7 @@ function volumeContextV326(report,s,nStatus,ab,targetZone){
 
   if(nStatus==="forming"){
 
-    if(pos==="ABOVE_B")return v>=2?"前置突破且明顯放量；但C未確認，不能當完整Fib":"價格先站上B；C未確認，仍屬前置突破";
+    if(pos==="ABOVE_B")return v>=2?"前置突破且明顯放量；但C未確認，不能當完整費波那契N字":"價格先站上B；C未確認，仍屬前置突破";
 
     if(v<0.7&&["BETWEEN_B_0236","BETWEEN_0236_0382"].includes(pos)&&slope!=="down")return "回檔量縮，結構目前較健康";
 
@@ -10866,7 +11052,7 @@ function buildGoldSectionV326(lines,report,s,ab,nStatus,nPhase,cLife){
 
     lines.push(`📈 現價高出B ${fmt(ab.aboveBAmount)} 元，相當於A→B原始波段幅度的 +${fmt(ab.valuePct,2)}%。`);
 
-    if(nStatus==="forming")lines.push(`🔥 位置判讀：${posMeta.label}；但C尚未形成，這是「未完成N字下的B上方前置突破」，不能直接當成完整Fib確認。`);
+    if(nStatus==="forming")lines.push(`🔥 位置判讀：${posMeta.label}；但C尚未形成，這是「未完成N字下的B上方前置突破」，不能直接當成完整費波那契N字確認。`);
 
     else lines.push(`🟢 位置判讀：${posMeta.label}；目前不是「回檔」，後續優先看B＝${fmt(ab.B)} 元在回測時能否守住。`);
 
@@ -11244,7 +11430,7 @@ function buildReportTextV325(report){
 
     lines.push("🟡 劇本一｜形成C：B後回檔逐步止穩，量能正常化 → 等待演算法確認有效C。");
 
-    lines.push(`➖ 劇本二｜繼續整理：目前${cNow}；沒有有效止跌 → 不猜C、不提前啟用正式Fib。`);
+    lines.push(`➖ 劇本二｜繼續整理：目前${cNow}；沒有有效止跌 → 不猜C、不提前啟用正式費波那契N字。`);
 
     if(A!==null)lines.push(`⚠️ 劇本三｜候選失效：日K收盤跌破A ${fmt(A)} 元 → 等待新的結構。`);
 
@@ -11328,7 +11514,7 @@ function buildReportTextV325(report){
 
   lines.push("⚠️ 歷史N字不等於目前訊號；歷史目標不得直接套用到目前結構。");
 
-  if(failed)lines.push(`🔴 上一組失敗：${fmt(failed.A)}／${fmt(failed.B)}／${fmt(failed.C)}｜Fib確認 ${datefmt(failed.fibBreakoutDate||failed.breakoutDate)}｜失敗 ${datefmt(failed.failedDate)}`);
+  if(failed)lines.push(`🔴 上一組失敗：${fmt(failed.A)}／${fmt(failed.B)}／${fmt(failed.C)}｜費波那契確認 ${datefmt(failed.fibBreakoutDate||failed.breakoutDate)}｜失敗 ${datefmt(failed.failedDate)}`);
 
   if(completed)lines.push(`🏆 上一組完成：${fmt(completed.A)}／${fmt(completed.B)}／${fmt(completed.C)}｜🔥戰術突破 ${datefmt(completed.tacticalBreakoutDate)}｜📐前高確認 ${datefmt(completed.fibBreakoutDate||completed.breakoutDate)}｜歷史1.618 ${fmt(completed.target1618)}｜完成 ${datefmt(completed.completedDate)}`);
 
@@ -11360,7 +11546,7 @@ function buildReportTextV325(report){
 
   else if(nStatus==="forming")lines.push("🟡 A、B已形成，C尚未確認，不提前猜C。");
 
-  else lines.push("🔴 本組N字已失效，舊Fib停止作為現行訊號，等待新的A／B／C。");
+  else lines.push("🔴 本組N字已失效，舊費波那契結構停止作為現行訊號，等待新的A／B／C。");
 
   if(A!==null)lines.push(`🛑 A＝${fmt(A)} 元：${nStatus==="failed"?"本組舊結構的歷史基準":"長週期結構失效觀察位，不等同短線固定停損"}。`);
 
@@ -11468,7 +11654,7 @@ function buildReportTextV325(report){
 
   lines.push("本版回檔Fib口徑：A→B回檔價＝B−（B−A）×回檔比例；若現價高於B，改顯示「高出B多少元＋相當於A→B原始波段幅度百分比」，不再稱為負回檔。");
 
-  lines.push("本版重要修正：CONFIRMED後屏蔽「等待突破B／站回0.618／0.764修復」舊模板；B成為突破有效性第一層觀察，MA20為趨勢健康度，0.618／0.764降級為回落風控，A為長週期結構失效觀察；FAILED後舊Fib停止作為現行訊號。");
+  lines.push("本版重要修正：CONFIRMED後屏蔽「等待突破B／站回0.618／0.764修復」舊模板；B成為突破有效性第一層觀察，MA20為趨勢健康度，0.618／0.764降級為回落風控，A為長週期結構失效觀察；FAILED後舊費波那契結構停止作為現行訊號。");
 
   lineSection(lines,"🏁 一句話總結");
 
@@ -11486,7 +11672,7 @@ function buildReportTextV325(report){
 
   else if(nStatus==="forming")summary=`${formatStockNameWithCode(report.name,report.code)}目前是「A、B已形成、C尚未確認」；不提前猜C或硬湊買點，等待有效C。`;
 
-  else summary=`${formatStockNameWithCode(report.name,report.code)}目前是「本組N字已失效」；舊Fib與1.618停止作為現行訊號，等待新的A／B／C。`;
+  else summary=`${formatStockNameWithCode(report.name,report.code)}目前是「本組N字已失效」；舊費波那契結構與1.618停止作為現行訊號，等待新的A／B／C。`;
 
   lines.push(summary);
 
@@ -11554,7 +11740,7 @@ function buildReportTextV326(report){
 
   const formingAboveB=nStatus==="forming"&&ab?.positionZone==="ABOVE_B";
 
-  // V3.3.0：保留ABC價位隨文顯示、目標分流與ENTRY改善條件；使用者可見的結構品質／新進品質全面中文化。
+  // V3.3.1：保留ABC價位隨文顯示、目標分流與新進改善條件；報告正文與進階區全面中文白話化。
 
   const aNow=A!==null?`A＝${fmt(A)} 元`:"A＝尚未形成";
 
@@ -11610,7 +11796,7 @@ function buildReportTextV326(report){
 
     if(nStatus==="abc_ready")return `ABC已形成（${abcNow}）｜等待完整收盤突破${bNow}`;
 
-    if(formingAboveB)return `前置強勢突破｜${cNow}，尚未構成完整Fib N字｜${bNow}`;
+    if(formingAboveB)return `前置強勢突破｜${cNow}，尚未構成完整費波那契N字 N字｜${bNow}`;
 
     if(cLife.invalidated)return `原C＝${fmt(rawC)} 元遭破壞｜${aNow}仍守住｜回退FORMING重新尋找C`;
 
@@ -11620,7 +11806,7 @@ function buildReportTextV326(report){
 
   };
 
-  lines.push("📘 石頭少爺分析助手｜V3.3.0 新手小白友善版（中文狀態顯示版）");
+  lines.push("📘 石頭少爺分析助手｜V3.3.1 新手小白友善版（全中文白話顯示版）");
 
   lines.push(`報告產出時間：${reportGeneratedAt()}`);
 
@@ -11656,7 +11842,7 @@ function buildReportTextV326(report){
 
   lines.push(`${entryQualityMeta.icon} 新進品質：${entryQualityMeta.label}${entryReasons.length?`｜${entryReasons.slice(0,3).join("；")}`:""}`);
 
-  lines.push(`📌 ENTRY改善條件：${entryImprove}`);
+  lines.push(`📌 新進改善條件：${entryImprove}`);
 
   if(nStatus==="confirmed")lines.push(`🟢 完整N字：已確認（${abcNow}）｜${bNow}已突破`);
 
@@ -11690,7 +11876,7 @@ function buildReportTextV326(report){
 
   else if(monthlyStatus==="UNAVAILABLE")lines.push("📌 月線固定倍數：暫停｜官方月線資料暫不可用");
 
-  // 新進 / 加碼：月線資格先作上層 gate，再看短線狀態。
+  // 新進 / 加碼：月線資格先作上層門檻，再看短線狀態。
 
   if(monthlyStatus==="FAIL"){
 
@@ -11748,7 +11934,7 @@ function buildReportTextV326(report){
 
     lines.push(`🟡 新進場：ABC已形成｜等待完整日K收盤突破B ${fmt(B)} 元，不再寫「等待C」。`);
 
-    lines.push("🔴 加碼：正式Fib尚未確認，暫不主動加碼。");
+    lines.push("🔴 加碼：正式費波那契N字尚未確認，暫不主動加碼。");
 
   }else if(formingAboveB){
 
@@ -11760,13 +11946,13 @@ function buildReportTextV326(report){
 
     lines.push("🔴 新進場：候選結構偏弱；即使RSI低也不代表止跌，等待有效C與價格確認。");
 
-    lines.push("🔴 加碼：完整Fib尚未確認且結構品質偏弱，暫停加碼。");
+    lines.push("🔴 加碼：完整費波那契N字尚未確認且結構品質偏弱，暫停加碼。");
 
   }else{
 
     lines.push(`🟡 新進場：${abNow}已形成，${cNow}；目前位於${posMeta.label}，不提前猜C。`);
 
-    lines.push("🔴 加碼：完整Fib尚未確認，暫不主動加碼。");
+    lines.push("🔴 加碼：完整費波那契N字尚未確認，暫不主動加碼。");
 
   }
 
@@ -11808,7 +11994,7 @@ function buildReportTextV326(report){
 
   if(monthlyStatus!=="PASS"){
 
-    lines.push(`${monthlyMeta.icon} 月線目前是「${monthlyMeta.short}」；短線Fib可以觀察，但月線波段新進場先不啟用。`);
+    lines.push(`${monthlyMeta.icon} 月線目前是「${monthlyMeta.short}」；短線費波那契結構可以觀察，但月線波段新進場先不啟用。`);
 
   }
 
@@ -11824,7 +12010,7 @@ function buildReportTextV326(report){
 
   }else if(nStatus==="abc_ready")lines.push(`🟡 ABC已形成（${abcNow}）；等待完整收盤突破${bNow}，不提前把預估1.618當正式訊號。`);
 
-  else if(formingAboveB)lines.push(`🟡 價格已先突破${bNow}，但${cNow}；屬前置突破，不把單日強勢直接當完整Fib進場。`);
+  else if(formingAboveB)lines.push(`🟡 價格已先突破${bNow}，但${cNow}；屬前置突破，不把單日強勢直接當完整費波那契N字進場。`);
 
   else if(quality==="WEAK")lines.push(`🔴 ${posMeta.label}，結構品質偏弱；不搶反彈、不因低RSI猜底，等待有效C。`);
 
@@ -12048,7 +12234,7 @@ function buildReportTextV326(report){
 
       lines.push(`🟡 劇本一｜形成C：從B（${fmt(B)}元）後回檔逐步止穩；目前${cNow}，量能正常化 → 等待演算法確認有效C。`);
 
-      lines.push(`➖ 劇本二｜繼續整理：目前${cNow}；沒有有效止跌 → 不猜C、不提前啟用正式Fib。`);
+      lines.push(`➖ 劇本二｜繼續整理：目前${cNow}；沒有有效止跌 → 不猜C、不提前啟用正式費波那契N字。`);
 
       lines.push(`⚠️ 劇本三｜結構惡化：回檔持續加深；A ${fmt(A)} 元為最終候選失效觀察。`);
 
@@ -12104,7 +12290,7 @@ function buildReportTextV326(report){
 
   }else if(nStatus==="abc_ready")lines.push("正式1.618尚未啟用；B突破確認後才啟用。若C被收盤跌破但A守住，回退WAIT_C。");
 
-  else if(nStatus==="failed")lines.push("本組N字已失效；舊Fib只作歷史回顧。");
+  else if(nStatus==="failed")lines.push("本組N字已失效；舊費波那契結構只作歷史回顧。");
 
   else lines.push("目前不產生新的正式1.618；先等待有效C。");
 
@@ -12130,7 +12316,7 @@ function buildReportTextV326(report){
 
   lines.push("⚠️ 歷史N字不等於目前訊號；歷史目標不得直接套用到目前結構。");
 
-  if(failed)lines.push(`🔴 上一組失敗：${fmt(failed.A)}／${fmt(failed.B)}／${fmt(failed.C)}｜Fib確認 ${datefmt(failed.fibBreakoutDate||failed.breakoutDate)}｜失敗 ${datefmt(failed.failedDate)}`);
+  if(failed)lines.push(`🔴 上一組失敗：${fmt(failed.A)}／${fmt(failed.B)}／${fmt(failed.C)}｜費波那契確認 ${datefmt(failed.fibBreakoutDate||failed.breakoutDate)}｜失敗 ${datefmt(failed.failedDate)}`);
 
   if(completed)lines.push(`🏆 上一組完成：${fmt(completed.A)}／${fmt(completed.B)}／${fmt(completed.C)}｜🔥戰術突破 ${datefmt(completed.tacticalBreakoutDate)}｜📐前高確認 ${datefmt(completed.fibBreakoutDate||completed.breakoutDate)}｜歷史1.618 ${fmt(completed.target1618)}｜完成 ${datefmt(completed.completedDate)}`);
 
@@ -12162,7 +12348,7 @@ function buildReportTextV326(report){
 
   else if(cLife.invalidated)lines.push(`⚠️ 原C＝${fmt(rawC)} 元已失效；${aNow}仍守住，回WAIT_C重新找C。`);
 
-  else if(formingAboveB)lines.push(`🔥 現價已高於${bNow}，但${cNow}；前置突破≠完整Fib確認。`);
+  else if(formingAboveB)lines.push(`🔥 現價已高於${bNow}，但${cNow}；前置突破≠完整費波那契N字確認。`);
 
   else lines.push(`🟡 ${abNow}已形成，${cNow}；${posMeta.label}不等於可以猜C。`);
 
@@ -12238,7 +12424,7 @@ function buildReportTextV326(report){
 
   }else if(nStatus==="abc_ready")lines.push(`📌 當前路徑：ABC已完成（${abcNow}）→ 守${cNow} → 等完整收盤突破${bNow}；C破壞則回WAIT_C。`);
 
-  else if(formingAboveB)lines.push(`📌 當前路徑：${cNow}但價格先站上${bNow} → 戰術可強、Fib仍未完成；等待新的有效轉折。`);
+  else if(formingAboveB)lines.push(`📌 當前路徑：${cNow}但價格先站上${bNow} → 戰術可強、費波那契N字仍未完成；等待新的有效轉折。`);
 
   else lines.push(`📌 當前路徑：${abNow}形成 → 現在位於${posMeta.label} → 等有效C（${cNow}）。`);
 
@@ -12246,33 +12432,33 @@ function buildReportTextV326(report){
 
   lineSection(lines,"⚙️ 版本資訊");
 
-  lines.push("前端報告版本：第3.3.0版（中文狀態顯示｜保留目標分流、ENTRY改善條件與ABC價位隨文顯示）");
+  lines.push("前端報告版本：第3.3.1版（全中文白話顯示｜保留目標分流、新進改善條件與ABC價位隨文顯示）");
 
   lines.push(`後端分析版本：${report.version||"-"}`);
 
   lines.push(`費波那契N字演算法：${s.fib?.algorithm?.name||"pivot-abc-v2.4"}`);
 
-  lines.push("MONTHLY_STATUS：PASS／PENDING／FAIL／UNAVAILABLE；PENDING與UNAVAILABLE不得被翻成FAIL。");
+  lines.push("月線狀態：成立／待確認／未成立／資料暫不可用；待確認與資料暫不可用不得誤判成未成立。");
 
-  lines.push("N_STATUS：FORMING／ABC_READY／CONFIRMED／FAILED；ABC_READY若日K收盤跌破C但A仍守住，回退FORMING / WAIT_C。");
+  lines.push("N字狀態：形成中／ABC已形成待突破／完整確認／結構失效；ABC已形成待突破時若日K收盤跌破C但A仍守住，回到等待有效C。");
 
-  lines.push(`N_PHASE：WAIT_C／WAIT_BREAKOUT／EXTENDING／RETESTING／WEAKENING／FAILED；B回測容許帶＝±${B_RETEST_TOLERANCE_PCT_V326}%（狀態分類參數，非Fib公式）。`);
+  lines.push(`N字階段：等待有效C／等待突破B／延伸中／回測確認中／轉弱中／結構失效；B回測容許帶＝±${B_RETEST_TOLERANCE_PCT_V326}%（狀態分類參數，非費波那契公式）。`);
 
-  lines.push("POSITION_ZONE：ABOVE_B／BETWEEN_B_0236／BETWEEN_0236_0382／BETWEEN_0382_0500／BETWEEN_0500_0618／BETWEEN_0618_0764／BELOW_0764／BELOW_A。");
+  lines.push("價格位置：B上方突破／延伸區、B～0.236極淺回檔區、0.236～0.382淺回檔強勢區、0.382～0.500中段整理區、0.500～0.618中深回檔區、0.618～0.764偏深回檔區、0.764以下極深回檔區、A下方結構失效區。");
 
-  lines.push(`FIB_TARGET_ZONE：NONE／FAR／APPROACHING（≤${TARGET_APPROACHING_PCT_V326}%）／NEAR（≤${TARGET_NEAR_PCT_V326}%）／REACHED／OVER_TARGET；只描述正式N字1.618距離。`);
+  lines.push(`費波那契目標距離：無／仍遠／已較接近（≤${TARGET_APPROACHING_PCT_V326}%）／很接近（≤${TARGET_NEAR_PCT_V326}%）／已觸及／已超越目標；只描述正式N字1.618距離。`);
 
-  lines.push(`FIXED_TARGET_ZONE：NONE／FAR／APPROACHING（≤${TARGET_APPROACHING_PCT_V326}%）／NEAR（≤${TARGET_NEAR_PCT_V326}%）／REACHED／OVER_TARGET；只描述月線下一固定倍數距離。`);
+  lines.push(`固定倍數目標距離：無／仍遠／已較接近（≤${TARGET_APPROACHING_PCT_V326}%）／很接近（≤${TARGET_NEAR_PCT_V326}%）／已觸及／已超越目標；只描述月線下一固定倍數距離。`);
 
-  lines.push("結構品質（內部碼 STRUCTURE_QUALITY）：HEALTHY＝健康／MIXED＝品質混合、仍待確認／WEAK＝偏弱、風控優先；POSITION_ZONE只描述位置，品質再搭配MA20斜率、是否站上MA20與量能判讀。");
+  lines.push("結構品質：健康／品質混合、仍待確認／偏弱、風控優先；價格位置只描述現價落點，結構品質再搭配MA20斜率、是否站上MA20與量能判讀。");
 
-  lines.push(`新進品質（內部碼 ENTRY_QUALITY）：LOCKED＝暫停新進／WAIT_STRUCTURE＝等待結構完成／POOR＝位置不佳／WATCH＝可觀察但不宜追價／BETTER＝新進條件改善；綜合月線Gate、N字階段、Fib／固定倍數目標距離、MA20正乖離與RSI，只作新進位置品質分級，不是自動買賣訊號。`);
+  lines.push(`新進品質：暫停新進／等待結構完成／位置不佳／可觀察但不宜追價／新進條件改善；綜合月線門檻、N字階段、費波那契／固定倍數目標距離、MA20正乖離與RSI，只作新進位置品質分級，不是自動買賣訊號。`);
 
-  lines.push("V3.3.0目標分流：Fib 1.618與月線固定倍數各自判斷距離，禁止再用單一『接近目標區』混寫兩套目標。");
+  lines.push("V3.3.1目標分流：費波那契1.618與月線固定倍數各自判斷距離，禁止再用單一「接近目標區」混寫兩套目標。");
 
-  lines.push("V3.3.0中文顯示：報告正文使用『結構品質：健康／品質混合／偏弱』與『新進品質：暫停新進／等待結構完成／位置不佳／可觀察／新進條件改善』；內部英文狀態碼保留供程式判斷與除錯。");
+  lines.push("V3.3.1中文顯示：報告對外顯示全面使用中文白話；RSI、MA等技術指標縮寫保留，內部英文狀態碼僅留在程式邏輯中，不直接顯示給使用者。");
 
-  lines.push("V3.3.0改善條件：新進品質不再只要求回到B；可透過高檔整理讓MA20追上、RSI／量價降溫，或B附近健康回測三種主要路徑改善。");
+  lines.push("V3.3.1改善條件：新進品質不再只要求回到B；可透過高檔整理讓MA20追上、RSI／量價降溫，或B附近健康回測三種主要路徑改善。");
 
   lines.push("完整N字確認後：目前這組A／B／C在報告敘述中會同步附上判定價位；B＝第一層突破有效性、C＝本組實際回檔低點、MA20＝短線趨勢健康度、0.618／0.764＝回落風控、A＝長週期重大失效觀察。");
 
@@ -12298,7 +12484,7 @@ function buildReportTextV326(report){
 
   }else if(formingAboveB){
 
-    summary=`${formatStockNameWithCode(report.name,report.code)}目前是「${monthlyText}、FORMING / WAIT_C、${abNow}、${cNow}、POSITION_ZONE=ABOVE_B」；價格已先突破${bNow}，但${cNow}，屬前置強勢突破，不倒推完整Fib或1.618。`;
+    summary=`${formatStockNameWithCode(report.name,report.code)}目前是「${monthlyText}、FORMING / WAIT_C、${abNow}、${cNow}、POSITION_ZONE=ABOVE_B」；價格已先突破${bNow}，但${cNow}，屬前置強勢突破，不倒推完整費波那契N字或1.618。`;
 
   }else if(nStatus==="forming"){
 
@@ -12306,13 +12492,13 @@ function buildReportTextV326(report){
 
   }else{
 
-    summary=`${formatStockNameWithCode(report.name,report.code)}目前是「${monthlyText}、FAILED」；舊Fib與1.618停止作為現行訊號，等待新的A／B／C。`;
+    summary=`${formatStockNameWithCode(report.name,report.code)}目前是「${monthlyText}、FAILED」；舊費波那契結構與1.618停止作為現行訊號，等待新的A／B／C。`;
 
   }
 
   lines.push(summary);
 
-  return lines.join("\n");
+  return localizeReportTextV331(lines.join("\n"));
 
 }
 
@@ -12616,19 +12802,19 @@ async function analyzeStock(){
 
       status.className="status ok";
 
-      status.textContent=`✅ MONTHLY_STATUS=PASS｜月線符合條件｜${stage||"有效區段"}｜可計算固定倍數目標價`;
+      status.textContent=`✅ 月線狀態：成立｜月線符合條件｜${stage||"有效區段"}｜可計算固定倍數目標價`;
 
     }else if(monthlyStatusUi==="FAIL"){
 
       status.className="status no";
 
-      status.textContent="❌ MONTHLY_STATUS=FAIL｜已確認月線資格未成立｜目前不計算固定倍數目標價";
+      status.textContent="❌ 月線狀態：未成立｜已確認月線資格未成立｜目前不計算固定倍數目標價";
 
     }else{
 
       status.className="status warn";
 
-      status.textContent=`${monthlyMetaUi.icon} MONTHLY_STATUS=${monthlyStatusUi}｜${monthlyMetaUi.detail}｜固定倍數暫停`;
+      status.textContent=`${monthlyMetaUi.icon} 月線狀態：${monthlyStatusMetaV326(monthlyStatusUi,data).short}｜${monthlyMetaUi.detail}｜固定倍數暫停`;
 
     }
 
@@ -12658,7 +12844,7 @@ async function analyzeStock(){
 
     }else if(monthlyStatusUi==="PENDING"){
 
-      set("previousBreak",`🟡 MONTHLY_STATUS=PENDING｜${monthlyMetaUi.detail} 固定倍數暫停，待正式月線確認後再更新。`);
+      set("previousBreak",`🟡 月線狀態：待確認｜${monthlyMetaUi.detail} 固定倍數暫停，待正式月線確認後再更新。`);
 
     }else if(breakMonth){
 
