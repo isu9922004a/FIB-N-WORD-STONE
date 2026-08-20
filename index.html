@@ -402,7 +402,7 @@ body{
 
     <p>月線波段條件判斷＋固定倍數目標價＋費波那契 N字分析</p>
 
-    <span class="version-pill">前端 V3.3.1｜全中文白話顯示版｜目標分流＋ABC價位隨文顯示｜新手小白友善版｜V2.9.5 相容｜費波那契核心 第2.4版</span>
+    <span class="version-pill">前端 V3.3.2｜全中文白話顯示＋隱藏版本資訊｜目標分流＋ABC價位隨文顯示｜新手小白友善版｜V2.9.5 相容｜費波那契核心 第2.4版</span>
 
   </div>
 
@@ -674,7 +674,7 @@ body{
 
       <div class="section-title">⑥ 一鍵複製分析報告</div>
 
-      <div class="hint">會依 V3.3.1 全中文白話顯示框架整理：先看結論、ABC、新進／續抱／加碼／獲利、轉弱條件、價格作戰地圖、下一交易日3種劇本、進階技術資料、歷史N字、小白懶人包與石頭少爺判讀。</div>
+      <div class="hint">會依 V3.3.2 全中文白話顯示框架整理：先看結論、ABC、新進／續抱／加碼／獲利、轉弱條件、價格作戰地圖、下一交易日3種劇本、進階技術資料、歷史N字、小白懶人包與石頭少爺判讀。</div>
 
       <div class="copy-actions">
 
@@ -690,7 +690,7 @@ body{
 
 </main>
 
-<footer class="footer">石頭少爺 Agent｜GitHub V3.3.1 全中文白話顯示版｜V2.9.5 相容｜費波那契核心 第2.4版<br>技術分析僅供研究與決策參考，不構成投資建議。</footer>
+<footer class="footer">石頭少爺 Agent｜GitHub V3.3.2 隱藏版本資訊版｜V2.9.5 相容｜費波那契核心 第2.4版<br>技術分析僅供研究與決策參考，不構成投資建議。</footer>
 
 <script>
 
@@ -700,7 +700,7 @@ const FRONTEND_REPORT_VERSION="2026-08-20-report-v3.2.6-multidimensional-state-m
 
 const TARGET_MULTIPLIERS=[3,3.5,4,4.5,5,5.5,6,6.5,7,7.5,8,8.5,9,9.5,10];
 
-// V3.3.1：沿用 V3.3.0 核心狀態機；內部英文狀態碼不變，但所有使用者可見狀態改為中文白話。
+// V3.3.2：沿用 V3.3.1 核心狀態機與中文顯示；分析報告不再輸出版本資訊區塊。
 
 // 1.5% 只用來分類「突破後是否正在回測 B」，不是 Fibonacci 公式。
 
@@ -10160,7 +10160,7 @@ function buildGoldSectionV325(lines,report,s,ab,nStatus,nPhase){
 
 }
 
-// V3.3.1 使用者可見文字中文化：只處理最後輸出的報告文字，不改內部狀態機值。
+// V3.3.2 使用者可見文字中文化沿用 V3.3.1；只處理最後輸出的報告文字，不改內部狀態機值。
 
 function localizeReportTextV331(text){
 
@@ -11740,7 +11740,7 @@ function buildReportTextV326(report){
 
   const formingAboveB=nStatus==="forming"&&ab?.positionZone==="ABOVE_B";
 
-  // V3.3.1：保留ABC價位隨文顯示、目標分流與新進改善條件；報告正文與進階區全面中文白話化。
+  // V3.3.2：保留ABC價位隨文顯示、目標分流、新進改善條件與中文白話；隱藏報告版本資訊區塊。
 
   const aNow=A!==null?`A＝${fmt(A)} 元`:"A＝尚未形成";
 
@@ -11806,7 +11806,7 @@ function buildReportTextV326(report){
 
   };
 
-  lines.push("📘 石頭少爺分析助手｜V3.3.1 新手小白友善版（全中文白話顯示版）");
+  lines.push("📘 石頭少爺分析助手｜V3.3.2 新手小白友善版（全中文白話＋隱藏版本資訊版）");
 
   lines.push(`報告產出時間：${reportGeneratedAt()}`);
 
@@ -12429,38 +12429,6 @@ function buildReportTextV326(report){
   else lines.push(`📌 當前路徑：${abNow}形成 → 現在位於${posMeta.label} → 等有效C（${cNow}）。`);
 
   lines.push("⚠️ 技術分析僅供研究與決策參考。布局、加碼、續抱、分批獲利都是條件式規劃，仍需搭配持股成本、部位大小與可承受風險。");
-
-  lineSection(lines,"⚙️ 版本資訊");
-
-  lines.push("前端報告版本：第3.3.1版（全中文白話顯示｜保留目標分流、新進改善條件與ABC價位隨文顯示）");
-
-  lines.push(`後端分析版本：${report.version||"-"}`);
-
-  lines.push(`費波那契N字演算法：${s.fib?.algorithm?.name||"pivot-abc-v2.4"}`);
-
-  lines.push("月線狀態：成立／待確認／未成立／資料暫不可用；待確認與資料暫不可用不得誤判成未成立。");
-
-  lines.push("N字狀態：形成中／ABC已形成待突破／完整確認／結構失效；ABC已形成待突破時若日K收盤跌破C但A仍守住，回到等待有效C。");
-
-  lines.push(`N字階段：等待有效C／等待突破B／延伸中／回測確認中／轉弱中／結構失效；B回測容許帶＝±${B_RETEST_TOLERANCE_PCT_V326}%（狀態分類參數，非費波那契公式）。`);
-
-  lines.push("價格位置：B上方突破／延伸區、B～0.236極淺回檔區、0.236～0.382淺回檔強勢區、0.382～0.500中段整理區、0.500～0.618中深回檔區、0.618～0.764偏深回檔區、0.764以下極深回檔區、A下方結構失效區。");
-
-  lines.push(`費波那契目標距離：無／仍遠／已較接近（≤${TARGET_APPROACHING_PCT_V326}%）／很接近（≤${TARGET_NEAR_PCT_V326}%）／已觸及／已超越目標；只描述正式N字1.618距離。`);
-
-  lines.push(`固定倍數目標距離：無／仍遠／已較接近（≤${TARGET_APPROACHING_PCT_V326}%）／很接近（≤${TARGET_NEAR_PCT_V326}%）／已觸及／已超越目標；只描述月線下一固定倍數距離。`);
-
-  lines.push("結構品質：健康／品質混合、仍待確認／偏弱、風控優先；價格位置只描述現價落點，結構品質再搭配MA20斜率、是否站上MA20與量能判讀。");
-
-  lines.push(`新進品質：暫停新進／等待結構完成／位置不佳／可觀察但不宜追價／新進條件改善；綜合月線門檻、N字階段、費波那契／固定倍數目標距離、MA20正乖離與RSI，只作新進位置品質分級，不是自動買賣訊號。`);
-
-  lines.push("V3.3.1目標分流：費波那契1.618與月線固定倍數各自判斷距離，禁止再用單一「接近目標區」混寫兩套目標。");
-
-  lines.push("V3.3.1中文顯示：報告對外顯示全面使用中文白話；RSI、MA等技術指標縮寫保留，內部英文狀態碼僅留在程式邏輯中，不直接顯示給使用者。");
-
-  lines.push("V3.3.1改善條件：新進品質不再只要求回到B；可透過高檔整理讓MA20追上、RSI／量價降溫，或B附近健康回測三種主要路徑改善。");
-
-  lines.push("完整N字確認後：目前這組A／B／C在報告敘述中會同步附上判定價位；B＝第一層突破有效性、C＝本組實際回檔低點、MA20＝短線趨勢健康度、0.618／0.764＝回落風控、A＝長週期重大失效觀察。");
 
   lineSection(lines,"🏁 一句話總結");
 
