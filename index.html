@@ -674,7 +674,7 @@ body{
 
       <div class="section-title">⑥ 一鍵複製分析報告</div>
 
-      <div class="hint">會依 V3.3.3 中文去重與逐層修復框架整理：先看結論、ABC、新進／續抱／加碼／獲利、轉弱條件、價格作戰地圖、下一交易日3種劇本、進階技術資料、歷史N字、小白懶人包與石頭少爺判讀。</div>
+      <div class="hint">會依 V3.3.4 兩處文字精修框架整理：先看結論、ABC、新進／續抱／加碼／獲利、轉弱條件、價格作戰地圖、下一交易日3種劇本、進階技術資料、歷史N字、小白懶人包與石頭少爺判讀。</div>
 
       <div class="copy-actions">
 
@@ -11776,7 +11776,7 @@ function buildReportTextV326(report){
 
   const formingAboveB=nStatus==="forming"&&ab?.positionZone==="ABOVE_B";
 
-  // V3.3.3：保留ABC價位隨文顯示、目標分流與隱藏版本資訊；中文去重並補極深回檔逐層修復。
+  // V3.3.5：僅精修一句話總結；其餘沿用V3.3.4。
 
   const aNow=A!==null?`A＝${fmt(A)} 元`:"A＝尚未形成";
 
@@ -11842,7 +11842,7 @@ function buildReportTextV326(report){
 
   };
 
-  lines.push("📘 石頭少爺分析助手｜V3.3.3 新手小白友善版（中文去重＋逐層修復版）");
+  lines.push("📘 石頭少爺分析助手｜V3.3.5 新手小白友善版（一句話總結逐層修復版）");
 
   lines.push(`報告產出時間：${reportGeneratedAt()}`);
 
@@ -12434,7 +12434,9 @@ function buildReportTextV326(report){
 
   lines.push(`${monthlyMeta.icon} 月線：${monthlyMeta.detail}`);
 
-  lines.push(`🧬 ${nStatusTextV326(nStatus,nPhase)}`);
+  if(nStatus==="forming")lines.push(`🧬 N字進度：A＝${fmt(A)} 元、B＝${fmt(B)} 元已形成｜等待有效C`);
+
+  else lines.push(`🧬 ${nStatusTextV326(nStatus,nPhase)}`);
 
   lines.push(`${posMeta.icon} 價格位置：${ab?.positionZone||"UNKNOWN"}｜${posMeta.label}`);
 
@@ -12442,7 +12444,7 @@ function buildReportTextV326(report){
 
   if(nStatus==="confirmed")lines.push(`${targetMeta.icon} Fib目標：FIB_TARGET_ZONE=${targetZone.key}${target!==null?`｜1.618＝${fmt(target)} 元`:""}`);
 
-  if(monthlyStatus==="PASS"&&fixed)lines.push(`${fixedTargetMeta.icon} 固定倍數目標：FIXED_TARGET_ZONE=${fixedTargetZone.key}｜${fixed.m}×＝${fmt(fixed.p)} 元`);
+  if(monthlyStatus==="PASS"&&fixed)lines.push(`${fixedTargetMeta.icon} 固定倍數目標：${fixedTargetZone.key}｜${fixed.m}×＝${fmt(fixed.p)} 元`);
 
   lines.push(`${entryQualityMeta.icon} 新進品質：${entryQualityMeta.label}`);
 
@@ -12492,7 +12494,27 @@ function buildReportTextV326(report){
 
   }else if(nStatus==="forming"){
 
-    summary=`${formatStockNameWithCode(report.name,report.code)}目前是「${monthlyText}、FORMING / WAIT_C、${abNow}、${cNow}、POSITION_ZONE=${ab?.positionZone||"UNKNOWN"}、結構品質=${structureQualityZhV330(quality)}」；${cLife.invalidated?`原C＝${fmt(rawC)}元已失效，${aNow}仍守住，重新等待新C`:`不提前猜C，依位置、MA20與量價等待有效C`}。`;
+    if(!cLife.invalidated&&ab?.positionZone==="BELOW_0764"){
+
+      const level764=ab?.levels?.["0.764"]??ret764;
+
+      const rsiText=rsi!==null?`現階段不因RSI ${fmt(rsi)}偏低就猜底`:`現階段不因價格已深度回檔就猜底`;
+
+      const repairLevels=[];
+
+      if(level764!==null)repairLevels.push(`0.764＝${fmt(level764)}元`);
+
+      if(ma!==null)repairLevels.push(`日20MA＝${fmt(ma)}元`);
+
+      if(B!==null)repairLevels.push(`B＝${fmt(B)}元`);
+
+      summary=`${formatStockNameWithCode(report.name,report.code)}目前${monthlyText}，A＝${fmt(A)}元、B＝${fmt(B)}元已形成，但C尚未確認。現價${fmt(close)}元${level764!==null?`已跌破0.764＝${fmt(level764)}元，`:""}A→B回檔達${fmt(ab.valuePct,2)}%，目前屬${posMeta.label}，結構品質${qualityMeta.label}；但日K尚未收破A＝${fmt(A)}元，因此候選結構尚未正式失效。${rsiText}，先等有效C形成${repairLevels.length?`，再依${repairLevels.join("、")}逐層觀察修復`:""}。`;
+
+    }else{
+
+      summary=`${formatStockNameWithCode(report.name,report.code)}目前是「${monthlyText}、FORMING / WAIT_C、${abNow}、${cNow}、POSITION_ZONE=${ab?.positionZone||"UNKNOWN"}、結構品質=${structureQualityZhV330(quality)}」；${cLife.invalidated?`原C＝${fmt(rawC)}元已失效，${aNow}仍守住，重新等待新C`:`不提前猜C，依位置、MA20與量價等待有效C`}。`;
+
+    }
 
   }else{
 
