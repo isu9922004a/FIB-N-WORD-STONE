@@ -441,7 +441,7 @@ body{
 
     <p>月線波段條件判斷＋固定倍數目標價＋費波那契 N字分析</p>
 
-    <span class="version-pill">前端 V3.3.11｜月線起始月待確認語意修正｜大盤戰報正式分流優化｜大盤一鍵免設定｜內建1,963檔台股快速索引｜個股＋大盤同頁雙 Worker</span>
+    <span class="version-pill">前端 V3.3.13｜固定倍數關卡狀態語意精修｜失效條件＋歷史越過語意修正｜月線起始月待確認｜大盤戰報正式分流優化｜內建1,963檔台股快速索引｜個股＋大盤同頁雙 Worker</span>
 
   </div>
 
@@ -818,16 +818,16 @@ body{
 
 </main>
 
-<footer class="footer">石頭少爺 Agent｜GitHub V3.3.11 月線起始月待確認語意修正版｜大盤戰報沿用 V3.3.10｜內建1,963檔股票快速索引｜個股＋大盤雙 Worker｜費波那契 pivot-abc-v2.4 核心<br>技術分析僅供研究與決策參考，不構成投資建議。</footer>
+<footer class="footer">石頭少爺 Agent｜GitHub V3.3.13 固定倍數關卡狀態語意精修版｜失效條件＋歷史越過語意沿用 V3.3.12｜月線待確認語意沿用 V3.3.11｜大盤戰報沿用 V3.3.10｜費波那契 pivot-abc-v2.4 核心<br>技術分析僅供研究與決策參考，不構成投資建議。</footer>
 
 <script>
 
 const API_BASE_URL="https://shitou-agent-fib-api.d318426.workers.dev";
 
-// 大盤 Worker 與個股 Worker 分開；V3.3.11 僅新增月線「目前在20MA之上但尚無可驗證起始月」的前端語意分流；大盤戰報邏輯沿用 V3.3.10。
+// 大盤 Worker 與個股 Worker 分開；V3.3.13 僅精修個股「固定倍數目標距離」欄位名稱為「固定倍數關卡狀態」；V3.3.12 失效條件／歷史越過、V3.3.11 月線待確認、V3.3.10 大盤戰報邏輯全部沿用。
 const MARKET_API_BASE_URL="https://shitou-taiwanmarket-api.d318426.workers.dev";
 
-const FRONTEND_REPORT_VERSION="2026-08-22-report-v3.3.11-monthly-start-unverified-semantics";
+const FRONTEND_REPORT_VERSION="2026-08-22-report-v3.3.13-fixed-level-status-label-semantics";
 
 const TARGET_MULTIPLIERS=[3,3.5,4,4.5,5,5.5,6,6.5,7,7.5,8,8.5,9,9.5,10];
 
@@ -3734,7 +3734,7 @@ function renderDailyRsi(value){
 
 }
 
-function renderTargets(entry,base,close,latestClose,latestMA,monthlyUnavailable=false,monthlyPending=false,monthlyNoStart=false){
+function renderTargets(entry,base,close,latestClose,latestMA,monthlyUnavailable=false,monthlyPending=false,monthlyNoStart=false,report=null){
 
   const wrap=document.getElementById("targetWrap");
 
@@ -3792,13 +3792,19 @@ function renderTargets(entry,base,close,latestClose,latestMA,monthlyUnavailable=
 
   const next=targetData.find(t=>c<t.p)??null;
 
+  const nextReclaim=next?fixedReclaimContextV3312(report,next):{crossed:false,knownHigh:null};
+
   set(
 
     "targetSummary",
 
     next
 
-      ? `目前收盤 ${fmt(c)} 元，現價約 ${fmt(multiple,2)} 倍；下一個固定倍數目標為 ${next.m}× = ${fmt(next.p)} 元。`
+      ? (nextReclaim.crossed
+
+          ? `目前收盤 ${fmt(c)} 元，現價約 ${fmt(multiple,2)} 倍；最近固定倍數關卡為 ${next.m}× = ${fmt(next.p)} 元，曾被可見結構高點 ${fmt(nextReclaim.knownHigh)} 元越過；目前回到關卡下方，距重新站回 ${fmtSignedPct(signedDistancePct(next.p,c))}。`
+
+          : `目前收盤 ${fmt(c)} 元，現價約 ${fmt(multiple,2)} 倍；下一個固定倍數目標為 ${next.m}× = ${fmt(next.p)} 元。`)
 
       : `目前收盤 ${fmt(c)} 元，已達或高於 10× 固定倍數目標。`
 
@@ -3818,13 +3824,15 @@ function renderTargets(entry,base,close,latestClose,latestMA,monthlyUnavailable=
 
     const isNext=next&&next.m===t.m;
 
+    const isReclaim=isNext&&nextReclaim.crossed;
+
     if(reached)div.classList.add("reached");
 
     if(isNext)div.classList.add("next");
 
     const trophy=(t.m===3||t.m===10)?" 🏆":"";
 
-    div.innerHTML=`<div class="m">× ${t.m}${trophy}</div><div class="p">${fmt(t.p)}</div>${reached?'<span class="badge">已達</span>':isNext?'<span class="badge">下一目標</span>':''}`;
+    div.innerHTML=`<div class="m">× ${t.m}${trophy}</div><div class="p">${fmt(t.p)}</div>${reached?'<span class="badge">已達</span>':isReclaim?'<span class="badge">曾越過</span>':isNext?'<span class="badge">下一目標</span>':''}`;
 
     box.appendChild(div);
 
@@ -11890,7 +11898,7 @@ function buildConditionalEntryV323(lines,report,s,ab){
 
   lines.push(`📍 進場參考：站回 ${fmt(r764)} 元後，再評估是否輕倉試多。`);
 
-  lines.push(`🛑 防守基準：A起漲點 ${fmt(A)} 元；若採收盤確認，日K收盤跌破A判定候選結構失效。`);
+  lines.push(`🛑 防守基準：A起漲點 ${fmt(A)} 元；依策略以完成日K最低價跌破A判定候選結構失效。`);
 
   lines.push("⚠️ 實際停損價不固定硬設，應依個人風險承受度與部位大小自行設定。");
 
@@ -12244,7 +12252,7 @@ function localizeReportTextV331(text){
 
     [/FIB_TARGET_ZONE/g,"費波那契目標距離"],
 
-    [/FIXED_TARGET_ZONE/g,"固定倍數目標距離"],
+    [/FIXED_TARGET_ZONE/g,"固定倍數關卡狀態"],
 
     [/STRUCTURE_QUALITY/g,"結構品質"],
 
@@ -12310,6 +12318,8 @@ function localizeReportTextV331(text){
 
     ["OVER_TARGET","已超越目標"],
 
+    ["RECLAIM","曾越過後回到關卡下方"],
+
     ["REACHED","已觸及"],
 
     ["NEAR","很接近"],
@@ -12354,7 +12364,7 @@ function localizeReportTextV331(text){
 
     .replace(/費波那契目標距離：仍遠｜距1\.618仍遠/g,"費波那契目標距離：仍遠")
 
-    .replace(/固定倍數目標距離：已較接近｜([^\n｜]+)已較接近/g,"固定倍數目標距離：已較接近｜$1")
+    .replace(/固定倍數關卡狀態：已較接近｜([^\n｜]+)已較接近/g,"固定倍數關卡狀態：已較接近｜$1")
 
     .replace(/N字狀態：完整確認｜N字階段：延伸中/g,"N字狀態：完整確認｜目前階段：延伸中")
 
@@ -12396,7 +12406,7 @@ function localizeReportTextV331(text){
 
     .replace(/費波那契目標距離=/g,"費波那契目標距離：")
 
-    .replace(/固定倍數目標距離=/g,"固定倍數目標距離：")
+    .replace(/固定倍數關卡狀態=/g,"固定倍數關卡狀態：")
 
     .replace(/結構品質=/g,"結構品質：")
 
@@ -12780,11 +12790,65 @@ function targetZoneMetaV326(key){
 
 }
 
+function knownFixedCrossingHighV3312(report){
+
+  const startMonth=String(report?.startMonth||report?.qualifyingMonth||"").replace(/\D/g,"").slice(0,6);
+
+  const eligible=(date)=>{
+
+    if(!startMonth)return true;
+
+    const ym=String(date||"").replace(/\D/g,"").slice(0,6);
+
+    return Boolean(ym)&&ym>=startMonth;
+
+  };
+
+  const candidates=[
+
+    {value:report?.dailyHigh,date:report?.closeDate},
+
+    {value:report?.fib?.B,date:report?.fib?.BDate},
+
+    {value:report?.fib?.lastCompletedFib?.completedHigh,date:report?.fib?.lastCompletedFib?.completedDate},
+
+    {value:report?.fib?.lastCompletedFib?.B,date:report?.fib?.lastCompletedFib?.BDate},
+
+    {value:report?.fib?.lastFailedFib?.B,date:report?.fib?.lastFailedFib?.BDate},
+
+    {value:report?.tacticalN?.active?.breakoutHigh,date:report?.tacticalN?.active?.breakoutDate},
+
+    {value:report?.tacticalN?.latestBreakout?.breakoutHigh,date:report?.tacticalN?.latestBreakout?.breakoutDate},
+
+    {value:report?.tacticalN?.previousBreakout?.breakoutHigh,date:report?.tacticalN?.previousBreakout?.breakoutDate}
+
+  ];
+
+  const values=candidates.filter(x=>eligible(x.date)).map(x=>n(x.value)).filter(v=>v!==null);
+
+  return values.length?Math.max(...values):null;
+
+}
+
+function fixedReclaimContextV3312(report,fixed){
+
+  const close=n(report?.close),p=n(fixed?.p),knownHigh=knownFixedCrossingHighV3312(report);
+
+  const crossed=close!==null&&p!==null&&close<p&&knownHigh!==null&&knownHigh>=p;
+
+  return {crossed,knownHigh,close,p,distancePct:(close!==null&&p!==null&&close!==0)?((p-close)/close)*100:null};
+
+}
+
 function getFixedTargetZoneV328(report,fixed,monthlyStatus){
 
   const close=n(report?.close),high=n(report?.dailyHigh),p=n(fixed?.p);
 
   if(monthlyStatus!=="PASS"||p===null||close===null||p<=0)return {key:"NONE",distancePct:null};
+
+  const reclaim=fixedReclaimContextV3312(report,fixed);
+
+  if(reclaim.crossed)return {key:"RECLAIM",distancePct:reclaim.distancePct,knownHigh:reclaim.knownHigh};
 
   if(close>p)return {key:"OVER_TARGET",distancePct:((p-close)/close)*100};
 
@@ -12814,6 +12878,8 @@ function fixedTargetZoneMetaV328(key,fixed){
 
     NEAR:{icon:"⚠️",label:`月線${m}×固定倍數已很接近`},
 
+    RECLAIM:{icon:"⚠️",label:`月線${m}×固定倍數曾被越過｜現價回到關卡下方`},
+
     REACHED:{icon:"🏆",label:`盤中／收盤已觸及月線${m}×固定倍數`},
 
     OVER_TARGET:{icon:"🏆",label:`收盤已站上月線${m}×固定倍數`}
@@ -12838,7 +12904,7 @@ function getEntryQualityV328(report,s,monthlyStatus,nStatus,nPhase,ab,fibTargetZ
 
   const fibHard=["NEAR","REACHED","OVER_TARGET"].includes(fibTargetZone?.key);
 
-  const fixedHard=["NEAR","REACHED","OVER_TARGET"].includes(fixedTargetZone?.key);
+  const fixedHard=["NEAR","RECLAIM","REACHED","OVER_TARGET"].includes(fixedTargetZone?.key);
 
   const gapPoor=gap!==null&&gap>=ENTRY_MA_GAP_POOR_PCT_V328;
 
@@ -12904,7 +12970,9 @@ function entryQualityReasonsV328(report,s,monthlyStatus,nStatus,nPhase,fibTarget
 
   if(fixedTargetZone?.key==="APPROACHING"&&fixed?.m!==undefined)reasons.push(`月線${fixed.m}×固定倍數已進入APPROACHING`);
 
-  if(["NEAR","REACHED","OVER_TARGET"].includes(fixedTargetZone?.key)&&fixed?.m!==undefined)reasons.push(`月線${fixed.m}×固定倍數=${fixedTargetZone.key}`);
+  if(fixedTargetZone?.key==="RECLAIM"&&fixed?.m!==undefined)reasons.push(`月線${fixed.m}×固定倍數曾被越過，目前回到關卡下方`);
+
+  else if(["NEAR","REACHED","OVER_TARGET"].includes(fixedTargetZone?.key)&&fixed?.m!==undefined)reasons.push(`月線${fixed.m}×固定倍數=${fixedTargetZone.key}`);
 
   if(gap!==null&&gap>=ENTRY_MA_GAP_POOR_PCT_V328)reasons.push(`日20MA正乖離 ${fmtSignedPct(gap)} 偏大`);
 
@@ -12978,7 +13046,11 @@ function entryQualityImproveTextV329(report,s,monthlyStatus,nStatus,nPhase,ab,fi
 
   if(B!==null)paths.push(`或回測B＝${fmt(B)} 元附近量縮守穩後再攻`);
 
-  if(["APPROACHING","NEAR","REACHED","OVER_TARGET"].includes(fixedTargetZone?.key)&&fixed?.m!==undefined){
+  if(fixedTargetZone?.key==="RECLAIM"&&fixed?.m!==undefined){
+
+    paths.push(`月線${fixed.m}×＝${fmt(fixed.p)} 元已曾被越過；目前先看能否重新站回並守穩，再搭配乖離、RSI與量價重新評估`);
+
+  }else if(["APPROACHING","NEAR","REACHED","OVER_TARGET"].includes(fixedTargetZone?.key)&&fixed?.m!==undefined){
 
     paths.push(`接近月線${fixed.m}×＝${fmt(fixed.p)} 元時，先觀察價格行為，再搭配乖離、RSI與量價重新評估`);
 
@@ -13422,7 +13494,7 @@ function buildReportTextV325(report){
 
     if(ret764!==null)lines.push(`④ ☹️ 0.764＝${fmt(ret764)} 元｜深度回檔風控參考。`);
 
-    if(A!==null)lines.push(`⑤ 🛑 A＝${fmt(A)} 元｜長週期N字結構重大失效觀察；依策略以日K收盤確認。`);
+    if(A!==null)lines.push(`⑤ 🛑 A＝${fmt(A)} 元｜長週期N字結構重大失效觀察；依策略以完成日K最低價是否跌破A確認。`);
 
   }else if(nStatus==="abc_ready"){
 
@@ -13470,13 +13542,13 @@ function buildReportTextV325(report){
 
     if(ma!==null)lines.push(`⚠️ 第二層：價格跌回日20MA ${fmt(ma)} 元下方且斜率轉弱 → 短線品質進一步下降。`);
 
-    if(A!==null)lines.push(`🔴 最終結構：日K收盤跌破A ${fmt(A)} 元 → N_STATUS切換FAILED，本組長週期N字結構失效。`);
+    if(A!==null)lines.push(`🔴 最終結構：完成日K最低價跌破A ${fmt(A)} 元 → N_STATUS切換FAILED，本組長週期N字結構失效。`);
 
   }else if(nStatus==="failed"){
 
     lines.push("🔴 本組N字已進入FAILED；停止沿用舊N字目標與加碼條件，重新尋找下一組有效A／B／C。");
 
-  }else if(A!==null)lines.push(`⚠️ 候選結構：日K收盤跌破A ${fmt(A)} 元 → 候選結構失效。`);
+  }else if(A!==null)lines.push(`⚠️ 候選結構：完成日K最低價跌破A ${fmt(A)} 元 → 候選結構失效。`);
 
   lineSection(lines,"🗺️ 價格作戰地圖（由高至低）");
 
@@ -13548,7 +13620,7 @@ function buildReportTextV325(report){
 
     lines.push("➖ 劇本二｜繼續整理：C附近止穩、量能正常化，但尚未突破B → 繼續等待，不提前追價。");
 
-    lines.push(`⚠️ 劇本三｜候選失效：日K收盤跌破A ${fmt(A)} 元 → N_STATUS切換FAILED。`);
+    lines.push(`⚠️ 劇本三｜候選失效：完成日K最低價跌破A ${fmt(A)} 元 → N_STATUS切換FAILED。`);
 
   }else if(nStatus==="forming"){
 
@@ -13556,7 +13628,7 @@ function buildReportTextV325(report){
 
     lines.push(`➖ 劇本二｜繼續整理：目前${cNow}；沒有有效止跌 → 不猜C、不提前啟用正式費波那契N字。`);
 
-    if(A!==null)lines.push(`⚠️ 劇本三｜候選失效：日K收盤跌破A ${fmt(A)} 元 → 等待新的結構。`);
+    if(A!==null)lines.push(`⚠️ 劇本三｜候選失效：完成日K最低價跌破A ${fmt(A)} 元 → 等待新的結構。`);
 
   }else{
 
@@ -13834,6 +13906,8 @@ function buildReportTextV326(report){
 
   const fixedTargetMeta=fixedTargetZoneMetaV328(fixedTargetZone.key,fixed);
 
+  const fixedReclaim=fixedReclaimContextV3312(report,fixed);
+
   const quality=getStructureQualityV326(report,s,nStatus,nPhase,ab);
 
   const qualityMeta=structureQualityMetaV326(quality);
@@ -13866,7 +13940,7 @@ function buildReportTextV326(report){
 
   const formingAboveB=nStatus==="forming"&&ab?.positionZone==="ABOVE_B";
 
-  // V3.3.5：僅精修一句話總結；其餘沿用V3.3.4。
+  // V3.3.13：沿用既有狀態機；本版只把使用者可見的「固定倍數目標距離」欄位統一改稱「固定倍數關卡狀態」。
 
   const aNow=A!==null?`A＝${fmt(A)} 元`:"A＝尚未形成";
 
@@ -13932,7 +14006,7 @@ function buildReportTextV326(report){
 
   };
 
-  lines.push("📘 石頭少爺分析助手｜V3.3.11 月線起始月待確認語意修正版");
+  lines.push("📘 石頭少爺分析助手｜V3.3.13 固定倍數關卡狀態語意精修版");
 
   lines.push(`報告產出時間：${reportGeneratedAt()}`);
 
@@ -13996,7 +14070,11 @@ function buildReportTextV326(report){
 
   else lines.push("📌 正式N字目標：目前沒有有效的現行1.618目標");
 
-  if(fixed&&monthlyStatus==="PASS")lines.push(`📌 下一長期目標：${fixed.m}×＝${fmt(fixed.p)} 元｜距現價 ${fmtSignedPct(signedDistancePct(fixed.p,close))}（月線固定倍數參考）`);
+  if(fixed&&monthlyStatus==="PASS")lines.push(fixedReclaim.crossed
+
+    ?`📌 最近固定倍數關卡：${fixed.m}×＝${fmt(fixed.p)} 元｜現價位於關卡下方，距重新站回 ${fmtSignedPct(signedDistancePct(fixed.p,close))}｜此關卡已曾被可見結構高點 ${fmt(fixedReclaim.knownHigh)} 元越過，不再稱為新的未達目標`
+
+    :`📌 下一長期目標：${fixed.m}×＝${fmt(fixed.p)} 元｜距現價 ${fmtSignedPct(signedDistancePct(fixed.p,close))}（月線固定倍數參考）`);
 
   else if(monthlyStatus==="PENDING")lines.push(monthlyNoStart
 
@@ -14204,7 +14282,7 @@ function buildReportTextV326(report){
 
     if(ret764!==null)lines.push(`⑤ ☹️ 0.764＝${fmt(ret764)} 元｜深度回檔風控參考。`);
 
-    if(A!==null)lines.push(`⑥ 🛑 A＝${fmt(A)} 元｜長週期N字結構重大失效觀察；依策略以日K收盤確認。`);
+    if(A!==null)lines.push(`⑥ 🛑 A＝${fmt(A)} 元｜長週期N字結構重大失效觀察；依策略以完成日K最低價是否跌破A確認。`);
 
   }else if(nStatus==="abc_ready"){
 
@@ -14244,7 +14322,11 @@ function buildReportTextV326(report){
 
   }else lines.push("➖ 目前沒有新的有效N字1.618目標；未確認或失效結構不沿用舊目標。");
 
-  if(fixed&&monthlyStatus==="PASS")lines.push(`📌 月線固定倍數下一關：${fixed.m}×＝${fmt(fixed.p)} 元｜距現價 ${fmtSignedPct(signedDistancePct(fixed.p,close))}。`);
+  if(fixed&&monthlyStatus==="PASS")lines.push(fixedReclaim.crossed
+
+    ?`📌 月線固定倍數關卡：${fixed.m}×＝${fmt(fixed.p)} 元｜曾被可見結構高點 ${fmt(fixedReclaim.knownHigh)} 元越過；目前回落至關卡下方，距重新站回 ${fmtSignedPct(signedDistancePct(fixed.p,close))}。`
+
+    :`📌 月線固定倍數下一關：${fixed.m}×＝${fmt(fixed.p)} 元｜距現價 ${fmtSignedPct(signedDistancePct(fixed.p,close))}。`);
 
   lines.push("⚠️ 目標價不是必到價；RSI高檔、爆量不漲、長上影、新高失敗、跌回關鍵價位時，應提高獲利保護。");
 
@@ -14258,19 +14340,19 @@ function buildReportTextV326(report){
 
     if(C!==null)lines.push(`⚠️ 第三層：跌破本組C ${fmt(C)} 元 → 已確認N字進入更深結構風險區，但是否FAILED仍依A／後端生命週期規則。`);
 
-    if(A!==null)lines.push(`🔴 最終結構：日K收盤跌破A ${fmt(A)} 元 → N_STATUS＝FAILED，本組長週期N字結構失效。`);
+    if(A!==null)lines.push(`🔴 最終結構：完成日K最低價跌破A ${fmt(A)} 元 → N_STATUS＝FAILED，本組長週期N字結構失效。`);
 
   }else if(nStatus==="abc_ready"){
 
     if(C!==null)lines.push(`⚠️ C有效性：日K收盤跌破${cNow}、但${aNow}仍守住 → ABC_READY回退FORMING / WAIT_C，重新找C。`);
 
-    if(A!==null)lines.push(`🔴 最終候選失效：日K收盤跌破A ${fmt(A)} 元 → N_STATUS＝FAILED。`);
+    if(A!==null)lines.push(`🔴 最終候選失效：完成日K最低價跌破A ${fmt(A)} 元 → N_STATUS＝FAILED。`);
 
   }else if(nStatus==="forming"){
 
-    if(ab?.positionZone==="BELOW_0764")lines.push("⚠️ 目前已在0.764以下極深回檔區；尚未跌破A前不直接FAILED，但候選品質偏弱。");
+    if(ab?.positionZone==="BELOW_0764")lines.push("⚠️ 目前已在0.764以下極深回檔區；完成日K最低價尚未跌破A前不直接FAILED，但候選品質偏弱。");
 
-    if(A!==null)lines.push(`🔴 最終候選失效：日K收盤跌破A ${fmt(A)} 元 → N_STATUS＝FAILED。`);
+    if(A!==null)lines.push(`🔴 最終候選失效：完成日K最低價跌破A ${fmt(A)} 元 → N_STATUS＝FAILED。`);
 
   }else lines.push("🔴 本組N字已FAILED；停止沿用舊目標與加碼條件。");
 
@@ -14280,7 +14362,11 @@ function buildReportTextV326(report){
 
   if(nStatus==="confirmed"&&target!==null)add(target,`🎯 ${fmt(target)} 元｜目前N字1.618正式目標｜FIB_TARGET_ZONE=${targetZone.key}`);
 
-  if(fixed&&monthlyStatus==="PASS")add(fixed.p,`📌 ${fmt(fixed.p)} 元｜月線${fixed.m}×下一固定倍數｜FIXED_TARGET_ZONE=${fixedTargetZone.key}`);
+  if(fixed&&monthlyStatus==="PASS")add(fixed.p,fixedReclaim.crossed
+
+    ?`📌 ${fmt(fixed.p)} 元｜月線${fixed.m}×固定倍數關卡／曾越過後待重新站回｜FIXED_TARGET_ZONE=${fixedTargetZone.key}`
+
+    :`📌 ${fmt(fixed.p)} 元｜月線${fixed.m}×下一固定倍數｜FIXED_TARGET_ZONE=${fixedTargetZone.key}`);
 
   add(close,`📍 ${fmt(close)} 元｜目前收盤價`);
 
@@ -14344,7 +14430,7 @@ function buildReportTextV326(report){
 
     lines.push(`🟡 劇本二｜繼續蓄勢：維持${cNow}以上但未突破${bNow} → ABC_READY / WAIT_BREAKOUT。`);
 
-    lines.push(`⚠️ 劇本三｜C遭破壞：日K收盤跌破${cNow}但${aNow}仍守住 → 回FORMING / WAIT_C；若再跌破${aNow} → FAILED。`);
+    lines.push(`⚠️ 劇本三｜C遭破壞：日K收盤跌破${cNow}但${aNow}仍守住 → 回FORMING / WAIT_C；若後續任一完成日K最低價跌破${aNow} → FAILED。`);
 
   }else if(formingAboveB){
 
@@ -14372,7 +14458,7 @@ function buildReportTextV326(report){
 
       lines.push("➖ 劇本二｜弱勢整理：沒有止跌確認 → 不因RSI低就搶反彈。");
 
-      lines.push(`🔴 劇本三｜跌破A ${fmt(A)} 元：候選結構FAILED。`);
+      lines.push(`🔴 劇本三｜完成日K最低價跌破A ${fmt(A)} 元：候選結構FAILED。`);
 
     }else{
 
@@ -14448,7 +14534,11 @@ function buildReportTextV326(report){
 
   }
 
-  if(fixed&&monthlyStatus==="PASS")lines.push(`【固定倍數】下一關：${fixed.m}×＝${fmt(fixed.p)} 元｜距現價 ${fmtSignedPct(signedDistancePct(fixed.p,close))}｜FIXED_TARGET_ZONE=${fixedTargetZone.key}`);
+  if(fixed&&monthlyStatus==="PASS")lines.push(fixedReclaim.crossed
+
+    ?`【固定倍數】最近關卡：${fixed.m}×＝${fmt(fixed.p)} 元｜曾被可見結構高點 ${fmt(fixedReclaim.knownHigh)} 元越過｜距重新站回 ${fmtSignedPct(signedDistancePct(fixed.p,close))}｜FIXED_TARGET_ZONE=${fixedTargetZone.key}`
+
+    :`【固定倍數】下一關：${fixed.m}×＝${fmt(fixed.p)} 元｜距現價 ${fmtSignedPct(signedDistancePct(fixed.p,close))}｜FIXED_TARGET_ZONE=${fixedTargetZone.key}`);
 
   buildGoldSectionV326(lines,report,s,ab,nStatus,nPhase,cLife);
 
@@ -14486,7 +14576,11 @@ function buildReportTextV326(report){
 
     if(target!==null)lines.push(`${targetMeta.icon} 1.618＝${fmt(target)} 元｜FIB_TARGET_ZONE=${targetZone.key}`);
 
-    if(fixed&&monthlyStatus==="PASS")lines.push(`${fixedTargetMeta.icon} 月線${fixed.m}×＝${fmt(fixed.p)} 元｜FIXED_TARGET_ZONE=${fixedTargetZone.key}`);
+    if(fixed&&monthlyStatus==="PASS")lines.push(fixedReclaim.crossed
+
+      ?`${fixedTargetMeta.icon} 月線${fixed.m}×＝${fmt(fixed.p)} 元｜曾越過後目前待重新站回｜FIXED_TARGET_ZONE=${fixedTargetZone.key}`
+
+      :`${fixedTargetMeta.icon} 月線${fixed.m}×＝${fmt(fixed.p)} 元｜FIXED_TARGET_ZONE=${fixedTargetZone.key}`);
 
   }else if(nStatus==="abc_ready")lines.push(`🟡 ${cNow}已形成；守住${cNow}並等待${bNow}完整收盤突破。`);
 
@@ -14512,7 +14606,11 @@ function buildReportTextV326(report){
 
     lines.push(`${targetMeta.icon} Fib目標距離：FIB_TARGET_ZONE=${targetZone.key}${target!==null?`｜1.618 ${fmt(target)} 元`:""}。`);
 
-    if(fixed&&monthlyStatus==="PASS")lines.push(`${fixedTargetMeta.icon} 固定倍數距離：FIXED_TARGET_ZONE=${fixedTargetZone.key}｜${fixed.m}× ${fmt(fixed.p)} 元。`);
+    if(fixed&&monthlyStatus==="PASS")lines.push(fixedReclaim.crossed
+
+      ?`${fixedTargetMeta.icon} 固定倍數關卡狀態：FIXED_TARGET_ZONE=${fixedTargetZone.key}｜${fixed.m}× ${fmt(fixed.p)} 元｜曾越過後待重新站回。`
+
+      :`${fixedTargetMeta.icon} 固定倍數關卡狀態：FIXED_TARGET_ZONE=${fixedTargetZone.key}｜${fixed.m}× ${fmt(fixed.p)} 元。`);
 
     lines.push(`${entryQualityMeta.icon} 新進品質：${entryQualityMeta.label}。`);
 
@@ -14552,7 +14650,11 @@ function buildReportTextV326(report){
 
   if(nStatus==="confirmed")lines.push(`${targetMeta.icon} Fib目標：FIB_TARGET_ZONE=${targetZone.key}${target!==null?`｜1.618＝${fmt(target)} 元`:""}`);
 
-  if(monthlyStatus==="PASS"&&fixed)lines.push(`${fixedTargetMeta.icon} 固定倍數目標：${fixedTargetZone.key}｜${fixed.m}×＝${fmt(fixed.p)} 元`);
+  if(monthlyStatus==="PASS"&&fixed)lines.push(fixedReclaim.crossed
+
+    ?`${fixedTargetMeta.icon} 固定倍數關卡狀態：${fixedTargetZone.key}｜${fixed.m}×＝${fmt(fixed.p)} 元｜曾越過後目前待重新站回`
+
+    :`${fixedTargetMeta.icon} 固定倍數關卡狀態：${fixedTargetZone.key}｜${fixed.m}×＝${fmt(fixed.p)} 元`);
 
   lines.push(`${entryQualityMeta.icon} 新進品質：${entryQualityMeta.label}`);
 
@@ -14588,7 +14690,11 @@ function buildReportTextV326(report){
 
     const targetText=target!==null?`FIB_TARGET_ZONE=${targetZone.key}、1.618=${fmt(target)}元`:"目前無正式1.618";
 
-    const fixedText=fixed&&monthlyStatus==="PASS"?`FIXED_TARGET_ZONE=${fixedTargetZone.key}、${fixed.m}×=${fmt(fixed.p)}元`:"固定倍數目前不可用";
+    const fixedText=fixed&&monthlyStatus==="PASS"?(fixedReclaim.crossed
+
+      ?`FIXED_TARGET_ZONE=${fixedTargetZone.key}、${fixed.m}×=${fmt(fixed.p)}元曾越過後待重新站回`
+
+      :`FIXED_TARGET_ZONE=${fixedTargetZone.key}、${fixed.m}×=${fmt(fixed.p)}元`):"固定倍數目前不可用";
 
     summary=`${formatStockNameWithCode(report.name,report.code)}目前是「${monthlyText}、CONFIRMED / ${nPhase}、${pos}、${targetText}、${fixedText}、結構品質=${structureQualityZhV330(quality)}、新進品質=${entryQualityZhV330(entryQuality)}」；${entryQuality==="POOR"?`趨勢可強但新進位置不佳，不追價；${entryImprove.replace(/。$/,"")}`:entryQuality==="BETTER"?"整理／回測後新進條件改善，但仍需量價確認":`持續觀察；${entryImprove.replace(/。$/,"")}`}。`;
 
@@ -14616,7 +14722,7 @@ function buildReportTextV326(report){
 
       if(B!==null)repairLevels.push(`B＝${fmt(B)}元`);
 
-      summary=`${formatStockNameWithCode(report.name,report.code)}目前${monthlyText}，A＝${fmt(A)}元、B＝${fmt(B)}元已形成，但C尚未確認。現價${fmt(close)}元${level764!==null?`已跌破0.764＝${fmt(level764)}元，`:""}A→B回檔達${fmt(ab.valuePct,2)}%，目前屬${posMeta.label}，結構品質${qualityMeta.label}；但日K尚未收破A＝${fmt(A)}元，因此候選結構尚未正式失效。${rsiText}，先等有效C形成${repairLevels.length?`，再依${repairLevels.join("、")}逐層觀察修復`:""}。`;
+      summary=`${formatStockNameWithCode(report.name,report.code)}目前${monthlyText}，A＝${fmt(A)}元、B＝${fmt(B)}元已形成，但C尚未確認。現價${fmt(close)}元${level764!==null?`已跌破0.764＝${fmt(level764)}元，`:""}A→B回檔達${fmt(ab.valuePct,2)}%，目前屬${posMeta.label}，結構品質${qualityMeta.label}；但目前可見完成日K最低價尚未跌破A＝${fmt(A)}元，因此候選結構尚未正式失效。${rsiText}，先等有效C形成${repairLevels.length?`，再依${repairLevels.join("、")}逐層觀察修復`:""}。`;
 
     }else{
 
@@ -14644,7 +14750,7 @@ function buildReportText(report){
 
 
 // ========================================================================
-// V3.3.11｜大盤 Worker 固定網址＋大盤戰報沿用 V3.3.10；本版只修正個股月線起始月待確認語意。
+// V3.3.13｜大盤 Worker 固定網址＋大盤戰報沿用 V3.3.10；本版只精修個股固定倍數欄位名稱，不改大盤邏輯。
 // 大盤 Worker／大盤 A-B-C／市場戰報計算邏輯不變。
 // ========================================================================
 function marketNStatusZh(status){
@@ -14881,7 +14987,7 @@ function buildMarketWorkerReportText(data){
   const lines=[];
   const section=title=>{lines.push("", "━━━━━━━━━━━━━━━━━━", `【${title}】`, "━━━━━━━━━━━━━━━━━━", "");};
 
-  lines.push("📈 石頭少爺分析助手｜V3.3.11 大盤環境戰報版（大盤邏輯沿用V3.3.10）");
+  lines.push("📈 石頭少爺分析助手｜V3.3.13 大盤環境戰報版（大盤邏輯沿用V3.3.10）");
   lines.push(`報告產出時間：${reportGeneratedAt()}`);
   lines.push("");
   lines.push(`指數：臺灣加權股價指數（TAIEX）｜資料來源：${data?.source||"TWSE Official"}`);
@@ -15387,7 +15493,7 @@ async function analyzeStock(){
 
     set("stockName",hasRealStockName(name,code)?name:`股票代號 ${code}`);
 
-    set("stockMeta",`${code}｜${market}｜${source}｜後端分析 ${version}｜前端 V3.3.11`);
+    set("stockMeta",`${code}｜${market}｜${source}｜後端分析 ${version}｜前端 V3.3.13`);
 
     set("closeDate",`最新交易日：${datefmt(closeDate)}`);
 
@@ -15435,7 +15541,7 @@ async function analyzeStock(){
 
     set("baseValue",fmt(base));
 
-    renderTargets(entry,base,close,latestMonthClose,latestMA,monthlyStatusUi==="UNAVAILABLE",monthlyStatusUi==="PENDING",monthlyNoVerifiedStart(lastReportData));
+    renderTargets(entry,base,close,latestMonthClose,latestMA,monthlyStatusUi==="UNAVAILABLE",monthlyStatusUi==="PENDING",monthlyNoVerifiedStart(lastReportData),lastReportData);
 
     if(monthlyStatusUi==="UNAVAILABLE"){
 
