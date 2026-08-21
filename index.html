@@ -386,6 +386,71 @@ body{
 .market-history-title{font-weight:900;margin-bottom:7px}
 .market-copy-actions{display:flex;justify-content:center;margin-top:16px}
 
+.quick-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:9px;flex-wrap:wrap}
+.mini-btn{border:1px solid #cbd5e1;border-radius:9px;background:#fff;color:#475467;padding:7px 11px;font-size:12px;font-weight:800;cursor:pointer;line-height:1.2;transition:.15s ease}
+.mini-btn:hover{background:#f8fafc;border-color:#94a3b8}
+.mini-btn:active{transform:translateY(1px)}
+
+body.dark-mode{
+  --bg:#0b1220;
+  --card:#111827;
+  --text:#e5e7eb;
+  --muted:#94a3b8;
+  --line:#334155;
+  --green:#86efac;
+  --greenbg:#0f2f22;
+  --red:#fca5a5;
+  --redbg:#3a1717;
+  --yellow:#fde68a;
+  --yellowbg:#3a3011;
+  --purple:#c4b5fd;
+  --purplebg:#241b3f;
+  --cyan:#67e8f9;
+  --cyanbg:#12313a;
+  color-scheme:dark
+}
+body.dark-mode .stock-input{background:#0b1220;color:var(--text);border-color:#334155}
+body.dark-mode .stock-input::placeholder{color:#64748b}
+body.dark-mode .mini-btn,
+body.dark-mode .market-config-btn{background:#162033;color:#e5e7eb;border-color:#475569}
+body.dark-mode .mini-btn:hover,
+body.dark-mode .market-config-btn:hover{background:#1e293b}
+body.dark-mode .card,
+body.dark-mode .fib-point,
+body.dark-mode .level,
+body.dark-mode .market-level,
+body.dark-mode .history-card,
+body.dark-mode .market-history-card,
+body.dark-mode .breakbox,
+body.dark-mode .rule,
+body.dark-mode .target{background:#162033;border-color:var(--line)}
+body.dark-mode .card.strong{background:#13233a;border-color:#31527f}
+body.dark-mode .card.support,
+body.dark-mode .level.support{background:#0f2f22;border-color:#24613f}
+body.dark-mode .card.risk,
+body.dark-mode .level.risk{background:#342315;border-color:#7a4a27}
+body.dark-mode .card.target-main,
+body.dark-mode .level.main{background:#241b3f;border-color:#5b45a0}
+body.dark-mode .target-head{background:#080d18}
+body.dark-mode .target-body{background:#101a2b}
+body.dark-mode .target.reached{background:#102a1d;border-color:#24613f}
+body.dark-mode .target.next{background:#352d13;border-color:#8b7426}
+body.dark-mode .badge{background:#123b26;color:#86efac}
+body.dark-mode .next .badge{background:#493d14;color:#fde68a}
+body.dark-mode .fib-status.not-formed,
+body.dark-mode .market-status-box,
+body.dark-mode .rsi-note.normal{background:#162033;color:#cbd5e1;border-color:var(--line)}
+body.dark-mode .history-card.invalidated{background:#2d2814;border-color:#8b7426}
+body.dark-mode .history-card.failed,
+body.dark-mode .market-history-card.failed{background:#351818;border-color:#7f3030}
+body.dark-mode .history-card.completed,
+body.dark-mode .market-history-card.completed{background:#102a1d;border-color:#24613f}
+body.dark-mode .target-summary,
+body.dark-mode .fib-message,
+body.dark-mode .rule,
+body.dark-mode .history-card .history-row{color:#cbd5e1}
+body.dark-mode .history-card .history-row strong{color:var(--text)}
+
 .footer{text-align:center;color:#98a2b3;font-size:13px;line-height:1.7;padding:30px 0}
 
 @media(max-width:860px){
@@ -441,7 +506,7 @@ body{
 
     <p>月線波段條件判斷＋固定倍數目標價＋費波那契 N字分析</p>
 
-    <span class="version-pill">前端 V3.3.13｜固定倍數關卡狀態語意精修｜失效條件＋歷史越過語意修正｜月線起始月待確認｜大盤戰報正式分流優化｜內建1,963檔台股快速索引｜個股＋大盤同頁雙 Worker</span>
+    <span class="version-pill">前端 V3.3.14｜清除輸入＋夜間模式介面｜固定倍數關卡狀態語意沿用 V3.3.13｜失效條件＋歷史越過語意沿用 V3.3.12｜月線起始月待確認｜大盤戰報正式分流優化｜內建1,963檔台股快速索引｜個股＋大盤同頁雙 Worker</span>
 
   </div>
 
@@ -461,6 +526,11 @@ body{
 
       <button id="searchButton" class="btn" type="button" onclick="analyzeStock()">開始分析</button>
 
+    </div>
+
+    <div class="quick-actions">
+      <button id="clearInputButton" class="mini-btn" type="button" onclick="clearStockInput()" title="清除股票輸入欄位">✕ 清除輸入</button>
+      <button id="themeToggleButton" class="mini-btn" type="button" onclick="toggleDarkMode()" aria-pressed="false" title="切換日間／夜間介面">🌙 夜間模式</button>
     </div>
 
     <div class="hint">可輸入股票代號或繁體中文股票名稱，例如「8039」「台虹」「4939」「亞電」。已內建 1,963 檔上市／上櫃股票代碼與名稱索引，中文名稱可直接快速解析；TWSE／TPEx 官方名稱清單仍會在背景載入校正。</div>
@@ -818,16 +888,16 @@ body{
 
 </main>
 
-<footer class="footer">石頭少爺 Agent｜GitHub V3.3.13 固定倍數關卡狀態語意精修版｜失效條件＋歷史越過語意沿用 V3.3.12｜月線待確認語意沿用 V3.3.11｜大盤戰報沿用 V3.3.10｜費波那契 pivot-abc-v2.4 核心<br>技術分析僅供研究與決策參考，不構成投資建議。</footer>
+<footer class="footer">石頭少爺 Agent｜GitHub V3.3.14 清除輸入＋夜間模式介面版｜固定倍數關卡狀態語意沿用 V3.3.13｜失效條件＋歷史越過語意沿用 V3.3.12｜月線待確認語意沿用 V3.3.11｜大盤戰報沿用 V3.3.10｜費波那契 pivot-abc-v2.4 核心<br>技術分析僅供研究與決策參考，不構成投資建議。</footer>
 
 <script>
 
 const API_BASE_URL="https://shitou-agent-fib-api.d318426.workers.dev";
 
-// 大盤 Worker 與個股 Worker 分開；V3.3.13 僅精修個股「固定倍數目標距離」欄位名稱為「固定倍數關卡狀態」；V3.3.12 失效條件／歷史越過、V3.3.11 月線待確認、V3.3.10 大盤戰報邏輯全部沿用。
+// 大盤 Worker 與個股 Worker 分開；V3.3.14 只新增清除輸入與夜間模式介面；V3.3.13 固定倍數關卡語意、V3.3.12 失效條件／歷史越過、V3.3.11 月線待確認、V3.3.10 大盤戰報邏輯全部沿用。
 const MARKET_API_BASE_URL="https://shitou-taiwanmarket-api.d318426.workers.dev";
 
-const FRONTEND_REPORT_VERSION="2026-08-22-report-v3.3.13-fixed-level-status-label-semantics";
+const FRONTEND_REPORT_VERSION="2026-08-22-report-v3.3.14-clear-input-dark-mode-ui";
 
 const TARGET_MULTIPLIERS=[3,3.5,4,4.5,5,5.5,6,6.5,7,7.5,8,8.5,9,9.5,10];
 
@@ -13940,7 +14010,7 @@ function buildReportTextV326(report){
 
   const formingAboveB=nStatus==="forming"&&ab?.positionZone==="ABOVE_B";
 
-  // V3.3.13：沿用既有狀態機；本版只把使用者可見的「固定倍數目標距離」欄位統一改稱「固定倍數關卡狀態」。
+  // V3.3.14：分析狀態機與報告判讀沿用 V3.3.13；本版只新增清除輸入與夜間模式介面。
 
   const aNow=A!==null?`A＝${fmt(A)} 元`:"A＝尚未形成";
 
@@ -14006,7 +14076,7 @@ function buildReportTextV326(report){
 
   };
 
-  lines.push("📘 石頭少爺分析助手｜V3.3.13 固定倍數關卡狀態語意精修版");
+  lines.push("📘 石頭少爺分析助手｜V3.3.14 清除輸入＋夜間模式介面版");
 
   lines.push(`報告產出時間：${reportGeneratedAt()}`);
 
@@ -14750,7 +14820,7 @@ function buildReportText(report){
 
 
 // ========================================================================
-// V3.3.13｜大盤 Worker 固定網址＋大盤戰報沿用 V3.3.10；本版只精修個股固定倍數欄位名稱，不改大盤邏輯。
+// V3.3.14｜大盤 Worker 固定網址＋大盤戰報沿用 V3.3.10；本版只新增前端清除輸入與夜間模式，不改大盤邏輯。
 // 大盤 Worker／大盤 A-B-C／市場戰報計算邏輯不變。
 // ========================================================================
 function marketNStatusZh(status){
@@ -14987,7 +15057,7 @@ function buildMarketWorkerReportText(data){
   const lines=[];
   const section=title=>{lines.push("", "━━━━━━━━━━━━━━━━━━", `【${title}】`, "━━━━━━━━━━━━━━━━━━", "");};
 
-  lines.push("📈 石頭少爺分析助手｜V3.3.13 大盤環境戰報版（大盤邏輯沿用V3.3.10）");
+  lines.push("📈 石頭少爺分析助手｜V3.3.14 大盤環境戰報版（大盤邏輯沿用V3.3.10）");
   lines.push(`報告產出時間：${reportGeneratedAt()}`);
   lines.push("");
   lines.push(`指數：臺灣加權股價指數（TAIEX）｜資料來源：${data?.source||"TWSE Official"}`);
@@ -15493,7 +15563,7 @@ async function analyzeStock(){
 
     set("stockName",hasRealStockName(name,code)?name:`股票代號 ${code}`);
 
-    set("stockMeta",`${code}｜${market}｜${source}｜後端分析 ${version}｜前端 V3.3.13`);
+    set("stockMeta",`${code}｜${market}｜${source}｜後端分析 ${version}｜前端 V3.3.14`);
 
     set("closeDate",`最新交易日：${datefmt(closeDate)}`);
 
@@ -15594,6 +15664,49 @@ async function analyzeStock(){
   }
 
 }
+
+const UI_THEME_STORAGE_KEY="shitou-agent-ui-theme-v1";
+
+function clearStockInput(){
+  const input=document.getElementById("stockInput");
+  const error=document.getElementById("error");
+  if(input){
+    input.value="";
+    input.focus();
+  }
+  if(error){
+    error.style.display="none";
+    error.textContent="";
+  }
+}
+
+function applyUiTheme(theme){
+  const isDark=theme==="dark";
+  document.body.classList.toggle("dark-mode",isDark);
+  const button=document.getElementById("themeToggleButton");
+  if(button){
+    button.textContent=isDark?"☀️ 日間模式":"🌙 夜間模式";
+    button.setAttribute("aria-pressed",String(isDark));
+    button.title=isDark?"切換為日間介面":"切換為夜間介面";
+  }
+}
+
+function toggleDarkMode(){
+  const nextTheme=document.body.classList.contains("dark-mode")?"light":"dark";
+  applyUiTheme(nextTheme);
+  try{localStorage.setItem(UI_THEME_STORAGE_KEY,nextTheme);}catch{}
+}
+
+function initUiTheme(){
+  let savedTheme="light";
+  try{
+    const saved=localStorage.getItem(UI_THEME_STORAGE_KEY);
+    if(saved==="dark"||saved==="light")savedTheme=saved;
+  }catch{}
+  applyUiTheme(savedTheme);
+}
+
+initUiTheme();
 
 document.getElementById("stockInput").addEventListener("keydown",e=>{
 
