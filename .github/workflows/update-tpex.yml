@@ -1,0 +1,81 @@
+name: Update TPEx Official Data
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: First run use bootstrap; later use update
+        required: true
+        default: bootstrap
+        type: choice
+        options:
+          - bootstrap
+          - update
+      months:
+        description: Months of monthly OHLC to retain
+        required: true
+        default: "72"
+      update_days:
+        description: Update mode catch-up window (calendar days)
+        required: true
+        default: "14"
+  schedule:
+    # 09:20 UTC = 17:20 Taiwan, Monday-Friday.
+    - cron: "20 9 * * 1-5"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: shitou-agent-tpex-update
+  cancel-in-progress: false
+
+jobs:
+  build-tpex-data:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Resolve mode
+        id: mode
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "mode=${{ inputs.mode }}" >> "$GITHUB_OUTPUT"
+            echo "months=${{ inputs.months }}" >> "$GITHUB_OUTPUT"
+            echo "update_days=${{ inputs.update_days }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "mode=update" >> "$GITHUB_OUTPUT"
+            echo "months=72" >> "$GITHUB_OUTPUT"
+            echo "update_days=14" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Fetch TPEx official data
+        run: |
+          python scripts/update_tpex.py \
+            --mode "${{ steps.mode.outputs.mode }}" \
+            --months "${{ steps.mode.outputs.months }}" \
+            --update-days "${{ steps.mode.outputs.update_days }}" \
+            --sleep 0.35 \
+            --data-dir tpex-data
+
+      - name: Commit TPEx data
+        shell: bash
+        run: |
+          git config user.name "shitou-agent-tpex-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add tpex-data
+          if git diff --cached --quiet; then
+            echo "No TPEx data changes."
+            exit 0
+          fi
+          git commit -m "Update TPEx official data $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          git push
