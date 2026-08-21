@@ -19,6 +19,7 @@ on:
         description: Update mode catch-up window (calendar days)
         required: true
         default: "14"
+
   schedule:
     # 09:20 UTC = 17:20 Taiwan, Monday-Friday.
     - cron: "20 9 * * 1-5"
@@ -68,14 +69,18 @@ jobs:
             --data-dir tpex-data
 
       - name: Commit TPEx data
-        shell: bash
         run: |
-          git config user.name "shitou-agent-tpex-bot"
-          git config user.email "actions@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
           git add tpex-data
+
           if git diff --cached --quiet; then
-            echo "No TPEx data changes."
+            echo "沒有新的 TPEx 資料需要提交"
             exit 0
           fi
-          git commit -m "Update TPEx official data $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
-          git push
+
+          git commit -m "Update TPEx official data"
+
+          git pull --rebase origin main
+          git push origin HEAD:main
