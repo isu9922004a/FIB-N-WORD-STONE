@@ -441,7 +441,7 @@ body{
 
     <p>月線波段條件判斷＋固定倍數目標價＋費波那契 N字分析</p>
 
-    <span class="version-pill">前端 V3.3.10｜大盤戰報正式分流優化｜大盤一鍵免設定｜內建1,963檔台股快速索引｜個股＋大盤同頁雙 Worker</span>
+    <span class="version-pill">前端 V3.3.11｜月線起始月待確認語意修正｜大盤戰報正式分流優化｜大盤一鍵免設定｜內建1,963檔台股快速索引｜個股＋大盤同頁雙 Worker</span>
 
   </div>
 
@@ -818,16 +818,16 @@ body{
 
 </main>
 
-<footer class="footer">石頭少爺 Agent｜GitHub V3.3.10 大盤戰報正式分流優化版｜內建1,963檔股票快速索引｜個股＋大盤雙 Worker｜費波那契 pivot-abc-v2.4 核心<br>技術分析僅供研究與決策參考，不構成投資建議。</footer>
+<footer class="footer">石頭少爺 Agent｜GitHub V3.3.11 月線起始月待確認語意修正版｜大盤戰報沿用 V3.3.10｜內建1,963檔股票快速索引｜個股＋大盤雙 Worker｜費波那契 pivot-abc-v2.4 核心<br>技術分析僅供研究與決策參考，不構成投資建議。</footer>
 
 <script>
 
 const API_BASE_URL="https://shitou-agent-fib-api.d318426.workers.dev";
 
-// 大盤 Worker 與個股 Worker 分開；V3.3.10 延續固定專用大盤 API，並將大盤戰報正式與個股模板分流。
+// 大盤 Worker 與個股 Worker 分開；V3.3.11 僅新增月線「目前在20MA之上但尚無可驗證起始月」的前端語意分流；大盤戰報邏輯沿用 V3.3.10。
 const MARKET_API_BASE_URL="https://shitou-taiwanmarket-api.d318426.workers.dev";
 
-const FRONTEND_REPORT_VERSION="2026-08-21-report-v3.3.10-market-report-split-optimized";
+const FRONTEND_REPORT_VERSION="2026-08-22-report-v3.3.11-monthly-start-unverified-semantics";
 
 const TARGET_MULTIPLIERS=[3,3.5,4,4.5,5,5.5,6,6.5,7,7.5,8,8.5,9,9.5,10];
 
@@ -2953,6 +2953,20 @@ function monthlyDataUnavailable(report){
 
 }
 
+function monthlyNoVerifiedStart(report){
+
+  return !monthlyDataUnavailable(report)
+
+    && report?.monthlyPass===true
+
+    && !report?.startMonth
+
+    && report?.startMonthConfirmed!==true
+
+    && report?.monthlyBoundaryAmbiguous===true;
+
+}
+
 function monthlyPassUnconfirmed(report){
 
   return !monthlyDataUnavailable(report)
@@ -2972,6 +2986,8 @@ function monthlyUnavailableReason(report){
 function monthlyStatusLine(report){
 
   if(monthlyDataUnavailable(report))return "🟡 月線官方資料暫不可用｜不判定成立或失效";
+
+  if(monthlyNoVerifiedStart(report))return "🟡 目前月K仍站在月20MA之上｜可驗證歷史區間尚未找到正式新起始月";
 
   if(monthlyPassUnconfirmed(report))return "🟡 目前月K最新價暫時站上月20MA｜起始月尚未完成官方確認";
 
@@ -3718,7 +3734,7 @@ function renderDailyRsi(value){
 
 }
 
-function renderTargets(entry,base,close,latestClose,latestMA,monthlyUnavailable=false,monthlyPending=false){
+function renderTargets(entry,base,close,latestClose,latestMA,monthlyUnavailable=false,monthlyPending=false,monthlyNoStart=false){
 
   const wrap=document.getElementById("targetWrap");
 
@@ -3737,6 +3753,10 @@ function renderTargets(entry,base,close,latestClose,latestMA,monthlyUnavailable=
     if(monthlyUnavailable){
 
       no.textContent="🟡 官方月線資料目前暫時無法取得，因此 startMonth／月20MA／Base／固定倍數暫停顯示；這不代表月線條件已失效。";
+
+    }else if(monthlyNoStart){
+
+      no.textContent=`🟡 目前月K ${fmt(lc)} 元仍站在月20MA ${fmt(ma)} 元之上，但在目前可驗證歷史區間內尚未找到可正式確認的新起始月，因此暫不建立 Base，也不計算 3×～10× 固定倍數目標；這不是月線失效。`;
 
     }else if(monthlyPending){
 
@@ -12492,6 +12512,28 @@ function monthlyStatusMetaV326(status,report){
 
     case "PENDING":{
 
+      if(monthlyNoVerifiedStart(report)){
+
+        const relation=latest!==null&&ma!==null
+
+          ?`目前月K ${fmt(latest)} 元仍站在月20MA ${fmt(ma)} 元之上`
+
+          :"目前月線位置仍在20MA之上";
+
+        return {
+
+          icon:"🟡",
+
+          label:"月線在20MA之上｜起始月未確認",
+
+          short:"月線在20MA之上／起始月未確認",
+
+          detail:`${relation}；中長期月線位置仍偏多，但在目前可驗證歷史區間內尚未找到可正式確認的新起始月。這不是月線失效；Base 與 3×～10× 固定倍數暫停。`
+
+        };
+
+      }
+
       const relation=latest!==null&&ma!==null
 
         ? latest>=ma
@@ -13066,7 +13108,7 @@ function monthlySummaryTextV326(status,meta){
 
   if(status==="PASS")return "月線條件成立";
 
-  if(status==="PENDING")return "月線待確認";
+  if(status==="PENDING")return meta?.short||"月線待確認";
 
   if(status==="UNAVAILABLE")return "月線資料暫不可用";
 
@@ -13772,6 +13814,8 @@ function buildReportTextV326(report){
 
   const monthlyMeta=monthlyStatusMetaV326(monthlyStatus,report);
 
+  const monthlyNoStart=monthlyNoVerifiedStart(report);
+
   const nStatus=getNStatusV326(report,s);
 
   const nPhase=getNPhaseV326(report,s,nStatus);
@@ -13888,7 +13932,7 @@ function buildReportTextV326(report){
 
   };
 
-  lines.push("📘 石頭少爺分析助手｜V3.3.5 新手小白友善版（一句話總結逐層修復版）");
+  lines.push("📘 石頭少爺分析助手｜V3.3.11 月線起始月待確認語意修正版");
 
   lines.push(`報告產出時間：${reportGeneratedAt()}`);
 
@@ -13910,7 +13954,7 @@ function buildReportTextV326(report){
 
   lines.push(`📈 市場結構：${marketLabel()}`);
 
-  lines.push(`${monthlyMeta.icon} 波段資格：${monthlyMeta.label}${monthlyStatus==="PENDING"||monthlyStatus==="UNAVAILABLE"?"｜本次不提前判定":""}`);
+  lines.push(`${monthlyMeta.icon} 波段資格：${monthlyMeta.label}${monthlyStatus==="PENDING"?(monthlyNoStart?"｜固定倍數資格待起始月":"｜本次不提前判定"):monthlyStatus==="UNAVAILABLE"?"｜本次不提前判定":""}`);
 
   lines.push(`🧬 N_STATUS：${nStatus.toUpperCase()}｜N_PHASE：${nPhase}`);
 
@@ -13954,7 +13998,11 @@ function buildReportTextV326(report){
 
   if(fixed&&monthlyStatus==="PASS")lines.push(`📌 下一長期目標：${fixed.m}×＝${fmt(fixed.p)} 元｜距現價 ${fmtSignedPct(signedDistancePct(fixed.p,close))}（月線固定倍數參考）`);
 
-  else if(monthlyStatus==="PENDING")lines.push("📌 月線固定倍數：暫停｜月線尚待正式確認");
+  else if(monthlyStatus==="PENDING")lines.push(monthlyNoStart
+
+    ?"📌 月線固定倍數：暫停｜目前月K仍在月20MA之上，但可驗證區間尚無正式起始月，因此不建立Base／不計算3×～10×"
+
+    :"📌 月線固定倍數：暫停｜月線尚待正式確認");
 
   else if(monthlyStatus==="UNAVAILABLE")lines.push("📌 月線固定倍數：暫停｜官方月線資料暫不可用");
 
@@ -13968,9 +14016,19 @@ function buildReportTextV326(report){
 
   }else if(monthlyStatus==="PENDING"){
 
-    lines.push("🟡 新進場：波段新進場暫緩｜月線待確認");
+    if(monthlyNoStart){
 
-    lines.push("🟡 加碼：波段加碼暫緩｜月線正式確認前不啟用波段加碼");
+      lines.push("🟡 新進場：波段新進場暫緩｜月線仍在20MA之上，但正式起始月尚無法從可驗證歷史區間確認");
+
+      lines.push("🟡 加碼：波段加碼暫緩｜先不建立Base／固定倍數，不把『起始月未確認』誤判成月線失效");
+
+    }else{
+
+      lines.push("🟡 新進場：波段新進場暫緩｜月線待確認");
+
+      lines.push("🟡 加碼：波段加碼暫緩｜月線正式確認前不啟用波段加碼");
+
+    }
 
   }else if(monthlyStatus==="UNAVAILABLE"){
 
@@ -14102,7 +14160,11 @@ function buildReportTextV326(report){
 
   if(monthlyStatus==="PASS")lines.push("🟢 月線波段資格已確認。短線部位再依N字、MA20與量價管理。");
 
-  else if(monthlyStatus==="PENDING")lines.push("🟡 月線目前待確認；不把待確認誤寫成失效。既有部位可依短線結構管理，但不新增月線波段部位。");
+  else if(monthlyStatus==="PENDING")lines.push(monthlyNoStart
+
+    ?"🟡 目前月K仍在月20MA之上，中長期月線位置沒有失效；但可驗證歷史區間尚無正式起始月，因此既有部位可依短線結構管理，Base／固定倍數與波段加碼先暫停。"
+
+    :"🟡 月線目前待確認；不把待確認誤寫成失效。既有部位可依短線結構管理，但不新增月線波段部位。");
 
   else if(monthlyStatus==="UNAVAILABLE")lines.push("🟡 官方月線資料暫不可用；不判定月線成立或失效。既有部位先依短線結構管理，不新增月線波段部位。");
 
@@ -14582,8 +14644,8 @@ function buildReportText(report){
 
 
 // ========================================================================
-// V3.3.10｜大盤 Worker 固定網址＋大盤戰報正式分流優化層
-// 個股原本的 Worker / 報告 / 狀態機完全不動。
+// V3.3.11｜大盤 Worker 固定網址＋大盤戰報沿用 V3.3.10；本版只修正個股月線起始月待確認語意。
+// 大盤 Worker／大盤 A-B-C／市場戰報計算邏輯不變。
 // ========================================================================
 function marketNStatusZh(status){
   switch(String(status||"").toUpperCase()){
@@ -14819,7 +14881,7 @@ function buildMarketWorkerReportText(data){
   const lines=[];
   const section=title=>{lines.push("", "━━━━━━━━━━━━━━━━━━", `【${title}】`, "━━━━━━━━━━━━━━━━━━", "");};
 
-  lines.push("📈 石頭少爺分析助手｜V3.3.10 大盤環境戰報版（個股／大盤正式分流）");
+  lines.push("📈 石頭少爺分析助手｜V3.3.11 大盤環境戰報版（大盤邏輯沿用V3.3.10）");
   lines.push(`報告產出時間：${reportGeneratedAt()}`);
   lines.push("");
   lines.push(`指數：臺灣加權股價指數（TAIEX）｜資料來源：${data?.source||"TWSE Official"}`);
@@ -15325,7 +15387,7 @@ async function analyzeStock(){
 
     set("stockName",hasRealStockName(name,code)?name:`股票代號 ${code}`);
 
-    set("stockMeta",`${code}｜${market}｜${source}｜後端分析 ${version}｜前端 V3.2.8`);
+    set("stockMeta",`${code}｜${market}｜${source}｜後端分析 ${version}｜前端 V3.3.11`);
 
     set("closeDate",`最新交易日：${datefmt(closeDate)}`);
 
@@ -15373,7 +15435,7 @@ async function analyzeStock(){
 
     set("baseValue",fmt(base));
 
-    renderTargets(entry,base,close,latestMonthClose,latestMA,monthlyStatusUi==="UNAVAILABLE",monthlyStatusUi==="PENDING");
+    renderTargets(entry,base,close,latestMonthClose,latestMA,monthlyStatusUi==="UNAVAILABLE",monthlyStatusUi==="PENDING",monthlyNoVerifiedStart(lastReportData));
 
     if(monthlyStatusUi==="UNAVAILABLE"){
 
@@ -15381,7 +15443,11 @@ async function analyzeStock(){
 
     }else if(monthlyStatusUi==="PENDING"){
 
-      set("previousBreak",`🟡 月線狀態：待確認｜${monthlyMetaUi.detail} 固定倍數暫停，待正式月線確認後再更新。`);
+      set("previousBreak",monthlyNoVerifiedStart(lastReportData)
+
+        ?`🟡 月線目前仍在20MA之上，但目前可驗證歷史區間內尚未找到可正式確認的新起始月；因此不硬指定起始月、不建立Base，也不計算固定倍數。這不是月線失效。`
+
+        :`🟡 月線狀態：待確認｜${monthlyMetaUi.detail} 固定倍數暫停，待正式月線確認後再更新。`);
 
     }else if(breakMonth){
 
