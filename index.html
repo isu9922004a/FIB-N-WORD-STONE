@@ -344,13 +344,17 @@ body{
 
 .empty-history{font-size:13px;color:var(--muted);padding:8px 0}
 
-.copy-actions{display:flex;justify-content:center;margin-top:18px}
+.copy-actions{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;margin-top:18px}
 
 .copy-btn{border:0;border-radius:12px;background:#172033;color:#fff;padding:14px 24px;font-size:16px;font-weight:900;cursor:pointer;min-width:220px;transition:.15s ease}
 
 .copy-btn:hover{transform:translateY(-1px);background:#0f172a}
 
 .copy-btn:disabled{background:#9aa8bb;cursor:not-allowed;transform:none}
+
+.newbie-copy-btn{min-width:160px;padding:12px 18px;font-size:14px;background:#087f5b}
+
+.newbie-copy-btn:hover{background:#066b4d}
 
 .copy-message{min-height:22px;margin-top:10px;text-align:center;font-size:13px;font-weight:800;color:var(--green)}
 
@@ -600,7 +604,7 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
 
     <p>月線波段條件判斷＋固定倍數目標價＋費波那契 N字分析</p>
 
-    <span class="version-pill">前端 V3.3.15｜ABC爬山白話解說｜清除輸入＋夜間模式介面｜固定倍數關卡狀態語意沿用 V3.3.13｜失效條件＋歷史越過語意沿用 V3.3.12｜月線起始月待確認｜大盤戰報正式分流優化｜內建1,963檔台股快速索引｜個股＋大盤同頁雙 Worker</span>
+    <span class="version-pill">前端 V3.3.17｜新手看這邊獨立複製｜價格作戰地圖白話解說沿用 V3.3.16｜ABC爬山白話解說沿用 V3.3.15｜清除輸入＋夜間模式介面｜固定倍數關卡狀態語意沿用 V3.3.13｜失效條件＋歷史越過語意沿用 V3.3.12｜月線起始月待確認｜大盤戰報正式分流優化｜內建1,963檔台股快速索引｜個股＋大盤同頁雙 Worker</span>
 
   </div>
 
@@ -1048,6 +1052,8 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
 
         <button id="copyReportButton" class="copy-btn" type="button" onclick="copyReport()">📋 一鍵複製報告</button>
 
+        <button id="copyNewbieButton" class="copy-btn newbie-copy-btn" type="button" onclick="copyNewbieSection()">📖 新手看這邊</button>
+
       </div>
 
       <div id="copyMessage" class="copy-message"></div>
@@ -1058,17 +1064,17 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
 
 </main>
 
-<footer class="footer">石頭少爺 Agent｜GitHub V3.3.15 ABC爬山白話解說版｜清除輸入＋夜間模式介面沿用 V3.3.14｜固定倍數關卡狀態語意沿用 V3.3.13｜失效條件＋歷史越過語意沿用 V3.3.12｜月線待確認語意沿用 V3.3.11｜大盤戰報沿用 V3.3.10｜費波那契 pivot-abc-v2.4 核心<br>技術分析僅供研究與決策參考，不構成投資建議。</footer>
+<footer class="footer">石頭少爺 Agent｜GitHub V3.3.17 新手看這邊獨立複製版｜價格作戰地圖白話解說沿用 V3.3.16｜ABC爬山白話解說沿用 V3.3.15｜清除輸入＋夜間模式介面沿用 V3.3.14｜固定倍數關卡狀態語意沿用 V3.3.13｜失效條件＋歷史越過語意沿用 V3.3.12｜月線待確認語意沿用 V3.3.11｜大盤戰報沿用 V3.3.10｜費波那契 pivot-abc-v2.4 核心<br>技術分析僅供研究與決策參考，不構成投資建議。</footer>
 
 <script>
 
 const API_BASE_URL="https://shitou-agent-fib-api.d318426.workers.dev";
 
-// 大盤 Worker 與個股 Worker 分開；V3.3.15 只調整複製報告的「新手先懂ABC」章節為爬山白話解說；V3.3.14 清除輸入與夜間模式、V3.3.13 固定倍數關卡語意、V3.3.12 失效條件／歷史越過、V3.3.11 月線待確認、V3.3.10 大盤戰報邏輯全部沿用。
+// 大盤 Worker 與個股 Worker 分開；V3.3.17 只新增「新手看這邊」獨立複製按鈕，並同步調整完整報告內「📖 新手只要這樣看」的格式；V3.3.16 價格作戰地圖、V3.3.15 ABC爬山白話解說、V3.3.14 清除輸入與夜間模式、V3.3.13 固定倍數關卡語意、V3.3.12 失效條件／歷史越過、V3.3.11 月線待確認、V3.3.10 大盤戰報邏輯全部沿用。
 
 const MARKET_API_BASE_URL="https://shitou-taiwanmarket-api.d318426.workers.dev";
 
-const FRONTEND_REPORT_VERSION="2026-08-22-report-v3.3.15-abc-mountain-newbie-explanation";
+const FRONTEND_REPORT_VERSION="2026-08-22-report-v3.3.17-newbie-section-copy";
 
 const TARGET_MULTIPLIERS=[3,3.5,4,4.5,5,5.5,6,6.5,7,7.5,8,8.5,9,9.5,10];
 
@@ -16162,6 +16168,178 @@ function buildReportTextV325(report){
 
 }
 
+// ========================================================================
+
+// V3.3.17｜「📖 新手看這邊」共用摘要
+
+// 同一份文字同時供：①完整報告的價格作戰地圖末段 ②獨立複製按鈕。
+
+// 不改任何 Worker、N字、月線、Fib、固定倍數計算，只讀既有分析結果轉成白話。
+
+// ========================================================================
+
+function buildNewbieLookHereV3317(report){
+
+  if(!report)return "";
+
+  const s=currentStrategyStateV321(report);
+
+  const monthlyStatus=getMonthlyStatusV326(report);
+
+  const nStatus=getNStatusV326(report,s);
+
+  const nPhase=getNPhaseV326(report,s,nStatus);
+
+  const ab=buildABPositionV326(report,s);
+
+  const cLife=cLifecycleV326(report,s,nStatus);
+
+  const fixed=s.fixed?.next||null;
+
+  const fixedReclaim=fixedReclaimContextV3312(report,fixed);
+
+  const close=n(report.close),A=n(s.fib.A),B=n(s.fib.B),rawC=n(s.fib.C);
+
+  const C=cLife.invalidated?null:rawC;
+
+  const ma=n(s.maCtx.value),target=n(s.fib.target1618),monthMa=n(report.latestMA);
+
+  const stock=formatStockNameWithCode(report.name,report.code);
+
+  const priceOrPending=v=>n(v)===null?"尚未形成":`${fmt(v)} 元`;
+
+  const cText=cLife.invalidated&&rawC!==null?`原 ${fmt(rawC)} 元（已失效）`:priceOrPending(C);
+
+  const lines=[];
+
+  lines.push("📖 新手只要這樣看：");
+
+  lines.push("");
+
+  lines.push(`📍 ${stock}現在股價：${fmt(close)} 元。`);
+
+  lines.push(`A：${priceOrPending(A)} / B：${priceOrPending(B)} / C：${cText}`);
+
+  lines.push("");
+
+  if(nStatus==="failed"){
+
+    lines.push(`🔴 這一組A／B／C結構已經失效；目前先把A、B、C當成歷史參考，等待新的N字重新形成。`);
+
+  }else if(B===null){
+
+    lines.push("🟡 目前B前高尚未形成，所以還沒有正式的前高突破關卡；先等待A→B結構建立。");
+
+  }else if(close>B){
+
+    if(nStatus==="confirmed"){
+
+      lines.push(`🟢 現在股價已在B＝${fmt(B)} 元上方，B前高已完成日K收盤突破確認；後續重點是能不能守住B，並繼續往上挑戰更高關卡。`);
+
+    }else{
+
+      lines.push(`🟡 現在股價雖在B＝${fmt(B)} 元上方，但完整N字仍未正式確認；先視為前置強勢，仍要依C與完整日K收盤突破規則確認。`);
+
+    }
+
+  }else if(close===B){
+
+    lines.push(`🟡 現在股價正好在B＝${fmt(B)} 元附近，這裡就是多空正在爭奪的重要前高關卡。`);
+
+  }else{
+
+    lines.push(`🟡 現在股價仍在B＝${fmt(B)} 元下方；往上走時，B是需要重新突破的重要前高關卡。`);
+
+  }
+
+  lines.push("");
+
+  const keyLevels=[];
+
+  const addLevel=(p,label)=>{if(n(p)!==null&&n(p)!==close)keyLevels.push({p:n(p),label});};
+
+  if(nStatus==="confirmed"&&target!==null)addLevel(target,"1.618正式目標");
+
+  if(fixed&&monthlyStatus==="PASS")addLevel(fixed.p,`${fixed.m}×固定倍數關卡${fixedReclaim.crossed?"（曾越過後待重新站回）":""}`);
+
+  if(B!==null)addLevel(B,"B前高");
+
+  if(ma!==null)addLevel(ma,"日20MA");
+
+  if(C!==null)addLevel(C,"C回檔低點");
+
+  if(ab){
+
+    addLevel(ab.levels["0.236"],"0.236回檔參考");
+
+    addLevel(ab.levels["0.382"],"0.382回檔參考");
+
+    addLevel(ab.levels["0.500"],"0.500回檔參考");
+
+    addLevel(ab.levels["0.618"],"0.618回檔參考");
+
+    addLevel(ab.levels["0.764"],"0.764回檔參考");
+
+  }
+
+  if(A!==null)addLevel(A,"A起漲點");
+
+  if(monthlyStatus!=="UNAVAILABLE"&&monthMa!==null)addLevel(monthMa,"月20MA");
+
+  const above=keyLevels.filter(x=>x.p>close).sort((a,b)=>a.p-b.p);
+
+  const below=keyLevels.filter(x=>x.p<close).sort((a,b)=>b.p-a.p);
+
+  if(above.length)lines.push(`⬆️ 往上先看：${above[0].label}＝${fmt(above[0].p)} 元。`);
+
+  else lines.push("⬆️ 往上先看：目前沒有比現價更高的已計算關卡，先觀察後續是否形成新的目標或固定倍數關卡。");
+
+  lines.push("");
+
+  if(below.length)lines.push(`⬇️ 往下先看：${below[0].label}＝${fmt(below[0].p)} 元。`);
+
+  else lines.push("⬇️ 往下先看：目前沒有比現價更低的已計算支撐，先以後續新結構與均線變化為主。");
+
+  lines.push("");
+
+  if(ab){
+
+    lines.push(`📌 0.236（${fmt(ab.levels["0.236"])} 元） → 0.382（${fmt(ab.levels["0.382"])} 元） → 0.500（${fmt(ab.levels["0.500"])} 元） → 0.618（${fmt(ab.levels["0.618"])} 元） → 0.764（${fmt(ab.levels["0.764"])} 元）：`);
+
+    lines.push("");
+
+    lines.push("數字越往後，代表回檔越深；");
+
+    lines.push("");
+
+    lines.push("越接近0.764與A，原本強勢結構承受的壓力越大。");
+
+  }else{
+
+    lines.push("📌 0.236 → 0.382 → 0.500 → 0.618 → 0.764：目前A→B尚未完整建立，因此暫時沒有可計算的回檔價格。");
+
+  }
+
+  lines.push("");
+
+  lines.push("📌 簡單記：");
+
+  lines.push("");
+
+  lines.push("往上看能不能突破／站回重要關卡；");
+
+  lines.push("");
+
+  lines.push("往下看支撐能不能守住。");
+
+  lines.push("");
+
+  lines.push("不要只看一個價位，還要一起看日20MA、量價與A／B／C結構。");
+
+  return lines.join("\n");
+
+}
+
 function buildReportTextV326(report){
 
   if(!report)return "";
@@ -16226,7 +16404,7 @@ function buildReportTextV326(report){
 
   const formingAboveB=nStatus==="forming"&&ab?.positionZone==="ABOVE_B";
 
-  // V3.3.15：分析狀態機與所有其他報告內容沿用 V3.3.14；本版只改「新手先懂ABC」章節的白話解說方式。
+  // V3.3.17：分析狀態機與所有其他報告內容沿用 V3.3.16；本版只新增「新手看這邊」獨立複製，並調整價格作戰地圖末段的新手摘要格式。
 
   const aNow=A!==null?`A＝${fmt(A)} 元`:"A＝尚未形成";
 
@@ -16292,7 +16470,7 @@ function buildReportTextV326(report){
 
   };
 
-  lines.push("📘 石頭少爺分析助手｜V3.3.15 ABC爬山白話解說版");
+  lines.push("📘 石頭少爺分析助手｜V3.3.17 新手看這邊獨立複製版");
 
   lines.push(`報告產出時間：${reportGeneratedAt()}`);
 
@@ -16652,47 +16830,245 @@ function buildReportTextV326(report){
 
   }else lines.push("🔴 本組N字已FAILED；停止沿用舊目標與加碼條件。");
 
-  lineSection(lines,"🗺️ 價格作戰地圖（由高至低）");
+  lineSection(lines,"🗺️ 價格作戰地圖｜股價往上、往下要看哪裡？");
 
-  const map=[]; const add=(p,t)=>{if(n(p)!==null)map.push({p:n(p),t});};
+  // V3.3.16：保留原本所有價位與 Fibonacci 參數，只把每一層翻成新手看得懂的白話。
 
-  if(nStatus==="confirmed"&&target!==null)add(target,`🎯 ${fmt(target)} 元｜目前N字1.618正式目標｜FIB_TARGET_ZONE=${targetZone.key}`);
+  const map=[];
 
-  if(fixed&&monthlyStatus==="PASS")add(fixed.p,fixedReclaim.crossed
+  const add=(p,t,d="",name="")=>{if(n(p)!==null)map.push({p:n(p),t,d,name});};
 
-    ?`📌 ${fmt(fixed.p)} 元｜月線${fixed.m}×固定倍數關卡／曾越過後待重新站回｜FIXED_TARGET_ZONE=${fixedTargetZone.key}`
+  if(nStatus==="confirmed"&&target!==null)add(
 
-    :`📌 ${fmt(fixed.p)} 元｜月線${fixed.m}×下一固定倍數｜FIXED_TARGET_ZONE=${fixedTargetZone.key}`);
+    target,
 
-  add(close,`📍 ${fmt(close)} 元｜目前收盤價`);
+    `🎯 ${fmt(target)} 元｜N字1.618正式目標`,
 
-  if(B!==null)add(B,`${nStatus==="confirmed"?"🔥":nStatus==="abc_ready"?"🔥":"📌"} ${fmt(B)} 元｜B前高／${nStatus==="confirmed"?"突破有效性第一層":nStatus==="abc_ready"?"完整N字確認門檻":"候選前高"}`);
+    targetZone.key==="OVER_TARGET"||targetZone.key==="REACHED"
 
-  if(ma!==null)add(ma,`⚠️ ${fmt(ma)} 元｜日20MA／短線趨勢健康度`);
+      ?"這個1.618目標已經碰到或越過，現在重點改看能不能守住成果，不再把它當成尚未到達的目標。"
 
-  if(rawC!==null)add(rawC,`${cLife.invalidated?"⚠️":"🟠"} ${fmt(rawC)} 元｜${cLife.invalidated?"原C已失效／歷史參考":nStatus==="abc_ready"?"C回檔低點／ABC_READY有效性":"C回檔低點／本組實際結構"}`);
+      :"這是完整N字確認後的延伸目標區；它是觀察關卡，不代表股價一定會到。",
 
-  if(ab){
+    "1.618目標"
 
-    add(ab.levels["0.236"],`💪 ${fmt(ab.levels["0.236"])} 元｜0.236淺回檔參考`);
+  );
 
-    add(ab.levels["0.382"],`🔥 ${fmt(ab.levels["0.382"])} 元｜0.382正常回檔參考`);
+  if(fixed&&monthlyStatus==="PASS")add(
 
-    add(ab.levels["0.500"],`⚖️ ${fmt(ab.levels["0.500"])} 元｜0.500中段參考`);
+    fixed.p,
 
-    add(ab.levels["0.618"],`⚠️ ${fmt(ab.levels["0.618"])} 元｜0.618中深度回檔參考`);
+    fixedReclaim.crossed
 
-    add(ab.levels["0.764"],`☹️ ${fmt(ab.levels["0.764"])} 元｜0.764深度回檔風控`);
+      ?`📌 ${fmt(fixed.p)} 元｜月線${fixed.m}×固定倍數關卡｜曾越過後待重新站回`
+
+      :`📌 ${fmt(fixed.p)} 元｜月線${fixed.m}×固定倍數關卡`,
+
+    fixedReclaim.crossed
+
+      ?`之前股價曾經站上這裡，但目前又回到關卡下方；之後若重新站回 ${fmt(fixed.p)} 元，代表多方重新拿回這個長線關卡。`
+
+      :`目前尚未越過這個固定倍數價位；如果股價往上走，這裡是下一個長線重要觀察關卡。`,
+
+    `${fixed.m}×固定倍數關卡`
+
+  );
+
+  add(close,`📍 ${fmt(close)} 元｜現在股價的位置`,`目前最新收盤就在這裡，往上、往下都以這個價位當作地圖中心。`,"目前收盤價");
+
+  if(B!==null){
+
+    if(nStatus==="confirmed")add(
+
+      B,
+
+      `📌 ${fmt(B)} 元｜B前高｜突破後第一道重要防守`,
+
+      `股價已完成B的突破確認；後續如果能守在B上方，代表突破成果仍在，若收盤跌回B下方則突破品質轉弱。`,
+
+      "B前高"
+
+    );
+
+    else if(nStatus==="abc_ready")add(
+
+      B,
+
+      `📌 ${fmt(B)} 元｜B前高｜完整N字確認關卡`,
+
+      `C已形成後，要等完整日K收盤突破B＝${fmt(B)} 元，才算完整N字正式確認。`,
+
+      "B前高"
+
+    );
+
+    else if(nStatus==="forming")add(
+
+      B,
+
+      `📌 ${fmt(B)} 元｜B前高｜目前重要前高關卡`,
+
+      `目前C還沒正式形成，先把B當成前波高點；在C確認以前，不提前把這組走勢當成完整N字。`,
+
+      "B前高"
+
+    );
 
   }
 
-  if(A!==null)add(A,`🛑 ${fmt(A)} 元｜A起漲點／${nStatus==="failed"?"舊結構歷史基準":"長週期結構失效觀察"}`);
+  if(ma!==null)add(
 
-  if(monthlyStatus!=="UNAVAILABLE"&&n(report.latestMA)!==null)add(report.latestMA,`${monthlyMeta.icon} ${fmt(report.latestMA)} 元｜目前月20MA／MONTHLY_STATUS=${monthlyStatus}`);
+    ma,
 
-  map.sort((x,y)=>y.p-x.p).forEach(x=>lines.push(x.t));
+    `⚠️ ${fmt(ma)} 元｜日20MA｜短線防守線`,
 
-  lines.push(`※ POSITION_ZONE＝${ab?.positionZone||"UNKNOWN"}只描述現價落點；結構品質＝${structureQualityZhV330(quality)}，再把MA20與量價一起納入。`);
+    "股價守在日20MA上方時，短線趨勢通常比較健康；若明顯跌破，而且均線斜率也轉弱，就要提高警覺。",
+
+    "日20MA"
+
+  );
+
+  if(rawC!==null)add(
+
+    rawC,
+
+    cLife.invalidated
+
+      ?`⚠️ ${fmt(rawC)} 元｜原C低點｜已失效、只留歷史參考`
+
+      :`🟠 ${fmt(rawC)} 元｜C回檔低點｜這次回檔踩穩的位置`,
+
+    cLife.invalidated
+
+      ?"這個C已經被後續價格破壞，不再當成目前有效的回檔低點。"
+
+      :nStatus==="abc_ready"
+
+        ?"這裡是目前確認的C；只要C仍有效，接下來就等股價重新往上挑戰B。"
+
+        :"這是目前這組結構實際抓到的回檔低點，後續要觀察它能不能守住。",
+
+    "C回檔低點"
+
+  );
+
+  if(ab){
+
+    add(
+
+      ab.levels["0.236"],
+
+      `💪 ${fmt(ab.levels["0.236"])} 元｜0.236淺回檔參考｜第一層回檔區`,
+
+      "如果股價從高檔拉回到這附近仍能守住，通常代表回檔很淺，走勢相對強勢。",
+
+      "0.236"
+
+    );
+
+    add(
+
+      ab.levels["0.382"],
+
+      `🔥 ${fmt(ab.levels["0.382"])} 元｜0.382正常回檔參考｜常見整理區`,
+
+      "回到這附近代表修正比0.236再深一些，但仍屬常見的正常回檔範圍。",
+
+      "0.382"
+
+    );
+
+    add(
+
+      ab.levels["0.500"],
+
+      `⚖️ ${fmt(ab.levels["0.500"])} 元｜0.500中段參考｜漲幅回吐一半附近`,
+
+      "來到這裡代表A到B這段漲幅大約已經回吐一半，不能再只當成很淺的小回檔。",
+
+      "0.500"
+
+    );
+
+    add(
+
+      ab.levels["0.618"],
+
+      `⚠️ ${fmt(ab.levels["0.618"])} 元｜0.618中深度回檔參考｜較深回檔警戒`,
+
+      "跌到這附近代表原本的強勢已明顯降溫，要更重視止穩、量價與結構是否仍健康。",
+
+      "0.618"
+
+    );
+
+    add(
+
+      ab.levels["0.764"],
+
+      `☹️ ${fmt(ab.levels["0.764"])} 元｜0.764深度回檔風控｜高風險回檔區`,
+
+      "來到這裡代表回檔已經很深，原本A→B上漲結構承受較大壓力，風控優先級要提高。",
+
+      "0.764"
+
+    );
+
+  }
+
+  if(A!==null)add(
+
+    A,
+
+    `🛑 ${fmt(A)} 元｜A起漲點｜${nStatus==="failed"?"舊結構歷史基準":"這一波最後重要結構防線"}`,
+
+    nStatus==="failed"
+
+      ?"這組N字已失效，所以A只保留作歷史回顧，不再拿來當目前交易觸發。"
+
+      :`可以把A理解成這一波的「山腳」；依目前規則，完成日K最低價跌破A＝${fmt(A)} 元，這組N字結構就失效。`,
+
+    "A起漲點"
+
+  );
+
+  if(monthlyStatus!=="UNAVAILABLE"&&n(report.latestMA)!==null){
+
+    let monthExplain="這條線用來觀察中長期月線趨勢。";
+
+    if(monthlyStatus==="PASS")monthExplain="目前月線條件成立；這條線可以當成中長期趨勢健康度的重要參考。";
+
+    else if(monthlyStatus==="PENDING"&&monthlyNoStart)monthExplain="目前月K仍在月20MA上方，但正式起始月尚未確認；中長期位置偏多，固定倍數暫停。";
+
+    else if(monthlyStatus==="PENDING")monthExplain="目前月線仍在待確認階段，先不把它當成正式成立或正式失效。";
+
+    else if(monthlyStatus==="FAIL")monthExplain="目前月線條件未成立，波段資格先暫停，等待之後重新站回並建立新的有效區段。";
+
+    add(
+
+      report.latestMA,
+
+      `${monthlyMeta.icon} ${fmt(report.latestMA)} 元｜月20MA｜中長期趨勢線`,
+
+      monthExplain,
+
+      "月20MA"
+
+    );
+
+  }
+
+  map.sort((x,y)=>y.p-x.p).forEach(x=>{
+
+    lines.push(x.t);
+
+    if(x.d)lines.push(`➡️ ${x.d}`);
+
+  });
+
+  lines.push("");
+
+  lines.push(buildNewbieLookHereV3317(report));
 
   lineSection(lines,"📅 下一交易日｜3種白話劇本");
 
@@ -17046,7 +17422,7 @@ function buildReportText(report){
 
 // ========================================================================
 
-// V3.3.15｜大盤 Worker 與大盤戰報邏輯完全不變；本版只調整個股複製報告的 ABC 新手解說。
+// V3.3.17｜大盤 Worker 與大盤戰報邏輯完全不變；本版只新增個股「新手看這邊」獨立複製與摘要格式。
 
 // 大盤 Worker／大盤 A-B-C／市場戰報計算邏輯不變。
 
@@ -17470,7 +17846,7 @@ function buildMarketWorkerReportText(data){
 
   const section=title=>{lines.push("", "━━━━━━━━━━━━━━━━━━", `【${title}】`, "━━━━━━━━━━━━━━━━━━", "");};
 
-  lines.push("📈 石頭少爺分析助手｜V3.3.15 大盤環境戰報版（大盤邏輯沿用V3.3.10）");
+  lines.push("📈 石頭少爺分析助手｜V3.3.17 大盤環境戰報版（大盤邏輯沿用V3.3.10）");
 
   lines.push(`報告產出時間：${reportGeneratedAt()}`);
 
@@ -17888,6 +18264,82 @@ async function copyMarketReport(){
 
 }
 
+async function copyNewbieSection(){
+
+  const message=document.getElementById("copyMessage");
+
+  const button=document.getElementById("copyNewbieButton");
+
+  if(!lastReportData){
+
+    message.style.color="var(--red)";
+
+    message.textContent="尚未有分析結果，請先輸入股票代號並按「開始分析」。";
+
+    return;
+
+  }
+
+  const text=buildNewbieLookHereV3317(lastReportData);
+
+  if(!text)return;
+
+  button.disabled=true;
+
+  const original=button.textContent;
+
+  try{
+
+    const textarea=document.createElement("textarea");
+
+    textarea.value=text;
+
+    textarea.setAttribute("readonly","");
+
+    textarea.style.position="fixed";
+
+    textarea.style.left="-9999px";
+
+    document.body.appendChild(textarea);
+
+    textarea.select();
+
+    const ok=document.execCommand("copy");
+
+    document.body.removeChild(textarea);
+
+    if(!ok)throw new Error("瀏覽器不允許自動複製");
+
+    message.style.color="var(--green)";
+
+    message.textContent="✅「新手看這邊」章節已複製到剪貼簿。";
+
+    button.textContent="✅ 已複製";
+
+  }catch(err){
+
+    console.error(err);
+
+    message.style.color="var(--red)";
+
+    message.textContent="❌ 複製失敗，請確認瀏覽器已允許剪貼簿權限。";
+
+    button.textContent="複製失敗";
+
+  }finally{
+
+    setTimeout(()=>{
+
+      button.disabled=false;
+
+      button.textContent=original;
+
+    },1200);
+
+  }
+
+}
+
 async function copyReport(){
 
   const message=document.getElementById("copyMessage");
@@ -18168,7 +18620,7 @@ async function analyzeStock(){
 
     set("stockName",hasRealStockName(name,code)?name:`股票代號 ${code}`);
 
-    set("stockMeta",`${code}｜${market}｜${source}｜後端分析 ${version}｜前端 V3.3.15`);
+    set("stockMeta",`${code}｜${market}｜${source}｜後端分析 ${version}｜前端 V3.3.17`);
 
     set("closeDate",`最新交易日：${datefmt(closeDate)}`);
 
