@@ -604,7 +604,7 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
 
     <p>月線波段條件判斷＋固定倍數目標價＋費波那契 N字分析</p>
 
-    <span class="version-pill">前端 V3.3.17｜新手看這邊獨立複製｜價格作戰地圖白話解說沿用 V3.3.16｜ABC爬山白話解說沿用 V3.3.15｜清除輸入＋夜間模式介面｜固定倍數關卡狀態語意沿用 V3.3.13｜失效條件＋歷史越過語意沿用 V3.3.12｜月線起始月待確認｜大盤戰報正式分流優化｜內建1,963檔台股快速索引｜個股＋大盤同頁雙 Worker</span>
+    <span class="version-pill">前端 V3.3.18｜B突破後回測防守語意修正｜新手看這邊獨立複製沿用 V3.3.17｜價格作戰地圖白話解說沿用 V3.3.16｜ABC爬山白話解說沿用 V3.3.15｜清除輸入＋夜間模式介面｜固定倍數關卡狀態語意沿用 V3.3.13｜失效條件＋歷史越過語意沿用 V3.3.12｜月線起始月待確認｜大盤戰報正式分流優化｜內建1,963檔台股快速索引｜個股＋大盤同頁雙 Worker</span>
 
   </div>
 
@@ -1064,17 +1064,17 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
 
 </main>
 
-<footer class="footer">石頭少爺 Agent｜GitHub V3.3.17 新手看這邊獨立複製版｜價格作戰地圖白話解說沿用 V3.3.16｜ABC爬山白話解說沿用 V3.3.15｜清除輸入＋夜間模式介面沿用 V3.3.14｜固定倍數關卡狀態語意沿用 V3.3.13｜失效條件＋歷史越過語意沿用 V3.3.12｜月線待確認語意沿用 V3.3.11｜大盤戰報沿用 V3.3.10｜費波那契 pivot-abc-v2.4 核心<br>技術分析僅供研究與決策參考，不構成投資建議。</footer>
+<footer class="footer">石頭少爺 Agent｜GitHub V3.3.18 B突破後回測防守語意修正版｜新手看這邊獨立複製沿用 V3.3.17｜價格作戰地圖白話解說沿用 V3.3.16｜ABC爬山白話解說沿用 V3.3.15｜清除輸入＋夜間模式介面沿用 V3.3.14｜固定倍數關卡狀態語意沿用 V3.3.13｜失效條件＋歷史越過語意沿用 V3.3.12｜月線待確認語意沿用 V3.3.11｜大盤戰報沿用 V3.3.10｜費波那契 pivot-abc-v2.4 核心<br>技術分析僅供研究與決策參考，不構成投資建議。</footer>
 
 <script>
 
 const API_BASE_URL="https://shitou-agent-fib-api.d318426.workers.dev";
 
-// 大盤 Worker 與個股 Worker 分開；V3.3.17 只新增「新手看這邊」獨立複製按鈕，並同步調整完整報告內「📖 新手只要這樣看」的格式；V3.3.16 價格作戰地圖、V3.3.15 ABC爬山白話解說、V3.3.14 清除輸入與夜間模式、V3.3.13 固定倍數關卡語意、V3.3.12 失效條件／歷史越過、V3.3.11 月線待確認、V3.3.10 大盤戰報邏輯全部沿用。
+// 大盤 Worker 與個股 Worker 分開；V3.3.18 只修正「現價已在B上方」時，B在價格地圖與新手摘要中的角色為「突破後第一道回測防守」；V3.3.17 新手看這邊獨立複製、V3.3.16 價格作戰地圖、V3.3.15 ABC爬山白話解說、V3.3.14 清除輸入與夜間模式、V3.3.13 固定倍數關卡語意、V3.3.12 失效條件／歷史越過、V3.3.11 月線待確認、V3.3.10 大盤戰報邏輯全部沿用。
 
 const MARKET_API_BASE_URL="https://shitou-taiwanmarket-api.d318426.workers.dev";
 
-const FRONTEND_REPORT_VERSION="2026-08-22-report-v3.3.17-newbie-section-copy";
+const FRONTEND_REPORT_VERSION="2026-08-22-report-v3.3.18-b-retest-defense-wording";
 
 const TARGET_MULTIPLIERS=[3,3.5,4,4.5,5,5.5,6,6.5,7,7.5,8,8.5,9,9.5,10];
 
@@ -16170,7 +16170,7 @@ function buildReportTextV325(report){
 
 // ========================================================================
 
-// V3.3.17｜「📖 新手看這邊」共用摘要
+// V3.3.18｜「📖 新手看這邊」共用摘要（B突破後回測防守語意修正）
 
 // 同一份文字同時供：①完整報告的價格作戰地圖末段 ②獨立複製按鈕。
 
@@ -16178,7 +16178,7 @@ function buildReportTextV325(report){
 
 // ========================================================================
 
-function buildNewbieLookHereV3317(report){
+function buildNewbieLookHereV3318(report){
 
   if(!report)return "";
 
@@ -16296,9 +16296,13 @@ function buildNewbieLookHereV3317(report){
 
   lines.push("");
 
-  if(below.length)lines.push(`⬇️ 往下先看：${below[0].label}＝${fmt(below[0].p)} 元。`);
+  if(below.length){
 
-  else lines.push("⬇️ 往下先看：目前沒有比現價更低的已計算支撐，先以後續新結構與均線變化為主。");
+    if(B!==null&&close>B&&below[0].label==="B前高")lines.push(`⬇️ 往下先看：B＝${fmt(B)} 元｜突破後第一道重要回測防守。`);
+
+    else lines.push(`⬇️ 往下先看：${below[0].label}＝${fmt(below[0].p)} 元。`);
+
+  }else lines.push("⬇️ 往下先看：目前沒有比現價更低的已計算支撐，先以後續新結構與均線變化為主。");
 
   lines.push("");
 
@@ -16404,7 +16408,7 @@ function buildReportTextV326(report){
 
   const formingAboveB=nStatus==="forming"&&ab?.positionZone==="ABOVE_B";
 
-  // V3.3.17：分析狀態機與所有其他報告內容沿用 V3.3.16；本版只新增「新手看這邊」獨立複製，並調整價格作戰地圖末段的新手摘要格式。
+  // V3.3.18：分析狀態機與所有其他報告內容沿用 V3.3.17；本版只修正現價已在B上方時，B的「突破後回測防守」白話語意。
 
   const aNow=A!==null?`A＝${fmt(A)} 元`:"A＝尚未形成";
 
@@ -16470,7 +16474,7 @@ function buildReportTextV326(report){
 
   };
 
-  lines.push("📘 石頭少爺分析助手｜V3.3.17 新手看這邊獨立複製版");
+  lines.push("📘 石頭少爺分析助手｜V3.3.18 B突破後回測防守語意修正版");
 
   lines.push(`報告產出時間：${reportGeneratedAt()}`);
 
@@ -16906,9 +16910,17 @@ function buildReportTextV326(report){
 
       B,
 
-      `📌 ${fmt(B)} 元｜B前高｜目前重要前高關卡`,
+      close>B
 
-      `目前C還沒正式形成，先把B當成前波高點；在C確認以前，不提前把這組走勢當成完整N字。`,
+        ?`📌 ${fmt(B)} 元｜B前高｜突破後第一道回測防守`
+
+        :`📌 ${fmt(B)} 元｜B前高｜目前重要前高關卡`,
+
+      close>B
+
+        ?`現價已先站在B＝${fmt(B)} 元上方；此時B先視為前置突破後的第一道回測防守。若能守住B，代表前置強勢仍在；若跌回B下方，則回到等待有效C的整理。完整N字仍要等有效C與後續正式突破確認。`
+
+        :`目前C還沒正式形成，先把B當成前波高點；在C確認以前，不提前把這組走勢當成完整N字。`,
 
       "B前高"
 
@@ -17068,7 +17080,7 @@ function buildReportTextV326(report){
 
   lines.push("");
 
-  lines.push(buildNewbieLookHereV3317(report));
+  lines.push(buildNewbieLookHereV3318(report));
 
   lineSection(lines,"📅 下一交易日｜3種白話劇本");
 
@@ -17422,7 +17434,7 @@ function buildReportText(report){
 
 // ========================================================================
 
-// V3.3.17｜大盤 Worker 與大盤戰報邏輯完全不變；本版只新增個股「新手看這邊」獨立複製與摘要格式。
+// V3.3.18｜大盤 Worker 與大盤戰報邏輯完全不變；本版只修正個股B突破後的回測防守語意。
 
 // 大盤 Worker／大盤 A-B-C／市場戰報計算邏輯不變。
 
@@ -17846,7 +17858,7 @@ function buildMarketWorkerReportText(data){
 
   const section=title=>{lines.push("", "━━━━━━━━━━━━━━━━━━", `【${title}】`, "━━━━━━━━━━━━━━━━━━", "");};
 
-  lines.push("📈 石頭少爺分析助手｜V3.3.17 大盤環境戰報版（大盤邏輯沿用V3.3.10）");
+  lines.push("📈 石頭少爺分析助手｜V3.3.18 大盤環境戰報版（大盤邏輯沿用V3.3.10）");
 
   lines.push(`報告產出時間：${reportGeneratedAt()}`);
 
@@ -18280,7 +18292,7 @@ async function copyNewbieSection(){
 
   }
 
-  const text=buildNewbieLookHereV3317(lastReportData);
+  const text=buildNewbieLookHereV3318(lastReportData);
 
   if(!text)return;
 
@@ -18620,7 +18632,7 @@ async function analyzeStock(){
 
     set("stockName",hasRealStockName(name,code)?name:`股票代號 ${code}`);
 
-    set("stockMeta",`${code}｜${market}｜${source}｜後端分析 ${version}｜前端 V3.3.17`);
+    set("stockMeta",`${code}｜${market}｜${source}｜後端分析 ${version}｜前端 V3.3.18`);
 
     set("closeDate",`最新交易日：${datefmt(closeDate)}`);
 
