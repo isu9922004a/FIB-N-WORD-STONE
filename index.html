@@ -509,7 +509,7 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
 
     <p>月線波段條件判斷＋固定倍數目標價＋費波那契 N字分析</p>
 
-    <span class="version-pill">前端 V3.3.23｜波段階段白話判讀｜新手報告時間標示沿用 V3.3.22｜新手Fib五層應對註解沿用 V3.3.21｜新手看這邊排版整理沿用 V3.3.20｜重複N字文字修正沿用 V3.3.19｜B突破後回測防守語意沿用 V3.3.18｜新手看這邊獨立複製沿用 V3.3.17｜價格作戰地圖白話解說沿用 V3.3.16｜ABC爬山白話解說沿用 V3.3.15｜清除輸入＋夜間模式介面｜固定倍數關卡狀態語意沿用 V3.3.13｜失效條件＋歷史越過語意沿用 V3.3.12｜月線起始月待確認｜大盤戰報正式分流優化｜內建1,963檔台股快速索引｜個股＋大盤同頁雙 Worker</span>
+    <span class="version-pill">前端 V3.3.24｜固定倍數描述＋新手排版小修｜波段階段白話判讀沿用 V3.3.23｜新手報告時間標示沿用 V3.3.22｜新手Fib五層應對註解沿用 V3.3.21｜新手看這邊排版整理沿用 V3.3.20｜重複N字文字修正沿用 V3.3.19｜B突破後回測防守語意沿用 V3.3.18｜新手看這邊獨立複製沿用 V3.3.17｜價格作戰地圖白話解說沿用 V3.3.16｜ABC爬山白話解說沿用 V3.3.15｜清除輸入＋夜間模式介面｜固定倍數關卡狀態語意沿用 V3.3.13｜失效條件＋歷史越過語意沿用 V3.3.12｜月線起始月待確認｜大盤戰報正式分流優化｜內建1,963檔台股快速索引｜個股＋大盤同頁雙 Worker</span>
 
   </div>
 
@@ -892,16 +892,17 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
 
 </main>
 
-<footer class="footer">石頭少爺 Agent｜GitHub V3.3.23 波段階段白話判讀版｜新手報告時間標示沿用 V3.3.22｜新手Fib五層應對註解沿用 V3.3.21｜新手看這邊排版整理沿用 V3.3.20｜重複N字文字修正沿用 V3.3.19｜B突破後回測防守語意沿用 V3.3.18｜新手看這邊獨立複製沿用 V3.3.17｜價格作戰地圖白話解說沿用 V3.3.16｜ABC爬山白話解說沿用 V3.3.15｜清除輸入＋夜間模式介面沿用 V3.3.14｜固定倍數關卡狀態語意沿用 V3.3.13｜失效條件＋歷史越過語意沿用 V3.3.12｜月線待確認語意沿用 V3.3.11｜大盤戰報沿用 V3.3.10｜費波那契 pivot-abc-v2.4 核心<br>技術分析僅供研究與決策參考，不構成投資建議。</footer>
+<footer class="footer">石頭少爺 Agent｜GitHub V3.3.24 固定倍數描述＋新手排版小修版｜波段階段白話判讀沿用 V3.3.23｜新手報告時間標示沿用 V3.3.22｜新手Fib五層應對註解沿用 V3.3.21｜新手看這邊排版整理沿用 V3.3.20｜重複N字文字修正沿用 V3.3.19｜B突破後回測防守語意沿用 V3.3.18｜新手看這邊獨立複製沿用 V3.3.17｜價格作戰地圖白話解說沿用 V3.3.16｜ABC爬山白話解說沿用 V3.3.15｜清除輸入＋夜間模式介面沿用 V3.3.14｜固定倍數關卡狀態語意沿用 V3.3.13｜失效條件＋歷史越過語意沿用 V3.3.12｜月線待確認語意沿用 V3.3.11｜大盤戰報沿用 V3.3.10｜費波那契 pivot-abc-v2.4 核心<br>技術分析僅供研究與決策參考，不構成投資建議。</footer>
 
 <script>
 
 const API_BASE_URL="https://shitou-agent-fib-api.d318426.workers.dev";
 
+// V3.3.24 僅精修：RECLAIM 固定倍數關卡描述＋「🏆 股票」排版空格；其餘分析邏輯完整沿用。
 // 大盤 Worker 與個股 Worker 分開；V3.3.23 新增「波段階段輔助判讀」白話章節與新手短版；V3.3.22 的報告時間標示、V3.3.21 的 Fib 五層新手應對註解、V3.3.20 的排版整理完整沿用；V3.3.19 的重複 N 字修正完整沿用；V3.3.18 的B突破後回測防守語意完整沿用；V3.3.17 新手看這邊獨立複製、V3.3.16 價格作戰地圖、V3.3.15 ABC爬山白話解說、V3.3.14 清除輸入與夜間模式、V3.3.13 固定倍數關卡語意、V3.3.12 失效條件／歷史越過、V3.3.11 月線待確認、V3.3.10 大盤戰報邏輯全部沿用。
 const MARKET_API_BASE_URL="https://shitou-taiwanmarket-api.d318426.workers.dev";
 
-const FRONTEND_REPORT_VERSION="2026-08-23-report-v3.3.23-wave-stage-guide";
+const FRONTEND_REPORT_VERSION="2026-08-23-report-v3.3.24-fixed-reclaim-newbie-spacing";
 
 const TARGET_MULTIPLIERS=[3,3.5,4,4.5,5,5.5,6,6.5,7,7.5,8,8.5,9,9.5,10];
 
@@ -14026,7 +14027,7 @@ function waveStageAssistV3323(report){
 
   return {
     key,...meta[key],monthlyStatus,nStatus,nPhase,close,B,ma,rsi,vol,gap,maAbove,slope,pos,quality,
-    matureFlags,riskFlags,targetKey:targetZone?.key||"NONE",fixedKey:fixedTargetZone?.key||"NONE",fixed
+    matureFlags,riskFlags,targetKey:targetZone?.key||"NONE",fixedKey:fixedTargetZone?.key||"NONE",fixedZone:fixedTargetZone,fixed
   };
 }
 
@@ -14049,7 +14050,12 @@ function appendWaveStageSectionV3323(lines,report,stage=null){
     const notes=[];
     if(w.rsi!==null&&w.rsi>=70)notes.push(`日RSI 5T＝${fmt(w.rsi)}，已${w.rsi>=80?"過熱":"偏高"}。`);
     if(w.gap!==null&&w.gap>=10)notes.push(`現價相對日20MA乖離 ${fmtSignedPct(w.gap)}，短線距離均線已拉開。`);
-    if(w.fixed&&["APPROACHING","NEAR","RECLAIM","REACHED","OVER_TARGET"].includes(w.fixedKey))notes.push(`月線${w.fixed.m}×固定倍數關卡＝${fmt(w.fixed.p)} 元已進入重要關卡觀察。`);
+    if(w.fixed&&w.fixedKey==="RECLAIM"){
+      const reclaimDist=n(w.fixedZone?.distancePct);
+      notes.push(`月線${w.fixed.m}×固定倍數關卡＝${fmt(w.fixed.p)} 元曾被越過，目前股價 ${fmt(w.close)} 元又回到關卡下方${reclaimDist!==null?`，距重新站回約 ${fmtSignedPct(reclaimDist)}`:""}。`);
+    }else if(w.fixed&&["APPROACHING","NEAR","REACHED","OVER_TARGET"].includes(w.fixedKey)){
+      notes.push(`月線${w.fixed.m}×固定倍數關卡＝${fmt(w.fixed.p)} 元已進入重要關卡觀察。`);
+    }
     if(["APPROACHING","NEAR","REACHED","OVER_TARGET"].includes(w.targetKey))notes.push("正式費波那契1.618已進入接近／觸及區域。 ");
     if(w.vol!==null&&w.vol>=1.5)notes.push(`最新相對量約 ${fmt(w.vol,2)} 倍，量能偏活躍，需確認放量是否能繼續推高價格。`);
     (notes.length?notes:["股價已經走過一段漲幅，位置不再屬於剛起漲區。"] ).slice(0,4).forEach((x,i)=>lines.push(`${i+1}. ${x}`));
@@ -14108,7 +14114,7 @@ function buildNewbieLookHereV3318(report,generatedAt=null){
   lines.push("");
   lines.push("📍【目前位置】");
   lines.push(`🕒報告產出時間：${sectionGeneratedAt}`);
-  lines.push(`🏆${stock}｜現價：${fmt(close)} 元`);
+  lines.push(`🏆 ${stock}｜現價：${fmt(close)} 元`);
   lines.push(`A｜起漲點：${priceOrPending(A)}`);
   lines.push(`B｜前波高點：${priceOrPending(B)}`);
   lines.push(`C｜回檔低點：${cText}`);
@@ -14359,7 +14365,7 @@ function buildReportTextV326(report){
 
   };
 
-  lines.push("📘 石頭少爺分析助手｜V3.3.23 波段階段白話判讀版");
+  lines.push("📘 石頭少爺分析助手｜V3.3.24 固定倍數描述＋新手排版小修版");
 
   lines.push(`報告產出時間：${generatedAt}`);
 
@@ -15447,7 +15453,7 @@ function buildMarketWorkerReportText(data){
   const lines=[];
   const section=title=>{lines.push("", "━━━━━━━━━━━━━━━━━━", `【${title}】`, "━━━━━━━━━━━━━━━━━━", "");};
 
-  lines.push("📈 石頭少爺分析助手｜V3.3.23 大盤環境戰報版（大盤邏輯沿用V3.3.10）");
+  lines.push("📈 石頭少爺分析助手｜V3.3.24 大盤環境戰報版（大盤邏輯沿用V3.3.10）");
   lines.push(`報告產出時間：${reportGeneratedAt()}`);
   lines.push("");
   lines.push(`指數：臺灣加權股價指數（TAIEX）｜資料來源：${data?.source||"TWSE Official"}`);
@@ -15998,7 +16004,7 @@ async function analyzeStock(){
 
     set("stockName",hasRealStockName(name,code)?name:`股票代號 ${code}`);
 
-    set("stockMeta",`${code}｜${market}｜${source}｜後端分析 ${version}｜前端 V3.3.23`);
+    set("stockMeta",`${code}｜${market}｜${source}｜後端分析 ${version}｜前端 V3.3.24`);
 
     set("closeDate",`最新交易日：${datefmt(closeDate)}`);
 
