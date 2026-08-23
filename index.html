@@ -509,7 +509,7 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
 
     <p>月線波段條件判斷＋固定倍數目標價＋費波那契 N字分析</p>
 
-    <span class="version-pill">前端 V3.3.25｜型態輔助＋假突破風險｜固定倍數描述＋新手排版小修沿用 V3.3.24｜波段階段白話判讀沿用 V3.3.23｜新手報告時間標示沿用 V3.3.22｜新手Fib五層應對註解沿用 V3.3.21｜新手看這邊排版整理沿用 V3.3.20｜重複N字文字修正沿用 V3.3.19｜B突破後回測防守語意沿用 V3.3.18｜新手看這邊獨立複製沿用 V3.3.17｜價格作戰地圖白話解說沿用 V3.3.16｜ABC爬山白話解說沿用 V3.3.15｜清除輸入＋夜間模式介面｜固定倍數關卡狀態語意沿用 V3.3.13｜失效條件＋歷史越過語意沿用 V3.3.12｜月線起始月待確認｜大盤戰報正式分流優化｜內建1,963檔台股快速索引｜個股＋大盤同頁雙 Worker</span>
+    <span class="version-pill">前端 V3.3.26｜個股複製按鈕修復｜型態輔助＋假突破風險沿用 V3.3.25｜固定倍數描述＋新手排版小修沿用 V3.3.24｜波段階段白話判讀沿用 V3.3.23｜新手報告時間標示沿用 V3.3.22｜新手Fib五層應對註解沿用 V3.3.21｜新手看這邊排版整理沿用 V3.3.20｜重複N字文字修正沿用 V3.3.19｜B突破後回測防守語意沿用 V3.3.18｜新手看這邊獨立複製沿用 V3.3.17｜價格作戰地圖白話解說沿用 V3.3.16｜ABC爬山白話解說沿用 V3.3.15｜清除輸入＋夜間模式介面｜固定倍數關卡狀態語意沿用 V3.3.13｜失效條件＋歷史越過語意沿用 V3.3.12｜月線起始月待確認｜大盤戰報正式分流優化｜內建1,963檔台股快速索引｜個股＋大盤同頁雙 Worker</span>
 
   </div>
 
@@ -892,18 +892,19 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
 
 </main>
 
-<footer class="footer">石頭少爺 Agent｜GitHub V3.3.25 型態輔助＋假突破風險版｜固定倍數描述＋新手排版小修沿用 V3.3.24｜波段階段白話判讀沿用 V3.3.23｜新手報告時間標示沿用 V3.3.22｜新手Fib五層應對註解沿用 V3.3.21｜新手看這邊排版整理沿用 V3.3.20｜重複N字文字修正沿用 V3.3.19｜B突破後回測防守語意沿用 V3.3.18｜新手看這邊獨立複製沿用 V3.3.17｜價格作戰地圖白話解說沿用 V3.3.16｜ABC爬山白話解說沿用 V3.3.15｜清除輸入＋夜間模式介面沿用 V3.3.14｜固定倍數關卡狀態語意沿用 V3.3.13｜失效條件＋歷史越過語意沿用 V3.3.12｜月線待確認語意沿用 V3.3.11｜大盤戰報沿用 V3.3.10｜費波那契 pivot-abc-v2.4 核心<br>技術分析僅供研究與決策參考，不構成投資建議。</footer>
+<footer class="footer">石頭少爺 Agent｜GitHub V3.3.26 個股複製按鈕修復版｜型態輔助＋假突破風險沿用 V3.3.25｜固定倍數描述＋新手排版小修沿用 V3.3.24｜波段階段白話判讀沿用 V3.3.23｜新手報告時間標示沿用 V3.3.22｜新手Fib五層應對註解沿用 V3.3.21｜新手看這邊排版整理沿用 V3.3.20｜重複N字文字修正沿用 V3.3.19｜B突破後回測防守語意沿用 V3.3.18｜新手看這邊獨立複製沿用 V3.3.17｜價格作戰地圖白話解說沿用 V3.3.16｜ABC爬山白話解說沿用 V3.3.15｜清除輸入＋夜間模式介面沿用 V3.3.14｜固定倍數關卡狀態語意沿用 V3.3.13｜失效條件＋歷史越過語意沿用 V3.3.12｜月線待確認語意沿用 V3.3.11｜大盤戰報沿用 V3.3.10｜費波那契 pivot-abc-v2.4 核心<br>技術分析僅供研究與決策參考，不構成投資建議。</footer>
 
 <script>
 
 const API_BASE_URL="https://shitou-agent-fib-api.d318426.workers.dev";
 
+// V3.3.26 修復個股複製按鈕：V3.3.25 型態輔助函式誤呼叫不存在的 getTacticalReportInfo，改回既有 getTacticalInfo；並將報告產生階段納入錯誤捕捉，避免按鈕無反應。
 // V3.3.25 新增「型態輔助觀察」：以既有突破品質、B回測、日20MA、量價、假突破風險與K棒訊號，輔助辨識突破延續／中途整理／假突破／高檔做頭風險；不硬套W底、M頭、頭肩底／頂、旗形或三角形名稱，不改Worker與既有核心計算。
 // V3.3.24 的 RECLAIM 固定倍數描述＋「🏆 股票」排版空格完整沿用。
 // 大盤 Worker 與個股 Worker 分開；V3.3.23 新增「波段階段輔助判讀」白話章節與新手短版；V3.3.22 的報告時間標示、V3.3.21 的 Fib 五層新手應對註解、V3.3.20 的排版整理完整沿用；V3.3.19 的重複 N 字修正完整沿用；V3.3.18 的B突破後回測防守語意完整沿用；V3.3.17 新手看這邊獨立複製、V3.3.16 價格作戰地圖、V3.3.15 ABC爬山白話解說、V3.3.14 清除輸入與夜間模式、V3.3.13 固定倍數關卡語意、V3.3.12 失效條件／歷史越過、V3.3.11 月線待確認、V3.3.10 大盤戰報邏輯全部沿用。
 const MARKET_API_BASE_URL="https://shitou-taiwanmarket-api.d318426.workers.dev";
 
-const FRONTEND_REPORT_VERSION="2026-08-23-report-v3.3.25-pattern-assist-false-breakout-risk";
+const FRONTEND_REPORT_VERSION="2026-08-23-report-v3.3.26-stock-copy-buttons-runtime-fix";
 
 const TARGET_MULTIPLIERS=[3,3.5,4,4.5,5,5.5,6,6.5,7,7.5,8,8.5,9,9.5,10];
 
@@ -14039,13 +14040,13 @@ function waveStageAssistV3323(report){
 // 只使用既有 Worker 已回傳的 B突破品質、三日站穩、回測／再攻、假突破風險、日20MA、量價與K棒訊號。
 // ========================================================================
 function patternAssistV3325(report,stage=null){
-  if(!report)return {key:"UNDETERMINED",icon:"⚪",label:"型態尚未確認",short:"目前資料不足，先不硬判突破延續、假突破或高檔做頭。",evidence:[]};
+  if(!report)return {key:"UNDETERMINED",icon:"⚪",label:"型態尚未確認",short:"目前資料不足，先不硬判突破延續、假突破或高檔做頭。",evidence:[],risk:[]};
 
   const w=stage||waveStageAssistV3323(report);
   const s=currentStrategyStateV321(report);
   const nStatus=getNStatusV326(report,s);
   const nPhase=getNPhaseV326(report,s,nStatus);
-  const t=getTacticalReportInfo(report);
+  const t=getTacticalInfo(report);
   const structure=report?.structure||{};
   const breakout=structure?.breakout||null;
   const latestCandle=structure?.latestCandle||null;
@@ -14491,7 +14492,7 @@ function buildReportTextV326(report){
 
   };
 
-  lines.push("📘 石頭少爺分析助手｜V3.3.25 型態輔助＋假突破風險版");
+  lines.push("📘 石頭少爺分析助手｜V3.3.26 個股複製按鈕修復版");
 
   lines.push(`報告產出時間：${generatedAt}`);
 
@@ -15816,7 +15817,15 @@ async function copyNewbieSection(){
     return;
   }
 
-  const text=buildNewbieLookHereV3318(lastReportData);
+  let text="";
+  try{
+    text=buildNewbieLookHereV3318(lastReportData);
+  }catch(err){
+    console.error("新手章節產生失敗：",err);
+    message.style.color="var(--red)";
+    message.textContent=`❌ 新手章節產生失敗：${err?.message||"未知錯誤"}`;
+    return;
+  }
   if(!text)return;
 
   button.disabled=true;
@@ -15866,7 +15875,15 @@ async function copyReport(){
 
   }
 
-  const text=buildReportText(lastReportData);
+  let text="";
+  try{
+    text=buildReportText(lastReportData);
+  }catch(err){
+    console.error("完整報告產生失敗：",err);
+    message.style.color="var(--red)";
+    message.textContent=`❌ 完整報告產生失敗：${err?.message||"未知錯誤"}`;
+    return;
+  }
 
   if(!text)return;
 
