@@ -527,7 +527,7 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
 
     <p>月線波段條件判斷＋固定倍數目標價＋費波那契 N字分析</p>
 
-    <span class="version-pill">前端 V3.4.4｜台股個股圖片改用正常版模組｜個股圖片直接套用正常版圖片格式、字體、排版與章節模組｜判讀語法沿用資料庫更新口徑｜大盤圖片／大盤戰報與兩支 Worker 完全不變</span>
+    <span class="version-pill">前端 V3.4.5｜個股實戰判讀語意強化版｜個股圖片維持正常版模組，並放大為更適合 iPhone 12 Pro Max 檢視的高解析直式版面｜完整內容保留｜大盤圖片／大盤戰報與兩支 Worker 完全不變</span>
 
   </div>
 
@@ -895,7 +895,7 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
 
       <div class="section-title">⑥ 一鍵複製分析報告</div>
 
-      <div class="hint">V3.4.4 直接把台股個股圖片報告改回你指定的「正常版圖片模組」：格式、字體、排版與章節區塊全面比照正常版生成；同時保留目前資料庫更新後的 ABC／Fib／月線／固定倍數／波段與突破品質判讀口徑。這次不改 Worker，只改 GitHub 前端的個股圖片輸出模組。</div>
+      <div class="hint">V3.4.5 維持你指定的「正常版圖片模組」：格式、字體、排版與章節區塊完整保留；本次只強化個股實戰判讀語意，並把個股圖片升級為更適合 iPhone 12 Pro Max 放大閱讀的高解析直式版面。這次不改 Worker，只改 GitHub 前端的個股圖片輸出模組。</div>
 
       <div class="copy-actions">
 
@@ -926,20 +926,20 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
       <a id="imageDownloadLink" class="image-save-link" href="#" download>💾 儲存 PNG</a>
       <button id="imageShareButton" class="image-share-btn" type="button" onclick="shareInfographicV3328()">📤 分享圖片</button>
     </div>
-    <div id="imagePreviewNote" class="image-preview-note">圖片由目前分析資料直接產生；PNG 採 1024×1536（2:3 直式），個股分析圖已改用使用者偏好的大字體直式模板。圖中的日線圖為前端示意圖，關鍵價位、均線與文字以目前報告資料為準。</div>
+    <div id="imagePreviewNote" class="image-preview-note">圖片由目前分析資料直接產生；V3.4.5 個股 PNG 升級為高解析 1800×2250（4:5 直式），更適合 iPhone 12 Pro Max 放大閱讀。圖中的結構示意圖為前端資訊圖，不代表實際逐根 K 棒；關鍵價位、均線與判讀文字以目前報告資料為準。</div>
   </div>
 </div>
 
-<footer class="footer">石頭少爺 Agent｜GitHub V3.4.4 台股個股圖片改用正常版模組｜個股圖片直接套用正常版格式、字體、排版與章節模組｜判讀語法沿用資料庫更新版口徑｜大盤圖片／大盤戰報／個股 Worker／大盤 Worker 完全不變｜費波那契 pivot-abc-v2.4 核心不變<br>技術分析僅供研究與決策參考，不構成投資建議。</footer>
+<footer class="footer">石頭少爺 Agent｜GitHub V3.4.5 個股實戰判讀語意強化版｜個股圖片維持正常版格式、字體、排版與章節模組，並升級為更適合 iPhone 12 Pro Max 的高解析直式輸出｜個股判讀語意強化｜大盤圖片／大盤戰報／個股 Worker／大盤 Worker 完全不變｜費波那契 pivot-abc-v2.4 核心不變<br>技術分析僅供研究與決策參考，不構成投資建議。</footer>
 
 <script>
 
 const API_BASE_URL="https://shitou-agent-fib-api.d318426.workers.dev";
 
-// V3.4.4：台股個股圖片直接改用正常版圖片模組；格式、字體、排版與章節模組回到正常版，但判讀語法沿用資料庫更新後的前端口徑。個股 Worker V2.9.10 與大盤 Worker pivot-abc-v2.4 完全不修改。
+// V3.4.5：台股個股圖片直接改用正常版圖片模組；格式、字體、排版與章節模組回到正常版，但判讀語法沿用資料庫更新後的前端口徑。個股 Worker V2.9.10 與大盤 Worker pivot-abc-v2.4 完全不修改。
 // 新增「多證據技術結構判讀」：價格結構優先、量價確認、均線趨勢、突破品質、支撐/壓力角色與訊號衝突檢查。
 // 不在資料不足時硬判 W底／M頭／頭肩底頂／旗形／三角形，也不虛構前端目前沒有的 MACD 歷史序列。
-// V3.4.4 圖片修正：個股圖不再使用安全排版特化模板，改直接套用正常版個股圖片模組；維持現有分析公式與資料庫更新判讀口徑，不改大盤圖。
+// V3.4.5 圖片修正：個股圖不再使用安全排版特化模板，改直接套用正常版個股圖片模組；維持現有分析公式與資料庫更新判讀口徑，不改大盤圖。
 // V3.4.1 保留：價格－日20MA－月20MA跨週期導航、回檔深度與乖離風險。
 // V3.3.35 修復：個股圖片模板函式內 rowH 被重複 const 宣告，造成整份 JavaScript SyntaxError，所有 onclick 按鈕因此失效；改為 mapRowH，其他分析與 Worker 邏輯不變。
 // V3.3.30 收尾：大盤圖片 N字進度去重、MA20 乖離單行適配、個股小白懶人包／判讀目標文字去重；分析圖防碰撞沿用 V3.3.29；不改兩個 Worker 與既有分析核心。
@@ -14499,7 +14499,7 @@ function evidenceChainV340(report){
 
 function appendEvidenceChainV340(lines,report){
   const e=evidenceChainV340(report);
-  lineSection(lines,"🧠 V3.4.4 多證據技術結構判讀｜個股圖改用正常版模組");
+  lineSection(lines,"🧠 V3.4.5 多證據技術結構判讀｜個股圖改用正常版模組");
   lines.push(`${e.icon} 綜合定調：${e.summary}`);
   lines.push(`📊 資料覆蓋度：${e.coverage}/6 層｜${e.coverageLabel}｜只使用目前 Worker 已回傳且可驗證的資料`);
   lines.push(`① 趨勢層：${e.trendLabel}`);
@@ -14638,13 +14638,13 @@ function appendMATrendNavigationV341(lines,report){
   lines.push("");
   lines.push("📌 這張均線示意圖的核心觀念已納入：上升趨勢不是只看『有沒有站上均線』，而是同時看價格位置、MA20斜率、回檔深度與長週期背景。");
   lines.push("📌 圖中的『上漲40%／回檔20%』只當示意，不變成固定公式；本版仍依每檔實際A→B幅度與0.236／0.382／0.500／0.618／0.764判斷回檔深度。");
-  lines.push("📎 個股 Worker 目前未回傳日60MA，所以 V3.4.4 仍不硬造 MA60，也不拿月20MA冒充日60MA；若未來後端正式提供，再接入真正的20MA／60MA排列判讀。");
+  lines.push("📎 個股 Worker 目前未回傳日60MA，所以 V3.4.5 仍不硬造 MA60，也不拿月20MA冒充日60MA；若未來後端正式提供，再接入真正的20MA／60MA排列判讀。");
 }
 
 
 
 /* ========================================================================
-   V3.4.4｜教材式技術分析SOP＋ABC突破品質檢核（GitHub 前端限定）
+   V3.4.5｜教材式技術分析SOP＋ABC突破品質檢核（GitHub 前端限定）
    ------------------------------------------------------------------------
    目的：把教材中的「趨勢→位置→均線→K線→成交量→型態→支撐壓力→指標→操作」
    轉成前端可驗證的判讀鏈。只使用 Worker 已回傳欄位；資料不足就明示，不硬造結論。
@@ -15171,7 +15171,7 @@ function buildReportTextV326(report){
 
   };
 
-  lines.push("📘 石頭少爺分析助手｜V3.4.4 台股個股圖片改用正常版模組");
+  lines.push("📘 石頭少爺分析助手｜V3.4.5 個股實戰判讀語意強化版");
 
   lines.push(`報告產出時間：${generatedAt}`);
 
@@ -16747,10 +16747,17 @@ function renderStockInfographicV3328(report){
 
   const P=infoPaletteV3328(),st=stockInfographicStateV3328(report);
 
-  const STOCK_NORMAL_CANVAS_W=1600, STOCK_NORMAL_CANVAS_H=1600;
+  const STOCK_BASE_W=1600, STOCK_BASE_H=1600;
+  const STOCK_NORMAL_CANVAS_W=1800, STOCK_NORMAL_CANVAS_H=2250;
+  const STOCK_CANVAS_SCALE=1.08;
+  const STOCK_OFFSET_X=Math.round((STOCK_NORMAL_CANVAS_W-STOCK_BASE_W*STOCK_CANVAS_SCALE)/2);
+  const STOCK_OFFSET_Y=26;
   const canvas=document.createElement("canvas");canvas.width=STOCK_NORMAL_CANVAS_W;canvas.height=STOCK_NORMAL_CANVAS_H;
 
   const ctx=canvas.getContext("2d");ctx.fillStyle=P.white;ctx.fillRect(0,0,STOCK_NORMAL_CANVAS_W,STOCK_NORMAL_CANVAS_H);
+  ctx.save();
+  ctx.translate(STOCK_OFFSET_X,STOCK_OFFSET_Y);
+  ctx.scale(STOCK_CANVAS_SCALE,STOCK_CANVAS_SCALE);
 
   rrV3328(ctx,2,2,1596,1596,18,P.white,P.blue,3);
 
@@ -16772,7 +16779,7 @@ function renderStockInfographicV3328(report){
 
   fontV3328(ctx,19,900,"#fff","center");ctx.fillText(reportGeneratedAt().replace("（台灣時間）",""),1402,115);
 
-  fontV3328(ctx,17,700,"#dbeafe","center");ctx.fillText("V3.4.4｜正常版個股模組｜資料庫更新版",1402,141);
+  fontV3328(ctx,17,700,"#dbeafe","center");ctx.fillText("V3.4.5｜正常版個股模組｜實戰語意強化版",1402,141);
 
   // 左：ABC。沿用 V3.3.29 固定欄位，避免 C 列與進度文字互相覆蓋。
 
@@ -17585,7 +17592,7 @@ async function analyzeStock(){
 
     set("stockName",hasRealStockName(name,code)?name:`股票代號 ${code}`);
 
-    set("stockMeta",`${code}｜${market}｜${source}｜後端分析 ${version}｜前端 V3.4.4`);
+    set("stockMeta",`${code}｜${market}｜${source}｜後端分析 ${version}｜前端 V3.4.5`);
 
     set("closeDate",`最新交易日：${datefmt(closeDate)}`);
 
