@@ -16156,39 +16156,39 @@ function renderStockInfographicV3328(report){
     {k:"B（前波高點）",d:"爬到的第一個山頂，是後續要突破的關卡。",c:P.orange},
     {k:"C（回檔低點）",d:"從山頂下來後再次踩穩的地方，是確認轉折的關鍵。",c:P.blue2}
   ];
-  let ly=350;
-  leftBullets.forEach((it,idx)=>{
-    fontV3328(ctx,28,950,it.c);ctx.fillText(`● ${it.k}`,48,ly);
-    drawWrapV3328(ctx,it.d,86,ly+20,590,34,2,{size:22,weight:700,color:P.text});
-    ly+=118;
+  let ly=344;
+  leftBullets.forEach((it)=>{
+    fontV3328(ctx,26,950,it.c);ctx.fillText(`● ${it.k}`,48,ly);
+    drawWrapV3328(ctx,it.d,86,ly+18,590,31,2,{size:21,weight:700,color:P.text});
+    ly+=104;
   });
 
-  const rowX=48,rowW=620,rowH=84;
+  const rowX=48,rowW=620,rowH=76;
   function drawBigAbcRow(key,color,label,value,date,y){
     rrV3328(ctx,rowX,y,rowW,rowH,12,"#fbfdff",P.line,1.5);
-    fontV3328(ctx,34,950,color);ctx.fillText(key,rowX+18,y+54);
-    fontV3328(ctx,22,900,P.text);ctx.fillText(label,rowX+68,y+50);
+    fontV3328(ctx,32,950,color);ctx.fillText(key,rowX+18,y+50);
+    fontV3328(ctx,21,900,P.text);ctx.fillText(label,rowX+68,y+47);
     const valueText=n(value)===null?"尚未形成":`${fmt(value)} 元`;
-    fontV3328(ctx,28,900,color,"right");ctx.fillText(valueText,rowX+rowW-122,y+50);
-    if(date&&n(value)!==null){fontV3328(ctx,18,750,P.muted,"right");ctx.fillText(dateCompactV3328(date),rowX+rowW-16,y+50);}
+    fontV3328(ctx,27,900,color,"right");ctx.fillText(valueText,rowX+rowW-122,y+47);
+    if(date&&n(value)!==null){fontV3328(ctx,18,750,P.muted,"right");ctx.fillText(dateCompactV3328(date),rowX+rowW-16,y+47);}
   }
-  drawBigAbcRow("A",P.green,"起漲點",st.A,st.s.fib.ADate,548);
-  drawBigAbcRow("B",P.orange,"前波高點",st.B,st.s.fib.BDate,642);
-  drawBigAbcRow("C",P.blue2,"回檔低點",st.C,st.s.fib.CDate,736);
+  drawBigAbcRow("A",P.green,"起漲點",st.A,st.s.fib.ADate,624);
+  drawBigAbcRow("B",P.orange,"前波高點",st.B,st.s.fib.BDate,710);
+  drawBigAbcRow("C",P.blue2,"回檔低點",st.C,st.s.fib.CDate,796);
 
-  rrV3328(ctx,48,836,620,72,12,"#f7fbff",P.line,1.2);
+  rrV3328(ctx,48,880,620,66,12,"#f7fbff",P.line,1.2);
   const progressText=st.nStatus==="confirmed"
     ? `目前進度：A、B、C 都已形成，且已突破 B ${fmt(st.B)} 元，完整 N 字確認。`
     : st.nStatus==="abc_ready"
       ? `目前進度：A、B、C 都已形成，下一步等完整日K收盤突破 B ${fmt(st.B)} 元。`
       : `目前進度：A 與 B 已出現，正在等待有效 C 形成；回檔尚未踩穩以前，不用急著把某個低點猜成 C。`;
-  drawWrapV3328(ctx,`⏳ ${progressText}`,66,877,584,30,2,{size:20,weight:800,color:P.text});
+  drawWrapV3328(ctx,`⏳ ${progressText}`,66,918,584,27,2,{size:18,weight:800,color:P.text});
 
-  rrV3328(ctx,48,922,620,48,12,"#fffdf5",P.line,1);
+  rrV3328(ctx,48,952,620,40,12,"#fffdf5",P.line,1);
   const mnemonicC=st.C!==null?"C 回檔":"等有效 C";
-  fontV3328(ctx,19,900,P.navy);ctx.fillText("💡 記住口訣：A 起漲 → B 前高 → ",66,955);
-  fontV3328(ctx,19,950,P.blue2);ctx.fillText(mnemonicC,408,955);
-  fontV3328(ctx,19,900,P.navy);ctx.fillText(" → 再突破 B ＝ 完整 N 字確認。",520,955);
+  fontV3328(ctx,17,900,P.navy);ctx.fillText("💡 記住口訣：A 起漲 → B 前高 → ",66,979);
+  fontV3328(ctx,17,950,P.blue2);ctx.fillText(mnemonicC,380,979);
+  fontV3328(ctx,17,900,P.navy);ctx.fillText(" → 再突破 B ＝ 完整 N 字確認。",480,979);
 
   // ===== 右側：日線圖風格示意 =====
   rrV3328(ctx,740,174,836,820,18,P.white,P.blue,2);
