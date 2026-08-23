@@ -16364,7 +16364,7 @@ function renderStockInfographicV3328(report){
   rrV3328(ctx,24,1192,1552,996,18,P.white,P.blue,2);
   drawCardTitleV3328(ctx,46,1236,"位置作戰地圖（往上、往下要看哪裡？）",P.navy,30);
 
-  const rowLeft=36,rowLabelX=248,rowTextX=640,rowTop=1268,mapRowH=160;
+  const rowTop=1268,mapRowH=184,leftBoxX=52,leftBoxW=500,descX=602,descW=900;
   const mapRows=[];
   if(fixedEnabled){
     mapRows.push({value:`${fmt(fixedValue)} 元`,color:P.green2,title:`月線${st.fixed.m}×固定倍數關卡${st.fixedReclaim?.crossed?"（曾越過後重新站回）":""}`,desc:st.fixedReclaim?.crossed?`之前股價曾站上這裡，但目前又回到關卡下方；之後若重新站回 ${fmt(fixedValue)} 元，代表多方重新拿回這個長線關卡。`:`這是目前最近的月線固定倍數關卡；如果股價繼續往上走，可先看接近這裡時的價格反應。`,icon:"◎"});
@@ -16378,10 +16378,11 @@ function renderStockInfographicV3328(report){
   mapRows.slice(0,4).forEach((row,idx)=>{
     const y=rowTop+idx*mapRowH;
     if(idx>0)drawDividerV3328(ctx,40,y-18,1550,P.line);
-    fontV3328(ctx,34,900,row.color);ctx.fillText(row.icon,rowLeft,y+56);
-    fontV3328(ctx,34,900,row.color);ctx.fillText(row.value,rowLeft+68,y+56);
-    drawWrapV3328(ctx,row.title,rowLabelX,y+40,350,30,2,{size:24,weight:900,color:row.color===P.red?P.text:row.color});
-    drawWrapV3328(ctx,row.desc,rowTextX,y+28,870,32,3,{size:22,weight:700,color:P.text});
+    rrV3328(ctx,leftBoxX,y+10,leftBoxW,112,16,"#fbfdff",P.line,1.2);
+    fontV3328(ctx,32,900,row.color);ctx.fillText(row.icon,leftBoxX+18,y+50);
+    fontV3328(ctx,30,900,row.color);ctx.fillText(row.value,leftBoxX+78,y+52);
+    drawWrapV3328(ctx,row.title,leftBoxX+78,y+84,leftBoxW-110,28,2,{size:21,weight:900,color:row.color===P.red?P.text:row.color});
+    drawWrapV3328(ctx,row.desc,descX,y+42,descW,31,3,{size:21,weight:700,color:P.text});
   });
 
   const bottomNote=(st.A!==null&&st.B!==null)
@@ -16389,16 +16390,30 @@ function renderStockInfographicV3328(report){
         ? `目前完整N字已確認：A＝${fmt(st.A)}、B＝${fmt(st.B)}、C＝${st.C!==null?fmt(st.C):"-"}。圖上的日20MA、月20MA與關鍵關卡，都是後續觀察重點。`
         : `目前 A 與 B 已經出現，但回檔 C 尚未正式確認；在 C 真正踩穩以前，先不要急著把任何低點直接當成 C。`)
     : "目前尚未有 A→B 完整波段，因此暫無法計算黃金分割回檔參考位。";
-  drawWrapV3328(ctx,`・ ${bottomNote}`,56,2128,1480,34,2,{size:22,weight:800,color:P.navy});
+  drawWrapV3328(ctx,`・ ${bottomNote}`,56,2108,1480,34,2,{size:22,weight:800,color:P.navy});
 
   // ===== 底部口訣 =====
   rrV3328(ctx,24,2210,1552,156,18,"#f8fbff",P.blue,2);
-  fontV3328(ctx,30,900,P.navy);ctx.fillText("☁️ 記住口訣：",58,2274);
-  fontV3328(ctx,26,950,P.green);ctx.fillText("A 起漲",300,2274);
-  fontV3328(ctx,26,900,P.orange);ctx.fillText("B 前高",560,2274);
-  fontV3328(ctx,26,900,P.blue2);ctx.fillText(st.C!==null?"C 回檔":"等有效 C",826,2274);
-  fontV3328(ctx,28,950,P.red);ctx.fillText("再突破 B",1102,2274);
-  fontV3328(ctx,34,900,P.navy,"center");ctx.fillText("＝ 完整 N 字確認。",800,2346);
+  fontV3328(ctx,28,900,P.navy);ctx.fillText("☁️ 記住口訣：",56,2262);
+
+  function drawMnemonicStepV3335(text,x,y,fill,stroke,textColor){
+    fontV3328(ctx,22,900,textColor);
+    const w=ctx.measureText(text).width+34;
+    rrV3328(ctx,x,y-28,w,42,21,fill,stroke,1.5);
+    fontV3328(ctx,22,900,textColor,"center");ctx.fillText(text,x+w/2,y);
+    return w;
+  }
+
+  let stepX=282, stepY=2262;
+  let w1=drawMnemonicStepV3335("A 起漲",stepX,stepY,"#eefaf2",P.green,P.green); stepX+=w1+20;
+  fontV3328(ctx,24,900,P.navy);ctx.fillText("→",stepX,stepY); stepX+=38;
+  let w2=drawMnemonicStepV3335("B 前高",stepX,stepY,"#fff4ea",P.orange,P.orange); stepX+=w2+20;
+  fontV3328(ctx,24,900,P.navy);ctx.fillText("→",stepX,stepY); stepX+=38;
+  let w3=drawMnemonicStepV3335(st.C!==null?"C 回檔":"等有效 C",stepX,stepY,"#eef4ff",P.blue2,P.blue2); stepX+=w3+20;
+  fontV3328(ctx,24,900,P.navy);ctx.fillText("→",stepX,stepY); stepX+=38;
+  drawMnemonicStepV3335("再突破 B",stepX,stepY,"#fff1f1",P.red,P.red);
+
+  fontV3328(ctx,31,900,P.navy,"center");ctx.fillText("＝ 完整 N 字確認。",800,2334);
   return canvas;
 }
 
