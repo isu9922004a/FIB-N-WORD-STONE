@@ -509,7 +509,7 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
 
     <p>月線波段條件判斷＋固定倍數目標價＋費波那契 N字分析</p>
 
-    <span class="version-pill">前端 V3.3.24｜固定倍數描述＋新手排版小修｜波段階段白話判讀沿用 V3.3.23｜新手報告時間標示沿用 V3.3.22｜新手Fib五層應對註解沿用 V3.3.21｜新手看這邊排版整理沿用 V3.3.20｜重複N字文字修正沿用 V3.3.19｜B突破後回測防守語意沿用 V3.3.18｜新手看這邊獨立複製沿用 V3.3.17｜價格作戰地圖白話解說沿用 V3.3.16｜ABC爬山白話解說沿用 V3.3.15｜清除輸入＋夜間模式介面｜固定倍數關卡狀態語意沿用 V3.3.13｜失效條件＋歷史越過語意沿用 V3.3.12｜月線起始月待確認｜大盤戰報正式分流優化｜內建1,963檔台股快速索引｜個股＋大盤同頁雙 Worker</span>
+    <span class="version-pill">前端 V3.3.25｜型態輔助＋假突破風險｜固定倍數描述＋新手排版小修沿用 V3.3.24｜波段階段白話判讀沿用 V3.3.23｜新手報告時間標示沿用 V3.3.22｜新手Fib五層應對註解沿用 V3.3.21｜新手看這邊排版整理沿用 V3.3.20｜重複N字文字修正沿用 V3.3.19｜B突破後回測防守語意沿用 V3.3.18｜新手看這邊獨立複製沿用 V3.3.17｜價格作戰地圖白話解說沿用 V3.3.16｜ABC爬山白話解說沿用 V3.3.15｜清除輸入＋夜間模式介面｜固定倍數關卡狀態語意沿用 V3.3.13｜失效條件＋歷史越過語意沿用 V3.3.12｜月線起始月待確認｜大盤戰報正式分流優化｜內建1,963檔台股快速索引｜個股＋大盤同頁雙 Worker</span>
 
   </div>
 
@@ -892,17 +892,18 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
 
 </main>
 
-<footer class="footer">石頭少爺 Agent｜GitHub V3.3.24 固定倍數描述＋新手排版小修版｜波段階段白話判讀沿用 V3.3.23｜新手報告時間標示沿用 V3.3.22｜新手Fib五層應對註解沿用 V3.3.21｜新手看這邊排版整理沿用 V3.3.20｜重複N字文字修正沿用 V3.3.19｜B突破後回測防守語意沿用 V3.3.18｜新手看這邊獨立複製沿用 V3.3.17｜價格作戰地圖白話解說沿用 V3.3.16｜ABC爬山白話解說沿用 V3.3.15｜清除輸入＋夜間模式介面沿用 V3.3.14｜固定倍數關卡狀態語意沿用 V3.3.13｜失效條件＋歷史越過語意沿用 V3.3.12｜月線待確認語意沿用 V3.3.11｜大盤戰報沿用 V3.3.10｜費波那契 pivot-abc-v2.4 核心<br>技術分析僅供研究與決策參考，不構成投資建議。</footer>
+<footer class="footer">石頭少爺 Agent｜GitHub V3.3.25 型態輔助＋假突破風險版｜固定倍數描述＋新手排版小修沿用 V3.3.24｜波段階段白話判讀沿用 V3.3.23｜新手報告時間標示沿用 V3.3.22｜新手Fib五層應對註解沿用 V3.3.21｜新手看這邊排版整理沿用 V3.3.20｜重複N字文字修正沿用 V3.3.19｜B突破後回測防守語意沿用 V3.3.18｜新手看這邊獨立複製沿用 V3.3.17｜價格作戰地圖白話解說沿用 V3.3.16｜ABC爬山白話解說沿用 V3.3.15｜清除輸入＋夜間模式介面沿用 V3.3.14｜固定倍數關卡狀態語意沿用 V3.3.13｜失效條件＋歷史越過語意沿用 V3.3.12｜月線待確認語意沿用 V3.3.11｜大盤戰報沿用 V3.3.10｜費波那契 pivot-abc-v2.4 核心<br>技術分析僅供研究與決策參考，不構成投資建議。</footer>
 
 <script>
 
 const API_BASE_URL="https://shitou-agent-fib-api.d318426.workers.dev";
 
-// V3.3.24 僅精修：RECLAIM 固定倍數關卡描述＋「🏆 股票」排版空格；其餘分析邏輯完整沿用。
+// V3.3.25 新增「型態輔助觀察」：以既有突破品質、B回測、日20MA、量價、假突破風險與K棒訊號，輔助辨識突破延續／中途整理／假突破／高檔做頭風險；不硬套W底、M頭、頭肩底／頂、旗形或三角形名稱，不改Worker與既有核心計算。
+// V3.3.24 的 RECLAIM 固定倍數描述＋「🏆 股票」排版空格完整沿用。
 // 大盤 Worker 與個股 Worker 分開；V3.3.23 新增「波段階段輔助判讀」白話章節與新手短版；V3.3.22 的報告時間標示、V3.3.21 的 Fib 五層新手應對註解、V3.3.20 的排版整理完整沿用；V3.3.19 的重複 N 字修正完整沿用；V3.3.18 的B突破後回測防守語意完整沿用；V3.3.17 新手看這邊獨立複製、V3.3.16 價格作戰地圖、V3.3.15 ABC爬山白話解說、V3.3.14 清除輸入與夜間模式、V3.3.13 固定倍數關卡語意、V3.3.12 失效條件／歷史越過、V3.3.11 月線待確認、V3.3.10 大盤戰報邏輯全部沿用。
 const MARKET_API_BASE_URL="https://shitou-taiwanmarket-api.d318426.workers.dev";
 
-const FRONTEND_REPORT_VERSION="2026-08-23-report-v3.3.24-fixed-reclaim-newbie-spacing";
+const FRONTEND_REPORT_VERSION="2026-08-23-report-v3.3.25-pattern-assist-false-breakout-risk";
 
 const TARGET_MULTIPLIERS=[3,3.5,4,4.5,5,5.5,6,6.5,7,7.5,8,8.5,9,9.5,10];
 
@@ -14031,6 +14032,123 @@ function waveStageAssistV3323(report){
   };
 }
 
+
+// ========================================================================
+// V3.3.25｜型態輔助觀察：把使用者提供的W底／頭肩底／旗形／三角形／假突破／M頭／頭肩頂觀念
+// 轉成「型態品質」輔助層。因目前前端沒有完整日K pivot 序列，不硬命名特定圖形；
+// 只使用既有 Worker 已回傳的 B突破品質、三日站穩、回測／再攻、假突破風險、日20MA、量價與K棒訊號。
+// ========================================================================
+function patternAssistV3325(report,stage=null){
+  if(!report)return {key:"UNDETERMINED",icon:"⚪",label:"型態尚未確認",short:"目前資料不足，先不硬判突破延續、假突破或高檔做頭。",evidence:[]};
+
+  const w=stage||waveStageAssistV3323(report);
+  const s=currentStrategyStateV321(report);
+  const nStatus=getNStatusV326(report,s);
+  const nPhase=getNPhaseV326(report,s,nStatus);
+  const t=getTacticalReportInfo(report);
+  const structure=report?.structure||{};
+  const breakout=structure?.breakout||null;
+  const latestCandle=structure?.latestCandle||null;
+
+  const close=n(report.close),B=n(s.fib.B),ma=n(s.maCtx.value),rsi=n(report.dailyRsi),vol=n(s.volume.latestRatio),gap=n(s.maCtx.gapPct);
+  const aboveB=close!==null&&B!==null&&close>B;
+  const aboveMa=s.maCtx.above===true;
+  const slope=s.maCtx.slopeClass?.key||"flat";
+  const tactical=t.tacticalActive||null;
+  const tacticalNeck=n(tactical?.neckline);
+  const tacticalDefense=n(t.tacticalDefense?.level ?? tactical?.defense);
+  const falseRisk=t.falseRisk||breakout?.falseBreakoutRisk||null;
+  const falseRiskKey=falseRisk?.level?.key||"unknown";
+  const falseRiskFlags=Array.isArray(falseRisk?.flags)?falseRisk.flags:[];
+  const fibThreeKey=t.fibThreeDay?.status?.key||breakout?.threeDay?.status?.key||null;
+  const longUpper=latestCandle?.upperWickRisk?.key==="long";
+  const closeNearLow=latestCandle?.closePosition?.key==="low";
+  const retestHeld=breakout?.retest?.closeHeld===true||t.retest?.closeHeld===true;
+  const reattack=!!(breakout?.reattack||t.reattack);
+
+  const evidence=[];
+  if(aboveB)evidence.push(`現價 ${fmt(close)} 元仍在B＝${fmt(B)} 元上方`);
+  if(tactical&&tacticalNeck!==null&&close!==null&&close>tacticalNeck)evidence.push(`戰術突破頸線 ${fmt(tacticalNeck)} 元仍在股價下方`);
+  if(aboveMa&&ma!==null)evidence.push(`股價仍在日20MA＝${fmt(ma)} 元上方`);
+  if(slope==="up")evidence.push("日20MA仍向上");
+  if(vol!==null&&vol>=1.2)evidence.push(`最新相對量 ${fmt(vol,2)} 倍，量能偏活躍`);
+  if(fibThreeKey==="passed")evidence.push("正式突破後三日站穩已通過");
+  if(retestHeld)evidence.push("突破後回測仍守住關鍵價位");
+  if(reattack)evidence.push("回測後已出現再攻訊號");
+
+  const risk=[];
+  if(falseRiskKey==="high")risk.push("正式突破的假突破風險評等偏高");
+  else if(falseRiskKey==="medium")risk.push("正式突破已有部分假突破風險特徵");
+  if(fibThreeKey==="failed")risk.push("突破後三日站穩未通過");
+  if(nPhase==="WEAKENING")risk.push(B!==null?`收盤已跌回B＝${fmt(B)} 元下方`:"突破後收盤已轉弱");
+  if(s.maCtx.above===false&&ma!==null)risk.push(`股價已跌到日20MA＝${fmt(ma)} 元下方`);
+  if(slope==="down")risk.push("日20MA斜率已向下");
+  if(longUpper)risk.push("最新K棒出現明顯長上影");
+  if(closeNearLow)risk.push("最新K棒收盤靠近日內低點");
+  falseRiskFlags.slice(0,2).forEach(x=>{if(x&&!risk.includes(x))risk.push(x);});
+
+  const topHeat=[rsi!==null&&rsi>=75,gap!==null&&gap>=15,vol!==null&&vol>=1.5,longUpper,closeNearLow].filter(Boolean).length;
+  const formalHold=nStatus==="confirmed"&&(fibThreeKey==="passed"||retestHeld||reattack)&&falseRiskKey!=="high"&&nPhase!=="WEAKENING";
+  const formalWeak=nStatus==="confirmed"&&(nPhase==="WEAKENING"||fibThreeKey==="failed"||falseRiskKey==="high");
+  const preBreakStrong=nStatus!=="confirmed"&&aboveB&&aboveMa&&slope!=="down";
+  const tacticalHold=!!tactical&&tacticalNeck!==null&&close!==null&&close>tacticalNeck&&aboveMa&&slope!=="down";
+  const consolidation=(w.key==="MID_CONSOLIDATION")||(aboveMa&&B!==null&&close!==null&&close<=B&&(vol===null||vol<=1.2)&&slope!=="down");
+
+  let key="UNDETERMINED";
+  if(nStatus==="failed")key="RESET";
+  else if(formalWeak)key="FALSE_BREAKOUT_RISK";
+  else if(w.key==="LATE_RISK"&&topHeat>=2)key="TOP_RISK";
+  else if(formalHold)key="BREAKOUT_HOLD";
+  else if(preBreakStrong||tacticalHold)key="PRE_BREAKOUT";
+  else if(consolidation)key="CONSOLIDATION";
+
+  const meta={
+    PRE_BREAKOUT:{
+      icon:"🔥",label:"前置突破／多頭延續候選",
+      short:`目前價格行為比較像整理後的強勢突破，但${nStatus!=="confirmed"?"完整費波那契N字尚未確認":"仍需觀察突破品質"}。${B!==null?`B＝${fmt(B)} 元已轉成第一道回測防守；` : ""}守住B與日20MA，突破品質較健康；若完成日K跌回B、量價轉弱，假突破警戒才需要提高。`
+    },
+    BREAKOUT_HOLD:{
+      icon:"🟢",label:"突破後站穩／回測續攻候選",
+      short:`正式突破後目前仍有站穩／回測守住的證據。${B!==null?`B＝${fmt(B)} 元由壓力轉成防守；` : ""}若回測守住再攻，較接近多頭中繼；若重新跌回B與日20MA下方，才要降級看待。`
+    },
+    CONSOLIDATION:{
+      icon:"🟡",label:"中途整理／蓄勢候選",
+      short:`目前較像趨勢中的整理，而不是已確認做頭。重點不是猜它一定是哪一種三角形或旗形，而是看整理期間能否守住${B!==null?`B＝${fmt(B)} 元、`:""}${ma!==null?`日20MA＝${fmt(ma)} 元`:"重要支撐"}，以及後續突破能否站穩。`
+    },
+    FALSE_BREAKOUT_RISK:{
+      icon:"⚠️",label:"假突破風險提高",
+      short:`突破後已出現實際轉弱證據${risk.length?`：${risk.slice(0,3).join("；")}`:""}。這比較接近你提供圖例中的『突破後又跌回頸線／支撐』風險；先提高風控，不把先前突破當成永久有效。`
+    },
+    TOP_RISK:{
+      icon:"⚠️",label:"高檔做頭／末升風險觀察",
+      short:`目前處於高檔成熟區，而且開始累積轉弱特徵${risk.length?`：${risk.slice(0,3).join("；")}`:""}。這只能說『做頭風險提高』，不能直接宣告M頭或頭肩頂完成；真正確認仍要看頸線／B／日20MA是否失守。`
+    },
+    RESET:{
+      icon:"🔴",label:"原型態失效／重新找結構",
+      short:"目前N字已失效，原本的突破／底部／整理型態不再當現行依據；等待新的A／B／C與新的頸線結構。"
+    },
+    UNDETERMINED:{
+      icon:"⚪",label:"型態尚未確認",
+      short:"目前沒有足夠一致的突破、回測或轉弱證據；先不硬套W底、M頭、頭肩底／頂、旗形或三角形。"
+    }
+  };
+
+  return {key,...meta[key],evidence,risk,falseRiskKey,fibThreeKey,tacticalNeck,tacticalDefense,longUpper,closeNearLow,topHeat,nStatus,nPhase,close,B,ma,rsi,vol,gap};
+}
+
+function appendPatternAssistV3325(lines,report,stage=null){
+  const p=patternAssistV3325(report,stage);
+  lines.push("");
+  lines.push("🧩【型態輔助觀察｜突破是真的還是假的？】");
+  lines.push(`${p.icon} ${p.label}`);
+  lines.push(`➡️ ${p.short}`);
+  if(p.evidence.length)lines.push(`📌 目前偏多／支撐依據：${p.evidence.slice(0,4).join("；")}。`);
+  if(p.risk.length)lines.push(`⚠️ 目前風險特徵：${p.risk.slice(0,4).join("；")}。`);
+  lines.push("📎 型態命名原則：W底、頭肩底、三角形、旗形、M頭、頭肩頂等，必須有完整轉折點與頸線序列才能正式命名；本版只做『型態品質』輔助，不為了套圖形而硬判。 ");
+  lines.push("⏱️ 時間對稱只作輔助觀察，不當成單獨買賣條件；目前核心仍以價格突破／回測、B、日20MA與量價是否守住為主。 ");
+  return p;
+}
+
 function appendWaveStageSectionV3323(lines,report,stage=null){
   const w=stage||waveStageAssistV3323(report);
   lineSection(lines,"🌊 現在大概走到哪一段？｜主升、整理還是末升？");
@@ -14075,6 +14193,8 @@ function appendWaveStageSectionV3323(lines,report,stage=null){
     lines.push(w.short);
     lines.push("➡️ 目前最重要的是先等結構變清楚，不為了貼『主升／整理／末升』標籤而硬做判斷。 ");
   }
+
+  appendPatternAssistV3325(lines,report,w);
 
   lines.push("");
   lines.push("📌 接下來怎麼判斷？");
@@ -14142,6 +14262,12 @@ function buildNewbieLookHereV3318(report,generatedAt=null){
   lines.push("🌊【目前可能走到哪一段？】");
   lines.push(`${waveStage.icon} ${waveStage.label}`);
   lines.push(`➡️ ${waveStage.short}`);
+
+  const patternAssist=patternAssistV3325(report,waveStage);
+  lines.push("");
+  lines.push("🧩【突破是真的還是假的？】");
+  lines.push(`${patternAssist.icon} ${patternAssist.label}`);
+  lines.push(`➡️ ${patternAssist.short}`);
 
   const keyLevels=[];
   const addLevel=(p,label)=>{if(n(p)!==null&&n(p)!==close)keyLevels.push({p:n(p),label});};
@@ -14365,7 +14491,7 @@ function buildReportTextV326(report){
 
   };
 
-  lines.push("📘 石頭少爺分析助手｜V3.3.24 固定倍數描述＋新手排版小修版");
+  lines.push("📘 石頭少爺分析助手｜V3.3.25 型態輔助＋假突破風險版");
 
   lines.push(`報告產出時間：${generatedAt}`);
 
@@ -15453,7 +15579,7 @@ function buildMarketWorkerReportText(data){
   const lines=[];
   const section=title=>{lines.push("", "━━━━━━━━━━━━━━━━━━", `【${title}】`, "━━━━━━━━━━━━━━━━━━", "");};
 
-  lines.push("📈 石頭少爺分析助手｜V3.3.24 大盤環境戰報版（大盤邏輯沿用V3.3.10）");
+  lines.push("📈 石頭少爺分析助手｜V3.3.25 大盤環境戰報版（大盤邏輯沿用V3.3.10）");
   lines.push(`報告產出時間：${reportGeneratedAt()}`);
   lines.push("");
   lines.push(`指數：臺灣加權股價指數（TAIEX）｜資料來源：${data?.source||"TWSE Official"}`);
@@ -16004,7 +16130,7 @@ async function analyzeStock(){
 
     set("stockName",hasRealStockName(name,code)?name:`股票代號 ${code}`);
 
-    set("stockMeta",`${code}｜${market}｜${source}｜後端分析 ${version}｜前端 V3.3.24`);
+    set("stockMeta",`${code}｜${market}｜${source}｜後端分析 ${version}｜前端 V3.3.25`);
 
     set("closeDate",`最新交易日：${datefmt(closeDate)}`);
 
