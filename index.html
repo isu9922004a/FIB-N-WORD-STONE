@@ -527,7 +527,7 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
 
     <p>月線波段條件判斷＋固定倍數目標價＋費波那契 N字分析</p>
 
-    <span class="version-pill">前端 V3.4.2｜教材SOP整合強化版｜新增：趨勢→位置→均線→ABC→K線→量價→型態→支撐壓力→指標→行動SOP＋教材式ABC突破檢核｜沿用V3.4.1均線趨勢導航、V3.4.0多證據判讀與V3.3.35穩定核心｜個股圖片模板、大盤圖片／大盤戰報與兩支 Worker 完全不變</span>
+    <span class="version-pill">前端 V3.4.3｜個股圖片安全排版修正版｜沿用V3.4.2教材SOP、V3.4.1均線導航、V3.4.0多證據判讀與V3.3.35穩定核心｜只修個股生成圖片的文字防遮蓋／自動縮字安全區｜大盤圖片／大盤戰報與兩支 Worker 完全不變</span>
 
   </div>
 
@@ -895,7 +895,7 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
 
       <div class="section-title">⑥ 一鍵複製分析報告</div>
 
-      <div class="hint">V3.4.2 在既有多證據＋均線導航上新增「技術分析實戰SOP」與「教材式ABC突破檢核」：把趨勢、位置、均線、ABC、K線、量價、型態、支撐壓力、指標與行動串成一條判讀鏈；資料不足就明確標示，不硬套型態、不虛構日60MA／MACD／KD。</div>
+      <div class="hint">V3.4.3 沿用 V3.4.2 的「技術分析實戰SOP」與「教材式ABC突破檢核」，本次只修正個股生成圖片的安全排版：固定文字區塊改為自動縮字／安全寬度，避免 iPhone 預覽時文字被右側區塊覆蓋、切字或互相重疊；大盤圖片與分析邏輯完全不動。</div>
 
       <div class="copy-actions">
 
@@ -930,16 +930,16 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
   </div>
 </div>
 
-<footer class="footer">石頭少爺 Agent｜GitHub V3.4.2 教材SOP整合強化版｜新增：10層技術分析實戰SOP＋教材式ABC突破品質檢核＋趨勢六字口訣資料邊界提示｜沿用V3.4.1均線趨勢導航、V3.4.0多證據判讀與V3.3.35穩定核心｜個股圖片模板／大盤圖片／大盤戰報／個股 Worker／大盤 Worker 均未修改｜費波那契 pivot-abc-v2.4 核心不變<br>技術分析僅供研究與決策參考，不構成投資建議。</footer>
+<footer class="footer">石頭少爺 Agent｜GitHub V3.4.3 個股圖片安全排版修正版｜沿用V3.4.2教材SOP＋V3.4.1均線導航＋V3.4.0多證據判讀｜本次只修個股生成圖片的文字防遮蓋、自動縮字與安全區｜大盤圖片／大盤戰報／個股 Worker／大盤 Worker 完全不變｜費波那契 pivot-abc-v2.4 核心不變<br>技術分析僅供研究與決策參考，不構成投資建議。</footer>
 
 <script>
 
 const API_BASE_URL="https://shitou-agent-fib-api.d318426.workers.dev";
 
-// V3.4.2：只升級 GitHub 前端判讀層；新增教材式技術分析SOP與ABC突破檢核。個股 Worker V2.9.10 與大盤 Worker pivot-abc-v2.4 完全不修改。
+// V3.4.3：沿用 V3.4.2 教材式技術分析SOP與ABC突破檢核；本次只修個股 Canvas 圖片安全排版。個股 Worker V2.9.10 與大盤 Worker pivot-abc-v2.4 完全不修改。
 // 新增「多證據技術結構判讀」：價格結構優先、量價確認、均線趨勢、突破品質、支撐/壓力角色與訊號衝突檢查。
 // 不在資料不足時硬判 W底／M頭／頭肩底頂／旗形／三角形，也不虛構前端目前沒有的 MACD 歷史序列。
-// V3.4.2 新增：在V3.4.1均線導航上加入「趨勢→位置→均線→ABC→K線→量價→型態→支撐壓力→指標→行動」SOP與ABC突破教材檢核；資料不足明示，不改兩支Worker。
+// V3.4.3 圖片修正：個股圖固定文字改用可量測寬度的自動縮字／安全區；不改文字內容、不改分析公式、不改大盤圖。V3.4.2 的SOP與ABC突破教材檢核完整沿用。
 // V3.4.1 保留：價格－日20MA－月20MA跨週期導航、回檔深度與乖離風險。
 // V3.3.35 修復：個股圖片模板函式內 rowH 被重複 const 宣告，造成整份 JavaScript SyntaxError，所有 onclick 按鈕因此失效；改為 mapRowH，其他分析與 Worker 邏輯不變。
 // V3.3.30 收尾：大盤圖片 N字進度去重、MA20 乖離單行適配、個股小白懶人包／判讀目標文字去重；分析圖防碰撞沿用 V3.3.29；不改兩個 Worker 與既有分析核心。
@@ -952,7 +952,7 @@ const API_BASE_URL="https://shitou-agent-fib-api.d318426.workers.dev";
 // 大盤 Worker 與個股 Worker 分開；V3.3.23 新增「波段階段輔助判讀」白話章節與新手短版；V3.3.22 的報告時間標示、V3.3.21 的 Fib 五層新手應對註解、V3.3.20 的排版整理完整沿用；V3.3.19 的重複 N 字修正完整沿用；V3.3.18 的B突破後回測防守語意完整沿用；V3.3.17 新手看這邊獨立複製、V3.3.16 價格作戰地圖、V3.3.15 ABC爬山白話解說、V3.3.14 清除輸入與夜間模式、V3.3.13 固定倍數關卡語意、V3.3.12 失效條件／歷史越過、V3.3.11 月線待確認、V3.3.10 大盤戰報邏輯全部沿用。
 const MARKET_API_BASE_URL="https://shitou-taiwanmarket-api.d318426.workers.dev";
 
-const FRONTEND_REPORT_VERSION="2026-08-23-report-v3.4.0-multi-evidence-structure-engine";
+const FRONTEND_REPORT_VERSION="2026-08-23-report-v3.4.3-stock-image-safe-layout";
 
 const TARGET_MULTIPLIERS=[3,3.5,4,4.5,5,5.5,6,6.5,7,7.5,8,8.5,9,9.5,10];
 
@@ -14499,7 +14499,7 @@ function evidenceChainV340(report){
 
 function appendEvidenceChainV340(lines,report){
   const e=evidenceChainV340(report);
-  lineSection(lines,"🧠 V3.4.2 多證據技術結構判讀｜沿用V3.4.0核心");
+  lineSection(lines,"🧠 V3.4.3 多證據技術結構判讀｜沿用V3.4.0核心");
   lines.push(`${e.icon} 綜合定調：${e.summary}`);
   lines.push(`📊 資料覆蓋度：${e.coverage}/6 層｜${e.coverageLabel}｜只使用目前 Worker 已回傳且可驗證的資料`);
   lines.push(`① 趨勢層：${e.trendLabel}`);
@@ -14638,13 +14638,13 @@ function appendMATrendNavigationV341(lines,report){
   lines.push("");
   lines.push("📌 這張均線示意圖的核心觀念已納入：上升趨勢不是只看『有沒有站上均線』，而是同時看價格位置、MA20斜率、回檔深度與長週期背景。");
   lines.push("📌 圖中的『上漲40%／回檔20%』只當示意，不變成固定公式；本版仍依每檔實際A→B幅度與0.236／0.382／0.500／0.618／0.764判斷回檔深度。");
-  lines.push("📎 個股 Worker 目前未回傳日60MA，所以V3.4.2仍不硬造MA60，也不拿月20MA冒充日60MA；若未來後端正式提供，再接入真正的20MA／60MA排列判讀。");
+  lines.push("📎 個股 Worker 目前未回傳日60MA，所以V3.4.3仍不硬造MA60，也不拿月20MA冒充日60MA；若未來後端正式提供，再接入真正的20MA／60MA排列判讀。");
 }
 
 
 
 /* ========================================================================
-   V3.4.2｜教材式技術分析SOP＋ABC突破品質檢核（GitHub 前端限定）
+   V3.4.3｜教材式技術分析SOP＋ABC突破品質檢核（GitHub 前端限定）
    ------------------------------------------------------------------------
    目的：把教材中的「趨勢→位置→均線→K線→成交量→型態→支撐壓力→指標→操作」
    轉成前端可驗證的判讀鏈。只使用 Worker 已回傳欄位；資料不足就明示，不硬造結論。
@@ -15171,7 +15171,7 @@ function buildReportTextV326(report){
 
   };
 
-  lines.push("📘 石頭少爺分析助手｜V3.4.2 教材SOP整合強化版");
+  lines.push("📘 石頭少爺分析助手｜V3.4.3 個股圖片安全排版修正版");
 
   lines.push(`報告產出時間：${generatedAt}`);
 
@@ -16759,15 +16759,59 @@ function renderStockInfographicV3328(report){
   const recentHigh=n(st.fixedReclaim?.knownHigh);
   const topLabel=stockTopLevelV3328(st),downLabel=stockDownLevelV3328(st);
 
+  // V3.4.3｜個股圖片專用安全排版：只影響個股 Canvas，不改大盤圖與任何分析資料。
+  function stockFitTextV343(text,x,y,maxWidth,baseSize=24,minSize=13,weight=800,color=P.text,align="left"){
+    const raw=String(text??"");
+    let size=baseSize;
+    while(size>minSize){
+      fontV3328(ctx,size,weight,color,align);
+      if(ctx.measureText(raw).width<=maxWidth)break;
+      size-=1;
+    }
+    fontV3328(ctx,size,weight,color,align);
+    ctx.fillText(raw,x,y);
+    return size;
+  }
+  function stockDrawSegmentsV343(segments,x,y,maxWidth,baseSize=19,minSize=13){
+    let size=baseSize,total=Infinity;
+    while(size>minSize){
+      total=0;
+      for(const seg of segments){
+        fontV3328(ctx,size,seg.weight||900,seg.color||P.navy);
+        total+=ctx.measureText(String(seg.text??"")).width;
+      }
+      if(total<=maxWidth)break;
+      size-=1;
+    }
+    let xx=x;
+    for(const seg of segments){
+      fontV3328(ctx,size,seg.weight||900,seg.color||P.navy);
+      const txt=String(seg.text??"");
+      ctx.fillText(txt,xx,y);
+      xx+=ctx.measureText(txt).width;
+    }
+    return size;
+  }
+  function drawStockMetricCardV343(x,y,w,h,title,value,sub,kind="blue"){
+    const style={
+      green:[P.paleGreen,P.green],blue:[P.paleBlue,P.navy],orange:[P.paleOrange,P.orange],
+      red:[P.paleRed,P.red],purple:[P.palePurple,P.purple],cyan:["#ecfeff",P.cyan]
+    }[kind]||[P.soft,P.navy];
+    rrV3328(ctx,x,y,w,h,14,style[0],style[1],2);
+    stockFitTextV343(title,x+16,y+31,w-32,21,15,900,style[1]);
+    stockFitTextV343(value,x+16,y+75,w-32,28,18,900,P.text);
+    if(sub)drawWrapV3328(ctx,sub,x+16,y+h-39,w-32,23,2,{size:17,weight:700,color:P.muted});
+  }
+
   drawHeaderTitleV3328(ctx,"🧩 新手先懂","這檔現在走到哪一步？");
   rrV3328(ctx,26,82,1190,72,10,P.navy,null);
-  fontV3328(ctx,31,900,"#facc15");ctx.fillText(stock,48,128);
-  fontV3328(ctx,24,800,"#fff");ctx.fillText(`｜${marketNameZh(report.market)}｜最新交易日 ${datefmt(report.closeDate)}｜資料來源：${sourceNameZh(report.source)}`,48+ctx.measureText(stock).width+12,128);
+  stockFitTextV343(stock,48,128,300,31,22,900,"#facc15");
+  stockFitTextV343(`｜${marketNameZh(report.market)}｜最新交易日 ${datefmt(report.closeDate)}｜資料來源：${sourceNameZh(report.source)}`,362,128,830,24,17,800,"#fff");
   rrV3328(ctx,1232,18,340,136,12,P.navy,null);
   fontV3328(ctx,20,900,"#fff","center");ctx.fillText("報告製作 By.石頭少爺",1402,50);
   fontV3328(ctx,17,800,"#fff","center");ctx.fillText("圖片產生時間",1402,80);
   fontV3328(ctx,20,900,"#fff","center");ctx.fillText(generatedAt,1402,112);
-  fontV3328(ctx,17,700,"#dbeafe","center");ctx.fillText("V3.4.2｜教材SOP整合",1402,140);
+  fontV3328(ctx,17,700,"#dbeafe","center");ctx.fillText("V3.4.3｜個股圖安全排版",1402,140);
 
   // ===== 左側：ABC 白話說明 =====
   rrV3328(ctx,24,174,700,820,18,P.white,P.blue,2);
@@ -16790,10 +16834,10 @@ function renderStockInfographicV3328(report){
   function drawBigAbcRow(key,color,label,value,date,y){
     rrV3328(ctx,rowX,y,rowW,rowH,12,"#fbfdff",P.line,1.5);
     fontV3328(ctx,34,950,color);ctx.fillText(key,rowX+18,y+54);
-    fontV3328(ctx,22,900,P.text);ctx.fillText(label,rowX+68,y+50);
+    stockFitTextV343(label,rowX+68,y+50,150,22,17,900,P.text);
     const valueText=n(value)===null?"尚未形成":`${fmt(value)} 元`;
-    fontV3328(ctx,28,900,color,"right");ctx.fillText(valueText,rowX+rowW-122,y+50);
-    if(date&&n(value)!==null){fontV3328(ctx,18,750,P.muted,"right");ctx.fillText(dateCompactV3328(date),rowX+rowW-16,y+50);}
+    stockFitTextV343(valueText,rowX+rowW-136,y+50,190,28,19,900,color,"right");
+    if(date&&n(value)!==null){stockFitTextV343(dateCompactV3328(date),rowX+rowW-16,y+50,112,18,14,750,P.muted,"right");}
   }
   drawBigAbcRow("A",P.green,"起漲點",st.A,st.s.fib.ADate,548);
   drawBigAbcRow("B",P.orange,"前波高點",st.B,st.s.fib.BDate,642);
@@ -16809,9 +16853,11 @@ function renderStockInfographicV3328(report){
 
   rrV3328(ctx,48,922,620,48,12,"#fffdf5",P.line,1);
   const mnemonicC=st.C!==null?"C 回檔":"等有效 C";
-  fontV3328(ctx,19,900,P.navy);ctx.fillText("💡 記住口訣：A 起漲 → B 前高 → ",66,955);
-  fontV3328(ctx,19,950,P.blue2);ctx.fillText(mnemonicC,408,955);
-  fontV3328(ctx,19,900,P.navy);ctx.fillText(" → 再突破 B ＝ 完整 N 字確認。",520,955);
+  stockDrawSegmentsV343([
+    {text:"💡 記住口訣：A 起漲 → B 前高 → ",color:P.navy,weight:900},
+    {text:mnemonicC,color:P.blue2,weight:950},
+    {text:" → 再突破 B ＝ 完整 N 字確認。",color:P.navy,weight:900}
+  ],66,955,584,19,12);
 
   // ===== 右側：日線圖風格示意 =====
   rrV3328(ctx,740,174,836,820,18,P.white,P.blue,2);
@@ -16927,11 +16973,13 @@ function renderStockInfographicV3328(report){
   function rightTag(y,color,text){
     if(!Number.isFinite(y))return;
     rrV3328(ctx,1480,y-19,86,38,8,color,null);
-    fontV3328(ctx,18,900,"#fff","center");ctx.fillText(text,1523,y+6);
+    stockFitTextV343(text,1523,y+6,72,18,11,900,"#fff","center");
   }
   function labelBox(x,y,w,h,stroke,lines,lineColor="#172033"){
     rrV3328(ctx,x,y,w,h,12,"rgba(255,255,255,.96)",stroke,1.8);
-    lines.forEach((line,idx)=>{fontV3328(ctx,idx===0?18:17,idx===0?900:800,lineColor);ctx.fillText(line,x+16,y+26+idx*24);});
+    lines.forEach((line,idx)=>{
+      stockFitTextV343(line,x+16,y+26+idx*24,w-32,idx===0?18:17,12,idx===0?900:800,lineColor);
+    });
   }
   if(fixedValue!==null){
     labelBox(1272,220,186,106,P.green2,[`月線 ${st.fixed.m}×`,`固定倍數關卡`,st.fixedReclaim?.crossed?"曾越過後待":"優先觀察位",st.fixedReclaim?.crossed?"重新站回":"價格反應"],P.green2);
@@ -16970,10 +17018,10 @@ function renderStockInfographicV3328(report){
   // ===== 指標卡 =====
   const metricY=1018,metricGap=12,metricW=298,metricH=152;
   const metricX=(i)=>24+i*(metricW+metricGap);
-  drawMetricCardV3328(ctx,metricX(0),metricY,metricW,metricH,"月線條件成立",st.monthlyStatus==="PASS"?"目前月線："+fmt(st.close)+" 元":"月線條件待確認",st.monthMa!==null?`月20MA：${fmt(st.monthMa)} 元`:st.monthlyMeta.short,"green");
-  drawMetricCardV3328(ctx,metricX(1),metricY,metricW,metricH,"日20MA",st.ma!==null?`${fmt(st.ma)} 元`:"資料不足",`斜率 ${st.s.maCtx.slope5Pct!==null?fmtSignedPct(st.s.maCtx.slope5Pct):"-"}｜乖離 ${st.s.maCtx.gapPct!==null?fmtSignedPct(st.s.maCtx.gapPct):"-"}`,"green");
-  drawMetricCardV3328(ctx,metricX(2),metricY,metricW,metricH,"RSI 5T",st.rsi!==null?fmt(st.rsi):"-",getRsiReportInfo(st.rsi).label,"orange");
-  drawMetricCardV3328(ctx,metricX(3),metricY,metricW,metricH,"相對量",st.vol!==null?`${fmt(st.vol,2)} 倍`:"-",st.vol===null?"量能資料不足":st.vol>=1.5?"量能偏活躍":st.vol<0.7?"量縮偏弱":"量能正常","orange");
+  drawStockMetricCardV343(metricX(0),metricY,metricW,metricH,"月線條件成立",st.monthlyStatus==="PASS"?"目前月線："+fmt(st.close)+" 元":"月線條件待確認",st.monthMa!==null?`月20MA：${fmt(st.monthMa)} 元`:st.monthlyMeta.short,"green");
+  drawStockMetricCardV343(metricX(1),metricY,metricW,metricH,"日20MA",st.ma!==null?`${fmt(st.ma)} 元`:"資料不足",`斜率 ${st.s.maCtx.slope5Pct!==null?fmtSignedPct(st.s.maCtx.slope5Pct):"-"}｜乖離 ${st.s.maCtx.gapPct!==null?fmtSignedPct(st.s.maCtx.gapPct):"-"}`,"green");
+  drawStockMetricCardV343(metricX(2),metricY,metricW,metricH,"RSI 5T",st.rsi!==null?fmt(st.rsi):"-",getRsiReportInfo(st.rsi).label,"orange");
+  drawStockMetricCardV343(metricX(3),metricY,metricW,metricH,"相對量",st.vol!==null?`${fmt(st.vol,2)} 倍`:"-",st.vol===null?"量能資料不足":st.vol>=1.5?"量能偏活躍":st.vol<0.7?"量縮偏弱":"量能正常","orange");
   const fixedCardTitle=fixedEnabled?"最近固定倍數":"關鍵關卡";
   const fixedCardValue=fixedEnabled?`${st.fixed.m}× = ${fmt(fixedValue)} 元`:(topLabel?`${topLabel.label}`:"等待新關卡形成");
   const fixedCardSub=fixedEnabled
@@ -16981,7 +17029,7 @@ function renderStockInfographicV3328(report){
         ? `曾被可見高點 ${fmt(recentHigh)} 元越過｜距重新站回 ${fixedDistance!==null?fmtSignedPct(fixedDistance):"-"}`
         : fixedDistance!==null?`距目前價格 ${fixedDistance>=0?"+":""}${fmt(fixedDistance)}%｜往上先看`:"月線觀察關卡")
     : (topLabel?`${fmt(topLabel.value)} 元｜目前往上先看`:"目前以日20MA與月20MA為主");
-  drawMetricCardV3328(ctx,metricX(4),metricY,metricW,metricH,fixedCardTitle,fixedCardValue,fixedCardSub,"blue");
+  drawStockMetricCardV343(metricX(4),metricY,metricW,metricH,fixedCardTitle,fixedCardValue,fixedCardSub,"blue");
 
   // ===== 位置作戰地圖 =====
   rrV3328(ctx,24,1192,1552,996,18,P.white,P.blue,2);
@@ -17002,7 +17050,7 @@ function renderStockInfographicV3328(report){
     const y=rowTop+idx*mapRowH;
     if(idx>0)drawDividerV3328(ctx,40,y-18,1550,P.line);
     fontV3328(ctx,34,900,row.color);ctx.fillText(row.icon,rowLeft,y+56);
-    fontV3328(ctx,34,900,row.color);ctx.fillText(row.value,rowLeft+68,y+56);
+    stockFitTextV343(row.value,rowLeft+68,y+56,rowLabelX-(rowLeft+68)-16,34,20,900,row.color);
     drawWrapV3328(ctx,row.title,rowLabelX,y+40,350,30,2,{size:24,weight:900,color:row.color===P.red?P.text:row.color});
     drawWrapV3328(ctx,row.desc,rowTextX,y+28,870,32,3,{size:22,weight:700,color:P.text});
   });
@@ -17016,12 +17064,14 @@ function renderStockInfographicV3328(report){
 
   // ===== 底部口訣 =====
   rrV3328(ctx,24,2210,1552,156,18,"#f8fbff",P.blue,2);
-  fontV3328(ctx,30,900,P.navy);ctx.fillText("☁️ 記住口訣：",58,2274);
-  fontV3328(ctx,26,950,P.green);ctx.fillText("A 起漲",300,2274);
-  fontV3328(ctx,26,900,P.orange);ctx.fillText("B 前高",560,2274);
-  fontV3328(ctx,26,900,P.blue2);ctx.fillText(st.C!==null?"C 回檔":"等有效 C",826,2274);
-  fontV3328(ctx,28,950,P.red);ctx.fillText("再突破 B",1102,2274);
-  fontV3328(ctx,34,900,P.navy,"center");ctx.fillText("＝ 完整 N 字確認。",800,2346);
+  stockDrawSegmentsV343([
+    {text:"☁️ 記住口訣：  ",color:P.navy,weight:900},
+    {text:"A 起漲  ",color:P.green,weight:950},
+    {text:"B 前高  ",color:P.orange,weight:900},
+    {text:(st.C!==null?"C 回檔  ":"等有效 C  "),color:P.blue2,weight:900},
+    {text:"再突破 B",color:P.red,weight:950}
+  ],58,2274,1484,28,18);
+  stockFitTextV343("＝ 完整 N 字確認。",800,2346,760,34,24,900,P.navy,"center");
   return canvas;
 }
 
@@ -17634,7 +17684,7 @@ async function analyzeStock(){
 
     set("stockName",hasRealStockName(name,code)?name:`股票代號 ${code}`);
 
-    set("stockMeta",`${code}｜${market}｜${source}｜後端分析 ${version}｜前端 V3.4.2`);
+    set("stockMeta",`${code}｜${market}｜${source}｜後端分析 ${version}｜前端 V3.4.3`);
 
     set("closeDate",`最新交易日：${datefmt(closeDate)}`);
 
