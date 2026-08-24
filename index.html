@@ -527,7 +527,7 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
 
     <p>月線波段條件判斷＋固定倍數目標價＋費波那契 N字分析</p>
 
-    <span class="version-pill">前端 V3.6.4｜超白話進出場固定句型版｜三叉戟壓支＋突破品質2.0＋市場階段＋動態防守｜個股圖 1152×2048（9:16）｜大盤圖 1024×1536（2:3）｜V3.4.7 穩定核心完整沿用｜兩支 Worker 完全不變</span>
+    <span class="version-pill">前端 V3.6.5.1.1｜真實日K細緻圖＋大盤三叉戟修復版｜個股真實日K＋量能＋日20MA＋壓撐預｜個股圖 1152×2048（9:16）｜大盤圖 1024×1536（2:3）｜V3.4.7 穩定核心完整沿用｜個股建議搭配 Worker V2.9.11</span>
 
   </div>
 
@@ -895,7 +895,7 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
 
       <div class="section-title">⑥ 一鍵複製分析報告</div>
 
-      <div class="hint">V3.6.4 延續 V3.6.4、V3.6.2、V3.6.1 與 V3.4.7 穩定核心；保留三叉戟壓支、突破品質2.0、市場階段、價帶與動態防守，這次把個股圖片再升級成「超白話固定句型版」：A.價格作戰地圖每個價位統一用固定句型呈現「強弱｜持有者怎麼做｜空手者怎麼做」；C區也統一翻成可直接判讀的進出場語言。個股 Worker／大盤 Worker、ABC／Fib／N字與 pivot-abc-v2.4 完全不變。</div>
+      <div class="hint">V3.6.5.1 延續 V3.6.4 與 V3.4.7 穩定核心；保留白話固定句型、三叉戟、突破品質2.0、市場階段、價帶與動態防守。這次第一優先把個股圖片主圖升級成「真實逐日日K＋量能柱＋日20MA」，並直接畫出三叉戟壓／撐／預；A／B／C改用實際日期定位到K棒。若逐日OHLCV不足，自動退回結構示意圖，不硬畫。大盤圖已預留完整逐日OHLCV自動升級架構。ABC／Fib／N字與 pivot-abc-v2.4 核心完全不變。</div>
 
       <div class="copy-actions">
 
@@ -926,17 +926,17 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
       <a id="imageDownloadLink" class="image-save-link" href="#" download>💾 儲存 PNG</a>
       <button id="imageShareButton" class="image-share-btn" type="button" onclick="shareInfographicV3328()">📤 分享圖片</button>
     </div>
-    <div id="imagePreviewNote" class="image-preview-note">圖片由目前分析資料直接產生；V3.6.4 沿用個股 PNG 1152×2048（9:16）與大盤 PNG 1024×1536（2:3）。個股圖的價格作戰地圖升級成「價位＋強弱＋固定句型決策」，盡量直接翻成可進／續抱／減碼／退出語言，讓持有者與空手者都能一眼看懂；並保留三叉戟壓力／支撐輔助。若Worker未回傳完整逐日OHLCV，三叉戟會明確顯示資料不足，不硬猜。圖中的結構示意圖仍為前端資訊圖，不代表實際逐根K棒。</div>
+    <div id="imagePreviewNote" class="image-preview-note">圖片由目前分析資料直接產生；V3.6.5.1 沿用個股 PNG 1152×2048（9:16）與大盤 PNG 1024×1536（2:3）。個股 Worker 若回傳完整 dailySeries，個股主圖會自動畫成真實近期日K、量能柱、日20MA、A/B/C與三叉戟壓／撐／預；資料不足才退回結構示意圖。大盤部署新版TAIEX Worker後，會使用TAIEX官方OHLC＋FMTQIK市場成交股數組成dailySeries，自動切換真實日K＋量能柱＋MA20＋三叉戟壓／撐／預；若量能資料暫時不可用，才安全退回結構示意圖。</div>
   </div>
 </div>
 
-<footer class="footer">石頭少爺 Agent｜GitHub 前端 V3.6.4 超白話進出場固定句型版｜V3.4.7 穩定核心與雙圖片版型完整沿用｜價格作戰地圖升級成強弱＋持有／空手固定句型決策｜保留三叉戟壓支＋市場階段／突破生命週期／突破品質2.0／價帶／動態防守／Replay稽核｜個股 Worker／大盤 Worker 完全不變｜費波那契 pivot-abc-v2.4 核心不變<br>技術分析僅供研究與決策參考，不構成投資建議。</footer>
+<footer class="footer">石頭少爺 Agent｜GitHub 前端 V3.6.5.1 真實日K細緻圖＋三叉戟白話標示版｜V3.4.7 穩定核心與雙圖片版型完整沿用｜個股主圖支援真實日K＋量能＋MA20＋A/B/C＋三叉戟壓撐預｜價格作戰地圖保留持有／空手固定句型｜本前端不改ABC／Fib／N字與 pivot-abc-v2.4 核心<br>技術分析僅供研究與決策參考，不構成投資建議。</footer>
 
 <script>
 
 const API_BASE_URL="https://shitou-agent-fib-api.d318426.workers.dev";
 
-// V3.6.4：延續 V3.6.4 白話進出場決策強化版；把個股圖片決策文字再標準化成固定句型。A區每個價位都統一顯示「強弱｜持有者動作｜空手者動作」；C區也改成固定句型，讓使用者更容易一眼判讀。三叉戟與ABC/Fib/N字、兩支Worker核心完全不變。
+// V3.6.5.1：延續 V3.6.4 超白話固定句型版；新增真實逐日日K繪圖層。個股有dailySeries時畫真實K棒＋量能＋MA20＋ABC＋三叉戟壓撐預，無資料時安全退回示意圖；大盤已接入OHLCV＋三叉戟自動升級架構。ABC/Fib/N字核心完全不變。
 // 新增「多證據技術結構判讀」：價格結構優先、量價確認、均線趨勢、突破品質、支撐/壓力角色與訊號衝突檢查。
 // 不在資料不足時硬判 W底／M頭／頭肩底頂／旗形／三角形，也不虛構前端目前沒有的 MACD 歷史序列。
 // V3.4.5 圖片修正：個股圖不再使用安全排版特化模板，改直接套用正常版個股圖片模組；維持現有分析公式與資料庫更新判讀口徑，不改大盤圖。
@@ -15074,7 +15074,7 @@ function appendPriceConfluenceV350(lines,report){
 
 
 /* ========================================================================
-   V3.6.4｜決策引擎＋三叉戟壓支＋超白話進出場固定句型層（GitHub 前端限定）
+   V3.6.5.1｜決策引擎＋真實日K＋三叉戟壓撐預＋超白話固定句型層（GitHub 前端限定）
    ------------------------------------------------------------------------
    目的：把既有可驗證資料整理為「階段 → 突破生命週期 → 品質 → 價帶 → 防守 → 稽核」。
    重要邊界：
@@ -15456,8 +15456,18 @@ function tridentImageTextV361(t){
   const parts=[];
   if(t.pressure)parts.push(`壓 ${fmt(t.pressure.value)}`);
   if(t.support)parts.push(`撐 ${fmt(t.support.value)}`);
-  if(t.preparatory)parts.push(`預 ${fmt(t.preparatory.value)}*`);
-  return `🔱 三叉戟：${parts.join("｜")||"價位待建立"}${t.preparatory?"（*候選）":""}`;
+  if(t.preparatory)parts.push(`預 ${fmt(t.preparatory.value)}`);
+  return `🔱 三叉戟：${parts.join("｜")||"價位待建立"}`;
+}
+
+function marketTridentImageTextV365(t){
+  if(!t||!t.available)return "🔱 大盤三叉戟：逐日OHLCV不足，暫不計算";
+  if(t.key==="NO_CANDIDATE")return "🔱 大盤三叉戟：目前沒有符合『量大於左一根』的大量K候選";
+  const parts=[];
+  if(t.pressure)parts.push(`壓 ${fmt(t.pressure.value)} 點`);
+  if(t.support)parts.push(`撐 ${fmt(t.support.value)} 點`);
+  if(t.preparatory)parts.push(`預 ${fmt(t.preparatory.value)} 點`);
+  return `🔱 大盤三叉戟：${parts.join("｜")||"價位待建立"}`;
 }
 
 function decisionEngineV360(report){
@@ -15513,7 +15523,7 @@ function appendDecisionEngineV360(lines,report){
   lines.push("");
   lines.push(`${d.measured.icon} 型態量度：${d.measured.text}`);
   lines.push(`${d.replay.icon} Replay／No-lookahead：${d.replay.label}｜${d.replay.text}`);
-  lines.push("📌 V3.6.4所有新增內容仍只屬前端判讀層；不修改Worker、不改ABC／Fib／N字核心。個股圖片的「可進／等待／續抱／減碼／退出」只是把既有結構與風控條件翻成更固定、更白話的判讀句型，不等於保證報酬。三叉戟需要完整逐日OHLCV，資料不足就停用；預備線只做候選提示。 ");
+  lines.push("📌 V3.6.5.1新增的真實日K、量能、MA20、ABC定位與三叉戟畫線都屬前端顯示／判讀層；不改ABC／Fib／N字核心。個股圖片的「可進／等待／續抱／減碼／退出」仍只是把既有結構與風控條件翻成白話，不等於保證報酬。三叉戟需要完整逐日OHLCV；預線仍採前端候選備用防線規則，不參與核心失效判定。 ");
 }
 
 function appendWaveStageSectionV3323(lines,report,stage=null){
@@ -15894,7 +15904,7 @@ function buildReportTextV326(report){
 
   };
 
-  lines.push("📘 石頭少爺分析助手｜GitHub 前端 V3.6.4｜超白話進出場固定句型版");
+  lines.push("📘 石頭少爺分析助手｜GitHub 前端 V3.6.5.1.1｜真實日K細緻圖＋大盤三叉戟修復版");
 
   lines.push(`報告產出時間：${generatedAt}`);
 
@@ -16998,7 +17008,7 @@ function buildMarketWorkerReportText(data){
   const lines=[];
   const section=title=>{lines.push("", "━━━━━━━━━━━━━━━━━━", `【${title}】`, "━━━━━━━━━━━━━━━━━━", "");};
 
-  lines.push("📈 石頭少爺分析助手｜GitHub 前端 V3.6.4｜大盤環境戰報");
+  lines.push("📈 石頭少爺分析助手｜GitHub 前端 V3.6.5.1｜大盤環境戰報");
   lines.push("判讀核心：大盤前端邏輯沿用 V3.3.10｜ABC演算法沿用 pivot-abc-v2.4｜大盤圖片模組不變");
   lines.push(`報告產出時間：${reportGeneratedAt()}`);
   lines.push("");
@@ -17240,8 +17250,15 @@ function drawWrapV3328(ctx,text,x,y,maxWidth,lineHeight,maxLines=99,opts={}){
   return y+shown.length*lineHeight;
 }
 
+function normalizeCanvasDashV365(dash){
+  // CanvasRenderingContext2D.setLineDash 必須收到可迭代的數字序列。
+  // V3.6.5.1 熱修：任何 null／非陣列／NaN／負值都安全降級成實線，避免整張圖片生成失敗。
+  if(!Array.isArray(dash))return [];
+  return dash.map(v=>Number(v)).filter(v=>Number.isFinite(v)&&v>=0);
+}
+
 function drawDividerV3328(ctx,x1,y,x2,color="#d7e1f0",dash=[]){
-  ctx.save();ctx.beginPath();ctx.setLineDash(dash);ctx.strokeStyle=color;ctx.lineWidth=2;ctx.moveTo(x1,y);ctx.lineTo(x2,y);ctx.stroke();ctx.restore();
+  ctx.save();ctx.beginPath();ctx.setLineDash(normalizeCanvasDashV365(dash));ctx.strokeStyle=color;ctx.lineWidth=2;ctx.moveTo(x1,y);ctx.lineTo(x2,y);ctx.stroke();ctx.restore();
 }
 
 function drawHeaderTitleV3328(ctx,prefix,suffix){
@@ -17318,7 +17335,7 @@ function chartYV3328(v,minV,maxV,y,h){
 }
 
 function drawLevelV3328(ctx,x1,x2,y,label,color,dash=[9,7],side="left"){
-  ctx.save();ctx.beginPath();ctx.setLineDash(dash);ctx.strokeStyle=color;ctx.lineWidth=2;ctx.moveTo(x1,y);ctx.lineTo(x2,y);ctx.stroke();ctx.restore();
+  ctx.save();ctx.beginPath();ctx.setLineDash(normalizeCanvasDashV365(dash));ctx.strokeStyle=color;ctx.lineWidth=2;ctx.moveTo(x1,y);ctx.lineTo(x2,y);ctx.stroke();ctx.restore();
   fontV3328(ctx,18,800,color,side==="right"?"right":"left");
   ctx.fillText(label,side==="right"?x2:x1+4,y-7);
 }
@@ -17347,7 +17364,7 @@ function layoutLabelYsV3329(items,minY,maxY,minGap=30){
 }
 
 function drawPlainLevelV3329(ctx,x1,x2,y,color,dash=[9,7],lw=2){
-  ctx.save();ctx.beginPath();ctx.setLineDash(dash);ctx.strokeStyle=color;ctx.lineWidth=lw;ctx.moveTo(x1,y);ctx.lineTo(x2,y);ctx.stroke();ctx.restore();
+  ctx.save();ctx.beginPath();ctx.setLineDash(normalizeCanvasDashV365(dash));ctx.strokeStyle=color;ctx.lineWidth=lw;ctx.moveTo(x1,y);ctx.lineTo(x2,y);ctx.stroke();ctx.restore();
 }
 
 function drawLeftLevelLabelsV3329(ctx,items,labelX,labelRight,plotX,minY,maxY){
@@ -17594,8 +17611,239 @@ function stockScenarioTextsV3328(st){
   ];
 }
 
+
+
+/* ========================================================================
+   V3.6.5.1｜真實逐日日K繪圖層（圖片限定）
+   - 個股：dailySeries完整時，畫真實K棒＋量能＋MA20＋A/B/C＋三叉戟壓／撐／預。
+   - 大盤：只在未來資料端回傳完整逐日OHLCV時自動啟用；否則安全退回示意圖。
+   - 不修改 pivot-abc-v2.4、ABC、Fib、N字核心。
+   ======================================================================== */
+
+function dateKeyV365(v){
+  if(v===null||v===undefined||v==="")return "";
+  if(typeof v==="number"&&Number.isFinite(v)){
+    const ms=v>1e12?v:v>1e9?v*1000:null;
+    if(ms){const d=new Date(ms);if(!Number.isNaN(d.getTime()))return `${d.getUTCFullYear()}${String(d.getUTCMonth()+1).padStart(2,"0")}${String(d.getUTCDate()).padStart(2,"0")}`;}
+  }
+  const s=String(v).trim();
+  const m=s.match(/(\d{4})\D?(\d{1,2})\D?(\d{1,2})/);
+  if(m)return `${m[1]}${String(m[2]).padStart(2,"0")}${String(m[3]).padStart(2,"0")}`;
+  return s.replace(/\D/g,"").slice(0,8);
+}
+
+function dateShortV365(v){
+  const k=dateKeyV365(v);
+  return k.length>=8?`${k.slice(4,6)}/${k.slice(6,8)}`:safeV3328(v,"");
+}
+
+function movingAverageAlignedV365(bars,period=20){
+  const out=new Array(bars.length).fill(null);
+  let sum=0;
+  for(let i=0;i<bars.length;i++){
+    sum+=bars[i].close;
+    if(i>=period)sum-=bars[i-period].close;
+    if(i>=period-1)out[i]=sum/period;
+  }
+  return out;
+}
+
+function findBarIndexByDateV365(bars,date){
+  const key=dateKeyV365(date);if(!key)return -1;
+  for(let i=0;i<bars.length;i++)if(dateKeyV365(bars[i].date)===key)return i;
+  return -1;
+}
+
+function selectStockChartBarsV365(report,st){
+  const all=normalizeDailyBarsV361(report);
+  if(all.length<20)return {all,bars:[],start:0,ma20:[]};
+  const preferred=80,maxBars=120;
+  let start=Math.max(0,all.length-preferred);
+  const abcDates=[st?.s?.fib?.ADate,st?.s?.fib?.BDate,st?.s?.fib?.CDate].filter(Boolean);
+  const idxs=abcDates.map(d=>findBarIndexByDateV365(all,d)).filter(i=>i>=0);
+  if(idxs.length){
+    const earliest=Math.min(...idxs);
+    if(earliest<start&&all.length-earliest<=maxBars)start=earliest;
+  }
+  start=Math.max(start,all.length-maxBars);
+  return {all,bars:all.slice(start),start,ma20:movingAverageAlignedV365(all,20)};
+}
+
+function normalizeMarketDailyBarsV365(data){
+  // 依第三優先規格：只有完整逐日OHLCV才啟用大盤真實K圖。
+  return normalizeDailyBarsV361(data);
+}
+
+function drawChartGridV365(ctx,x,y,w,h,minV,maxV,unit="元"){
+  const P=infoPaletteV3328();
+  for(let i=0;i<=4;i++){
+    const yy=y+h*(i/4),value=maxV-(maxV-minV)*(i/4);
+    drawDividerV3328(ctx,x,yy,x+w,P.line,[4,6]);
+    fontV3328(ctx,12,700,P.muted);ctx.fillText(`${fmt(value)}${unit==="點"?"":""}`,x+4,yy-5);
+  }
+}
+
+function drawAbcKMarkerV365(ctx,x,y,key,color,anchor="above"){
+  const P=infoPaletteV3328();
+  ctx.save();ctx.fillStyle="#fff";ctx.strokeStyle=color;ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(x,y,6,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.restore();
+  const boxY=anchor==="below"?y+11:y-35;
+  rrV3328(ctx,x-15,boxY,30,24,6,"rgba(255,255,255,.96)",color,1.5);
+  fontV3328(ctx,14,950,color,"center");ctx.fillText(key,x,boxY+18);
+}
+
+function drawRealKCoreV365(ctx,bars,all,start,ma20,opts){
+  const P=infoPaletteV3328();
+  const x=opts.x,y=opts.y,w=opts.w,h=opts.h,volY=opts.volY,volH=opts.volH,unit=opts.unit||"元";
+  const trident=opts.trident||null;
+  let rawMin=Math.min(...bars.map(b=>b.low)),rawMax=Math.max(...bars.map(b=>b.high));
+  let range=Math.max(rawMax-rawMin,Math.abs(rawMax)*.01,1);
+  const extras=[];
+  [opts.A,opts.B,opts.C,opts.close,opts.ma20Now,trident?.pressure?.value,trident?.support?.value,trident?.preparatory?.value].forEach(v=>{v=n(v);if(v!==null&&v>=rawMin-range*.15&&v<=rawMax+range*.15)extras.push(v);});
+  if(extras.length){rawMin=Math.min(rawMin,...extras);rawMax=Math.max(rawMax,...extras);range=Math.max(rawMax-rawMin,1);}
+  const pad=range*.06;const minV=rawMin-pad,maxV=rawMax+pad;
+  const yPrice=v=>chartYV3328(v,minV,maxV,y,h);
+  drawChartGridV365(ctx,x,y,w,h,minV,maxV,unit);
+  const step=w/bars.length,bodyW=Math.max(2.4,Math.min(8,step*.62));
+  const maxVol=Math.max(1,...bars.map(b=>b.volume||0));
+
+  // 量能柱
+  bars.forEach((b,i)=>{
+    const cx=x+(i+.5)*step;
+    const vh=Math.max(1,(b.volume/maxVol)*volH);
+    const up=b.close>b.open,down=b.close<b.open;
+    ctx.save();ctx.globalAlpha=.62;ctx.fillStyle=up?P.red:down?P.green:P.muted;ctx.fillRect(cx-bodyW/2,volY+volH-vh,bodyW,vh);ctx.restore();
+  });
+  drawDividerV3328(ctx,x,volY+volH,x+w,P.line);
+
+  // K棒：台股慣例紅漲綠跌
+  bars.forEach((b,i)=>{
+    const cx=x+(i+.5)*step,yo=yPrice(b.open),yc=yPrice(b.close),yh=yPrice(b.high),yl=yPrice(b.low);
+    const up=b.close>b.open,down=b.close<b.open,color=up?P.red:down?P.green:P.muted;
+    ctx.save();ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=Math.max(1,bodyW*.18);ctx.beginPath();ctx.moveTo(cx,yh);ctx.lineTo(cx,yl);ctx.stroke();
+    const top=Math.min(yo,yc),bh=Math.max(1.5,Math.abs(yc-yo));ctx.fillRect(cx-bodyW/2,top,bodyW,bh);ctx.restore();
+  });
+
+  // MA20
+  ctx.save();ctx.strokeStyle=P.blue2;ctx.lineWidth=2.6;ctx.beginPath();let started=false;
+  bars.forEach((b,i)=>{const g=start+i,m=n(ma20[g]);if(m===null)return;const px=x+(i+.5)*step,py=yPrice(m);if(!started){ctx.moveTo(px,py);started=true;}else ctx.lineTo(px,py);});
+  if(started)ctx.stroke();ctx.restore();
+  fontV3328(ctx,13,900,P.blue2);ctx.fillText("MA20",x+8,y+20);
+
+  // 現價 / B / 三叉戟水平線
+  const lineIfVisible=(v,color,dash,lw=2)=>{v=n(v);if(v===null||v<minV||v>maxV)return null;const yy=yPrice(v);drawPlainLevelV3329(ctx,x,x+w,yy,color,dash,lw);return yy;};
+  const labels=[];
+  const addLabel=(v,text,color,dash,lw)=>{const yy=lineIfVisible(v,color,dash,lw);if(yy!==null)labels.push({y:yy,text,color});};
+  addLabel(opts.close,`${unit==="點"?"現價":"現價"} ${fmt(opts.close)}`,P.red,[4,4],2.4);
+  addLabel(opts.B,`B ${fmt(opts.B)}`,P.orange,[10,6],2.1);
+  if(trident?.pressure)addLabel(trident.pressure.value,`壓 ${fmt(trident.pressure.value)}`,"#d97706",[11,5],2.5);
+  if(trident?.support)addLabel(trident.support.value,`撐 ${fmt(trident.support.value)}`,"#0ea5e9",[8,5],2.5);
+  if(trident?.preparatory)addLabel(trident.preparatory.value,`預 ${fmt(trident.preparatory.value)}`,"#ec4899",[6,5],2.3);
+
+  // ABC依實際日期定位
+  const markers=[
+    {key:"A",date:opts.ADate,value:opts.A,color:P.green,anchor:"above"},
+    {key:"B",date:opts.BDate,value:opts.B,color:P.orange,anchor:"above"},
+    {key:"C",date:opts.CDate,value:opts.C,color:P.blue2,anchor:"below"}
+  ];
+  markers.forEach(m=>{
+    const gi=findBarIndexByDateV365(all,m.date);if(gi<start||gi>=start+bars.length||n(m.value)===null)return;
+    const i=gi-start,px=x+(i+.5)*step,py=yPrice(m.value);if(py>=y-5&&py<=y+h+5)drawAbcKMarkerV365(ctx,px,py,m.key,m.color,m.anchor);
+  });
+
+  // 右側避讓價位標籤
+  if(labels.length&&opts.labelX&&opts.labelW)drawRightKeyLabelsV3329(ctx,labels,x+w,opts.labelX,opts.labelW,y+8,y+h-8);
+
+  // 日期刻度
+  const ticks=[0,Math.floor((bars.length-1)/3),Math.floor((bars.length-1)*2/3),bars.length-1];
+  ticks.forEach((i,ti)=>{const px=x+(i+.5)*step;drawDividerV3328(ctx,px,volY+volH+2,px,volY+volH+7,P.line);fontV3328(ctx,11,700,P.muted,ti===0?"left":ti===ticks.length-1?"right":"center");ctx.fillText(dateShortV365(bars[i]?.date),px,volY+volH+22);});
+  return {minV,maxV,step};
+}
+
+function drawTridentPlainLegendV365(ctx,t,x,y,w){
+  const P=infoPaletteV3328();
+  const hasPrep=!!t?.preparatory;
+  const rows=hasPrep?[
+    ["壓","漲到這裡容易被賣壓卡住","#d97706"],
+    ["撐","跌到這裡要觀察能不能守住","#0ea5e9"],
+    ["預","如果撐不住，下面還有一條備用防線","#ec4899"]
+  ]:[
+    ["壓","漲到這裡容易被賣壓卡住","#d97706"],
+    ["撐","跌到這裡要觀察能不能守住","#0ea5e9"]
+  ];
+  const gap=hasPrep?19:22;
+  rows.forEach((r,i)=>{fontV3328(ctx,13,950,r[2]);ctx.fillText(`${r[0]}：`,x,y+i*gap);fontV3328(ctx,13,750,P.text);ctx.fillText(r[1],x+40,y+i*gap);});
+}
+
+function drawStockTopChartV365(ctx,report,st){
+  const P=infoPaletteV3328();
+  rrV3328(ctx,560,174,1016,520,14,P.white,P.blue,2);
+  const selected=selectStockChartBarsV365(report,st);
+  const t=st.trident361;
+  if(selected.bars.length>=20){
+    drawCardTitleV3328(ctx,586,213,`真實日K｜最近 ${selected.bars.length} 根＋量能＋日20MA`,P.navy,27);
+    fontV3328(ctx,15,700,P.muted);ctx.fillText("紅K＝上漲、綠K＝下跌｜A/B/C依實際日期定位｜三叉戟直接畫在價位上",586,242);
+    drawRealKCoreV365(ctx,selected.bars,selected.all,selected.start,selected.ma20,{
+      x:604,y:270,w:744,h:258,volY:542,volH:72,labelX:1370,labelW:176,unit:"元",
+      A:st.A,B:st.B,C:st.C,close:st.close,ma20Now:st.ma,
+      ADate:st.s.fib.ADate,BDate:st.s.fib.BDate,CDate:st.s.fib.CDate,trident:t
+    });
+    drawTridentPlainLegendV365(ctx,t,604,t?.preparatory?654:662,720);
+  }else{
+    drawCardTitleV3328(ctx,586,215,"結構示意圖｜逐日OHLCV不足",P.navy,28);
+    fontV3328(ctx,16,700,P.muted);ctx.fillText("未取得至少20根完整日K時不假裝畫真實K線；部署含dailySeries的個股Worker後會自動升級。",586,246);
+    const gx=748,gy=300,gw=550,gh=286,plotRight=gx+gw;
+    const vals=[st.A,st.B,st.C,st.close,st.ma];const nums=vals.map(n).filter(v=>v!==null);let minV=Math.min(...nums),maxV=Math.max(...nums);if(!Number.isFinite(minV)||!Number.isFinite(maxV)||minV===maxV){minV=0;maxV=1;}const pad=Math.max((maxV-minV)*.1,Math.abs(maxV)*.02||1);minV-=pad;maxV+=pad;
+    if(st.ma!==null)drawPlainLevelV3329(ctx,gx,plotRight,chartYV3328(st.ma,minV,maxV,gy,gh),P.blue2,[6,5],2);
+    if(st.B!==null)drawPlainLevelV3329(ctx,gx,plotRight,chartYV3328(st.B,minV,maxV,gy,gh),P.orange,[12,6],2);
+    const xA=gx+40,xB=gx+210,xC=gx+365,xN=gx+520;
+    const yA=chartYV3328(st.A,minV,maxV,gy,gh),yB=chartYV3328(st.B,minV,maxV,gy,gh),yC=chartYV3328(st.C,minV,maxV,gy,gh),yN=chartYV3328(st.close,minV,maxV,gy,gh);
+    ctx.save();ctx.strokeStyle=P.green2;ctx.lineWidth=4;ctx.beginPath();if(st.A!==null){ctx.moveTo(xA,yA);if(st.B!==null)ctx.lineTo(xB,yB);if(st.C!==null){ctx.lineTo(xC,yC);ctx.lineTo(xN,yN);}else if(st.close!==null){ctx.setLineDash([10,8]);ctx.lineTo(xN,yN);}}ctx.stroke();ctx.restore();
+    if(st.A!==null)drawPointV3328(ctx,xA,yA,"A",dateCompactV3328(st.s.fib.ADate),P.green);if(st.B!==null)drawPointV3328(ctx,xB,yB,"B",dateCompactV3328(st.s.fib.BDate),P.orange);if(st.C!==null)drawPointV3328(ctx,xC,yC,"C",dateCompactV3328(st.s.fib.CDate),P.blue2);else{fontV3328(ctx,19,900,P.blue2,"center");ctx.fillText("C 尚未形成",xC,gy+gh-14);}if(st.close!==null)drawPointV3328(ctx,xN,yN,"現價","",P.red);
+    drawTridentPlainLegendV365(ctx,t,586,638,760);
+  }
+}
+
+function selectMarketChartBarsV365(data,st){
+  const all=normalizeMarketDailyBarsV365(data);
+  if(all.length<20)return {all,bars:[],start:0,ma20:[]};
+  const maxBars=120,preferred=80;let start=Math.max(0,all.length-preferred);
+  const dates=[st?.fib?.ADate,st?.fib?.BDate,st?.fib?.CDate].filter(Boolean);
+  const idxs=dates.map(d=>findBarIndexByDateV365(all,d)).filter(i=>i>=0);if(idxs.length){const earliest=Math.min(...idxs);if(earliest<start&&all.length-earliest<=maxBars)start=earliest;}
+  start=Math.max(start,all.length-maxBars);
+  return {all,bars:all.slice(start),start,ma20:movingAverageAlignedV365(all,20)};
+}
+
+function drawMarketTopChartV365(ctx,data,st){
+  const P=infoPaletteV3328();
+  rrV3328(ctx,560,174,1016,520,14,P.white,P.blue,2);
+  const selected=selectMarketChartBarsV365(data,st);
+  const t=st.trident365||tridentEngineV361(data);
+  if(selected.bars.length>=20){
+    drawCardTitleV3328(ctx,586,213,`真實大盤日K｜最近 ${selected.bars.length} 根＋量能＋MA20＋三叉戟`,P.navy,26);
+    fontV3328(ctx,14,700,P.muted);ctx.fillText("紅K＝上漲、綠K＝下跌｜大盤量能＝TWSE市場成交股數｜A/B/C依實際日期定位",586,241);
+    drawRealKCoreV365(ctx,selected.bars,selected.all,selected.start,selected.ma20,{
+      x:604,y:267,w:744,h:238,volY:516,volH:54,labelX:1370,labelW:176,unit:"點",
+      A:st.A,B:st.B,C:st.C,close:st.close,ma20Now:st.ma20,
+      ADate:st.fib.ADate,BDate:st.fib.BDate,CDate:st.fib.CDate,trident:t
+    });
+    drawTridentPlainLegendV365(ctx,t,604,t?.preparatory?626:636,744);
+  }else{
+    drawCardTitleV3328(ctx,586,215,"結構示意圖｜大盤逐日OHLCV尚未到位",P.navy,27);
+    fontV3328(ctx,15,700,P.muted);ctx.fillText("目前大盤資料端未回傳完整逐日OHLCV，因此不硬畫真實K圖；未來一旦有dailySeries會自動切換。",586,244);
+    const gx=758,gy=292,gw=526,gh=330,plotRight=gx+gw;
+    const vals=[st.A,st.B,st.C,st.close,st.ma5,st.ma10,st.ma20,st.ma60,...Object.values(st.ret||{})];const nums=vals.map(n).filter(v=>v!==null);let minV=Math.min(...nums),maxV=Math.max(...nums);if(!Number.isFinite(minV)||!Number.isFinite(maxV)||minV===maxV){minV=0;maxV=1;}const pad=Math.max((maxV-minV)*.08,Math.abs(maxV)*.015||1);minV-=pad;maxV+=pad;
+    if(st.B!==null)drawPlainLevelV3329(ctx,gx,plotRight,chartYV3328(st.B,minV,maxV,gy,gh),P.orange,[12,6],2);
+    if(st.ma20!==null)drawPlainLevelV3329(ctx,gx,plotRight,chartYV3328(st.ma20,minV,maxV,gy,gh),P.blue2,[6,5],2);
+    const xA=gx+36,xB=gx+210,xC=gx+366,xNow=gx+500,yA=chartYV3328(st.A,minV,maxV,gy,gh),yB=chartYV3328(st.B,minV,maxV,gy,gh),yC=chartYV3328(st.C,minV,maxV,gy,gh),yNow=chartYV3328(st.close,minV,maxV,gy,gh);
+    ctx.save();ctx.strokeStyle=P.green2;ctx.lineWidth=4;ctx.beginPath();if(st.A!==null){ctx.moveTo(xA,yA);if(st.B!==null)ctx.lineTo(xB,yB);if(st.C!==null){ctx.lineTo(xC,yC);ctx.lineTo(xNow,yNow);}else if(st.close!==null){ctx.setLineDash([10,8]);ctx.lineTo(xNow,yNow);}}ctx.stroke();ctx.restore();
+    if(st.A!==null)drawPointV3328(ctx,xA,yA,"A",dateCompactV3328(st.fib.ADate),P.green);if(st.B!==null)drawPointV3328(ctx,xB,yB,"B",dateCompactV3328(st.fib.BDate),P.orange);if(st.C!==null)drawPointV3328(ctx,xC,yC,"C",dateCompactV3328(st.fib.CDate),P.blue2);else{fontV3328(ctx,20,900,P.blue2,"center");ctx.fillText("C 尚未形成",xC,gy+gh-18);}if(st.close!==null)drawPointV3328(ctx,xNow,yNow,"現價","",P.red);
+    const keys=[];const add=(v,t,c)=>{v=n(v);if(v!==null)keys.push({y:chartYV3328(v,minV,maxV,gy,gh),text:t,color:c});};add(st.close,`現價 ${fmt(st.close)}`,P.red);add(st.B,`B ${fmt(st.B)}`,P.orange);add(st.ma20,`MA20 ${fmt(st.ma20)}`,P.blue2);drawRightKeyLabelsV3329(ctx,keys,plotRight,1304,244,gy+18,gy+gh-8);
+    fontV3328(ctx,14,700,P.muted);ctx.fillText("※ 請部署新版大盤Worker（TAIEX OHLC＋FMTQIK市場成交股數）後，自動啟用真實大盤K線與三叉戟。",586,676);
+  }
+}
+
 function renderStockInfographicV3328(report){
-  // V3.6.4｜沿用 V3.4.7 iPhone 12 Pro Max 滿版個股模組：1152×2048（9:16）
+  // V3.6.5.1｜沿用 V3.4.7 iPhone 12 Pro Max 滿版個股模組：1152×2048（9:16）
   // 新增市場階段／突破生命週期／突破品質2.0／價帶／動態防守；Canvas尺寸與ABC/Fib/N字公式完全不變。
   const P=infoPaletteV3328(),st=stockInfographicStateV3328(report);
   const STOCK_W=1152,STOCK_H=2048,LOG_W=1600,LOG_H=2844,SCALE=STOCK_W/LOG_W;
@@ -17612,7 +17860,7 @@ function renderStockInfographicV3328(report){
   fontV3328(ctx,22,900,"#fff","center");ctx.fillText("報告製作 By.石頭少爺",1402,52);
   fontV3328(ctx,18,800,"#fff","center");ctx.fillText("圖片產生時間",1402,83);
   fontV3328(ctx,19,900,"#fff","center");ctx.fillText(reportGeneratedAt().replace("（台灣時間）",""),1402,115);
-  fontV3328(ctx,16,700,"#dbeafe","center");ctx.fillText("V3.6.4｜超白話進出場固定句型版",1402,141);
+  fontV3328(ctx,16,700,"#dbeafe","center");ctx.fillText("V3.6.5.1｜真實日K細緻圖＋大盤三叉戟修復版",1402,141);
 
   // ===== 上半部：ABC + 結構示意圖 =====
   rrV3328(ctx,24,174,520,520,14,P.white,P.blue,2);
@@ -17625,25 +17873,9 @@ function renderStockInfographicV3328(report){
   drawAbcValueRowV3329(ctx,48,608,466,"C",P.blue2,"回檔低點",st.C,st.s.fib.CDate);
   rrV3328(ctx,48,660,466,27,8,P.paleBlue,null);fontV3328(ctx,16,900,P.navy);ctx.fillText(stockInfographicProgressV3329(st),58,679);
 
-  rrV3328(ctx,560,174,1016,520,14,P.white,P.blue,2);
-  drawCardTitleV3328(ctx,586,215,"結構示意圖｜非實際K線",P.navy,28);
-  fontV3328(ctx,16,700,P.muted);ctx.fillText("主圖以ABC／Fib／現價／目標尺度呈現；月20MA另列，不代表實際逐日K棒。",586,246);
-  const gx=758,gy=284,gw=526,gh=338,plotRight=gx+gw;
-  const vals=[st.A,st.B,st.C,st.close,st.ma];if(st.ab)vals.push(...Object.values(st.ab.levels));if(st.fixed)vals.push(st.fixed.p);if(st.target)vals.push(st.target);
-  const nums=vals.map(n).filter(v=>v!==null);let minV=Math.min(...nums),maxV=Math.max(...nums);if(!Number.isFinite(minV)||!Number.isFinite(maxV)||minV===maxV){minV=0;maxV=1;}const pad=Math.max((maxV-minV)*.08,Math.abs(maxV)*.015||1);minV-=pad;maxV+=pad;
-  const fibItems=[];if(st.ab){[["0.236",P.green],["0.382",P.orange],["0.500",P.muted],["0.618",P.red],["0.764",P.purple]].forEach(([k,c])=>{const v=n(st.ab.levels[k]);if(v!==null){const yy=chartYV3328(v,minV,maxV,gy,gh);drawPlainLevelV3329(ctx,gx,plotRight,yy,c,[8,6],1.7);fibItems.push({y:yy,text:`${k}  ${fmt(v)}`,color:c});}});}drawLeftLevelLabelsV3329(ctx,fibItems,586,742,gx,gy+16,gy+gh-8);
-  if(st.ma!==null)drawPlainLevelV3329(ctx,gx,plotRight,chartYV3328(st.ma,minV,maxV,gy,gh),P.blue2,[6,5],2);
-  if(st.B!==null)drawPlainLevelV3329(ctx,gx,plotRight,chartYV3328(st.B,minV,maxV,gy,gh),P.orange,[12,6],2);
-  if(st.fixed&&n(st.fixed.p)!==null)drawPlainLevelV3329(ctx,gx,plotRight,chartYV3328(st.fixed.p,minV,maxV,gy,gh),P.navy,[11,7],2);
-  if(st.nStatus==="confirmed"&&st.target!==null)drawPlainLevelV3329(ctx,gx,plotRight,chartYV3328(st.target,minV,maxV,gy,gh),P.purple,[10,6],2.2);
-  const xA=gx+36,xB=gx+210,xC=gx+366,xNow=gx+500;
-  const yA=chartYV3328(st.A,minV,maxV,gy,gh),yB=chartYV3328(st.B,minV,maxV,gy,gh),yC=chartYV3328(st.C,minV,maxV,gy,gh),yNow=chartYV3328(st.close,minV,maxV,gy,gh);
-  ctx.save();ctx.strokeStyle=P.green2;ctx.lineWidth=4;ctx.beginPath();if(st.A!==null){ctx.moveTo(xA,yA);if(st.B!==null)ctx.lineTo(xB,yB);if(st.C!==null){ctx.lineTo(xC,yC);ctx.lineTo(xNow,yNow);}else if(st.close!==null){ctx.setLineDash([10,8]);ctx.lineTo(xNow,yNow);}}ctx.stroke();ctx.restore();
-  if(st.A!==null)drawPointV3328(ctx,xA,yA,"A",dateCompactV3328(st.s.fib.ADate),P.green);if(st.B!==null)drawPointV3328(ctx,xB,yB,"B",dateCompactV3328(st.s.fib.BDate),P.orange);if(st.C!==null)drawPointV3328(ctx,xC,yC,"C",dateCompactV3328(st.s.fib.CDate),P.blue2);else{fontV3328(ctx,21,900,P.blue2,"center");ctx.fillText("C 尚未形成",xC,gy+gh-18);}if(st.close!==null)drawPointV3328(ctx,xNow,yNow,"現價","",P.red);
-  const keyItems=[],addKey=(value,text,color)=>{const v=n(value);if(v!==null)keyItems.push({y:chartYV3328(v,minV,maxV,gy,gh),text,color});};if(st.nStatus==="confirmed")addKey(st.target,`1.618  ${fmt(st.target)}`,P.purple);if(st.fixed&&st.monthlyStatus==="PASS")addKey(st.fixed.p,`${st.fixed.m}×  ${fmt(st.fixed.p)}${st.fixedReclaim.crossed?"｜待站回":""}`,P.navy);addKey(st.close,`現價  ${fmt(st.close)}`,P.red);addKey(st.B,`B  ${fmt(st.B)}`,P.orange);addKey(st.ma,`日20MA  ${fmt(st.ma)}`,P.blue2);if(st.C!==null)addKey(st.C,`C  ${fmt(st.C)}`,P.blue2);drawRightKeyLabelsV3329(ctx,keyItems,plotRight,1304,244,gy+18,gy+gh-8);
-  if(st.monthMa!==null){fontV3328(ctx,16,800,P.green2);ctx.fillText(`月20MA ${fmt(st.monthMa)} 元｜中長期趨勢（另列，不納入主圖比例）`,586,672);}else{fontV3328(ctx,16,700,P.muted);ctx.fillText("月20MA：資料不足",586,672);}
+  drawStockTopChartV365(ctx,report,st);
 
-  // ===== 六張指標卡：V3.6.4 沿用「長週期＋市場階段＋短趨勢／突破狀態＋量價＋品質」 =====
+  // ===== 六張指標卡：V3.6.5.1 沿用「長週期＋市場階段＋短趨勢／突破狀態＋量價＋品質」 =====
   const cardsX=24,cardsY=714,gap=12,cw=(1552-gap*2)/3,ch=160,rowGap=12;
   drawMetricCardV3328(ctx,cardsX,cardsY,cw,ch,"月線狀態",st.monthlyMeta.label,st.monthlyStatus==="PASS"?`月20MA ${fmt(st.monthMa)} 元`:st.monthlyMeta.short,"green");
   drawMetricCardV3328(ctx,cardsX+cw+gap,cardsY,cw,ch,"市場階段",`${st.marketPhase360.icon} ${st.marketPhase360.label}`,`證據信心 ${st.marketPhase360.confidence}`,st.marketPhase360.icon==="🔴"||st.marketPhase360.icon==="⚠️"?"red":"blue");
@@ -17653,7 +17885,7 @@ function renderStockInfographicV3328(report){
   drawMetricCardV3328(ctx,cardsX+cw+gap,cardsY2,cw,ch,"量價位置",`${st.volumePosition.icon} ${st.volumePosition.label}`,st.vol===null?"相對量資料不足":`相對量 ${fmt(st.vol,2)} 倍`,st.volumePosition.icon==="⚠️"?"red":"orange");
   drawMetricCardV3328(ctx,cardsX+(cw+gap)*2,cardsY2,cw,ch,"突破品質2.0",breakoutQualityBadgeV360(st.breakoutQuality360),st.breakoutQuality360.key==="WAIT"?"突破後才評分":`覆蓋 ${st.breakoutQuality360.coverageLabel}｜0–10分≠勝率`,"purple");
 
-  // ===== A. 價格作戰地圖：V3.6.4 每個價位同步顯示強弱＋持有／空手固定句型決策 =====
+  // ===== A. 價格作戰地圖：V3.6.5.1 每個價位同步顯示強弱＋持有／空手固定句型決策 =====
   const mapY=1062,mapH=744;
   rrV3328(ctx,24,mapY,1552,mapH,14,P.white,P.blue,2);drawCardTitleV3328(ctx,46,mapY+42,"A. 價格作戰地圖｜固定句型快速判讀（可進／續抱／減碼／退出）",P.navy,26);
   fontV3328(ctx,16,750,P.muted);ctx.fillText("每一列固定顯示：強弱｜持有者動作｜空手者動作；由高到低排列。",48,mapY+70);
@@ -17681,7 +17913,7 @@ function renderStockInfographicV3328(report){
   const qPlus=q360?.positive?.[0]||"尚無足夠加分證據";
   const qRisk=q360?.risk?.[0]||"目前未見主要扣分證據";
   const plain362=stockPlainActionV362(st);
-  const bullets=[`🚦 現在：${plain362.bias.icon} ${plain362.bias.label}｜一句話：${plain362.summary}`,`👤 空手者：${plain362.nonHolderAction}｜${plain362.nonHolderNote}`,`💼 持有者：${plain362.holderAction}｜${plain362.holderNote}`,`${st.breakoutLife360.icon} 突破：${st.breakoutLife360.label}｜${st.breakoutLife360.progress}`,`${q360.icon} 品質：${q360.key==="WAIT"?q360.label:`${q360.label}｜${q360.scoreText}`}｜${qPlus}`,`⚠️ 主要風險：${qRisk}`,`${st.volumePosition.icon} 量價：${st.volumePosition.label}${st.vol!==null?`｜${fmt(st.vol,2)}倍`:""}｜RSI ${st.rsi===null?"-":fmt(st.rsi)}`,b360?.resistance?`⬆️ 壓力：${b360.resistance.text}｜${b360.resistance.strength}`:(cUp?`⬆️ 壓力：${fmt(cUp.avg)} 元｜${cUp.strength}`:(up?`⬆️ 壓力：${up.label} ${fmt(up.value)} 元`:"⬆️ 壓力：等待新關卡")),b360?.support?`⬇️ 支撐：${b360.support.text}｜${b360.support.strength}`:(cDown?`⬇️ 支撐：${fmt(cDown.avg)} 元｜${cDown.strength}`:(down?`⬇️ 支撐：${down.label} ${fmt(down.value)} 元`:"⬇️ 支撐：依MA20與新結構")),d360?.first?`🛡️ 減碼／退出防守：${fmt(d360.first.level)} 元｜${d360.first.label}`:"🛡️ 出場／減碼防守：等待可驗證價位",tridentImageTextV361(st.trident361)];
+  const bullets=[`🚦 現在：${plain362.bias.icon} ${plain362.bias.label}｜一句話：${plain362.summary}`,`👤 空手者：${plain362.nonHolderAction}｜${plain362.nonHolderNote}`,`💼 持有者：${plain362.holderAction}｜${plain362.holderNote}`,`${st.breakoutLife360.icon} 突破：${st.breakoutLife360.label}｜${st.breakoutLife360.progress}`,`${q360.icon} 品質：${q360.key==="WAIT"?q360.label:`${q360.label}｜${q360.scoreText}`}｜${qPlus}`,`⚠️ 主要風險：${qRisk}`,`${st.volumePosition.icon} 量價：${st.volumePosition.label}${st.vol!==null?`｜${fmt(st.vol,2)}倍`:""}｜RSI ${st.rsi===null?"-":fmt(st.rsi)}`,b360?.resistance?`⬆️ 壓力：${b360.resistance.text}｜${b360.resistance.strength}`:(cUp?`⬆️ 壓力：${fmt(cUp.avg)} 元｜${cUp.strength}`:(up?`⬆️ 壓力：${up.label} ${fmt(up.value)} 元`:"⬆️ 壓力：等待新關卡")),b360?.support?`⬇️ 支撐：${b360.support.text}｜${b360.support.strength}`:(cDown?`⬇️ 支撐：${fmt(cDown.avg)} 元｜${cDown.strength}`:(down?`⬇️ 支撐：${down.label} ${fmt(down.value)} 元`:"⬇️ 支撐：依MA20與新結構")),d360?.first?`🛡️ 減碼／退出防守：${fmt(d360.first.level)} 元｜${d360.first.label}`:"🛡️ 出場／減碼防守：等待可驗證價位",tridentImageTextV361(st.trident361),st.trident361?.preparatory?"📝 預：如果撐不住，下面還有一條備用防線":"📝 三叉戟：壓＝漲到這裡容易被賣壓卡住｜撐＝跌到這裡要觀察能不能守住"];
   let ky=lowerY+94;bullets.forEach(b=>{ky=drawWrapV3328(ctx,`• ${b}`,824,ky,720,33,2,{size:20,weight:750,color:P.text})+14;});
   if(ky<lowerY+lowerH-106)drawWrapV3328(ctx,`🎯 下一步：${st.breakoutLife360?.next||st.machine.trigger}`,824,ky+4,720,28,2,{size:18,weight:850,color:P.navy});
   drawWrapV3328(ctx,"⚠️ 圖中的可進／續抱／減碼／退出，只是把目前技術條件翻成固定句型的白話風控，不保證漲跌；實際交易仍須自行承擔風險。",824,lowerY+lowerH-54,720,28,2,{size:18,weight:800,color:P.red});
@@ -17704,12 +17936,18 @@ function marketInfographicStateV3328(data){
   return {
     fib,ret,nStatus,nPhase,env:marketEnvironmentMetaV3310(data),pos:marketPositionMetaV3310(data),action:marketActionMetaV3310(data),
     close:n(data?.close),A:n(fib.A),B:n(fib.B),C:n(fib.C),ma5:n(data?.ma5),ma10:n(data?.ma10),ma20:n(data?.ma20),ma60:n(data?.ma60),
-    rsi:n(data?.dailyRsi5),slope:n(data?.ma20Slope5Pct),gap:n(data?.ma20GapPct),change:n(data?.change),changePct:n(data?.changePct)
+    rsi:n(data?.dailyRsi5),slope:n(data?.ma20Slope5Pct),gap:n(data?.ma20GapPct),change:n(data?.change),changePct:n(data?.changePct),
+    dailySeriesReadyV365:normalizeMarketDailyBarsV365(data).length>=20,
+    trident365:tridentEngineV361(data)
   };
 }
 
 function buildMarketMapItemsV3328(data,st){
   const items=[],add=(v,l,c)=>{v=n(v);if(v!==null)items.push({value:v,label:l,color:c});};
+  const t=st.trident365||tridentEngineV361(data);
+  if(t?.pressure)add(t.pressure.value,"🔱 壓｜漲到這裡容易被賣壓卡住","#d97706");
+  if(t?.support)add(t.support.value,"🔱 撐｜跌到這裡要觀察能不能守住","#0ea5e9");
+  if(t?.preparatory)add(t.preparatory.value,"🔱 預｜如果撐不住，下面還有一條備用防線","#ec4899");
   add(st.B,"B前波高點｜未來突破關卡","#ea580c");add(st.ma10,"MA10｜短線反彈關卡","#dc2626");add(st.close,"目前收盤","#dc2626");add(st.ma5,"MA5｜短線反彈關卡","#ea580c");add(st.ma60,"MA60｜中期參考","#6d28d9");
   add(st.ret?.["0.236"],"0.236｜極淺回檔","#137333");add(st.ma20,"MA20｜中期趨勢健康度","#1d4ed8");add(st.ret?.["0.382"],"0.382｜淺回檔","#ea580c");add(st.ret?.["0.500"],"0.500｜中段回檔","#475467");add(st.ret?.["0.618"],"0.618｜中深回檔","#dc2626");add(st.ret?.["0.764"],"0.764｜深度風控","#6d28d9");add(st.A,"A起漲點｜長週期失效觀察","#137333");
   return items.sort((a,b)=>b.value-a.value);
@@ -17758,7 +17996,7 @@ function renderMarketInfographicV3328(data){
   rrV3328(ctx,2,2,1596,2396,18,P.white,P.blue,3);
   drawHeaderTitleV3328(ctx,"📈 大盤先懂","現在市場走到哪一步？");
   rrV3328(ctx,26,82,1190,72,10,P.navy,null);fontV3328(ctx,31,900,"#facc15");ctx.fillText("臺灣加權股價指數（TAIEX）",48,128);fontV3328(ctx,24,800,"#fff");ctx.fillText(`｜最新交易日 ${datefmt(data.closeDate)}｜資料來源：${data.source||"TWSE Official"}`,500,128);
-  rrV3328(ctx,1232,18,340,136,12,P.navy,null);fontV3328(ctx,22,900,"#fff","center");ctx.fillText("報告製作 By.石頭少爺",1402,52);fontV3328(ctx,18,800,"#fff","center");ctx.fillText("圖片產生時間",1402,83);fontV3328(ctx,19,900,"#fff","center");ctx.fillText(reportGeneratedAt().replace("（台灣時間）",""),1402,115);fontV3328(ctx,17,700,"#dbeafe","center");ctx.fillText("V3.6.4｜大盤環境判讀版",1402,141);
+  rrV3328(ctx,1232,18,340,136,12,P.navy,null);fontV3328(ctx,22,900,"#fff","center");ctx.fillText("報告製作 By.石頭少爺",1402,52);fontV3328(ctx,18,800,"#fff","center");ctx.fillText("圖片產生時間",1402,83);fontV3328(ctx,19,900,"#fff","center");ctx.fillText(reportGeneratedAt().replace("（台灣時間）",""),1402,115);fontV3328(ctx,17,700,"#dbeafe","center");ctx.fillText("V3.6.5.1｜大盤真實日K＋三叉戟版",1402,141);
 
   rrV3328(ctx,24,174,520,520,14,P.white,P.blue,2);drawCardTitleV3328(ctx,48,215,"📖 ABC 是這套分析的核心：",P.navy,30);drawWrapV3328(ctx,"A＝起漲點、B＝前波高點、C＝B回檔後由Pivot規則正式確認的回檔低點。",48,255,468,31,3,{size:21,weight:650,color:P.text});
   drawAbcValueRowV3329(ctx,48,365,466,"A",P.green,"起漲點",st.A,st.fib.ADate,"點");
@@ -17766,15 +18004,7 @@ function renderMarketInfographicV3328(data){
   drawAbcValueRowV3329(ctx,48,481,466,"C",P.blue2,"回檔低點",st.C,st.fib.CDate,"點");
   const progress=marketInfographicProgressV3330(st);drawWrapV3328(ctx,`⏳ 目前進度：${progress.combined}`,48,574,468,29,3,{size:20,weight:850,color:P.navy});drawWrapV3328(ctx,"💡 口訣：A起漲 → B前高 → 等有效C → 再突破B＝完整N字確認。",48,660,468,27,2,{size:19,weight:800,color:P.navy});
 
-  rrV3328(ctx,560,174,1016,520,14,P.white,P.blue,2);drawCardTitleV3328(ctx,586,215,"結構示意圖｜非實際K線",P.navy,28);fontV3328(ctx,16,700,P.muted);ctx.fillText("主圖以ABC、Fib、均線與現價位置示意，不代表實際K棒。",586,246);
-  const gx=758,gy=284,gw=526,gh=338,plotRight=gx+gw;
-  const vals=[st.A,st.B,st.C,st.close,st.ma5,st.ma10,st.ma20,st.ma60,...Object.values(st.ret||{})];const nums=vals.map(n).filter(v=>v!==null);let minV=Math.min(...nums),maxV=Math.max(...nums);if(!Number.isFinite(minV)||!Number.isFinite(maxV)||minV===maxV){minV=0;maxV=1;}const pad=Math.max((maxV-minV)*.08,Math.abs(maxV)*.015||1);minV-=pad;maxV+=pad;
-  const fibItems=[];[["0.236",P.green],["0.382",P.orange],["0.500",P.muted],["0.618",P.red],["0.764",P.purple]].forEach(([k,c])=>{const v=n(st.ret?.[k]);if(v!==null){const yy=chartYV3328(v,minV,maxV,gy,gh);drawPlainLevelV3329(ctx,gx,plotRight,yy,c,[8,6],1.7);fibItems.push({y:yy,text:`${k}  ${fmt(v)}`,color:c});}});drawLeftLevelLabelsV3329(ctx,fibItems,586,742,gx,gy+16,gy+gh-8);
-  if(st.B!==null)drawPlainLevelV3329(ctx,gx,plotRight,chartYV3328(st.B,minV,maxV,gy,gh),P.orange,[12,6],2);
-  if(st.ma20!==null)drawPlainLevelV3329(ctx,gx,plotRight,chartYV3328(st.ma20,minV,maxV,gy,gh),P.blue2,[6,5],2);
-  const xA=gx+36,xB=gx+210,xC=gx+366,xNow=gx+500,yA=chartYV3328(st.A,minV,maxV,gy,gh),yB=chartYV3328(st.B,minV,maxV,gy,gh),yC=chartYV3328(st.C,minV,maxV,gy,gh),yNow=chartYV3328(st.close,minV,maxV,gy,gh);ctx.save();ctx.strokeStyle=P.green2;ctx.lineWidth=4;ctx.beginPath();if(st.A!==null){ctx.moveTo(xA,yA);if(st.B!==null)ctx.lineTo(xB,yB);if(st.C!==null){ctx.lineTo(xC,yC);ctx.lineTo(xNow,yNow);}else if(st.close!==null){ctx.setLineDash([10,8]);ctx.lineTo(xNow,yNow);}}ctx.stroke();ctx.restore();if(st.A!==null)drawPointV3328(ctx,xA,yA,"A",dateCompactV3328(st.fib.ADate),P.green);if(st.B!==null)drawPointV3328(ctx,xB,yB,"B",dateCompactV3328(st.fib.BDate),P.orange);if(st.C!==null)drawPointV3328(ctx,xC,yC,"C",dateCompactV3328(st.fib.CDate),P.blue2);else{fontV3328(ctx,21,900,P.blue2,"center");ctx.fillText("C 尚未形成",xC,gy+gh-18);}if(st.close!==null)drawPointV3328(ctx,xNow,yNow,"現價","",P.red);
-  const keyItems=[],addKey=(value,text,color)=>{const v=n(value);if(v!==null)keyItems.push({y:chartYV3328(v,minV,maxV,gy,gh),text,color});};addKey(st.B,`B  ${fmt(st.B)}`,P.orange);addKey(st.close,`現價  ${fmt(st.close)}`,P.red);addKey(st.ma10,`MA10  ${fmt(st.ma10)}`,P.red);addKey(st.ma5,`MA5  ${fmt(st.ma5)}`,P.orange);addKey(st.ma60,`MA60  ${fmt(st.ma60)}`,P.purple);addKey(st.ma20,`MA20  ${fmt(st.ma20)}`,P.blue2);if(st.C!==null)addKey(st.C,`C  ${fmt(st.C)}`,P.blue2);drawRightKeyLabelsV3329(ctx,keyItems,plotRight,1304,244,gy+18,gy+gh-8);
-  fontV3328(ctx,16,700,P.muted);ctx.fillText("※ 主圖為位置關係示意，正式C仍依 pivot-abc-v2.4 規則確認。",586,672);
+  drawMarketTopChartV365(ctx,data,st);
 
   const cardsY=714,cardsX=24,gap=10,cw=(1552-gap*5)/6,ch=166;
   drawMetricCardV3328(ctx,cardsX+(cw+gap)*0,cardsY,cw,ch,"大盤環境",st.env.state,`市場風險：${st.env.risk}`,"green");drawMarketMa20CardV3330(ctx,cardsX+(cw+gap)*1,cardsY,cw,ch,st);drawMetricCardV3328(ctx,cardsX+(cw+gap)*2,cardsY,cw,ch,"RSI 5T",st.rsi===null?"-":fmt(st.rsi),marketRsiMetaV3310(st.rsi).label,"orange");drawMetricCardV3328(ctx,cardsX+(cw+gap)*3,cardsY,cw,ch,"價格位置",st.pos.label,"Fib位置描述","orange");drawMetricCardV3328(ctx,cardsX+(cw+gap)*4,cardsY,cw,ch,"N字進度",progress.main,progress.sub,"blue");drawMetricCardV3328(ctx,cardsX+(cw+gap)*5,cardsY,cw,ch,"個股操作環境",st.action.label,st.action.label==="保守"?"提高門檻":"依個股自身結構選股","purple");
@@ -17814,6 +18044,8 @@ function renderMarketInfographicV3328(data){
     `🎛️ 個股操作：${st.action.label}`,
     st.B!==null?`⬆️ 往上先看：B｜${fmt(st.B)} 點`:"⬆️ 往上等待新前高",
     st.ma20!==null?`⬇️ 第一趨勢防守：MA20｜${fmt(st.ma20)} 點`:"⬇️ 依Fib支撐觀察",
+    marketTridentImageTextV365(st.trident365),
+    data?.dailySeriesMeta?.volumeMeaning?`📊 大盤量能口徑：${data.dailySeriesMeta.volumeMeaning}`:"📊 大盤量能口徑：等待新版Worker回傳",
     st.nStatus==="FORMING"?"📌 C尚未確認：止跌K只能先當候選C。":"📌 依N字生命週期持續更新。"
   ];
   let ky=lowerY+88;
@@ -18295,7 +18527,7 @@ async function analyzeStock(){
 
     const tactical=data?.tactical||null;
 
-    // V3.6.4 Replay／三叉戟-ready gate：若未來 Worker 已有逐日序列，前端先保留原始欄位；
+    // V3.6.5.1 Replay／三叉戟-ready gate：Worker若有逐日序列，前端直接保留並用於真實日K與三叉戟；
     // 目前沒有就保持 null，不新增任何API請求，也不假裝已完成歷史回測。
     const dailySeries=data?.dailySeries||data?.dailyBars||data?.history?.daily||data?.candles||data?.ohlcv||null;
 
@@ -18315,7 +18547,7 @@ async function analyzeStock(){
 
     set("stockName",hasRealStockName(name,code)?name:`股票代號 ${code}`);
 
-    set("stockMeta",`${code}｜${market}｜${source}｜後端分析 ${version}｜前端 V3.6.4`);
+    set("stockMeta",`${code}｜${market}｜${source}｜後端分析 ${version}｜前端 V3.6.5.1`);
 
     set("closeDate",`最新交易日：${datefmt(closeDate)}`);
 
