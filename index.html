@@ -527,7 +527,7 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
 
     <p>月線波段條件判斷＋固定倍數目標價＋費波那契 N字分析</p>
 
-    <span class="version-pill">前端 V3.6.5.1.1｜真實日K細緻圖＋大盤三叉戟修復版｜個股真實日K＋量能＋日20MA＋壓撐預｜個股圖 1152×2048（9:16）｜大盤圖 1024×1536（2:3）｜V3.4.7 穩定核心完整沿用｜個股建議搭配 Worker V2.9.11</span>
+    <span class="version-pill">前端 V3.6.6.1｜GitHub覆蓋部署最終穩定版｜真實日K＋大盤三叉戟｜個股真實日K＋量能＋日20MA＋壓撐預｜個股圖 1152×2048（9:16）｜大盤圖 1024×1536（2:3）｜V3.4.7 穩定核心完整沿用｜個股建議搭配 Worker V2.9.11</span>
 
   </div>
 
@@ -895,7 +895,7 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
 
       <div class="section-title">⑥ 一鍵複製分析報告</div>
 
-      <div class="hint">V3.6.5.1 延續 V3.6.4 與 V3.4.7 穩定核心；保留白話固定句型、三叉戟、突破品質2.0、市場階段、價帶與動態防守。這次第一優先把個股圖片主圖升級成「真實逐日日K＋量能柱＋日20MA」，並直接畫出三叉戟壓／撐／預；A／B／C改用實際日期定位到K棒。若逐日OHLCV不足，自動退回結構示意圖，不硬畫。大盤圖已預留完整逐日OHLCV自動升級架構。ABC／Fib／N字與 pivot-abc-v2.4 核心完全不變。</div>
+      <div class="hint">V3.6.6.1 延續 V3.6.4 與 V3.4.7 穩定核心；保留白話固定句型、三叉戟、突破品質2.0、市場階段、價帶與動態防守。這次第一優先把個股圖片主圖升級成「真實逐日日K＋量能柱＋日20MA」，並直接畫出三叉戟壓／撐／預；A／B／C改用實際日期定位到K棒。若逐日OHLCV不足，自動退回結構示意圖，不硬畫。大盤圖已預留完整逐日OHLCV自動升級架構。ABC／Fib／N字與 pivot-abc-v2.4 核心完全不變。</div>
 
       <div class="copy-actions">
 
@@ -926,7 +926,7 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
       <a id="imageDownloadLink" class="image-save-link" href="#" download>💾 儲存 PNG</a>
       <button id="imageShareButton" class="image-share-btn" type="button" onclick="shareInfographicV3328()">📤 分享圖片</button>
     </div>
-    <div id="imagePreviewNote" class="image-preview-note">圖片由目前分析資料直接產生；V3.6.5.1 沿用個股 PNG 1152×2048（9:16）與大盤 PNG 1024×1536（2:3）。個股 Worker 若回傳完整 dailySeries，個股主圖會自動畫成真實近期日K、量能柱、日20MA、A/B/C與三叉戟壓／撐／預；資料不足才退回結構示意圖。大盤部署新版TAIEX Worker後，會使用TAIEX官方OHLC＋FMTQIK市場成交股數組成dailySeries，自動切換真實日K＋量能柱＋MA20＋三叉戟壓／撐／預；若量能資料暫時不可用，才安全退回結構示意圖。</div>
+    <div id="imagePreviewNote" class="image-preview-note">圖片由目前分析資料直接產生；V3.6.6.1 沿用個股 PNG 1152×2048（9:16）與大盤 PNG 1024×1536（2:3）。個股 Worker 若回傳完整 dailySeries，個股主圖會自動畫成真實近期日K、量能柱、日20MA、A/B/C與三叉戟壓／撐／預；資料不足才退回結構示意圖。大盤部署新版TAIEX Worker後，會使用TAIEX官方OHLC＋FMTQIK市場成交股數組成dailySeries，自動切換真實日K＋量能柱＋MA20＋三叉戟壓／撐／預；若量能資料暫時不可用，才安全退回結構示意圖。</div>
   </div>
 </div>
 
@@ -940,7 +940,7 @@ const API_BASE_URL="https://shitou-agent-fib-api.d318426.workers.dev";
 // 只強化 Canvas 排版安全：A區保留固定狀態欄、所有狀態統一置中、長字串嚴格自動縮放、避免越界／重疊／裁切。
 // PNG仍固定1152×2048；ABC／Fib／N字／pivot-abc-v2.4、個股Worker與大盤Worker資料判斷核心不變。
 
-// V3.6.5.1：延續 V3.6.4 超白話固定句型版；新增真實逐日日K繪圖層。個股有dailySeries時畫真實K棒＋量能＋MA20＋ABC＋三叉戟壓撐預，無資料時安全退回示意圖；大盤已接入OHLCV＋三叉戟自動升級架構。ABC/Fib/N字核心完全不變。
+// V3.6.6.1：延續真實日K／三叉戟版本與 V3.6.4 超白話固定句型核心；統一 GitHub 覆蓋部署與圖片排版安全。個股有dailySeries時畫真實K棒＋量能＋MA20＋ABC＋三叉戟壓撐預，無資料時安全退回示意圖；大盤已接入OHLCV＋三叉戟自動升級架構。ABC/Fib/N字核心完全不變。
 // 新增「多證據技術結構判讀」：價格結構優先、量價確認、均線趨勢、突破品質、支撐/壓力角色與訊號衝突檢查。
 // 不在資料不足時硬判 W底／M頭／頭肩底頂／旗形／三角形，也不虛構前端目前沒有的 MACD 歷史序列。
 // V3.4.5 圖片修正：個股圖不再使用安全排版特化模板，改直接套用正常版個股圖片模組；維持現有分析公式與資料庫更新判讀口徑，不改大盤圖。
@@ -15078,7 +15078,7 @@ function appendPriceConfluenceV350(lines,report){
 
 
 /* ========================================================================
-   V3.6.5.1｜決策引擎＋真實日K＋三叉戟壓撐預＋超白話固定句型層（GitHub 前端限定）
+   V3.6.6.1｜決策引擎＋真實日K＋三叉戟壓撐預＋超白話固定句型層（GitHub 前端限定）
    ------------------------------------------------------------------------
    目的：把既有可驗證資料整理為「階段 → 突破生命週期 → 品質 → 價帶 → 防守 → 稽核」。
    重要邊界：
@@ -15527,7 +15527,7 @@ function appendDecisionEngineV360(lines,report){
   lines.push("");
   lines.push(`${d.measured.icon} 型態量度：${d.measured.text}`);
   lines.push(`${d.replay.icon} Replay／No-lookahead：${d.replay.label}｜${d.replay.text}`);
-  lines.push("📌 V3.6.5.1新增的真實日K、量能、MA20、ABC定位與三叉戟畫線都屬前端顯示／判讀層；不改ABC／Fib／N字核心。個股圖片的「可進／等待／續抱／減碼／退出」仍只是把既有結構與風控條件翻成白話，不等於保證報酬。三叉戟需要完整逐日OHLCV；預線仍採前端候選備用防線規則，不參與核心失效判定。 ");
+  lines.push("📌 V3.6.6.1新增的真實日K、量能、MA20、ABC定位與三叉戟畫線都屬前端顯示／判讀層；不改ABC／Fib／N字核心。個股圖片的「可進／等待／續抱／減碼／退出」仍只是把既有結構與風控條件翻成白話，不等於保證報酬。三叉戟需要完整逐日OHLCV；預線仍採前端候選備用防線規則，不參與核心失效判定。 ");
 }
 
 function appendWaveStageSectionV3323(lines,report,stage=null){
@@ -15908,7 +15908,7 @@ function buildReportTextV326(report){
 
   };
 
-  lines.push("📘 石頭少爺分析助手｜GitHub 前端 V3.6.5.1.1｜真實日K細緻圖＋大盤三叉戟修復版");
+  lines.push("📘 石頭少爺分析助手｜GitHub 前端 V3.6.6.1｜真實日K細緻圖＋大盤三叉戟修復版");
 
   lines.push(`報告產出時間：${generatedAt}`);
 
@@ -17012,7 +17012,7 @@ function buildMarketWorkerReportText(data){
   const lines=[];
   const section=title=>{lines.push("", "━━━━━━━━━━━━━━━━━━", `【${title}】`, "━━━━━━━━━━━━━━━━━━", "");};
 
-  lines.push("📈 石頭少爺分析助手｜GitHub 前端 V3.6.5.1｜大盤環境戰報");
+  lines.push("📈 石頭少爺分析助手｜GitHub 前端 V3.6.6.1｜大盤環境戰報");
   lines.push("判讀核心：大盤前端邏輯沿用 V3.3.10｜ABC演算法沿用 pivot-abc-v2.4｜大盤圖片模組不變");
   lines.push(`報告產出時間：${reportGeneratedAt()}`);
   lines.push("");
@@ -17256,7 +17256,7 @@ function drawWrapV3328(ctx,text,x,y,maxWidth,lineHeight,maxLines=99,opts={}){
 
 function normalizeCanvasDashV365(dash){
   // CanvasRenderingContext2D.setLineDash 必須收到可迭代的數字序列。
-  // V3.6.5.1 熱修：任何 null／非陣列／NaN／負值都安全降級成實線，避免整張圖片生成失敗。
+  // V3.6.6.1 熱修：任何 null／非陣列／NaN／負值都安全降級成實線，避免整張圖片生成失敗。
   if(!Array.isArray(dash))return [];
   return dash.map(v=>Number(v)).filter(v=>Number.isFinite(v)&&v>=0);
 }
@@ -17660,7 +17660,7 @@ function stockScenarioTextsV3328(st){
 
 
 /* ========================================================================
-   V3.6.5.1｜真實逐日日K繪圖層（圖片限定）
+   V3.6.6.1｜真實逐日日K繪圖層（圖片限定）
    - 個股：dailySeries完整時，畫真實K棒＋量能＋MA20＋A/B/C＋三叉戟壓／撐／預。
    - 大盤：只在未來資料端回傳完整逐日OHLCV時自動啟用；否則安全退回示意圖。
    - 不修改 pivot-abc-v2.4、ABC、Fib、N字核心。
@@ -18573,7 +18573,7 @@ async function analyzeStock(){
 
     const tactical=data?.tactical||null;
 
-    // V3.6.5.1 Replay／三叉戟-ready gate：Worker若有逐日序列，前端直接保留並用於真實日K與三叉戟；
+    // V3.6.6.1 Replay／三叉戟-ready gate：Worker若有逐日序列，前端直接保留並用於真實日K與三叉戟；
     // 目前沒有就保持 null，不新增任何API請求，也不假裝已完成歷史回測。
     const dailySeries=data?.dailySeries||data?.dailyBars||data?.history?.daily||data?.candles||data?.ohlcv||null;
 
@@ -18593,7 +18593,7 @@ async function analyzeStock(){
 
     set("stockName",hasRealStockName(name,code)?name:`股票代號 ${code}`);
 
-    set("stockMeta",`${code}｜${market}｜${source}｜後端分析 ${version}｜前端 V3.6.5.1`);
+    set("stockMeta",`${code}｜${market}｜${source}｜後端分析 ${version}｜前端 V3.6.6.1`);
 
     set("closeDate",`最新交易日：${datefmt(closeDate)}`);
 
