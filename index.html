@@ -527,7 +527,7 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
 
     <p>月線波段條件判斷＋固定倍數目標價＋費波那契 N字分析</p>
 
-    <span class="version-pill">前端 V3.6.7.4｜🧪 歷史經驗超白話提示｜真實日K＋大盤三叉戟｜個股真實日K＋量能＋日20MA＋壓撐預｜個股圖 1152×2048（9:16）｜大盤圖 1024×1536（2:3）｜V3.4.7 穩定核心完整沿用｜研究建議搭配 Worker V2.9.12</span>
+    <span class="version-pill">前端 V3.6.7.5｜🧪 歷史經驗超白話＋英文名稱修正｜真實日K＋大盤三叉戟｜個股真實日K＋量能＋日20MA＋壓撐預｜個股圖 1152×2048（9:16）｜大盤圖 1024×1536（2:3）｜V3.4.7 穩定核心完整沿用｜研究建議搭配 Worker V2.9.12</span>
 
   </div>
 
@@ -895,7 +895,7 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
 
       <div class="section-title">⑥ 一鍵複製分析報告</div>
 
-      <div class="hint">V3.6.7.4 延續 V3.6.6.2 與 V3.4.7 穩定核心；所有既有 ABC／Fib／N字、突破品質2.0、三叉戟、白話進出場與圖片版型完全保留。新增的 🧪 歷史經驗提示只做時間序列驗證後的白話呈現；沒有相對類似趨勢基準提升就不加入報告證據，也不改舊分數與操作結論。</div>
+      <div class="hint">V3.6.7.5 延續 V3.6.6.2 與 V3.4.7 穩定核心；所有既有 ABC／Fib／N字、突破品質2.0、三叉戟、白話進出場與圖片版型完全保留。新增的 🧪 歷史經驗提示只做時間序列驗證後的白話呈現；沒有相對類似趨勢基準提升就不加入報告證據，也不改舊分數與操作結論。</div>
 
       <div class="copy-actions">
 
@@ -926,24 +926,25 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
       <a id="imageDownloadLink" class="image-save-link" href="#" download>💾 儲存 PNG</a>
       <button id="imageShareButton" class="image-share-btn" type="button" onclick="shareInfographicV3328()">📤 分享圖片</button>
     </div>
-    <div id="imagePreviewNote" class="image-preview-note">圖片由目前分析資料直接產生；V3.6.7.4 沿用個股 PNG 1152×2048（9:16）與大盤 PNG 1024×1536（2:3）。個股 Worker 若回傳完整 dailySeries，個股主圖會自動畫成真實近期日K、量能柱、日20MA、A/B/C與三叉戟壓／撐／預；資料不足才退回結構示意圖。大盤部署新版TAIEX Worker後，會使用TAIEX官方OHLC＋FMTQIK市場成交股數組成dailySeries，自動切換真實日K＋量能柱＋MA20＋三叉戟壓／撐／預；若量能資料暫時不可用，才安全退回結構示意圖。</div>
+    <div id="imagePreviewNote" class="image-preview-note">圖片由目前分析資料直接產生；V3.6.7.5 沿用個股 PNG 1152×2048（9:16）與大盤 PNG 1024×1536（2:3）。個股 Worker 若回傳完整 dailySeries，個股主圖會自動畫成真實近期日K、量能柱、日20MA、A/B/C與三叉戟壓／撐／預；資料不足才退回結構示意圖。大盤部署新版TAIEX Worker後，會使用TAIEX官方OHLC＋FMTQIK市場成交股數組成dailySeries，自動切換真實日K＋量能柱＋MA20＋三叉戟壓／撐／預；若量能資料暫時不可用，才安全退回結構示意圖。</div>
   </div>
 </div>
 
-<footer class="footer">石頭少爺 Agent｜GitHub 前端 V3.6.7.4｜🧪 歷史經驗超白話提示｜完整套用使用者指定的個股圖片報告格式｜V3.4.7 穩定核心與雙圖片版型完整沿用｜個股主圖支援真實日K＋量能＋MA20＋A/B/C＋三叉戟壓撐預｜價格作戰地圖保留持有／空手固定句型｜本前端不改ABC／Fib／N字與 pivot-abc-v2.4 核心<br>技術分析僅供研究與決策參考，不構成投資建議。<br>本版重點：個股圖片報告固定採用使用者指定之標準版型，作為後續 GitHub 個股圖正式模板。</footer>
+<footer class="footer">石頭少爺 Agent｜GitHub 前端 V3.6.7.5｜🧪 歷史經驗超白話＋英文名稱修正｜完整套用使用者指定的個股圖片報告格式｜V3.4.7 穩定核心與雙圖片版型完整沿用｜個股主圖支援真實日K＋量能＋MA20＋A/B/C＋三叉戟壓撐預｜價格作戰地圖保留持有／空手固定句型｜本前端不改ABC／Fib／N字與 pivot-abc-v2.4 核心<br>技術分析僅供研究與決策參考，不構成投資建議。<br>本版重點：個股圖片報告固定採用使用者指定之標準版型，作為後續 GitHub 個股圖正式模板。</footer>
 
 <script>
 
 const API_BASE_URL="https://shitou-agent-fib-api.d318426.workers.dev";
 
-// V3.6.7.4：個股圖片的 OHLCV Research Gate 提示再簡化成新手一眼就懂的超白話版本。
+// V3.6.7.5：修正純英文／英數股票簡稱（如 GIS-KY）被誤判為無名稱；名稱解析不再強迫含中文字。
+// V3.6.7.5：個股圖片的 OHLCV Research Gate 提示再簡化成新手一眼就懂的超白話版本。
 // 只有時間序列驗證已通過、且目前型態正在等待突破或已出現時才顯示；不改 ABC／Fib／N字／突破品質2.0／三叉戟／既有進出場結論。
 // 卡片顯示「這個訊號偏加分、訊號是否已出現、過去另外測過幾次、5天後通常表現、比類似行情多多少」並固定附上白話提醒。
 
-// V3.6.7.4：延續資料視窗隔離——個股圖80~120根／三叉戟固定120根／OHLCV Walk-Forward研究最多420根。
+// V3.6.7.5：延續資料視窗隔離——個股圖80~120根／三叉戟固定120根／OHLCV Walk-Forward研究最多420根。
 // 目的：只增加研究深度，不讓較長研究歷史偷偷改變舊版三叉戟壓／撐／預；ABC／Fib／N字／突破品質2.0均不變。
 
-// V3.6.7.4：研究閘門仍為時間序列 holdout + 同趨勢基準比較；本版只優化提示文字，不改研究邏輯。
+// V3.6.7.5：研究閘門仍為時間序列 holdout + 同趨勢基準比較；本版只優化提示文字，不改研究邏輯。
 
 // V3.6.6.2 個股圖片排版修正：完整沿用 V3.6.6.1 固定模板與所有分析文字內容；
 // 只調整個股圖片警語位置與文字渲染清晰度；A區固定狀態欄與既有排版安全完整保留。
@@ -3161,6 +3162,24 @@ function hasCjkText(value){
 
 }
 
+// V3.6.7.5｜股票名稱顯示修正：正式股票簡稱不一定含中文（例如 GIS-KY）。
+// 只要名稱不是空值、不是純代號／代號占位字串，且含中文或英文字母，就視為可顯示名稱。
+function isValidStockDisplayName(name,code){
+
+  const nm=String(name??"").trim();
+
+  const c=String(code??"").trim();
+
+  if(!nm)return false;
+
+  const compact=nm.replace(/[\s　]+/g,"");
+
+  if(compact===c||compact===`股票${c}`||compact===`代號${c}`)return false;
+
+  return /[A-Za-z\u3400-\u9fff]/.test(nm);
+
+}
+
 function parseStockCodeFromMixedInput(value){
 
   const raw=String(value??"").trim();
@@ -3752,7 +3771,7 @@ async function fetchSingleOfficialStockName(code,market){
 
     const name=String(row?.n??row?.nf??"").trim();
 
-    return hasCjkText(name)?name:null;
+    return isValidStockDisplayName(name,c)?name:null;
 
   }catch{
 
@@ -3764,15 +3783,23 @@ async function fetchSingleOfficialStockName(code,market){
 
 function resolveTraditionalStockName(code,apiName,directory,preferredName){
 
-  const official=preferredName||directory?.byCode?.[code]?.name||LOCAL_NAME_MAP[code]||null;
+  const c=String(code??"").trim();
 
-  if(official&&hasCjkText(official))return official;
+  // 不再用「一定要含中文字」當名稱門檻。
+  // 依來源優先序逐一驗證，避免 preferredName 若只是代號時，反而擋住內建 GIS-KY 等正確名稱。
+  const candidates=[
+    preferredName,
+    directory?.byCode?.[c]?.name,
+    LOCAL_NAME_MAP[c],
+    apiName
+  ];
 
-  if(apiName&&hasCjkText(apiName))return String(apiName).trim();
+  for(const candidate of candidates){
+    if(isValidStockDisplayName(candidate,c))return String(candidate).trim();
+  }
 
-  // 若官方清單暫時無法取得，也不要製造「股票 5351（5351）」這種重複名稱。
-
-  return String(code);
+  // 所有名稱來源都不可用時才退回代號。
+  return c;
 
 }
 
@@ -15087,7 +15114,7 @@ function appendPriceConfluenceV350(lines,report){
 
 
 /* ========================================================================
-   V3.6.7.4｜決策引擎＋真實日K＋三叉戟＋OHLCV Research Gate（超白話提示版）
+   V3.6.7.5｜決策引擎＋真實日K＋三叉戟＋OHLCV Research Gate（超白話提示版）
    ------------------------------------------------------------------------
    目的：把既有可驗證資料整理為「階段 → 突破生命週期 → 品質 → 價帶 → 防守 → 稽核」。
    重要邊界：
@@ -15413,7 +15440,7 @@ function normalizeDailyBarsV361(report){
 
 
 // ============================================================
-// V3.6.7.4｜OHLCV 可回測研究閘門（Research Gate，提示文字超白話化）
+// V3.6.7.5｜OHLCV 可回測研究閘門（Research Gate，提示文字超白話化）
 // ------------------------------------------------------------
 // 原則：
 // 1) 只使用已完成逐日 OHLCV；歷史事件在 t 日判斷時，不讀取 t 之後資料。
@@ -15597,7 +15624,7 @@ function backtestPatternV367(bars,detector){
   return {n:overall.n,pass,reason,train,test,overall,splitIndex:split};
 }
 
-// V3.6.7.4｜資料視窗隔離：避免研究資料變長後改動既有三叉戟結果。
+// V3.6.7.5｜資料視窗隔離：避免研究資料變長後改動既有三叉戟結果。
 // 1) 圖片：最近80根為主，為了納入A/B/C最多延伸到120根（selectStockChartBarsV365）。
 // 2) 三叉戟：固定只掃最近120根已完成OHLCV，維持既有短中期壓／撐／預語意。
 // 3) Research Gate：最多使用最近420根已完成OHLCV，僅供Walk-Forward研究，不回頭改三叉戟。
@@ -15642,7 +15669,7 @@ function ohlcvResearchGateV367(report,mode="stock"){
 }
 
 function researchImageTextV367(r){
-  // 保留舊介面供文字報告／相容用途；圖片自 V3.6.7.4 改由 researchImageCardDataV3673() 白話呈現。
+  // 保留舊介面供文字報告／相容用途；圖片自 V3.6.7.5 改由 researchImageCardDataV3673() 白話呈現。
   if(!r?.active)return null;
   const a=r.active,s=a.stats.test,c=a.current;
   const state=c.state==="TRIGGERED"?"已觸發":"等待突破";
@@ -15699,7 +15726,7 @@ function drawResearchValidationCardV3673(ctx,card,x,y,w,h){
 }
 
 function tridentEngineV361(report){
-  // V3.6.7.4：三叉戟固定最近120根，避免Worker提供420根研究資料後改變既有壓／撐／預。
+  // V3.6.7.5：三叉戟固定最近120根，避免Worker提供420根研究資料後改變既有壓／撐／預。
   const bars=tridentBarsV3672(report);
   const close=n(report?.close)??(bars.length?n(bars[bars.length-1].close):null);
   if(bars.length<2){
@@ -15829,7 +15856,7 @@ function appendDecisionEngineV360(lines,report){
     lines.push(`🧪 歷史經驗提示：${d.research.text}`);
     lines.push("📌 研究閘門只使用當下以前的日K做歷史事件判定；未通過局部樣本門檻的影片規則完全不加入操作證據。此處不是普遍勝率承諾。 ");
   }
-  lines.push("📌 V3.6.7.4沿用的真實日K、量能、MA20、ABC定位與三叉戟畫線都屬前端顯示／判讀層；不改ABC／Fib／N字核心。個股圖片的「可進／等待／續抱／減碼／退出」仍只是把既有結構與風控條件翻成白話，不等於保證報酬。三叉戟需要完整逐日OHLCV；預線仍採前端候選備用防線規則，不參與核心失效判定。 ");
+  lines.push("📌 V3.6.7.5沿用的真實日K、量能、MA20、ABC定位與三叉戟畫線都屬前端顯示／判讀層；不改ABC／Fib／N字核心。個股圖片的「可進／等待／續抱／減碼／退出」仍只是把既有結構與風控條件翻成白話，不等於保證報酬。三叉戟需要完整逐日OHLCV；預線仍採前端候選備用防線規則，不參與核心失效判定。 ");
 }
 
 function appendWaveStageSectionV3323(lines,report,stage=null){
@@ -16210,7 +16237,7 @@ function buildReportTextV326(report){
 
   };
 
-  lines.push("📘 石頭少爺分析助手｜GitHub 前端 V3.6.7.4｜🧪 歷史經驗超白話提示");
+  lines.push("📘 石頭少爺分析助手｜GitHub 前端 V3.6.7.5｜🧪 歷史經驗超白話＋英文名稱修正");
 
   lines.push(`報告產出時間：${generatedAt}`);
 
@@ -17314,7 +17341,7 @@ function buildMarketWorkerReportText(data){
   const lines=[];
   const section=title=>{lines.push("", "━━━━━━━━━━━━━━━━━━", `【${title}】`, "━━━━━━━━━━━━━━━━━━", "");};
 
-  lines.push("📈 石頭少爺分析助手｜GitHub 前端 V3.6.7.4｜大盤環境戰報");
+  lines.push("📈 石頭少爺分析助手｜GitHub 前端 V3.6.7.5｜大盤環境戰報");
   lines.push("判讀核心：大盤前端邏輯沿用 V3.3.10｜ABC演算法沿用 pivot-abc-v2.4｜大盤圖片模組不變");
   lines.push(`報告產出時間：${reportGeneratedAt()}`);
   lines.push("");
@@ -18007,7 +18034,7 @@ function findBarIndexByDateV365(bars,date){
 function selectStockChartBarsV365(report,st){
   const all=normalizeDailyBarsV361(report);
   if(all.length<20)return {all,bars:[],start:0,ma20:[]};
-  // V3.6.7.4：圖片視窗維持原行為——最近80根為主，必要時最多延伸至120根以容納A/B/C。
+  // V3.6.7.5：圖片視窗維持原行為——最近80根為主，必要時最多延伸至120根以容納A/B/C。
   const preferred=80,maxBars=120;
   let start=Math.max(0,all.length-preferred);
   const abcDates=[st?.s?.fib?.ADate,st?.s?.fib?.BDate,st?.s?.fib?.CDate].filter(Boolean);
@@ -18225,7 +18252,7 @@ function renderStockInfographicV3328(report){
   fontV3328(ctx,22,900,"#fff","center");ctx.fillText("報告製作 By.石頭少爺",1402,52);
   fontV3328(ctx,18,800,"#fff","center");ctx.fillText("圖片產生時間",1402,83);
   fontV3328(ctx,19,900,"#fff","center");ctx.fillText(reportGeneratedAt().replace("（台灣時間）",""),1402,115);
-  fontV3328(ctx,16,700,"#dbeafe","center");ctx.fillText("V3.6.7.4｜🧪 歷史經驗超白話提示",1402,141);
+  fontV3328(ctx,16,700,"#dbeafe","center");ctx.fillText("V3.6.7.5｜🧪 歷史經驗超白話＋英文名稱修正",1402,141);
 
   // ===== 上半部：ABC + 結構示意圖 =====
   rrV3328(ctx,24,174,520,520,14,P.white,P.blue,2);
@@ -18273,7 +18300,7 @@ function renderStockInfographicV3328(report){
   const qRisk=q360?.risk?.[0]||"目前未見主要扣分證據";
   const plain362=stockPlainActionV362(st);
   const bullets=[`🚦 現在：${plain362.bias.icon} ${plain362.bias.label}｜一句話：${plain362.summary}`,`👤 空手者：${plain362.nonHolderAction}｜${plain362.nonHolderNote}`,`💼 持有者：${plain362.holderAction}｜${plain362.holderNote}`,`${st.breakoutLife360.icon} 突破：${st.breakoutLife360.label}｜${st.breakoutLife360.progress}`,`${q360.icon} 品質：${q360.key==="WAIT"?q360.label:`${q360.label}｜${q360.scoreText}`}｜${qPlus}`,`⚠️ 主要風險：${qRisk}`,`${st.volumePosition.icon} 量價：${st.volumePosition.label}${st.vol!==null?`｜${fmt(st.vol,2)}倍`:""}｜RSI ${st.rsi===null?"-":fmt(st.rsi)}`,b360?.resistance?`⬆️ 壓力：${b360.resistance.text}｜${b360.resistance.strength}`:(cUp?`⬆️ 壓力：${fmt(cUp.avg)} 元｜${cUp.strength}`:(up?`⬆️ 壓力：${up.label} ${fmt(up.value)} 元`:"⬆️ 壓力：等待新關卡")),b360?.support?`⬇️ 支撐：${b360.support.text}｜${b360.support.strength}`:(cDown?`⬇️ 支撐：${fmt(cDown.avg)} 元｜${cDown.strength}`:(down?`⬇️ 支撐：${down.label} ${fmt(down.value)} 元`:"⬇️ 支撐：依MA20與新結構")),d360?.first?`🛡️ 減碼／退出防守：${fmt(d360.first.level)} 元｜${d360.first.label}`:"🛡️ 出場／減碼防守：等待可驗證價位"];
-  // V3.6.7.4：Research Gate 通過且目前有型態時，改成獨立白話驗證卡；不把研究結果混進突破品質分數。
+  // V3.6.7.5：Research Gate 通過且目前有型態時，改成獨立白話驗證卡；不把研究結果混進突破品質分數。
   const researchCard3673=researchImageCardDataV3673(st.research367);
   bullets.push(tridentImageTextV361(st.trident361));
   bullets.push(st.trident361?.preparatory?"📝 預：如果撐不住，下面還有一條備用防線":"📝 三叉戟：壓＝漲到這裡容易被賣壓卡住｜撐＝跌到這裡要觀察能不能守住");
@@ -18378,7 +18405,7 @@ function renderMarketInfographicV3328(data){
   rrV3328(ctx,2,2,1596,2396,18,P.white,P.blue,3);
   drawHeaderTitleV3328(ctx,"📈 大盤先懂","現在市場走到哪一步？");
   rrV3328(ctx,26,82,1190,72,10,P.navy,null);fontV3328(ctx,31,900,"#facc15");ctx.fillText("臺灣加權股價指數（TAIEX）",48,128);fontV3328(ctx,24,800,"#fff");ctx.fillText(`｜最新交易日 ${datefmt(data.closeDate)}｜資料來源：${data.source||"TWSE Official"}`,500,128);
-  rrV3328(ctx,1232,18,340,136,12,P.navy,null);fontV3328(ctx,22,900,"#fff","center");ctx.fillText("報告製作 By.石頭少爺",1402,52);fontV3328(ctx,18,800,"#fff","center");ctx.fillText("圖片產生時間",1402,83);fontV3328(ctx,19,900,"#fff","center");ctx.fillText(reportGeneratedAt().replace("（台灣時間）",""),1402,115);fontV3328(ctx,17,700,"#dbeafe","center");ctx.fillText("V3.6.7.4｜大盤真實日K＋三叉戟版",1402,141);
+  rrV3328(ctx,1232,18,340,136,12,P.navy,null);fontV3328(ctx,22,900,"#fff","center");ctx.fillText("報告製作 By.石頭少爺",1402,52);fontV3328(ctx,18,800,"#fff","center");ctx.fillText("圖片產生時間",1402,83);fontV3328(ctx,19,900,"#fff","center");ctx.fillText(reportGeneratedAt().replace("（台灣時間）",""),1402,115);fontV3328(ctx,17,700,"#dbeafe","center");ctx.fillText("V3.6.7.5｜大盤真實日K＋三叉戟版",1402,141);
 
   rrV3328(ctx,24,174,520,520,14,P.white,P.blue,2);drawCardTitleV3328(ctx,48,215,"📖 ABC 是這套分析的核心：",P.navy,30);drawWrapV3328(ctx,"A＝起漲點、B＝前波高點、C＝B回檔後由Pivot規則正式確認的回檔低點。",48,255,468,31,3,{size:21,weight:650,color:P.text});
   drawAbcValueRowV3329(ctx,48,365,466,"A",P.green,"起漲點",st.A,st.fib.ADate,"點");
@@ -18929,7 +18956,7 @@ async function analyzeStock(){
 
     set("stockName",hasRealStockName(name,code)?name:`股票代號 ${code}`);
 
-    set("stockMeta",`${code}｜${market}｜${source}｜後端分析 ${version}｜前端 V3.6.7.4`);
+    set("stockMeta",`${code}｜${market}｜${source}｜後端分析 ${version}｜前端 V3.6.7.5`);
 
     set("closeDate",`最新交易日：${datefmt(closeDate)}`);
 
