@@ -527,7 +527,7 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
 
     <p>月線波段條件判斷＋固定倍數目標價＋費波那契 N字分析</p>
 
-    <span class="version-pill">前端 V3.6.7.2｜📊 開高低收量（OHLCV）資料驗證｜真實日K＋大盤三叉戟｜個股真實日K＋量能＋日20MA＋壓撐預｜個股圖 1152×2048（9:16）｜大盤圖 1024×1536（2:3）｜V3.4.7 穩定核心完整沿用｜研究建議搭配 Worker V2.9.12</span>
+    <span class="version-pill">前端 V3.6.7.4｜🧪 歷史經驗超白話提示｜真實日K＋大盤三叉戟｜個股真實日K＋量能＋日20MA＋壓撐預｜個股圖 1152×2048（9:16）｜大盤圖 1024×1536（2:3）｜V3.4.7 穩定核心完整沿用｜研究建議搭配 Worker V2.9.12</span>
 
   </div>
 
@@ -895,7 +895,7 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
 
       <div class="section-title">⑥ 一鍵複製分析報告</div>
 
-      <div class="hint">V3.6.7.2 延續 V3.6.6.2 與 V3.4.7 穩定核心；所有既有 ABC／Fib／N字、突破品質2.0、三叉戟、白話進出場與圖片版型完全保留。新增的 📊 開高低收量（OHLCV）資料驗證只做時間序列 holdout 驗證；沒有相對同趨勢基準提升就不加入報告證據，也不改舊分數與操作結論。</div>
+      <div class="hint">V3.6.7.4 延續 V3.6.6.2 與 V3.4.7 穩定核心；所有既有 ABC／Fib／N字、突破品質2.0、三叉戟、白話進出場與圖片版型完全保留。新增的 🧪 歷史經驗提示只做時間序列驗證後的白話呈現；沒有相對類似趨勢基準提升就不加入報告證據，也不改舊分數與操作結論。</div>
 
       <div class="copy-actions">
 
@@ -926,20 +926,24 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
       <a id="imageDownloadLink" class="image-save-link" href="#" download>💾 儲存 PNG</a>
       <button id="imageShareButton" class="image-share-btn" type="button" onclick="shareInfographicV3328()">📤 分享圖片</button>
     </div>
-    <div id="imagePreviewNote" class="image-preview-note">圖片由目前分析資料直接產生；V3.6.7.2 沿用個股 PNG 1152×2048（9:16）與大盤 PNG 1024×1536（2:3）。個股 Worker 若回傳完整 dailySeries，個股主圖會自動畫成真實近期日K、量能柱、日20MA、A/B/C與三叉戟壓／撐／預；資料不足才退回結構示意圖。大盤部署新版TAIEX Worker後，會使用TAIEX官方OHLC＋FMTQIK市場成交股數組成dailySeries，自動切換真實日K＋量能柱＋MA20＋三叉戟壓／撐／預；若量能資料暫時不可用，才安全退回結構示意圖。</div>
+    <div id="imagePreviewNote" class="image-preview-note">圖片由目前分析資料直接產生；V3.6.7.4 沿用個股 PNG 1152×2048（9:16）與大盤 PNG 1024×1536（2:3）。個股 Worker 若回傳完整 dailySeries，個股主圖會自動畫成真實近期日K、量能柱、日20MA、A/B/C與三叉戟壓／撐／預；資料不足才退回結構示意圖。大盤部署新版TAIEX Worker後，會使用TAIEX官方OHLC＋FMTQIK市場成交股數組成dailySeries，自動切換真實日K＋量能柱＋MA20＋三叉戟壓／撐／預；若量能資料暫時不可用，才安全退回結構示意圖。</div>
   </div>
 </div>
 
-<footer class="footer">石頭少爺 Agent｜GitHub 前端 V3.6.7.2｜📊 開高低收量（OHLCV）資料驗證｜完整套用使用者指定的個股圖片報告格式｜V3.4.7 穩定核心與雙圖片版型完整沿用｜個股主圖支援真實日K＋量能＋MA20＋A/B/C＋三叉戟壓撐預｜價格作戰地圖保留持有／空手固定句型｜本前端不改ABC／Fib／N字與 pivot-abc-v2.4 核心<br>技術分析僅供研究與決策參考，不構成投資建議。<br>本版重點：個股圖片報告固定採用使用者指定之標準版型，作為後續 GitHub 個股圖正式模板。</footer>
+<footer class="footer">石頭少爺 Agent｜GitHub 前端 V3.6.7.4｜🧪 歷史經驗超白話提示｜完整套用使用者指定的個股圖片報告格式｜V3.4.7 穩定核心與雙圖片版型完整沿用｜個股主圖支援真實日K＋量能＋MA20＋A/B/C＋三叉戟壓撐預｜價格作戰地圖保留持有／空手固定句型｜本前端不改ABC／Fib／N字與 pivot-abc-v2.4 核心<br>技術分析僅供研究與決策參考，不構成投資建議。<br>本版重點：個股圖片報告固定採用使用者指定之標準版型，作為後續 GitHub 個股圖正式模板。</footer>
 
 <script>
 
 const API_BASE_URL="https://shitou-agent-fib-api.d318426.workers.dev";
 
-// V3.6.7.2：資料視窗正式隔離——個股圖80~120根／三叉戟固定120根／OHLCV Walk-Forward研究最多420根。
+// V3.6.7.4：個股圖片的 OHLCV Research Gate 提示再簡化成新手一眼就懂的超白話版本。
+// 只有時間序列驗證已通過、且目前型態正在等待突破或已出現時才顯示；不改 ABC／Fib／N字／突破品質2.0／三叉戟／既有進出場結論。
+// 卡片顯示「這個訊號偏加分、訊號是否已出現、過去另外測過幾次、5天後通常表現、比類似行情多多少」並固定附上白話提醒。
+
+// V3.6.7.4：延續資料視窗隔離——個股圖80~120根／三叉戟固定120根／OHLCV Walk-Forward研究最多420根。
 // 目的：只增加研究深度，不讓較長研究歷史偷偷改變舊版三叉戟壓／撐／預；ABC／Fib／N字／突破品質2.0均不變。
 
-// V3.6.7.2：研究閘門升級為時間序列 holdout + 同趨勢基準比較；未通過者不進報告證據、不改任何舊分數／訊號。
+// V3.6.7.4：研究閘門仍為時間序列 holdout + 同趨勢基準比較；本版只優化提示文字，不改研究邏輯。
 
 // V3.6.6.2 個股圖片排版修正：完整沿用 V3.6.6.1 固定模板與所有分析文字內容；
 // 只調整個股圖片警語位置與文字渲染清晰度；A區固定狀態欄與既有排版安全完整保留。
@@ -15083,7 +15087,7 @@ function appendPriceConfluenceV350(lines,report){
 
 
 /* ========================================================================
-   V3.6.7.2｜決策引擎＋真實日K＋三叉戟＋OHLCV Research Gate（GitHub 前端限定）
+   V3.6.7.4｜決策引擎＋真實日K＋三叉戟＋OHLCV Research Gate（超白話提示版）
    ------------------------------------------------------------------------
    目的：把既有可驗證資料整理為「階段 → 突破生命週期 → 品質 → 價帶 → 防守 → 稽核」。
    重要邊界：
@@ -15409,7 +15413,7 @@ function normalizeDailyBarsV361(report){
 
 
 // ============================================================
-// V3.6.7.2｜OHLCV 可回測研究閘門（Research Gate）
+// V3.6.7.4｜OHLCV 可回測研究閘門（Research Gate，提示文字超白話化）
 // ------------------------------------------------------------
 // 原則：
 // 1) 只使用已完成逐日 OHLCV；歷史事件在 t 日判斷時，不讀取 t 之後資料。
@@ -15593,7 +15597,7 @@ function backtestPatternV367(bars,detector){
   return {n:overall.n,pass,reason,train,test,overall,splitIndex:split};
 }
 
-// V3.6.7.2｜資料視窗隔離：避免研究資料變長後改動既有三叉戟結果。
+// V3.6.7.4｜資料視窗隔離：避免研究資料變長後改動既有三叉戟結果。
 // 1) 圖片：最近80根為主，為了納入A/B/C最多延伸到120根（selectStockChartBarsV365）。
 // 2) 三叉戟：固定只掃最近120根已完成OHLCV，維持既有短中期壓／撐／預語意。
 // 3) Research Gate：最多使用最近420根已完成OHLCV，僅供Walk-Forward研究，不回頭改三叉戟。
@@ -15617,7 +15621,7 @@ function ohlcvResearchGateV367(report,mode="stock"){
   if(mode==="market")return {available:bars.length>=260,mode,key:"MARKET_SHADOW_ONLY",active:null,validated:[],bars:bars.length,
     text:"大盤僅保留研究架構；未做獨立TAIEX回測前，不把個股影片規則直接套用到指數。"};
   if(bars.length<260)return {available:false,mode,key:"INSUFFICIENT_HISTORY",active:null,validated:[],bars:bars.length,
-    text:`📊 開高低收量（OHLCV）資料驗證至少需要260根已完成日K；目前 ${bars.length} 根。不足時不升級任何影片規則。`};
+    text:`🧪 歷史經驗提示至少需要260根已完成日K；目前 ${bars.length} 根。不足時不升級任何影片規則。`};
 
   const defs=[
     {key:"LEFT_PEAK_VOLUME",label:"左峰攻擊量續強",detector:leftPeakVolumeSignalV367},
@@ -15632,20 +15636,70 @@ function ohlcvResearchGateV367(report,mode="stock"){
   }
   const active=validated.find(x=>x.current)||null;
   return {available:true,mode,key:active?"ACTIVE_VALIDATED":validated.length?"VALIDATED_IDLE":"NO_OUT_OF_SAMPLE_LIFT",bars:bars.length,validated,all,active,
-    text:active?`${active.label}｜${active.current.text}｜holdout樣本 n=${active.stats.test.n}，5日中位 ${pctTextV367(active.stats.test.med5)}，較同趨勢基準 ${pctTextV367(active.stats.test.lift5)}`:
-      validated.length?`本檔有 ${validated.length} 個候選通過時間序列holdout閘門，但目前沒有觸發／等待中的對應型態。`:
-      "目前候選沒有在時間序列holdout同時通過樣本數、5日報酬增益、勝率增益、10日確認與MAE風險門檻，因此不加入操作判斷。"};
+    text:active?`${active.label}｜${active.current.state==="TRIGGERED"?"✅ 已出現":"⏳ 等待突破"}｜過去另外測過 ${active.stats.test.n} 次｜之後 5 天通常約 ${pctTextV367(active.stats.test.med5)}｜比類似行情多 ${pctTextV367(active.stats.test.lift5)}`:
+      validated.length?`本檔有 ${validated.length} 個候選通過時間序列驗證，但目前沒有已出現／等待中的對應型態。`:
+      "目前候選沒有同時通過時間序列驗證所需的事件數、5日增益、10日確認與風險門檻，因此不加入操作判斷。"};
 }
 
 function researchImageTextV367(r){
+  // 保留舊介面供文字報告／相容用途；圖片自 V3.6.7.4 改由 researchImageCardDataV3673() 白話呈現。
   if(!r?.active)return null;
   const a=r.active,s=a.stats.test,c=a.current;
   const state=c.state==="TRIGGERED"?"已觸發":"等待突破";
-  return `📊 開高低收量（OHLCV）資料驗證：${a.label}｜${state}｜holdout樣本${s.n}｜5日中位${pctTextV367(s.med5)}｜較同趨勢${pctTextV367(s.lift5)}`;
+  return `🧪 歷史經驗：${a.label}｜${state==="已觸發"?"✅ 已出現":"⏳ 等待突破"}｜過去另外測過 ${s.n} 次｜之後 5 天通常約 ${pctTextV367(s.med5)}｜比類似行情多 ${pctTextV367(s.lift5)}`;
+}
+
+function researchImageCardDataV3673(r){
+  if(!r?.active)return null;
+  const a=r.active,s=a.stats?.test,c=a.current;
+  if(!s||!c)return null;
+  const state=c.state==="TRIGGERED"?"目前已觸發":"目前等待突破";
+  return {
+    title:"🧪 歷史經驗：這個訊號偏加分",
+    status:`${a.label}｜${c.state==="TRIGGERED"?"✅ 已出現":"⏳ 等待突破"}`,
+    pattern:`過去另外測過 ${s.n} 次｜之後 5 天通常約 ${pctTextV367(s.med5)}`,
+    stats:`比類似行情多漲約 ${pctTextV367(s.lift5)}`,
+    note:"💡 白話：這個訊號過去出現時，後面的表現通常比類似行情更好，但不是保證一定會漲。"
+  };
+}
+
+function estimateWrappedLinesV3673(ctx,text,maxWidth,size,weight=750,maxLines=2){
+  ctx.save();
+  fontV3328(ctx,size,weight,"#172033","left");
+  const count=Math.max(1,wrapLinesV3328(ctx,String(text??""),maxWidth).length);
+  ctx.restore();
+  return Math.min(count,maxLines);
+}
+
+function fitSummaryTypographyV3673(ctx,bullets,maxWidth,availableHeight){
+  const candidates=[
+    {size:20,lineHeight:33,gap:14},
+    {size:19,lineHeight:31,gap:11},
+    {size:18,lineHeight:29,gap:9},
+    {size:17,lineHeight:27,gap:8},
+    {size:16,lineHeight:25,gap:7},
+    {size:15,lineHeight:24,gap:6}
+  ];
+  for(const opt of candidates){
+    const needed=bullets.reduce((sum,b)=>sum+estimateWrappedLinesV3673(ctx,`• ${b}`,maxWidth,opt.size,750,2)*opt.lineHeight+opt.gap,0);
+    if(needed<=availableHeight)return opt;
+  }
+  return candidates[candidates.length-1];
+}
+
+function drawResearchValidationCardV3673(ctx,card,x,y,w,h){
+  if(!card)return;
+  const P=infoPaletteV3328();
+  rrV3328(ctx,x,y,w,h,12,"#f3fff7",P.green,2);
+  drawFitSingleLineStrictV3661(ctx,card.title,x+18,y+28,w-36,{maxSize:20,minSize:16,weight:950,color:P.green});
+  drawFitSingleLineStrictV3661(ctx,card.status,x+18,y+52,w-36,{maxSize:17,minSize:14,weight:900,color:P.green});
+  drawFitSingleLineStrictV3661(ctx,card.pattern,x+18,y+76,w-36,{maxSize:17,minSize:14,weight:850,color:P.navy});
+  drawFitSingleLineStrictV3661(ctx,card.stats,x+18,y+100,w-36,{maxSize:16,minSize:13,weight:800,color:P.text});
+  drawFitSingleLineStrictV3661(ctx,card.note,x+18,y+124,w-36,{maxSize:14,minSize:11,weight:750,color:P.muted});
 }
 
 function tridentEngineV361(report){
-  // V3.6.7.2：三叉戟固定最近120根，避免Worker提供420根研究資料後改變既有壓／撐／預。
+  // V3.6.7.4：三叉戟固定最近120根，避免Worker提供420根研究資料後改變既有壓／撐／預。
   const bars=tridentBarsV3672(report);
   const close=n(report?.close)??(bars.length?n(bars[bars.length-1].close):null);
   if(bars.length<2){
@@ -15772,10 +15826,10 @@ function appendDecisionEngineV360(lines,report){
   lines.push(`${d.measured.icon} 型態量度：${d.measured.text}`);
   lines.push(`${d.replay.icon} Replay／No-lookahead：${d.replay.label}｜${d.replay.text}`);
   if(d.research?.active){
-    lines.push(`📊 開高低收量（OHLCV）資料驗證：${d.research.text}`);
+    lines.push(`🧪 歷史經驗提示：${d.research.text}`);
     lines.push("📌 研究閘門只使用當下以前的日K做歷史事件判定；未通過局部樣本門檻的影片規則完全不加入操作證據。此處不是普遍勝率承諾。 ");
   }
-  lines.push("📌 V3.6.7.2沿用的真實日K、量能、MA20、ABC定位與三叉戟畫線都屬前端顯示／判讀層；不改ABC／Fib／N字核心。個股圖片的「可進／等待／續抱／減碼／退出」仍只是把既有結構與風控條件翻成白話，不等於保證報酬。三叉戟需要完整逐日OHLCV；預線仍採前端候選備用防線規則，不參與核心失效判定。 ");
+  lines.push("📌 V3.6.7.4沿用的真實日K、量能、MA20、ABC定位與三叉戟畫線都屬前端顯示／判讀層；不改ABC／Fib／N字核心。個股圖片的「可進／等待／續抱／減碼／退出」仍只是把既有結構與風控條件翻成白話，不等於保證報酬。三叉戟需要完整逐日OHLCV；預線仍採前端候選備用防線規則，不參與核心失效判定。 ");
 }
 
 function appendWaveStageSectionV3323(lines,report,stage=null){
@@ -16156,7 +16210,7 @@ function buildReportTextV326(report){
 
   };
 
-  lines.push("📘 石頭少爺分析助手｜GitHub 前端 V3.6.7.2｜📊 開高低收量（OHLCV）資料驗證");
+  lines.push("📘 石頭少爺分析助手｜GitHub 前端 V3.6.7.4｜🧪 歷史經驗超白話提示");
 
   lines.push(`報告產出時間：${generatedAt}`);
 
@@ -17260,7 +17314,7 @@ function buildMarketWorkerReportText(data){
   const lines=[];
   const section=title=>{lines.push("", "━━━━━━━━━━━━━━━━━━", `【${title}】`, "━━━━━━━━━━━━━━━━━━", "");};
 
-  lines.push("📈 石頭少爺分析助手｜GitHub 前端 V3.6.7.2｜大盤環境戰報");
+  lines.push("📈 石頭少爺分析助手｜GitHub 前端 V3.6.7.4｜大盤環境戰報");
   lines.push("判讀核心：大盤前端邏輯沿用 V3.3.10｜ABC演算法沿用 pivot-abc-v2.4｜大盤圖片模組不變");
   lines.push(`報告產出時間：${reportGeneratedAt()}`);
   lines.push("");
@@ -17953,7 +18007,7 @@ function findBarIndexByDateV365(bars,date){
 function selectStockChartBarsV365(report,st){
   const all=normalizeDailyBarsV361(report);
   if(all.length<20)return {all,bars:[],start:0,ma20:[]};
-  // V3.6.7.2：圖片視窗維持原行為——最近80根為主，必要時最多延伸至120根以容納A/B/C。
+  // V3.6.7.4：圖片視窗維持原行為——最近80根為主，必要時最多延伸至120根以容納A/B/C。
   const preferred=80,maxBars=120;
   let start=Math.max(0,all.length-preferred);
   const abcDates=[st?.s?.fib?.ADate,st?.s?.fib?.BDate,st?.s?.fib?.CDate].filter(Boolean);
@@ -18171,7 +18225,7 @@ function renderStockInfographicV3328(report){
   fontV3328(ctx,22,900,"#fff","center");ctx.fillText("報告製作 By.石頭少爺",1402,52);
   fontV3328(ctx,18,800,"#fff","center");ctx.fillText("圖片產生時間",1402,83);
   fontV3328(ctx,19,900,"#fff","center");ctx.fillText(reportGeneratedAt().replace("（台灣時間）",""),1402,115);
-  fontV3328(ctx,16,700,"#dbeafe","center");ctx.fillText("V3.6.7.2｜📊 開高低收量（OHLCV）資料驗證",1402,141);
+  fontV3328(ctx,16,700,"#dbeafe","center");ctx.fillText("V3.6.7.4｜🧪 歷史經驗超白話提示",1402,141);
 
   // ===== 上半部：ABC + 結構示意圖 =====
   rrV3328(ctx,24,174,520,520,14,P.white,P.blue,2);
@@ -18219,12 +18273,21 @@ function renderStockInfographicV3328(report){
   const qRisk=q360?.risk?.[0]||"目前未見主要扣分證據";
   const plain362=stockPlainActionV362(st);
   const bullets=[`🚦 現在：${plain362.bias.icon} ${plain362.bias.label}｜一句話：${plain362.summary}`,`👤 空手者：${plain362.nonHolderAction}｜${plain362.nonHolderNote}`,`💼 持有者：${plain362.holderAction}｜${plain362.holderNote}`,`${st.breakoutLife360.icon} 突破：${st.breakoutLife360.label}｜${st.breakoutLife360.progress}`,`${q360.icon} 品質：${q360.key==="WAIT"?q360.label:`${q360.label}｜${q360.scoreText}`}｜${qPlus}`,`⚠️ 主要風險：${qRisk}`,`${st.volumePosition.icon} 量價：${st.volumePosition.label}${st.vol!==null?`｜${fmt(st.vol,2)}倍`:""}｜RSI ${st.rsi===null?"-":fmt(st.rsi)}`,b360?.resistance?`⬆️ 壓力：${b360.resistance.text}｜${b360.resistance.strength}`:(cUp?`⬆️ 壓力：${fmt(cUp.avg)} 元｜${cUp.strength}`:(up?`⬆️ 壓力：${up.label} ${fmt(up.value)} 元`:"⬆️ 壓力：等待新關卡")),b360?.support?`⬇️ 支撐：${b360.support.text}｜${b360.support.strength}`:(cDown?`⬇️ 支撐：${fmt(cDown.avg)} 元｜${cDown.strength}`:(down?`⬇️ 支撐：${down.label} ${fmt(down.value)} 元`:"⬇️ 支撐：依MA20與新結構")),d360?.first?`🛡️ 減碼／退出防守：${fmt(d360.first.level)} 元｜${d360.first.label}`:"🛡️ 出場／減碼防守：等待可驗證價位"];
-  const researchLine367=researchImageTextV367(st.research367);
-  if(researchLine367)bullets.push(researchLine367);
+  // V3.6.7.4：Research Gate 通過且目前有型態時，改成獨立白話驗證卡；不把研究結果混進突破品質分數。
+  const researchCard3673=researchImageCardDataV3673(st.research367);
   bullets.push(tridentImageTextV361(st.trident361));
   bullets.push(st.trident361?.preparatory?"📝 預：如果撐不住，下面還有一條備用防線":"📝 三叉戟：壓＝漲到這裡容易被賣壓卡住｜撐＝跌到這裡要觀察能不能守住");
-  let ky=lowerY+94;bullets.forEach(b=>{ky=drawWrapV3328(ctx,`• ${b}`,824,ky,720,33,2,{size:20,weight:750,color:P.text})+14;});
-  if(ky<lowerY+lowerH-106)drawWrapV3328(ctx,`🎯 下一步：${st.breakoutLife360?.next||st.machine.trigger}`,824,ky+4,720,28,2,{size:18,weight:850,color:P.navy});
+  let ky=lowerY+94;
+  if(researchCard3673){
+    const cardH=140,cardX=824,cardW=720,cardY=lowerY+lowerH-cardH-18;
+    const available=Math.max(180,cardY-ky-10);
+    const typo=fitSummaryTypographyV3673(ctx,bullets,720,available);
+    bullets.forEach(b=>{ky=drawWrapV3328(ctx,`• ${b}`,824,ky,720,typo.lineHeight,2,{size:typo.size,weight:750,color:P.text})+typo.gap;});
+    drawResearchValidationCardV3673(ctx,researchCard3673,cardX,cardY,cardW,cardH);
+  }else{
+    bullets.forEach(b=>{ky=drawWrapV3328(ctx,`• ${b}`,824,ky,720,33,2,{size:20,weight:750,color:P.text})+14;});
+    if(ky<lowerY+lowerH-106)drawWrapV3328(ctx,`🎯 下一步：${st.breakoutLife360?.next||st.machine.trigger}`,824,ky+4,720,28,2,{size:18,weight:850,color:P.navy});
+  }
 
   // ===== 底部口訣＋固定風險警語（V3.6.6.2） =====
   // 左側保留原本「記住口訣」內容；右下角使用獨立警語框，避免與 C 區或口訣文字互相覆蓋。
@@ -18315,7 +18378,7 @@ function renderMarketInfographicV3328(data){
   rrV3328(ctx,2,2,1596,2396,18,P.white,P.blue,3);
   drawHeaderTitleV3328(ctx,"📈 大盤先懂","現在市場走到哪一步？");
   rrV3328(ctx,26,82,1190,72,10,P.navy,null);fontV3328(ctx,31,900,"#facc15");ctx.fillText("臺灣加權股價指數（TAIEX）",48,128);fontV3328(ctx,24,800,"#fff");ctx.fillText(`｜最新交易日 ${datefmt(data.closeDate)}｜資料來源：${data.source||"TWSE Official"}`,500,128);
-  rrV3328(ctx,1232,18,340,136,12,P.navy,null);fontV3328(ctx,22,900,"#fff","center");ctx.fillText("報告製作 By.石頭少爺",1402,52);fontV3328(ctx,18,800,"#fff","center");ctx.fillText("圖片產生時間",1402,83);fontV3328(ctx,19,900,"#fff","center");ctx.fillText(reportGeneratedAt().replace("（台灣時間）",""),1402,115);fontV3328(ctx,17,700,"#dbeafe","center");ctx.fillText("V3.6.7.2｜大盤真實日K＋三叉戟版",1402,141);
+  rrV3328(ctx,1232,18,340,136,12,P.navy,null);fontV3328(ctx,22,900,"#fff","center");ctx.fillText("報告製作 By.石頭少爺",1402,52);fontV3328(ctx,18,800,"#fff","center");ctx.fillText("圖片產生時間",1402,83);fontV3328(ctx,19,900,"#fff","center");ctx.fillText(reportGeneratedAt().replace("（台灣時間）",""),1402,115);fontV3328(ctx,17,700,"#dbeafe","center");ctx.fillText("V3.6.7.4｜大盤真實日K＋三叉戟版",1402,141);
 
   rrV3328(ctx,24,174,520,520,14,P.white,P.blue,2);drawCardTitleV3328(ctx,48,215,"📖 ABC 是這套分析的核心：",P.navy,30);drawWrapV3328(ctx,"A＝起漲點、B＝前波高點、C＝B回檔後由Pivot規則正式確認的回檔低點。",48,255,468,31,3,{size:21,weight:650,color:P.text});
   drawAbcValueRowV3329(ctx,48,365,466,"A",P.green,"起漲點",st.A,st.fib.ADate,"點");
@@ -18866,7 +18929,7 @@ async function analyzeStock(){
 
     set("stockName",hasRealStockName(name,code)?name:`股票代號 ${code}`);
 
-    set("stockMeta",`${code}｜${market}｜${source}｜後端分析 ${version}｜前端 V3.6.7.2`);
+    set("stockMeta",`${code}｜${market}｜${source}｜後端分析 ${version}｜前端 V3.6.7.4`);
 
     set("closeDate",`最新交易日：${datefmt(closeDate)}`);
 
