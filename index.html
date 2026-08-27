@@ -527,7 +527,7 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
 
     <p>月線波段條件判斷＋固定倍數目標價＋費波那契 N字分析</p>
 
-    <span class="version-pill">前端 V3.6.8.1｜八書結構校正＋白話中文版｜60分K細微浪2.4＋多層級＋BOS｜真實日K＋大盤三叉戟｜個股真實日K＋量能＋日20MA＋壓撐預｜個股圖 1152×2048（9:16）｜大盤圖 1024×1536（2:3）｜V3.4.7 穩定核心完整沿用｜研究建議搭配 Worker V2.9.13</span>
+    <span class="version-pill">前端 V3.6.9.0｜多週期交易劇本＋位置決策版｜日K方向＋60分K操作層級＋進場模式＋整理品質＋缺口生命週期2.0｜60分K細微浪2.4＋多層級＋BOS｜個股圖 1152×2048（9:16）｜大盤圖 1024×1536（2:3）｜V3.4.7 穩定核心完整沿用｜研究建議搭配 Worker V2.9.13</span>
 
   </div>
 
@@ -926,16 +926,20 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
       <a id="imageDownloadLink" class="image-save-link" href="#" download>💾 儲存 PNG</a>
       <button id="imageShareButton" class="image-share-btn" type="button" onclick="shareInfographicV3328()">📤 分享圖片</button>
     </div>
-    <div id="imagePreviewNote" class="image-preview-note">圖片由目前分析資料直接產生；V3.6.8.1 沿用個股 PNG 1152×2048（9:16）與大盤 PNG 1024×1536（2:3）。個股 Worker 若回傳完整 dailySeries，個股主圖會畫真實日K、量能柱、日20MA、A/B/C與三叉戟；若另回傳 intraday60Series，主升／整理／末升的小判斷改由60分K細微浪2.4＋多層級＋結構突破（BOS）共振確認，日K不再硬數細部1~5；V3.6.8.1保留「起漲→拉回→主升→整理→末升→初跌→反彈→主跌」獨立白話教學層，只新增文字判讀，不覆蓋既有PNG文字。大盤部署新版TAIEX Worker後，會使用TAIEX官方OHLC＋FMTQIK市場成交股數組成dailySeries，自動切換真實日K＋量能柱＋MA20＋三叉戟壓／撐／預；若量能資料暫時不可用，才安全退回結構示意圖。</div>
+    <div id="imagePreviewNote" class="image-preview-note">圖片由目前分析資料直接產生；V3.6.9.0 沿用個股 PNG 1152×2048（9:16）與大盤 PNG 1024×1536（2:3），新增多週期交易劇本／位置決策顯示，不增加圖片尺寸、不覆蓋原本價格作戰地圖文字。個股 Worker 若回傳完整 dailySeries，個股主圖會畫真實日K、量能柱、日20MA、A/B/C與三叉戟；若另回傳 intraday60Series，主升／整理／末升的小判斷改由60分K細微浪2.4＋多層級＋結構突破（BOS）共振確認，日K不再硬數細部1~5；V3.6.9.0保留「起漲→拉回→主升→整理→末升→初跌→反彈→主跌」獨立白話教學層，只新增文字判讀，不覆蓋既有PNG文字。大盤部署新版TAIEX Worker後，會使用TAIEX官方OHLC＋FMTQIK市場成交股數組成dailySeries，自動切換真實日K＋量能柱＋MA20＋三叉戟壓／撐／預；若量能資料暫時不可用，才安全退回結構示意圖。</div>
   </div>
 </div>
 
-<footer class="footer">石頭少爺 Agent｜GitHub 前端 V3.6.8.1｜八書結構校正＋白話中文版｜60分K細微浪2.4＋多層級＋BOS｜完整套用使用者指定的個股圖片報告格式｜V3.4.7 穩定核心與雙圖片版型完整沿用｜個股主圖支援真實日K＋量能＋MA20＋A/B/C＋三叉戟壓撐預｜價格作戰地圖保留持有／空手固定句型｜本前端不改ABC／Fib／N字與 pivot-abc-v2.4 核心<br>技術分析僅供研究與決策參考，不構成投資建議。<br>本版重點：個股圖片報告固定採用使用者指定之標準版型，作為後續 GitHub 個股圖正式模板。</footer>
+<footer class="footer">石頭少爺 Agent｜GitHub 前端 V3.6.9.0｜多週期交易劇本＋位置決策版｜60分K細微浪2.4＋多層級＋BOS｜完整套用使用者指定的個股圖片報告格式｜V3.4.7 穩定核心與雙圖片版型完整沿用｜新增整理品質、均線收斂→張口、進場模式、結構防守距離、缺口生命週期2.0｜價格作戰地圖與原ABC／Fib／N字／突破品質2.0／三叉戟／OHLCV Research Gate全部保留｜本前端不改 pivot-abc-v2.4 核心<br>技術分析僅供研究與決策參考，不構成投資建議。<br>本版重點：在不改既有圖片尺寸與核心公式下，將日K方向、60分K操作波段、位置、進場模式與結構防守整合成同一決策鏈。</footer>
 
 <script>
 
 const API_BASE_URL="https://shitou-agent-fib-api.d318426.workers.dev";
 
+// V3.6.9.0：在V3.6.8.1之上新增「多週期交易劇本＋位置決策層」。
+// 原則：日K定大方向／ABC／N字；60分K負責操作波段與細微浪；未取得可靠15分／5分K序列時一律顯示未接入，不以日K或60分K冒充。
+// 新增：整理品質（ATR自適應、不硬設固定百分比）、均線糾結→張口、突破確認型／回測轉折型進場模式、結構防守距離、缺口生命週期2.0。
+// 保留：突破品質2.0、三叉戟、OHLCV Research Gate、波浪候選、價格作戰地圖與既有圖片尺寸／文字區塊；不改ABC／Fib／N字／BOS核心。
 // V3.6.8.1：以V3.6.7.21的60分K細微浪2.4／多層級／BOS／白話教學層為底，新增八書結構決策層並修正多層級一致性；不覆蓋原判讀。
 // 核心數浪／ABC／N字／BOS規則不改：新增Fib Wave Profile，把0.236/0.382/0.5/0.618/0.786回撤與1.0/1.272/1.618/2.0/2.618延伸做成「合理度＋目標區」，不把比例當鐵律。
 // Wave5新增「相對Wave1的1.0~1.618倍」主參考；保留既有0→3的0.382/0.618為次參考。ABC新增B/A回撤與C/A等長、1.618延伸資訊。
@@ -17198,6 +17202,118 @@ function riskEvidenceEngineV3681(report,deps={}){
   return {key,icon,label,action,positive,risk,neutral,net,coverage,coverageLabel:coverage>=7?"高":coverage>=4?"中":"低",summary:`${label}｜正向 ${positive.length}｜風險 ${risk.length}｜覆蓋 ${coverage}`};
 }
 
+
+/* ========================================================================
+   V3.6.9.0｜多週期交易劇本＋位置決策層（前端輔助，不改核心）
+   ------------------------------------------------------------------------
+   Trading Timeframe     → 操作層級（日K定方向／60分K定操作波段）
+   Setup Mode            → 進場模式（突破確認型／回測轉折型／等待）
+   Consolidation Quality → 整理品質（緊密／一般／寬幅；ATR自適應）
+   MA Compression/Open   → 均線糾結／收斂／剛張口／擴張
+   Structural Risk       → 結構防守距離（以既有防守價，不用固定%當停損）
+   Gap Lifecycle 2.0     → 缺口生命週期＋支撐壓力角色
+   ======================================================================== */
+function maClusterWidthAtV3690(bars,index){
+  if(!Array.isArray(bars)||index<19)return null;
+  const vals=[5,10,20].map(len=>smaAtV3681(bars,index,len)).filter(Number.isFinite);
+  if(vals.length<3)return null;
+  const base=smaAtV3681(bars,index,20);
+  if(!Number.isFinite(base)||base===0)return null;
+  return (Math.max(...vals)-Math.min(...vals))/Math.abs(base)*100;
+}
+function maArchitectureEnhanceV3690(report,base=null){
+  const b=base||maArchitectureEngineV3681(report),bars=completedDailyBarsV3681(report,180),i=bars.length-1,close=n(report?.close)??n(bars[i]?.close);
+  const cur=maClusterWidthAtV3690(bars,i),prev=maClusterWidthAtV3690(bars,i-5),ma20=n(b?.ma20),gap=close!==null&&ma20!==null&&ma20!==0?(close-ma20)/ma20*100:null;
+  let stateKey='UNKNOWN',stateIcon='⚪',stateLabel='均線狀態待確認',stateShort='待確認';
+  if(cur!==null){
+    const contracting=prev!==null&&cur<prev*.82,expanding=prev!==null&&cur>Math.max(prev*1.28,prev+.35);
+    const bull=['BULL_STACK','BULL_SHORT'].includes(b?.key),bear=['BEAR_STACK','BEAR_SHORT'].includes(b?.key);
+    if(cur<=1.25){stateKey='CLUSTERED';stateIcon='🟡';stateLabel='均線糾結｜多週期成本收斂';stateShort='均線糾結';}
+    else if(contracting){stateKey='CONTRACTING';stateIcon='🟡';stateLabel='均線收斂中｜等待方向';stateShort='收斂中';}
+    else if(bull&&expanding&&prev!==null&&prev<=2.8){stateKey='BULL_OPENING';stateIcon='🟢';stateLabel='多頭剛張口｜成本開始向上分離';stateShort='多頭剛張口';}
+    else if(bear&&expanding&&prev!==null&&prev<=2.8){stateKey='BEAR_OPENING';stateIcon='🔴';stateLabel='空頭剛張口｜成本開始向下分離';stateShort='空頭剛張口';}
+    else if(bull&&gap!==null&&gap>=15){stateKey='BULL_STRETCHED';stateIcon='🟠';stateLabel='多頭開口擴張｜乖離偏大';stateShort='擴張偏熱';}
+    else if(bull){stateKey='BULL_OPEN';stateIcon='🟢';stateLabel='多頭開口維持';stateShort='多頭開口';}
+    else if(bear){stateKey='BEAR_OPEN';stateIcon='🔴';stateLabel='空頭開口維持';stateShort='空頭開口';}
+    else {stateKey='MIXED';stateIcon='🟡';stateLabel='均線交錯／方向未統一';stateShort='交錯';}
+  }
+  const stateText=`${stateLabel}${cur!==null?`｜5/10/20成本帶寬 ${fmt(cur,2)}%`:''}${prev!==null?`｜5日前 ${fmt(prev,2)}%`:''}${gap!==null?`｜現價對20日 ${fmtSignedPct(gap)}`:''}`;
+  return {...b,stateKey,stateIcon,stateLabel,stateShort,clusterPct:cur,prevClusterPct:prev,priceGap20:gap,stateText};
+}
+function consolidationQualityEngineV3690(report){
+  const bars=completedDailyBarsV3681(report,80),i=bars.length-1;
+  if(i<20)return {available:false,key:'NO_DATA',icon:'⚪',label:'整理品質資料不足',short:'資料不足',text:'需要較完整日K才判斷整理是否緊密。'};
+  const win=bars.slice(Math.max(0,i-11),i+1),high=Math.max(...win.map(b=>n(b.high)).filter(Number.isFinite)),low=Math.min(...win.map(b=>n(b.low)).filter(Number.isFinite)),close=n(bars[i].close),atr=atrAtV3681(bars,i,14);
+  const width=Number.isFinite(high)&&Number.isFinite(low)?high-low:null,widthAtr=width!==null&&atr&&atr>0?width/atr:null,widthPct=width!==null&&close?width/Math.abs(close)*100:null;
+  const v5=avgVolAtV3681(bars,i,5,false),vPrev=bars.slice(Math.max(0,i-9),Math.max(0,i-4)).map(x=>n(x.volume)).filter(Number.isFinite),prevAvg=vPrev.length?vPrev.reduce((a,b)=>a+b,0)/vPrev.length:null,volRatio=v5!==null&&prevAvg&&prevAvg>0?v5/prevAvg:null;
+  const maCur=maClusterWidthAtV3690(bars,i);
+  let key='NORMAL',icon='🟡',label='一般整理',short='一般整理';
+  if(widthAtr!==null&&widthAtr<=4.5&&(volRatio===null||volRatio<=1.10)&&(maCur===null||maCur<=3)){key='TIGHT';icon='🟢';label='緊密整理候選｜波動與成本收斂';short='緊密整理';}
+  else if(widthAtr!==null&&widthAtr>=8){key='WIDE';icon='⚠️';label='寬幅震盪｜不當成高品質橫盤';short='寬幅震盪';}
+  else if(volRatio!==null&&volRatio<=.8){key='DRYING';icon='🟢';label='整理量縮｜等待方向';short='量縮整理';}
+  const text=`${label}${widthAtr!==null?`｜近12根區間約 ${fmt(widthAtr,2)} ATR`:''}${widthPct!==null?`（${fmt(widthPct,2)}%）`:''}${volRatio!==null?`｜近5量／前段量 ${fmt(volRatio,2)}×`:''}。門檻採ATR與成本收斂自適應，只作突破前母體品質輔助，不併入突破品質2.0分數。`;
+  return {available:true,key,icon,label,short,text,widthAtr,widthPct,volRatio,maClusterPct:maCur,lookback:win.length};
+}
+function multiTimeframeContextV3690(report,deps={}){
+  const regime=deps.regime||null,w=waveStageAssistV3323(report),f=w?.fineWave60||null;
+  const dailyBull=['BULL','BULL_EXTENSION_HOT','BULL_PULLBACK'].includes(regime?.key),dailyBear=regime?.key==='BEAR';
+  let key='MIXED',icon='🟡',label='日K與60分K等待共振',short='多週期待確認',action='日K先定方向，再等60分K提供操作波段確認。';
+  if(!f?.available){key='DAILY_ONLY';icon='⚪';label='日K已有判讀｜60分K資料不足';short='僅日K';action='不以日K冒充60分K細浪；等60分K資料完整再升級操作劇本。';}
+  else if(dailyBull&&['MAIN_ADVANCE','LATE_EXTENSION'].includes(w.key)){key='BULL_ALIGNED';icon='🟢';label='日K偏多＋60分K順勢推進';short='日多／60K推進';action='方向同向；新進仍需看位置與結構防守距離。';}
+  else if(dailyBull&&w.key==='MID_CONSOLIDATION'){key='BULL_PULLBACK';icon='🟡';label='日K偏多＋60分K整理／修正';short='日多／60K整理';action='優先尋找回測轉折型，而不是看到趨勢偏多就追價。';}
+  else if(dailyBull&&w.key==='LATE_RISK'){key='BULL_LATE';icon='⚠️';label='日K偏多＋60分K末段風險';short='日多／60K末段';action='提高獲利保護；要有結構轉弱證據才升級成反轉。';}
+  else if(dailyBear&&['MID_CONSOLIDATION','UNDETERMINED'].includes(w.key)){key='BEAR_REBOUND';icon='⚠️';label='日K偏弱＋60分K反彈／整理';short='日弱／60K反彈';action='不因短線反彈直接翻多，先看是否破壞原空頭結構。';}
+  else if(dailyBear){key='BEAR_ALIGNED';icon='🔴';label='日K偏弱＋60分K未扭轉';short='日弱／60K偏弱';action='風險優先，等待日K結構修復。';}
+  const fineLabel=f?.available?(w.label||f.label):'60分K未啟用';
+  return {key,icon,label,short,action,dailyLabel:regime?.label||'日K盤態待確認',fine60Label:fineLabel,fineAvailable:!!f?.available,fineStage:w?.key||'UNDETERMINED',note:'15分K／5分K尚未由目前Worker提供可靠完成K序列，V3.6.9.0不虛構觸發。'};
+}
+function gapLifecycleEnhanceV3690(report,base=null){
+  const g=base||gapLifecycleEngineV3681(report,{}),e=g?.gap;
+  if(!e)return {...g,classZh:g?.key==='NONE'?'近期無缺口':'缺口待確認',roleZh:'無需設定缺口角色',roleLevel:null};
+  let classZh='一般缺口候選',roleZh='缺口角色待後續價格確認',roleLevel=null;
+  if(g.key==='BREAKAWAY_CANDIDATE')classZh='突破缺口候選';
+  else if(g.key==='RUNAWAY_CANDIDATE')classZh='行進／逃逸缺口候選';
+  else if(g.key==='EXHAUSTION_RISK')classZh='竭盡缺口警戒候選';
+  else if(g.key==='BREAKDOWN_GAP')classZh='跌破缺口候選';
+  else if(g.key==='NOISE_ONLY')classZh='普通小缺口／快速回補';
+  if(g.filled){roleZh='已回補｜原缺口支撐／壓力角色降級';}
+  else if(e.dir==='UP'){roleLevel=n(e.to);roleZh=`向上缺口未回補｜缺口上沿附近 ${fmt(roleLevel)} 元作回檔支撐觀察`;}
+  else if(e.dir==='DOWN'){roleLevel=n(e.to);roleZh=`向下缺口未回補｜缺口下沿附近 ${fmt(roleLevel)} 元作反彈壓力觀察`;}
+  return {...g,classZh,roleZh,roleLevel,text2:`${classZh}｜${roleZh}。只有價格真正回補／失守後才做角色切換，不用缺口名稱直接下單。`};
+}
+function structuralRiskPlanV3690(report,deps={}){
+  const close=n(report?.close),layers=Array.isArray(deps?.defense?.layers)?deps.defense.layers:[],ma20=n(deps?.ma?.ma20),B=n(deps?.nStruct?.B),swingLow=n(deps?.swing?.lastLow?.v),bars=completedDailyBarsV3681(report,80),atr=atrAtV3681(bars,bars.length-1,14);
+  const candidates=[];
+  layers.forEach(x=>{const v=n(x?.level);if(v!==null&&close!==null&&v<close)candidates.push({level:v,label:x.label||'動態防守'});});
+  if(B!==null&&close!==null&&B<close)candidates.push({level:B,label:'B角色防守'});
+  if(ma20!==null&&close!==null&&ma20<close)candidates.push({level:ma20,label:'日20MA趨勢防守'});
+  if(swingLow!==null&&close!==null&&swingLow<close)candidates.push({level:swingLow,label:'最近有效Swing低點'});
+  candidates.sort((a,b)=>b.level-a.level);
+  const first=candidates[0]||null,distPct=first&&close?(close-first.level)/Math.abs(close)*100:null,distAtr=first&&atr&&atr>0?(close-first.level)/atr:null;
+  let key='NO_LEVEL',icon='⚪',label='結構防守待建立';
+  if(first){
+    if((distAtr!==null&&distAtr<=1.5)||(distPct!==null&&distPct<=4)){key='NEAR';icon='🟢';label='離結構防守近｜風險較好控制';}
+    else if((distAtr!==null&&distAtr<=3)||(distPct!==null&&distPct<=8)){key='MID';icon='🟡';label='結構防守距離中等';}
+    else {key='FAR';icon='⚠️';label='離結構防守較遠｜新進容錯較差';}
+  }
+  const text=first?`${label}｜最近防守 ${fmt(first.level)} 元（${first.label}）${distPct!==null?`｜距現價 ${fmt(distPct,2)}%`:''}${distAtr!==null?`｜約 ${fmt(distAtr,2)} ATR`:''}`:'目前沒有位於現價下方、可驗證的結構防守價。';
+  return {key,icon,label,text,first,candidates:candidates.slice(0,5),distancePct:distPct,distanceAtr:distAtr,atr};
+}
+function entryModeEngineV3690(report,deps={}){
+  const regime=deps.regime,life=deps.lifecycle,quality=deps.quality,keyK=deps.keyK,volume=deps.volume,ma=deps.ma,con=deps.consolidation,mtf=deps.mtf,riskPlan=deps.riskPlan,evidence=deps.evidence,s=currentStrategyStateV321(report),rsi=n(report?.dailyRsi),gap=n(s?.maCtx?.gapPct);
+  const bull=['BULL','BULL_EXTENSION_HOT','BULL_PULLBACK'].includes(regime?.key),bear=regime?.key==='BEAR'||evidence?.key==='RISK',hot=(rsi!==null&&rsi>=78)||(gap!==null&&gap>=15)||regime?.key==='BULL_EXTENSION_HOT';
+  const breakout=['CONFIRMED','STAND_CONFIRMED','REATTACK','EXTENDING'].includes(life?.key),qualityGood=['A','B'].includes(quality?.key),pullbackSignal=['RETESTING','RETEST_HELD'].includes(life?.key)||keyK?.key==='RETEST_HOLD'||keyK?.nearMa20||mtf?.key==='BULL_PULLBACK';
+  const riskFar=riskPlan?.key==='FAR',tight=['TIGHT','DRYING'].includes(con?.key);
+  let key='WAIT',icon='🟡',label='等待模式',short='等待',action='先等結構、位置與觸發條件更完整。',trigger=life?.next||'等待下一個可驗證事件';
+  if(bear){key='RISK_OFF';icon='🔴';label='風險優先｜暫不新進';short='風險優先';action='先處理風險；等日K結構與關鍵位重新修復。';trigger='收復關鍵壓力＋高低點結構修復';}
+  else if(bull&&pullbackSignal&&!riskFar){key='PULLBACK_TURN';icon='🟢';label='回測轉折型｜優先';short='等回測轉折';action='方向仍偏多，優先等B／均線／支撐附近量縮止穩＋關鍵K再評估，不追遠離防守的價格。';trigger='回測守住＋量縮／止穩K＋60分K重新轉強';}
+  else if(bull&&breakout&&qualityGood&&tight&&!hot&&!riskFar){key='BREAKOUT_CONFIRM';icon='🟢';label='突破確認型｜條件較完整';short='突破確認型';action='突破前母體較緊、突破品質合格且位置未過熱；仍需後續站穩／重測，不把分數當勝率。';trigger='突破後站穩／重測不破＋續攻';}
+  else if(bull&&(hot||riskFar)){key='HOLD_WAIT';icon='🟠';label='方向偏多｜新進等待';short='偏多但不追';action='已有部位依防守管理；空手等乖離收斂或回測靠近結構防守。';trigger='乖離收斂＋回測止穩，或新的低風險轉折';}
+  else if(bull&&breakout){key='BREAKOUT_WAIT';icon='🟡';label='突破已發生｜等站穩／回測';short='突破後等待';action='方向偏多，但突破確認與位置品質分開處理；先等站穩或回測。';trigger='站穩B／壓力轉支撐＋量價續強';}
+  const defenseText=riskPlan?.first?`防守 ${fmt(riskPlan.first.level)} 元｜${riskPlan.label}`:riskPlan?.label||'防守待建立';
+  return {key,icon,label,short,action,trigger,defenseText,hot,riskFar,pullbackSignal,breakout,qualityGood,tight,modeNote:'進場模式是前端劇本分類，不改ABC／N字／突破品質2.0，也不直接產生買賣指令。'};
+}
+
 function decisionEngineV360(report){
   const phase=marketPhaseEngineV360(report);
   const lifecycle=breakoutLifecycleV360(report);
@@ -17209,25 +17325,41 @@ function decisionEngineV360(report){
   const nStructure368=nStructureEngineV3681(report);
   const swing368=swingStructureEngineV3681(report,nStructure368);
   const maArchitecture368=maArchitectureEngineV3681(report);
-  const keyK368=keyKContextEngineV3681(report,{phase,lifecycle,maArchitecture:maArchitecture368});
+  const maArchitecture369=maArchitectureEnhanceV3690(report,maArchitecture368);
+  const keyK368=keyKContextEngineV3681(report,{phase,lifecycle,maArchitecture:maArchitecture369});
   const role368=supportResistanceRoleEngineV3681(report,{lifecycle,bands});
   const volume368=volumePriceEngineV3681(report,{phase,lifecycle,keyK:keyK368});
   const gap368=gapLifecycleEngineV3681(report,{phase,lifecycle,volume:volume368,keyK:keyK368});
+  const gap369=gapLifecycleEnhanceV3690(report,gap368);
   const regime368=marketRegimeEngineV3681(report,{phase,swing:swing368,maArchitecture:maArchitecture368,nStructure:nStructure368});
   const evidence368=riskEvidenceEngineV3681(report,{swing:swing368,maArchitecture:maArchitecture368,regime:regime368,lifecycle,quality,volume:volume368,keyK:keyK368,gap:gap368,role:role368});
-  return {phase,lifecycle,quality,trend,bands,defense,candle,measured:patternMeasuredMoveV360(report),trident:tridentEngineV361(report),research:ohlcvResearchGateV367(report,"stock"),replay:replayAuditV360(report),swing368,maArchitecture368,nStructure368,keyK368,role368,volume368,gap368,regime368,evidence368};
+  const consolidation369=consolidationQualityEngineV3690(report);
+  const multiTf369=multiTimeframeContextV3690(report,{regime:regime368});
+  const riskPlan369=structuralRiskPlanV3690(report,{defense,ma:maArchitecture369,nStruct:nStructure368,swing:swing368});
+  const entryMode369=entryModeEngineV3690(report,{regime:regime368,lifecycle,quality,keyK:keyK368,volume:volume368,ma:maArchitecture369,consolidation:consolidation369,mtf:multiTf369,riskPlan:riskPlan369,evidence:evidence368});
+  return {phase,lifecycle,quality,trend,bands,defense,candle,measured:patternMeasuredMoveV360(report),trident:tridentEngineV361(report),research:ohlcvResearchGateV367(report,"stock"),replay:replayAuditV360(report),swing368,maArchitecture368,maArchitecture369,nStructure368,keyK368,role368,volume368,gap368,gap369,regime368,evidence368,consolidation369,multiTf369,riskPlan369,entryMode369};
 }
 
 function appendDecisionEngineV360(lines,report){
   const d=decisionEngineV360(report),q=d.quality;
-  lineSection(lines,"🧠 V3.6 決策核心｜盤態 → 結構 → 突破 → 價帶 → 防守 → 稽核");
+  lineSection(lines,"🧠 V3.6.9 決策核心｜盤態 → 操作層級 → 位置 → 進場模式 → 突破 → 防守 → 稽核");
   lines.push(`${d.regime368.icon} 市場盤態：${d.regime368.label}`);
   lines.push(`➡️ ${d.regime368.summary}`);
   lines.push(`${d.swing368.icon} 波段高低點結構：${d.swing368.label}｜${d.swing368.degree}`);
   lines.push(`➡️ ${d.swing368.sequenceZh||"轉折待建立"}`);
   lines.push(`${d.nStructure368.icon} N字結構3.0：${d.nStructure368.label}｜${d.nStructure368.statusLabel}`);
-  lines.push(`${d.maArchitecture368.icon} 均線架構：${d.maArchitecture368.text}`);
-  lines.push(`📌 均線資料來源：${d.maArchitecture368.source}`);
+  lines.push(`${d.maArchitecture369.stateIcon} 均線架構：${d.maArchitecture369.text}`);
+  lines.push(`➡️ 均線狀態：${d.maArchitecture369.stateText}`);
+  lines.push(`📌 均線資料來源：${d.maArchitecture369.source}`);
+  lines.push(`${d.multiTf369.icon} 操作層級：${d.multiTf369.label}`);
+  lines.push(`➡️ ${d.multiTf369.action}`);
+  lines.push(`📎 ${d.multiTf369.note}`);
+  lines.push(`${d.consolidation369.icon} 整理品質：${d.consolidation369.label}`);
+  lines.push(`➡️ ${d.consolidation369.text}`);
+  lines.push(`${d.entryMode369.icon} 目前策略：${d.entryMode369.label}`);
+  lines.push(`➡️ ${d.entryMode369.action}`);
+  lines.push(`🎯 劇本觸發：${d.entryMode369.trigger}`);
+  lines.push(`${d.riskPlan369.icon} 結構防守距離：${d.riskPlan369.text}`);
   lines.push("📖 高低點白話：HH＝高點更高｜HL＝低點墊高｜LH＝高點降低｜LL＝低點更低；主級＝大波段｜中級＝操作波段｜細級＝短線。");
   lines.push(`${d.phase.icon} 原市場階段：${d.phase.label}｜證據信心 ${d.phase.confidence}`);
   lines.push(`➡️ ${d.phase.summary}`);
@@ -17250,8 +17382,8 @@ function appendDecisionEngineV360(lines,report){
   lines.push(`➡️ ${d.keyK368.text}`);
   lines.push(`${d.volume368.icon} 量價結構：${d.volume368.label}｜${d.volume368.posLabel||"位置待確認"}`);
   lines.push(`➡️ ${d.volume368.text}`);
-  lines.push(`${d.gap368.icon} 缺口狀態：${d.gap368.label}`);
-  lines.push(`➡️ ${d.gap368.text}`);
+  lines.push(`${d.gap369.icon} 缺口生命週期2.0：${d.gap369.classZh}`);
+  lines.push(`➡️ ${d.gap369.text2||d.gap369.text}`);
   lines.push(`${d.candle.icon} 原K棒情境：${d.candle.label}｜${d.candle.text}`);
   lines.push("");
   lines.push(`${d.role368.icon} 支撐／壓力角色：${d.role368.bRole}`);
@@ -17279,7 +17411,7 @@ function appendDecisionEngineV360(lines,report){
     lines.push(`🧪 歷史經驗提示：${d.research.text}`);
     lines.push("📌 研究閘門只使用當下以前的日K做歷史事件判定；未通過局部樣本門檻的影片規則完全不加入操作證據。此處不是普遍勝率承諾。 ");
   }
-  lines.push("📌 V3.6.7.9沿用的真實日K、量能、MA20、ABC定位與三叉戟畫線都屬前端顯示／判讀層；不改ABC／Fib／N字核心。個股圖片的「可進／等待／續抱／減碼／退出」仍只是把既有結構與風控條件翻成白話，不等於保證報酬。三叉戟需要完整逐日OHLCV；預線仍採前端候選備用防線規則，不參與核心失效判定。 ");
+  lines.push("📌 V3.6.9.0新增的多週期交易劇本、整理品質、均線收斂／張口、進場模式、結構防守距離與缺口生命週期2.0都屬前端輔助層；原真實日K、量能、MA20、ABC定位、突破品質2.0、三叉戟、OHLCV Research Gate與波浪候選全部保留。新層不改ABC／Fib／N字／BOS核心，也不把任何分數寫成勝率或保證報酬。 ");
 }
 
 
@@ -17742,7 +17874,7 @@ function buildReportTextV326(report){
 
   };
 
-  lines.push("📘 石頭少爺分析助手｜GitHub 前端 V3.6.8.1｜八書結構校正＋白話中文版｜60分K細微浪2.4＋多層級＋BOS");
+  lines.push("📘 石頭少爺分析助手｜GitHub 前端 V3.6.9.0｜多週期交易劇本＋位置決策版｜60分K細微浪2.4＋多層級＋BOS");
 
   lines.push(`報告產出時間：${generatedAt}`);
 
@@ -17781,6 +17913,10 @@ function buildReportTextV326(report){
 
   lines.push(`📌 新進改善條件：${entryImprove}`);
   lines.push(`🎯 操作定位：${evidenceChainV340(report).action}`);
+  const d369=decisionEngineV360(report);
+  lines.push(`${d369.multiTf369.icon} 操作層級：${d369.multiTf369.label}`);
+  lines.push(`${d369.entryMode369.icon} 進場劇本：${d369.entryMode369.label}｜${d369.entryMode369.action}`);
+  lines.push(`${d369.riskPlan369.icon} 結構防守距離：${d369.riskPlan369.text}`);
 
   if(nStatus==="confirmed")lines.push(`🟢 完整N字：已確認（${abcNow}）｜${bNow}已突破`);
 
@@ -19366,7 +19502,7 @@ function stockInfographicStateV3328(report){
   const confluence=priceConfluenceV350(report);
   const breakoutGrade=breakoutGradeV350(report);
   const decision=decisionEngineV360(report);
-  return {s,monthlyStatus,monthlyMeta,nStatus,nPhase,ab,wave,pattern,quality,qualityMeta,entryQuality,entryMeta,A,B,C,rawC,cLife,close,ma,monthMa,rsi,vol,fixed,fixedZone,fixedReclaim,target,machine,volumePosition,confluence,breakoutGrade,decision,marketPhase360:decision.phase,breakoutLife360:decision.lifecycle,breakoutQuality360:decision.quality,bands360:decision.bands,defense360:decision.defense,candle360:decision.candle,trident361:decision.trident,research367:decision.research,swing368:decision.swing368,maArch368:decision.maArchitecture368,nStructure368:decision.nStructure368,keyK368:decision.keyK368,role368:decision.role368,volume368:decision.volume368,gap368:decision.gap368,regime368:decision.regime368,riskEvidence368:decision.evidence368};
+  return {s,monthlyStatus,monthlyMeta,nStatus,nPhase,ab,wave,pattern,quality,qualityMeta,entryQuality,entryMeta,A,B,C,rawC,cLife,close,ma,monthMa,rsi,vol,fixed,fixedZone,fixedReclaim,target,machine,volumePosition,confluence,breakoutGrade,decision,marketPhase360:decision.phase,breakoutLife360:decision.lifecycle,breakoutQuality360:decision.quality,bands360:decision.bands,defense360:decision.defense,candle360:decision.candle,trident361:decision.trident,research367:decision.research,swing368:decision.swing368,maArch368:decision.maArchitecture368,nStructure368:decision.nStructure368,keyK368:decision.keyK368,role368:decision.role368,volume368:decision.volume368,gap368:decision.gap368,regime368:decision.regime368,riskEvidence368:decision.evidence368,maArch369:decision.maArchitecture369,multiTf369:decision.multiTf369,entryMode369:decision.entryMode369,consolidation369:decision.consolidation369,gap369:decision.gap369,riskPlan369:decision.riskPlan369};
 }
 
 function stockNStatusLabelV3328(key){
@@ -20364,7 +20500,7 @@ function renderStockInfographicV3328(report){
   fontV3328(ctx,22,900,"#fff","center");ctx.fillText("報告製作 By.石頭少爺",1402,52);
   fontV3328(ctx,18,800,"#fff","center");ctx.fillText("圖片產生時間",1402,83);
   fontV3328(ctx,19,900,"#fff","center");ctx.fillText(reportGeneratedAt().replace("（台灣時間）",""),1402,115);
-  fontV3328(ctx,16,700,"#dbeafe","center");ctx.fillText("V3.6.8.1｜結構校正＋白話中文",1402,141);
+  fontV3328(ctx,16,700,"#dbeafe","center");ctx.fillText("V3.6.9.0｜多週期劇本＋位置決策",1402,141);
 
   // ===== 上半部：ABC + 結構示意圖 =====
   rrV3328(ctx,24,174,520,520,14,P.white,P.blue,2);
@@ -20384,11 +20520,11 @@ function renderStockInfographicV3328(report){
   // ===== 六張指標卡：V3.6.6.2 沿用「長週期＋市場階段＋短趨勢／突破狀態＋量價＋品質」 =====
   const cardsX=24,cardsY=714,gap=12,cw=(1552-gap*2)/3,ch=160,rowGap=12;
   drawMetricCardV3328(ctx,cardsX,cardsY,cw,ch,"月線狀態",st.monthlyMeta.label,st.monthlyStatus==="PASS"?`月20MA ${fmt(st.monthMa)} 元`:st.monthlyMeta.short,"green");
-  drawMetricCardV3328(ctx,cardsX+cw+gap,cardsY,cw,ch,"市場盤態",`${st.regime368.icon} ${st.regime368.label}`,`${st.swing368.degree}｜${st.nStructure368.type}`,st.regime368.icon==="🔴"||st.regime368.icon==="⚠️"?"red":"blue");
-  drawMetricCardV3328(ctx,cardsX+(cw+gap)*2,cardsY,cw,ch,"均線架構",`${st.maArch368.icon} ${st.maArch368.short}`,st.maArch368.ma20===null?"均線資料不足":`20日 ${fmt(st.maArch368.ma20)}｜${st.maArch368.opening}`,st.maArch368.icon==="🔴"||st.maArch368.icon==="⚠️"?"red":"green");
+  drawMetricCardV3328(ctx,cardsX+cw+gap,cardsY,cw,ch,"市場盤態",`${st.regime368.icon} ${st.regime368.label}`,`${st.multiTf369?.short||st.swing368.degree}｜${st.nStructure368.type}`,st.regime368.icon==="🔴"||st.regime368.icon==="⚠️"?"red":"blue");
+  drawMetricCardV3328(ctx,cardsX+(cw+gap)*2,cardsY,cw,ch,"均線狀態",`${st.maArch369?.stateIcon||st.maArch368.icon} ${st.maArch369?.stateShort||st.maArch368.short}`,st.maArch369?.ma20===null?"均線資料不足":`20日 ${fmt(st.maArch369?.ma20)}｜${st.maArch369?.stateLabel||st.maArch368.opening}`,st.maArch369?.stateIcon==="🔴"||st.maArch369?.stateIcon==="⚠️"?"red":"green");
   const cardsY2=cardsY+ch+rowGap;
-  drawMetricCardV3328(ctx,cardsX,cardsY2,cw,ch,"突破狀態",`${st.breakoutLife360.icon} ${st.breakoutLife360.label}`,`生命週期 ${st.breakoutLife360.progress}`,st.breakoutLife360.icon==="🔴"||st.breakoutLife360.icon==="⚠️"?"red":"blue");
-  drawMetricCardV3328(ctx,cardsX+cw+gap,cardsY2,cw,ch,"量價結構",`${st.volume368.icon} ${st.volume368.label}`,st.volume368.rel===null?"相對量資料不足":`相對量 ${fmt(st.volume368.rel,2)} 倍｜${st.keyK368.label}`,st.volume368.icon==="⚠️"?"red":"orange");
+  drawMetricCardV3328(ctx,cardsX,cardsY2,cw,ch,"目前策略",`${st.entryMode369?.icon||"🟡"} ${st.entryMode369?.short||"等待"}`,st.riskPlan369?.first?`防守 ${fmt(st.riskPlan369.first.level)}｜${st.riskPlan369.label}`:(st.entryMode369?.trigger||"等待觸發"),st.entryMode369?.icon==="🔴"||st.entryMode369?.icon==="⚠️"?"red":"blue");
+  drawMetricCardV3328(ctx,cardsX+cw+gap,cardsY2,cw,ch,"量價／關鍵K",`${st.volume368.icon} ${st.volume368.label}`,st.volume368.rel===null?`${st.keyK368.label}`:`${fmt(st.volume368.rel,2)} 倍｜${st.keyK368.label}`,st.volume368.icon==="⚠️"?"red":"orange");
   drawMetricCardV3328(ctx,cardsX+(cw+gap)*2,cardsY2,cw,ch,"突破品質2.0",breakoutQualityBadgeV360(st.breakoutQuality360),st.breakoutQuality360.key==="WAIT"?"突破後才評分":`覆蓋 ${st.breakoutQuality360.coverageLabel}｜0–10分≠勝率`,"purple");
 
   // ===== A. 價格作戰地圖：V3.6.6.2 沿用固定模板安全排版；文字內容完全不變 =====
@@ -20407,7 +20543,7 @@ function renderStockInfographicV3328(report){
   const scenarios=stockScenarioTextsV3328(st),scColors=[P.green,P.orange,P.red],scFills=[P.paleGreen,P.paleOrange,P.paleRed];let sy=lowerY+88;
   scenarios.forEach((t,i)=>{rrV3328(ctx,48,sy,712,188,12,scFills[i],scColors[i],2);fontV3328(ctx,22,900,scColors[i]);ctx.fillText(`${i===0?"✅":i===1?"▶":"✖"} 劇本${i+1}`,68,sy+38);drawWrapV3328(ctx,t,68,sy+80,670,31,4,{size:20,weight:700,color:P.text});sy+=204;});
 
-  rrV3328(ctx,800,lowerY,776,lowerH,14,P.white,P.blue,2);drawCardTitleV3328(ctx,824,lowerY+44,"C. 現在能不能進？｜固定句型總結",P.navy,26);
+  rrV3328(ctx,800,lowerY,776,lowerH,14,P.white,P.blue,2);drawCardTitleV3328(ctx,824,lowerY+44,"C. 現在能不能進？｜交易劇本＋位置決策",P.navy,26);
   const up=stockTopLevelV3328(st),down=stockDownLevelV3328(st);
   const cUp=st.confluence.nearestResistance,cDown=st.confluence.nearestSupport;
   const q360=st.breakoutQuality360,b360=st.bands360,d360=st.defense360;
@@ -20416,8 +20552,20 @@ function renderStockInfographicV3328(report){
   const plain362=stockPlainActionV362(st);
   const srText=b360?.resistance&&b360?.support?`壓 ${b360.resistance.text}｜撐 ${b360.support.text}`:b360?.resistance?`壓 ${b360.resistance.text}`:b360?.support?`撐 ${b360.support.text}`:(cUp||cDown)?`${cUp?`壓 ${fmt(cUp.avg)} 元`:""}${cUp&&cDown?"｜":""}${cDown?`撐 ${fmt(cDown.avg)} 元`:""}`:"壓支等待新價帶";
   const riskTop=st.riskEvidence368?.risk?.[0]||qRisk;
-  const bullets=[`🚦 現在：${plain362.bias.icon} ${plain362.bias.label}｜一句話：${plain362.summary}`,`🧭 結構：${st.regime368.icon} ${st.regime368.label}｜${st.nStructure368.type} ${st.nStructure368.degree}｜高低點 ${st.swing368.short}`,`📐 均線：${st.maArch368.label}｜${st.maArch368.opening}`,`👤 空手者：${plain362.nonHolderAction}｜${plain362.nonHolderNote}`,`💼 持有者：${plain362.holderAction}｜${plain362.holderNote}`,`${st.breakoutLife360.icon} 突破：${st.breakoutLife360.label} ${st.breakoutLife360.progress}｜${q360.icon} ${q360.key==="WAIT"?q360.label:`${q360.label} ${q360.scoreText}`}`,`${st.volume368.icon} 量價／K：${st.volume368.label}${st.volume368.rel!==null?`｜${fmt(st.volume368.rel,2)}倍`:""}｜${st.keyK368.label}`,`⚠️ 主要風險：${riskTop}`,`🧱 壓支角色：${st.role368.bRole}｜${srText}`,d360?.first?`🛡️ 減碼／退出防守：${fmt(d360.first.level)} 元｜${d360.first.label}`:"🛡️ 出場／減碼防守：等待可驗證價位"];
-  if(st.gap368?.showInMain)bullets.push(`${st.gap368.icon} 缺口：${st.gap368.label}`);
+  const bullets=[
+    `🚦 現在：${plain362.bias.icon} ${plain362.bias.label}｜${plain362.summary}`,
+    `${st.multiTf369?.icon||"🟡"} 操作層級：${st.multiTf369?.label||"多週期待確認"}`,
+    `${st.entryMode369?.icon||"🟡"} 適合策略：${st.entryMode369?.label||"等待"}`,
+    `🎯 現在只等：${st.entryMode369?.trigger||st.breakoutLife360?.next||"下一個可驗證事件"}`,
+    `${st.riskPlan369?.icon||"⚪"} 結構防守：${st.riskPlan369?.first?`${fmt(st.riskPlan369.first.level)} 元｜${st.riskPlan369.label}`:"等待可驗證防守價"}`,
+    `🧭 結構：${st.regime368.icon} ${st.regime368.label}｜高低點 ${st.swing368.short}｜${st.nStructure368.type}`,
+    `📐 均線：${st.maArch369?.stateLabel||st.maArch368.label}${st.maArch369?.priceGap20!==null?`｜乖離 ${fmtSignedPct(st.maArch369.priceGap20)}`:""}`,
+    `${st.consolidation369?.icon||"🟡"} 整理品質：${st.consolidation369?.label||"待確認"}`,
+    `${st.breakoutLife360.icon} 突破：${st.breakoutLife360.label} ${st.breakoutLife360.progress}｜${q360.icon} ${q360.key==="WAIT"?q360.label:`${q360.label} ${q360.scoreText}`}`,
+    `${st.volume368.icon} 量價／K：${st.volume368.label}${st.volume368.rel!==null?`｜${fmt(st.volume368.rel,2)}倍`:""}｜${st.keyK368.label}`,
+    `⚠️ 主要風險：${riskTop}`
+  ];
+  if(st.gap369?.showInMain)bullets.push(`${st.gap369.icon} 缺口：${st.gap369.classZh}｜${st.gap369.roleZh}`);
   // V3.6.7.9：Research Gate 通過且目前有型態時，仍用獨立白話驗證卡；不把研究結果混進突破品質分數。
   const researchCard3673=researchImageCardDataV3673(st.research367);
   bullets.push(tridentImageTextV361(st.trident361));
@@ -20430,8 +20578,11 @@ function renderStockInfographicV3328(report){
     bullets.forEach(b=>{ky=drawWrapV3328(ctx,`• ${b}`,824,ky,720,typo.lineHeight,2,{size:typo.size,weight:750,color:P.text})+typo.gap;});
     drawResearchValidationCardV3673(ctx,researchCard3673,cardX,cardY,cardW,cardH);
   }else{
-    bullets.forEach(b=>{ky=drawWrapV3328(ctx,`• ${b}`,824,ky,720,33,2,{size:20,weight:750,color:P.text})+14;});
-    if(ky<lowerY+lowerH-106)drawWrapV3328(ctx,`🎯 下一步：${st.breakoutLife360?.next||st.machine.trigger}`,824,ky+4,720,28,2,{size:18,weight:850,color:P.navy});
+    // V3.6.9.0：C區即使沒有Research Gate卡，也依可用高度自動縮排版，避免新增交易劇本文字覆蓋原本內容。
+    const available=Math.max(260,lowerY+lowerH-ky-34);
+    const typo=fitSummaryTypographyV3673(ctx,bullets,720,available);
+    bullets.forEach(b=>{ky=drawWrapV3328(ctx,`• ${b}`,824,ky,720,typo.lineHeight,2,{size:typo.size,weight:750,color:P.text})+typo.gap;});
+    if(ky<lowerY+lowerH-62)drawWrapV3328(ctx,`🎯 下一步：${st.entryMode369?.trigger||st.breakoutLife360?.next||st.machine.trigger}`,824,ky+2,720,24,2,{size:Math.max(14,typo.size-1),weight:850,color:P.navy});
   }
 
   // ===== 底部口訣＋固定風險警語（V3.6.6.2） =====
