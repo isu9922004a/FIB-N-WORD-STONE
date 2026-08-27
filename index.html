@@ -527,7 +527,7 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
 
     <p>月線波段條件判斷＋固定倍數目標價＋費波那契 N字分析</p>
 
-    <span class="version-pill">前端 V3.6.7.13｜波浪候選移位版｜真實日K＋大盤三叉戟｜個股真實日K＋量能＋日20MA＋壓撐預｜個股圖 1152×2048（9:16）｜大盤圖 1024×1536（2:3）｜V3.4.7 穩定核心完整沿用｜研究建議搭配 Worker V2.9.12</span>
+    <span class="version-pill">前端 V3.6.7.14｜波浪週期說明版｜真實日K＋大盤三叉戟｜個股真實日K＋量能＋日20MA＋壓撐預｜個股圖 1152×2048（9:16）｜大盤圖 1024×1536（2:3）｜V3.4.7 穩定核心完整沿用｜研究建議搭配 Worker V2.9.12</span>
 
   </div>
 
@@ -930,7 +930,7 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
   </div>
 </div>
 
-<footer class="footer">石頭少爺 Agent｜GitHub 前端 V3.6.7.13｜波浪候選移位版｜完整套用使用者指定的個股圖片報告格式｜V3.4.7 穩定核心與雙圖片版型完整沿用｜個股主圖支援真實日K＋量能＋MA20＋A/B/C＋三叉戟壓撐預｜價格作戰地圖保留持有／空手固定句型｜本前端不改ABC／Fib／N字與 pivot-abc-v2.4 核心<br>技術分析僅供研究與決策參考，不構成投資建議。<br>本版重點：個股圖片報告固定採用使用者指定之標準版型，作為後續 GitHub 個股圖正式模板。</footer>
+<footer class="footer">石頭少爺 Agent｜GitHub 前端 V3.6.7.14｜波浪週期說明版｜完整套用使用者指定的個股圖片報告格式｜V3.4.7 穩定核心與雙圖片版型完整沿用｜個股主圖支援真實日K＋量能＋MA20＋A/B/C＋三叉戟壓撐預｜價格作戰地圖保留持有／空手固定句型｜本前端不改ABC／Fib／N字與 pivot-abc-v2.4 核心<br>技術分析僅供研究與決策參考，不構成投資建議。<br>本版重點：個股圖片報告固定採用使用者指定之標準版型，作為後續 GitHub 個股圖正式模板。</footer>
 
 <script>
 
@@ -938,8 +938,8 @@ const API_BASE_URL="https://shitou-agent-fib-api.d318426.workers.dev";
 
 // V3.6.7.9：延續 GIS-KY 英文名稱修正；新增「戰術頸線突破」與「Fib B正式突破」角色隔離，避免B尚未突破卻被寫成支撐。
 // V3.6.7.9：角色一致性收尾——長文字價格地圖與新手「往下先看」同步納入有效戰術頸線；未正式突破B時，K線／量能文字改成「尚未有正式突破K可評分」。
-// V3.6.7.13：真實日K新增紅1/3/5、綠2/4、白a/b/c的波浪理論候選直線箭頭；量能使用同一波段區間同步標註。僅為前端顯示輔助，不改ABC/Fib/N字核心。
-// V3.6.7.13：波浪候選階段提示移至個股主圖右側 RSI 上方空白區；不改波浪箭頭、ABC/Fib/N字、三叉戟或RSI計算。
+// V3.6.7.14：真實日K新增紅1/3/5、綠2/4、白a/b/c的波浪理論候選直線箭頭；量能使用同一波段區間同步標註。僅為前端顯示輔助，不改ABC/Fib/N字核心。
+// V3.6.7.14：波浪候選階段提示移至個股主圖右側 RSI 上方空白區；不改波浪箭頭、ABC/Fib/N字、三叉戟或RSI計算。
 // V3.6.7.9：個股主圖右下空白區新增「日RSI 5T」提示卡，只使用Worker既有dailyRsi5，不新增或推導任何RSI資料。
 // V3.6.7.9：顯示一致性收尾——0.80倍以下量能提示燈與量能文字同步；大盤持股提示依N字生命週期動態描述；大盤／個股RSI共用同一分級口徑。
 // V3.6.7.9：量能口徑統一——相對量 < 0.80 一律視為「量能偏縮」；並將有效戰術頸線加入個股價格作戰地圖，不改任何核心計分。
@@ -16279,7 +16279,7 @@ function buildReportTextV326(report){
 
   };
 
-  lines.push("📘 石頭少爺分析助手｜GitHub 前端 V3.6.7.13｜波浪候選移位版");
+  lines.push("📘 石頭少爺分析助手｜GitHub 前端 V3.6.7.14｜波浪週期說明版");
 
   lines.push(`報告產出時間：${generatedAt}`);
 
@@ -18403,6 +18403,32 @@ function drawWaveStageHintV3682(ctx,label,x,y,maxW=170){
   ctx.restore();
 }
 
+function waveStageMetaV3684(label){
+  const k=String(label||"").toLowerCase();
+  const map={
+    "1":{tag:"第1浪",emoji:"🌱",title:"起漲",desc:"剛開始漲，準備轉強",detail:"低檔開始轉強",border:"#16a34a",fill:"#f0fdf4",titleColor:"#166534"},
+    "2":{tag:"第2浪",emoji:"↘️",title:"拉回",desc:"漲後拉回，測試支撐",detail:"洗掉短線賣壓",border:"#16a34a",fill:"#f0fdf4",titleColor:"#166534"},
+    "3":{tag:"第3浪",emoji:"🚀",title:"主升",desc:"正式主升，通常漲勢最強",detail:"多頭加速上攻",border:"#dc2626",fill:"#fff1f2",titleColor:"#b91c1c"},
+    "4":{tag:"第4浪",emoji:"⏸️",title:"整理",desc:"漲多整理，多頭休息",detail:"主升後獲利了結",border:"#16a34a",fill:"#f0fdf4",titleColor:"#166534"},
+    "5":{tag:"第5浪",emoji:"⚠️",title:"末升",desc:"最後衝高，注意過熱",detail:"追價風險開始升高",border:"#dc2626",fill:"#fff1f2",titleColor:"#b91c1c"},
+    "a":{tag:"A浪",emoji:"🔻",title:"初跌",desc:"多頭開始轉弱，進入修正",detail:"可能是上升趨勢結束的開始",border:"#64748b",fill:"#f8fafc",titleColor:"#334155"},
+    "b":{tag:"B浪",emoji:"↗️",title:"反彈",desc:"跌深反彈，還沒翻多",detail:"小心誘多，趨勢可能尚未翻多",border:"#2563eb",fill:"#eff6ff",titleColor:"#1d4ed8"},
+    "c":{tag:"C浪",emoji:"📉",title:"主跌",desc:"空頭主跌，賣壓加重",detail:"通常跌勢加速，風險較高",border:"#64748b",fill:"#f8fafc",titleColor:"#334155"}
+  };
+  return map[k]||null;
+}
+
+function drawWaveCycleInfoCardV3684(ctx,label,x=1366,y=452,w=180,h=108){
+  const P=infoPaletteV3328();
+  const meta=waveStageMetaV3684(label);
+  if(!ctx||!meta)return;
+  rrV3328(ctx,x,y,w,h,12,meta.fill,meta.border,2);
+  drawFitSingleLineStrictV3661(ctx,"🏆 波浪理論週期",x+10,y+18,w-20,{maxSize:13,minSize:11,weight:900,color:P.navy});
+  drawFitSingleLineStrictV3661(ctx,meta.tag+" "+meta.emoji+" "+meta.title,x+10,y+41,w-20,{maxSize:18,minSize:13,weight:950,color:meta.titleColor});
+  drawFitSingleLineStrictV3661(ctx,meta.desc,x+10,y+63,w-20,{maxSize:11,minSize:9,weight:850,color:P.text});
+  drawFitSingleLineStrictV3661(ctx,"（"+meta.detail+"）",x+10,y+81,w-20,{maxSize:10,minSize:8,weight:700,color:P.muted});
+  drawFitSingleLineStrictV3661(ctx,"依目前波浪候選階段顯示",x+10,y+98,w-20,{maxSize:9,minSize:8,weight:700,color:P.muted});
+}
 function drawWaveTrendOverlayV3680(ctx,bars,{
   x,y,w,h,volY,volH,priceToY,step
 }={}){
@@ -18534,7 +18560,7 @@ function drawRealKCoreV365(ctx,bars,all,start,ma20,opts){
   fontV3328(ctx,13,900,P.blue2);ctx.fillText("MA20",x+8,y+20);
 
   // 波浪理論候選標註（價格＋量能）｜僅顯示層，不改ABC/Fib/N字核心
-  // V3.6.7.13：只在K線區畫箭頭與1/2/3/4/5/a/b/c標記；
+  // V3.6.7.14：只在K線區畫箭頭與1/2/3/4/5/a/b/c標記；
   // 「波浪候選：第X浪／a/b/c浪」提示卡移到右側 RSI 上方空白區，避免覆蓋K線。
   let waveOverlay=null;
   if(opts.showWaveTrend!==false){
@@ -18617,18 +18643,16 @@ function drawStockTopChartV365(ctx,report,st){
   const t=st.trident361;
   if(selected.bars.length>=20){
     drawCardTitleV3328(ctx,586,213,`真實日K｜最近 ${selected.bars.length} 根＋量能＋日20MA＋波浪階段`,P.navy,27);
-    drawFitSingleLineStrictV3661(ctx,"波浪候選：紅1/3/5＝推動｜綠2/4＝調整｜白a/b/c＝修正｜下方同色箭頭＝量能節奏｜不改ABC核心",586,242,930,{maxSize:15,minSize:12,weight:700,color:P.muted});
+    drawFitSingleLineStrictV3661(ctx,"波浪候選：紅1/3/5＝推動｜綠2/4＝調整｜白a/b/c＝修正｜下方同色箭頭＝量能節奏｜右側顯示目前週期",586,242,930,{maxSize:15,minSize:12,weight:700,color:P.muted});
     const chartCore=drawRealKCoreV365(ctx,selected.bars,selected.all,selected.start,selected.ma20,{
       x:604,y:270,w:744,h:258,volY:542,volH:72,labelX:1370,labelW:176,unit:"元",
       A:st.A,B:st.B,C:st.C,close:st.close,ma20Now:st.ma,
       ADate:st.s.fib.ADate,BDate:st.s.fib.BDate,CDate:st.s.fib.CDate,trident:t
     });
     drawTridentPlainLegendV365(ctx,t,604,t?.preparatory?654:662,720);
-
-    // 波浪候選提示固定放在 RSI 卡上方空白區，不再疊在線圖內。
-    // x=1370 與右側價位／RSI欄對齊；y=550 讓提示卡落在 RSI(y=568) 上方。
+    // 右側 RSI 上方空白區：改為顯示「目前波浪理論週期」白話提示，不再覆蓋K線。
     if(chartCore?.waveOverlay?.current){
-      drawWaveStageHintV3682(ctx,chartCore.waveOverlay.current,1370,550,176);
+      drawWaveCycleInfoCardV3684(ctx,chartCore.waveOverlay.current,1368,452,178,108);
     }
     drawStockRsiMiniCardV3678(ctx,st.rsi);
   }else{
@@ -18718,7 +18742,7 @@ function renderStockInfographicV3328(report){
   fontV3328(ctx,22,900,"#fff","center");ctx.fillText("報告製作 By.石頭少爺",1402,52);
   fontV3328(ctx,18,800,"#fff","center");ctx.fillText("圖片產生時間",1402,83);
   fontV3328(ctx,19,900,"#fff","center");ctx.fillText(reportGeneratedAt().replace("（台灣時間）",""),1402,115);
-  fontV3328(ctx,16,700,"#dbeafe","center");ctx.fillText("V3.6.7.10｜波浪趨勢箭頭",1402,141);
+  fontV3328(ctx,16,700,"#dbeafe","center");ctx.fillText("V3.6.7.14｜波浪週期說明版",1402,141);
 
   // ===== 上半部：ABC + 結構示意圖 =====
   rrV3328(ctx,24,174,520,520,14,P.white,P.blue,2);
@@ -18795,6 +18819,7 @@ function renderStockInfographicV3328(report){
   fontV3328(ctx,32,950,P.blue2);ctx.fillText(st.C!==null?"C 回檔":"等有效 C",702,2692);fontV3328(ctx,30,900,P.navy);ctx.fillText("→",910,2692);
   fontV3328(ctx,32,950,P.red);ctx.fillText("再突破 B",958,2692);
   fontV3328(ctx,28,900,P.navy,"center");ctx.fillText("＝ 完整 N 字確認。",580,2762);
+  drawFitSingleLineStrictV3661(ctx,"🏆 波浪理論週期🌊 起漲 → 拉回 → 主升 → 整理 → 末升 → 初跌 → 反彈 → 主跌",276,2790,850,{maxSize:18,minSize:14,weight:850,color:P.navy});
 
   // 右下角警語：完整保留原文字，只搬移位置；以淡紅底＋紅框確保辨識度。
   rrV3328(ctx,warningX,warningY,warningW,warningH,12,"#fff7f7",P.red,2);
