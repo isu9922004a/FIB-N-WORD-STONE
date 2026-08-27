@@ -14396,32 +14396,38 @@ function breakoutQualityEvidenceV340(report,s=null,nStatusArg=null,nPhaseArg=nul
   const nPhase=nPhaseArg||getNPhaseV326(report,state,nStatus);
   const t=getTacticalInfo(report);
   const br=report?.structure?.breakout||null;
-  const B=n(state?.fib?.B);
+  const A=n(state?.fib?.A),B=n(state?.fib?.B);
+  const waitAB=A===null||B===null;
   const close=n(report?.close);
   const evidence=[],risk=[];
   let score=0;
 
-  if(nStatus==="confirmed"){
+  // V3.7.0 Final｜Master State優先：A或B尚未建立時，不得沿用上一循環的C／突破／回測證據。
+  if(waitAB){
+    evidence.push("新ABC尚未建立，目前只等待A→B；尚未進入C與正式突破檢核");
+  }else if(nStatus==="confirmed"){
     evidence.push(B!==null?`完整N字已確認，B＝${fmt(B)} 元曾完成日K收盤突破`:'完整N字已確認');
     score+=2;
   }else if(nStatus==="abc_ready"){
     evidence.push(B!==null?`ABC已形成，正在等待完整日K收盤突破B＝${fmt(B)} 元`:'ABC已形成，等待突破B');
     score+=1;
   }else if(nStatus==="forming"){
-    evidence.push("A、B結構已存在，但有效C／完整突破仍未全部完成");
+    evidence.push("A、B已形成，目前等待有效C與後續完整突破確認");
   }else if(nStatus==="failed"){
     risk.push("原N字結構已失效，舊突破不再當現行依據");
     score-=2;
   }
 
-  if(nPhase==="RETESTING"){
-    evidence.push(B!==null?`目前屬突破後回測B＝${fmt(B)} 元的確認階段`:'目前屬突破後回測確認階段');
-  }else if(nPhase==="WEAKENING"){
-    risk.push(B!==null?`收盤已回到B＝${fmt(B)} 元下方，突破品質轉弱`:'突破後收盤轉弱');
-    score-=2;
-  }else if(nPhase==="EXTENDING"){
-    evidence.push("突破後仍維持延伸結構");
-    score+=1;
+  if(!waitAB){
+    if(nPhase==="RETESTING"){
+      evidence.push(B!==null?`目前屬突破後回測B＝${fmt(B)} 元的確認階段`:'目前屬突破後回測確認階段');
+    }else if(nPhase==="WEAKENING"){
+      risk.push(B!==null?`收盤已回到B＝${fmt(B)} 元下方，突破品質轉弱`:'突破後收盤轉弱');
+      score-=2;
+    }else if(nPhase==="EXTENDING"){
+      evidence.push("突破後仍維持延伸結構");
+      score+=1;
+    }
   }
 
   const three=br?.threeDay?.status?.key||t?.fibThreeDay?.status?.key||null;
@@ -14775,7 +14781,8 @@ function abcBreakoutTeachingCheckV342(report){
   const t=getTacticalInfo(report);
   const br=report?.structure?.breakout||null;
   const candle=br?.candle||null;
-  const B=n(s?.fib?.B);
+  const A=n(s?.fib?.A),B=n(s?.fib?.B);
+  const waitAB=A===null||B===null;
   const brVol=n(t?.fibBreakoutVolume);
   const o=n(candle?.open),c=n(candle?.close);
   const bodyChangePct=(o!==null&&c!==null&&o!==0)?((c-o)/o)*100:null;
@@ -14786,17 +14793,19 @@ function abcBreakoutTeachingCheckV342(report){
   const checks=[];
   let score=0,available=0;
 
-  if(nStatus==="confirmed"){
+  if(waitAB){
+    checks.push({icon:"⏳",title:"價格突破",text:"新A／B尚未形成，尚未進入C與突破K教材檢核"});available++;
+  }else if(nStatus==="confirmed"){
     checks.push({icon:"✅",title:"價格突破",text:B!==null?`已完成日K收盤突破B＝${fmt(B)} 元`:`完整N字突破已確認`});score+=2;available++;
   }else if(nStatus==="abc_ready"){
     checks.push({icon:"🟡",title:"價格突破",text:B!==null?`ABC已形成，等待完整日K收盤突破B＝${fmt(B)} 元`:`ABC已形成，等待突破B`});available++;
   }else if(nStatus==="forming"){
-    checks.push({icon:"⏳",title:"價格突破",text:"有效C／完整突破尚未完成，現在不套用突破K教材條件"});available++;
+    checks.push({icon:"⏳",title:"價格突破",text:"A、B已形成但有效C／完整突破尚未完成，現在不套用突破K教材條件"});available++;
   }else{
     checks.push({icon:"🔴",title:"價格突破",text:"原N字結構已失效，舊突破不再當現行依據"});score-=2;available++;
   }
 
-  if(brVol!==null){
+  if(!waitAB&&brVol!==null){
     available++;
     if(brVol>=1.3){checks.push({icon:"✅",title:"量增",text:`Fib突破日相對量 ${fmt(brVol,2)} 倍，達到1.3倍以上的量增參考`});score+=1;}
     else if(brVol>=1){checks.push({icon:"🟡",title:"量增",text:`Fib突破日相對量 ${fmt(brVol,2)} 倍，量能有增加但未達1.3倍強確認參考`});}
@@ -14805,7 +14814,7 @@ function abcBreakoutTeachingCheckV342(report){
     checks.push({icon:"⚪",title:"量增",text:nStatus!=="confirmed"?"尚未發生正式B突破，暫無正式突破日量能可評分":"已確認B突破，但目前沒有可驗證的Fib突破日相對量；這一項不加分也不扣分"});
   }
 
-  if(candle&&bodyChangePct!==null){
+  if(!waitAB&&candle&&bodyChangePct!==null){
     available++;
     if(bodyChangePct>=2&&closePos==="high"&&!longUpper){
       checks.push({icon:"✅",title:"線實",text:`突破K實體漲幅約 ${fmt(bodyChangePct,2)}%，且收盤靠近高點、無明顯長上影，屬較有力紅K`});score+=2;
@@ -14825,14 +14834,14 @@ function abcBreakoutTeachingCheckV342(report){
   else checks.push({icon:"⚪",title:"長週期背景",text:"官方月線狀態暫不可完整判定；不補猜月20MA斜率"});
 
   const three=t?.fibThreeDay?.status?.key||br?.threeDay?.status?.key||null;
-  if(three){
+  if(!waitAB&&three){
     available++;
     if(three==="passed"){checks.push({icon:"✅",title:"突破後確認",text:"突破後三日站穩條件已通過，突破延續品質加分"});score+=1;}
     else if(three==="failed"){checks.push({icon:"⚠️",title:"突破後確認",text:"突破後三日站穩未通過，先提高假突破／修復警戒"});score-=1;}
     else checks.push({icon:"🟡",title:"突破後確認",text:"突破後三日確認仍在觀察中"});
   }
-  if(t?.retest?.closeHeld===true||br?.retest?.closeHeld===true){checks.push({icon:"✅",title:"回測驗證",text:"突破後曾回測關鍵位且完成收盤守住，支撐角色得到實際驗證"});score+=1;available++;}
-  if(nPhase==="WEAKENING"){checks.push({icon:"⚠️",title:"目前狀態",text:B!==null?`目前收盤已回到B＝${fmt(B)} 元下方，先把修復放在追求目標之前`:`目前突破品質已轉弱，先看修復`});score-=1;}
+  if(!waitAB&&(t?.retest?.closeHeld===true||br?.retest?.closeHeld===true)){checks.push({icon:"✅",title:"回測驗證",text:"突破後曾回測關鍵位且完成收盤守住，支撐角色得到實際驗證"});score+=1;available++;}
+  if(!waitAB&&nPhase==="WEAKENING"){checks.push({icon:"⚠️",title:"目前狀態",text:B!==null?`目前收盤已回到B＝${fmt(B)} 元下方，先把修復放在追求目標之前`:`目前突破品質已轉弱，先看修復`});score-=1;}
 
   let icon="🟡",label="教材式突破條件仍待確認";
   if(nStatus==="failed"){icon="🔴";label="原突破結構已失效";}
@@ -14842,7 +14851,7 @@ function abcBreakoutTeachingCheckV342(report){
   else if(score>=1){icon="🟡";label="突破成立，但確認證據仍需累積";}
   else{icon="⚠️";label="突破成立，但品質偏弱／修復優先";}
 
-  return {icon,label,score,available,checks,brVol,bodyChangePct,bodySharePct,nStatus,nPhase};
+  return {icon,label,score,available,checks,brVol:waitAB?null:brVol,bodyChangePct:waitAB?null:bodyChangePct,bodySharePct:waitAB?null:bodySharePct,nStatus,nPhase,waitAB};
 }
 
 function supportPressureSummaryV342(report,s=null,nStatusArg=null){
@@ -16201,6 +16210,7 @@ function buildNewbieLookHereV3318(report,generatedAt=null){
   return lines.join("\n");
 }
 
+// V3.7.0 Final State Consistency：WAIT_AB 為單一真相來源；清除舊 WAIT_C 文案殘留。
 function buildReportTextV326(report){
 
   if(!report)return "";
@@ -16350,7 +16360,7 @@ function buildReportTextV326(report){
 
   };
 
-  lines.push("📘 石頭少爺分析助手｜GitHub 前端 V3.7.0｜純粹趨勢通道箭頭版｜狀態一致性修正");
+  lines.push("📘 石頭少爺分析助手｜GitHub 前端 V3.7.0｜純粹趨勢通道箭頭版｜最終狀態一致性");
   lines.push("🧭 趨勢方向改以K線通道箭頭呈現：紅↗上升／綠↘下降／黃→盤整；不使用1～5浪或ABC修正浪計數。 ");
 
   lines.push(`報告產出時間：${generatedAt}`);
@@ -16683,6 +16693,10 @@ function buildReportTextV326(report){
 
     if(A!==null)lines.push(`③ 🛑 A＝${fmt(A)} 元｜整組A→B候選結構最終失效觀察。`);
 
+  }else if(waitAB){
+
+    lines.push("🟡 新ABC尚未建立，暫無ABC結構停損；短線先依既有戰術防守、日20MA與高檔量價管理。");
+
   }else if(cLife.invalidated){
 
     lines.push(`⚠️ 原C＝${fmt(rawC)} 元已失效；A＝${fmt(A)} 元仍守住，因此不是FAILED，重新尋找新C。`);
@@ -16898,7 +16912,15 @@ function buildReportTextV326(report){
 
   lineSection(lines,"📅 第三層｜下一交易日：3種白話劇本");
 
-  if(nStatus==="confirmed"&&nPhase==="EXTENDING"){
+  if(waitAB){
+
+    lines.push("🟢 劇本一｜強勢延伸：趨勢維持向上，但新A／B／C尚未建立 → 不硬抓新ABC，也不把單日急漲當成低風險起漲點。");
+
+    lines.push("🟡 劇本二｜高檔整理：價格震盪／回測後出現新的有效Swing → 才開始建立新的A→B結構。");
+
+    lines.push(`⚠️ 劇本三｜快速轉弱：若近期結構支撐陸續失守${ma!==null?`，且日20MA＝${fmt(ma)} 元也轉弱`:"，且日20MA同步轉弱"} → 降低趨勢評級並重新等待新結構。`);
+
+  }else if(nStatus==="confirmed"&&nPhase==="EXTENDING"){
 
     lines.push(`🟢 劇本一｜續強：維持B ${fmt(B)} 元上方、量價正常 → N_PHASE維持EXTENDING。`);
 
@@ -16992,7 +17014,9 @@ function buildReportTextV326(report){
 
   if(vol!==null)lines.push(`【最新相對量】${fmt(vol,2)} 倍｜${volumeContext}`);
 
-  lines.push(`【多維狀態】POSITION_ZONE=${ab?.positionZone||"UNKNOWN"}｜FIB_TARGET_ZONE=${targetZone.key}｜FIXED_TARGET_ZONE=${fixedTargetZone.key}｜結構品質=${structureQualityZhV330(quality)}｜新進品質=${entryQualityZhV330(entryQuality)}`);
+  lines.push(waitAB
+    ?`【多維狀態】市場位置=${posMeta.label}｜新ABC位置=尚未建立｜FIB_TARGET_ZONE=無｜FIXED_TARGET_ZONE=${fixedTargetZone.key}｜結構品質=${structureQualityZhV330(quality)}｜新進品質=${entryQualityZhV330(entryQuality)}`
+    :`【多維狀態】POSITION_ZONE=${ab?.positionZone||"UNKNOWN"}｜FIB_TARGET_ZONE=${targetZone.key}｜FIXED_TARGET_ZONE=${fixedTargetZone.key}｜結構品質=${structureQualityZhV330(quality)}｜新進品質=${entryQualityZhV330(entryQuality)}`);
 
   lines.push("");
 
