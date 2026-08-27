@@ -527,7 +527,7 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
 
     <p>月線波段條件判斷＋固定倍數目標價＋費波那契 N字分析</p>
 
-    <span class="version-pill">前端 V3.6.7.20｜60分K細微浪2.4＋多層級＋BOS＋狀態一致性版｜真實日K＋大盤三叉戟｜個股真實日K＋量能＋日20MA＋壓撐預｜個股圖 1152×2048（9:16）｜大盤圖 1024×1536（2:3）｜V3.4.7 穩定核心完整沿用｜研究建議搭配 Worker V2.9.13</span>
+    <span class="version-pill">前端 V3.6.7.21｜60分K細微浪2.4＋多層級＋BOS＋波浪白話教學層版｜真實日K＋大盤三叉戟｜個股真實日K＋量能＋日20MA＋壓撐預｜個股圖 1152×2048（9:16）｜大盤圖 1024×1536（2:3）｜V3.4.7 穩定核心完整沿用｜研究建議搭配 Worker V2.9.13</span>
 
   </div>
 
@@ -926,17 +926,17 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
       <a id="imageDownloadLink" class="image-save-link" href="#" download>💾 儲存 PNG</a>
       <button id="imageShareButton" class="image-share-btn" type="button" onclick="shareInfographicV3328()">📤 分享圖片</button>
     </div>
-    <div id="imagePreviewNote" class="image-preview-note">圖片由目前分析資料直接產生；V3.6.7.20 沿用個股 PNG 1152×2048（9:16）與大盤 PNG 1024×1536（2:3）。個股 Worker 若回傳完整 dailySeries，個股主圖會畫真實日K、量能柱、日20MA、A/B/C與三叉戟；若另回傳 intraday60Series，主升／整理／末升的小判斷改由60分K細微浪2.4＋多層級＋BOS＋狀態一致性共振確認，日K不再硬數細部1~5。大盤部署新版TAIEX Worker後，會使用TAIEX官方OHLC＋FMTQIK市場成交股數組成dailySeries，自動切換真實日K＋量能柱＋MA20＋三叉戟壓／撐／預；若量能資料暫時不可用，才安全退回結構示意圖。</div>
+    <div id="imagePreviewNote" class="image-preview-note">圖片由目前分析資料直接產生；V3.6.7.21 沿用個股 PNG 1152×2048（9:16）與大盤 PNG 1024×1536（2:3）。個股 Worker 若回傳完整 dailySeries，個股主圖會畫真實日K、量能柱、日20MA、A/B/C與三叉戟；若另回傳 intraday60Series，主升／整理／末升的小判斷改由60分K細微浪2.4＋多層級＋BOS共振確認，日K不再硬數細部1~5；V3.6.7.21另新增「起漲→拉回→主升→整理→末升→初跌→反彈→主跌」獨立白話教學層，只新增文字判讀，不覆蓋既有PNG文字。大盤部署新版TAIEX Worker後，會使用TAIEX官方OHLC＋FMTQIK市場成交股數組成dailySeries，自動切換真實日K＋量能柱＋MA20＋三叉戟壓／撐／預；若量能資料暫時不可用，才安全退回結構示意圖。</div>
   </div>
 </div>
 
-<footer class="footer">石頭少爺 Agent｜GitHub 前端 V3.6.7.20｜60分K細微浪2.4＋多層級＋BOS＋狀態一致性版｜完整套用使用者指定的個股圖片報告格式｜V3.4.7 穩定核心與雙圖片版型完整沿用｜個股主圖支援真實日K＋量能＋MA20＋A/B/C＋三叉戟壓撐預｜價格作戰地圖保留持有／空手固定句型｜本前端不改ABC／Fib／N字與 pivot-abc-v2.4 核心<br>技術分析僅供研究與決策參考，不構成投資建議。<br>本版重點：個股圖片報告固定採用使用者指定之標準版型，作為後續 GitHub 個股圖正式模板。</footer>
+<footer class="footer">石頭少爺 Agent｜GitHub 前端 V3.6.7.21｜60分K細微浪2.4＋多層級＋BOS＋波浪白話教學層版｜完整套用使用者指定的個股圖片報告格式｜V3.4.7 穩定核心與雙圖片版型完整沿用｜個股主圖支援真實日K＋量能＋MA20＋A/B/C＋三叉戟壓撐預｜價格作戰地圖保留持有／空手固定句型｜本前端不改ABC／Fib／N字與 pivot-abc-v2.4 核心<br>技術分析僅供研究與決策參考，不構成投資建議。<br>本版重點：個股圖片報告固定採用使用者指定之標準版型，作為後續 GitHub 個股圖正式模板。</footer>
 
 <script>
 
 const API_BASE_URL="https://shitou-agent-fib-api.d318426.workers.dev";
 
-// V3.6.7.20：60分K細微浪2.4＋多層級＋BOS＋狀態一致性版。
+// V3.6.7.21：保留V3.6.7.20全部判讀文字與邏輯，新增獨立「1→2→3→4→5→A→B→C」白話教學顯示層；不覆蓋原判讀。
 // 核心數浪／ABC／N字／BOS規則不改：新增Fib Wave Profile，把0.236/0.382/0.5/0.618/0.786回撤與1.0/1.272/1.618/2.0/2.618延伸做成「合理度＋目標區」，不把比例當鐵律。
 // Wave5新增「相對Wave1的1.0~1.618倍」主參考；保留既有0→3的0.382/0.618為次參考。ABC新增B/A回撤與C/A等長、1.618延伸資訊。
 // 同時修正個股主圖右側提示，統一改讀最新60分K細微浪2.3多層級引擎，不再誤用V3.6.7.15舊函式。
@@ -17007,6 +17007,57 @@ function appendDecisionEngineV360(lines,report){
   lines.push("📌 V3.6.7.9沿用的真實日K、量能、MA20、ABC定位與三叉戟畫線都屬前端顯示／判讀層；不改ABC／Fib／N字核心。個股圖片的「可進／等待／續抱／減碼／退出」仍只是把既有結構與風控條件翻成白話，不等於保證報酬。三叉戟需要完整逐日OHLCV；預線仍採前端候選備用防線規則，不參與核心失效判定。 ");
 }
 
+
+const WAVE_TEACHING_CATALOG_V36721=Object.freeze({
+  "1":{emoji:"🌱",title:"第1浪｜起漲",plain:"剛開始漲，準備轉強",note:"低檔開始轉強"},
+  "2":{emoji:"↘️",title:"第2浪｜拉回",plain:"漲後拉回，測試支撐",note:"洗掉短線賣壓"},
+  "3":{emoji:"🚀",title:"第3浪｜主升",plain:"正式主升，通常漲勢最強",note:"多頭加速上攻"},
+  "4":{emoji:"⏸️",title:"第4浪｜整理",plain:"漲多整理，多頭休息",note:"主升後獲利了結"},
+  "5":{emoji:"⚠️",title:"第5浪｜末升",plain:"最後衝高，注意過熱",note:"追價風險開始升高"},
+  "a":{emoji:"🔻",title:"A浪｜初跌",plain:"多頭開始轉弱，進入修正",note:"可能是上升趨勢結束的開始"},
+  "b":{emoji:"↗️",title:"B浪｜反彈",plain:"跌深反彈，還沒翻多",note:"小心誘多，趨勢可能尚未翻多"},
+  "c":{emoji:"📉",title:"C浪｜主跌",plain:"空頭主跌，賣壓加重",note:"通常跌勢加速，風險較高"}
+});
+
+function waveTeachingCycleTextV36721(){
+  return "🌱 起漲 → ↘️ 拉回 → 🚀 主升 → ⏸️ 整理 → ⚠️ 末升 → 🔻 初跌 → ↗️ 反彈 → 📉 主跌";
+}
+
+function waveTeachingCurrentV36721(stage){
+  const fine=stage?.fineWave60||stage||null;
+  const active=String(fine?.active??fine?.current??fine?.analysis?.active??"").toLowerCase();
+  const motiveDir=n(fine?.analysis?.motiveDir);
+  if(active==="next")return {emoji:"🔄",title:"新循環｜等待下一組第1浪",plain:"上一組1→2→3→4→5→A→B→C已完成候選",note:"重新從新Swing尋找下一組起點"};
+  const meta=WAVE_TEACHING_CATALOG_V36721[active]||null;
+  if(!meta)return null;
+  // 使用者指定的固定白話口訣是「多頭循環」教學。若目前底層為空頭推動，避免把方向相反的數字浪硬翻成「起漲／主升」。
+  if(motiveDir!==null&&motiveDir<0&&["1","2","3","4","5"].includes(active)){
+    return {emoji:"🧭",title:`第${active}浪｜空頭推動方向`,plain:"目前實際推動方向與多頭教學口訣相反",note:"保留原系統實際判讀，不硬套『起漲／主升／末升』名稱"};
+  }
+  return meta;
+}
+
+function appendWaveTeachingLayerV36721(lines,stage,{detailed=true}={}){
+  if(!Array.isArray(lines))return;
+  lines.push("");
+  lines.push("🎓【波浪白話教學對照｜新增顯示，不取代原本系統判讀】");
+  lines.push(`🌊 波浪理論週期：${waveTeachingCycleTextV36721()}`);
+  if(detailed){
+    lines.push("🌱 第1浪 起漲｜剛開始漲，準備轉強（低檔開始轉強）");
+    lines.push("↘️ 第2浪 拉回｜漲後拉回，測試支撐（洗掉短線賣壓）");
+    lines.push("🚀 第3浪 主升｜正式主升，通常漲勢最強（多頭加速上攻）");
+    lines.push("⏸️ 第4浪 整理｜漲多整理，多頭休息（主升後獲利了結）");
+    lines.push("⚠️ 第5浪 末升｜最後衝高，注意過熱（追價風險開始升高）");
+    lines.push("🔻 A浪 初跌｜多頭開始轉弱，進入修正（可能是上升趨勢結束的開始）");
+    lines.push("↗️ B浪 反彈｜跌深反彈，還沒翻多（小心誘多，趨勢可能尚未翻多）");
+    lines.push("📉 C浪 主跌｜空頭主跌，賣壓加重（通常跌勢加速，風險較高）");
+  }
+  const cur=waveTeachingCurrentV36721(stage);
+  if(cur)lines.push(`📍 目前教學翻譯：${cur.emoji} ${cur.title}｜${cur.plain}（${cur.note}）`);
+  else lines.push("📍 目前教學翻譯：尚未有足夠60分K證據確認目前浪號，不硬套名稱。");
+  lines.push("📌 教學層只負責把浪號翻成白話；原本的Major／Minor／Micro多層級、Elliott鐵律、Diagonal驗證、BOS、量能、重測與Fib容差判讀全部保留並優先。多頭口訣用於教學，若目前實際為空頭推動則以原系統方向判讀為準。");
+}
+
 function appendWaveStageSectionV3323(lines,report,stage=null){
   const w=stage||waveStageAssistV3323(report);
   lineSection(lines,"🌊 60分K細微浪2.4＋多層級＋BOS＋狀態一致性｜現在是推進、整理、末段還是ABC修正？");
@@ -17024,6 +17075,8 @@ function appendWaveStageSectionV3323(lines,report,stage=null){
     (f.guidelineEvidence||[]).slice(0,4).forEach(x=>lines.push(`• ${x}`));
     lines.push("");
   }
+  appendWaveTeachingLayerV36721(lines,w,{detailed:true});
+  lines.push("");
   lines.push("📖 白話解釋：");
 
   if(w.key==="LATE_EXTENSION"){
@@ -17143,6 +17196,7 @@ function buildNewbieLookHereV3318(report,generatedAt=null){
   lines.push("③【波段成熟度｜目前可能走到哪一段？】");
   lines.push(`${waveStage.icon} ${waveStage.label}`);
   lines.push(`➡️ ${waveStage.short}`);
+  appendWaveTeachingLayerV36721(lines,waveStage,{detailed:false});
 
   const patternAssist=patternAssistV3325(report,waveStage);
   lines.push("");
@@ -17413,7 +17467,7 @@ function buildReportTextV326(report){
 
   };
 
-  lines.push("📘 石頭少爺分析助手｜GitHub 前端 V3.6.7.20｜60分K細微浪2.4＋多層級＋BOS＋狀態一致性版");
+  lines.push("📘 石頭少爺分析助手｜GitHub 前端 V3.6.7.21｜60分K細微浪2.4＋多層級＋BOS＋波浪白話教學層版");
 
   lines.push(`報告產出時間：${generatedAt}`);
 
@@ -20035,7 +20089,7 @@ function renderStockInfographicV3328(report){
   fontV3328(ctx,22,900,"#fff","center");ctx.fillText("報告製作 By.石頭少爺",1402,52);
   fontV3328(ctx,18,800,"#fff","center");ctx.fillText("圖片產生時間",1402,83);
   fontV3328(ctx,19,900,"#fff","center");ctx.fillText(reportGeneratedAt().replace("（台灣時間）",""),1402,115);
-  fontV3328(ctx,16,700,"#dbeafe","center");ctx.fillText("V3.6.7.20｜細微浪2.4＋多層級＋BOS＋狀態一致性",1402,141);
+  fontV3328(ctx,16,700,"#dbeafe","center");ctx.fillText("V3.6.7.21｜細微浪2.4＋多層級＋BOS＋教學層",1402,141);
 
   // ===== 上半部：ABC + 結構示意圖 =====
   rrV3328(ctx,24,174,520,520,14,P.white,P.blue,2);
@@ -20049,6 +20103,8 @@ function renderStockInfographicV3328(report){
   rrV3328(ctx,48,660,466,27,8,P.paleBlue,null);fontV3328(ctx,16,900,P.navy);ctx.fillText(stockInfographicProgressV3329(st),58,679);
 
   drawStockTopChartV365(ctx,report,st);
+  // V3.6.7.21：波浪白話教學層只新增到文字判讀／新手說明；PNG既有版位與原文字完全不覆蓋。
+  // 若未來要把完整8段口訣加入PNG，必須另外開新區塊或擴充畫布，不得壓縮／蓋住目前圖卡。
 
   // ===== 六張指標卡：V3.6.6.2 沿用「長週期＋市場階段＋短趨勢／突破狀態＋量價＋品質」 =====
   const cardsX=24,cardsY=714,gap=12,cw=(1552-gap*2)/3,ch=160,rowGap=12;
