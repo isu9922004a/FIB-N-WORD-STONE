@@ -527,7 +527,7 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
 
     <p>月線波段條件判斷＋固定倍數目標價＋費波那契 N字分析</p>
 
-    <span class="version-pill">前端 V3.6.7.12｜紅綠白波浪階段提示版｜真實日K＋大盤三叉戟｜個股真實日K＋量能＋日20MA＋壓撐預｜個股圖 1152×2048（9:16）｜大盤圖 1024×1536（2:3）｜V3.4.7 穩定核心完整沿用｜研究建議搭配 Worker V2.9.12</span>
+    <span class="version-pill">前端 V3.6.7.13｜波浪候選移位版｜真實日K＋大盤三叉戟｜個股真實日K＋量能＋日20MA＋壓撐預｜個股圖 1152×2048（9:16）｜大盤圖 1024×1536（2:3）｜V3.4.7 穩定核心完整沿用｜研究建議搭配 Worker V2.9.12</span>
 
   </div>
 
@@ -930,7 +930,7 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
   </div>
 </div>
 
-<footer class="footer">石頭少爺 Agent｜GitHub 前端 V3.6.7.12｜紅綠白波浪階段提示版｜完整套用使用者指定的個股圖片報告格式｜V3.4.7 穩定核心與雙圖片版型完整沿用｜個股主圖支援真實日K＋量能＋MA20＋A/B/C＋三叉戟壓撐預｜價格作戰地圖保留持有／空手固定句型｜本前端不改ABC／Fib／N字與 pivot-abc-v2.4 核心<br>技術分析僅供研究與決策參考，不構成投資建議。<br>本版重點：個股圖片報告固定採用使用者指定之標準版型，作為後續 GitHub 個股圖正式模板。</footer>
+<footer class="footer">石頭少爺 Agent｜GitHub 前端 V3.6.7.13｜波浪候選移位版｜完整套用使用者指定的個股圖片報告格式｜V3.4.7 穩定核心與雙圖片版型完整沿用｜個股主圖支援真實日K＋量能＋MA20＋A/B/C＋三叉戟壓撐預｜價格作戰地圖保留持有／空手固定句型｜本前端不改ABC／Fib／N字與 pivot-abc-v2.4 核心<br>技術分析僅供研究與決策參考，不構成投資建議。<br>本版重點：個股圖片報告固定採用使用者指定之標準版型，作為後續 GitHub 個股圖正式模板。</footer>
 
 <script>
 
@@ -938,7 +938,8 @@ const API_BASE_URL="https://shitou-agent-fib-api.d318426.workers.dev";
 
 // V3.6.7.9：延續 GIS-KY 英文名稱修正；新增「戰術頸線突破」與「Fib B正式突破」角色隔離，避免B尚未突破卻被寫成支撐。
 // V3.6.7.9：角色一致性收尾——長文字價格地圖與新手「往下先看」同步納入有效戰術頸線；未正式突破B時，K線／量能文字改成「尚未有正式突破K可評分」。
-// V3.6.7.12：真實日K新增紅1/3/5、綠2/4、白a/b/c的波浪理論候選直線箭頭；量能使用同一波段區間同步標註。僅為前端顯示輔助，不改ABC/Fib/N字核心。
+// V3.6.7.13：真實日K新增紅1/3/5、綠2/4、白a/b/c的波浪理論候選直線箭頭；量能使用同一波段區間同步標註。僅為前端顯示輔助，不改ABC/Fib/N字核心。
+// V3.6.7.13：波浪候選階段提示移至個股主圖右側 RSI 上方空白區；不改波浪箭頭、ABC/Fib/N字、三叉戟或RSI計算。
 // V3.6.7.9：個股主圖右下空白區新增「日RSI 5T」提示卡，只使用Worker既有dailyRsi5，不新增或推導任何RSI資料。
 // V3.6.7.9：顯示一致性收尾——0.80倍以下量能提示燈與量能文字同步；大盤持股提示依N字生命週期動態描述；大盤／個股RSI共用同一分級口徑。
 // V3.6.7.9：量能口徑統一——相對量 < 0.80 一律視為「量能偏縮」；並將有效戰術頸線加入個股價格作戰地圖，不改任何核心計分。
@@ -16278,7 +16279,7 @@ function buildReportTextV326(report){
 
   };
 
-  lines.push("📘 石頭少爺分析助手｜GitHub 前端 V3.6.7.12｜紅綠白波浪階段提示版");
+  lines.push("📘 石頭少爺分析助手｜GitHub 前端 V3.6.7.13｜波浪候選移位版");
 
   lines.push(`報告產出時間：${generatedAt}`);
 
@@ -18533,15 +18534,15 @@ function drawRealKCoreV365(ctx,bars,all,start,ma20,opts){
   fontV3328(ctx,13,900,P.blue2);ctx.fillText("MA20",x+8,y+20);
 
   // 波浪理論候選標註（價格＋量能）｜僅顯示層，不改ABC/Fib/N字核心
+  // V3.6.7.13：只在K線區畫箭頭與1/2/3/4/5/a/b/c標記；
+  // 「波浪候選：第X浪／a/b/c浪」提示卡移到右側 RSI 上方空白區，避免覆蓋K線。
+  let waveOverlay=null;
   if(opts.showWaveTrend!==false){
-    const waveOverlay=drawWaveTrendOverlayV3680(ctx,bars,{
+    waveOverlay=drawWaveTrendOverlayV3680(ctx,bars,{
       x,y,w,h,volY,volH,
       priceToY:yPrice,
       step
     });
-    if(waveOverlay?.current){
-      drawWaveStageHintV3682(ctx,waveOverlay.current,x+58,y+20,180);
-    }
   }
 
   // 現價 / B / 三叉戟水平線
@@ -18571,7 +18572,7 @@ function drawRealKCoreV365(ctx,bars,all,start,ma20,opts){
   // 日期刻度
   const ticks=[0,Math.floor((bars.length-1)/3),Math.floor((bars.length-1)*2/3),bars.length-1];
   ticks.forEach((i,ti)=>{const px=x+(i+.5)*step;drawDividerV3328(ctx,px,volY+volH+2,px,volY+volH+7,P.line);fontV3328(ctx,11,700,P.muted,ti===0?"left":ti===ticks.length-1?"right":"center");ctx.fillText(dateShortV365(bars[i]?.date),px,volY+volH+22);});
-  return {minV,maxV,step};
+  return {minV,maxV,step,waveOverlay};
 }
 
 function drawTridentPlainLegendV365(ctx,t,x,y,w){
@@ -18617,12 +18618,18 @@ function drawStockTopChartV365(ctx,report,st){
   if(selected.bars.length>=20){
     drawCardTitleV3328(ctx,586,213,`真實日K｜最近 ${selected.bars.length} 根＋量能＋日20MA＋波浪階段`,P.navy,27);
     drawFitSingleLineStrictV3661(ctx,"波浪候選：紅1/3/5＝推動｜綠2/4＝調整｜白a/b/c＝修正｜下方同色箭頭＝量能節奏｜不改ABC核心",586,242,930,{maxSize:15,minSize:12,weight:700,color:P.muted});
-    drawRealKCoreV365(ctx,selected.bars,selected.all,selected.start,selected.ma20,{
+    const chartCore=drawRealKCoreV365(ctx,selected.bars,selected.all,selected.start,selected.ma20,{
       x:604,y:270,w:744,h:258,volY:542,volH:72,labelX:1370,labelW:176,unit:"元",
       A:st.A,B:st.B,C:st.C,close:st.close,ma20Now:st.ma,
       ADate:st.s.fib.ADate,BDate:st.s.fib.BDate,CDate:st.s.fib.CDate,trident:t
     });
     drawTridentPlainLegendV365(ctx,t,604,t?.preparatory?654:662,720);
+
+    // 波浪候選提示固定放在 RSI 卡上方空白區，不再疊在線圖內。
+    // x=1370 與右側價位／RSI欄對齊；y=550 讓提示卡落在 RSI(y=568) 上方。
+    if(chartCore?.waveOverlay?.current){
+      drawWaveStageHintV3682(ctx,chartCore.waveOverlay.current,1370,550,176);
+    }
     drawStockRsiMiniCardV3678(ctx,st.rsi);
   }else{
     drawCardTitleV3328(ctx,586,215,"結構示意圖｜逐日OHLCV不足",P.navy,28);
