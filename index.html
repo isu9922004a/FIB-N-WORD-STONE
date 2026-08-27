@@ -4199,7 +4199,10 @@ function renderFib(fib,close){
 
   if(uiA0!==null&&uiClose0!==null&&uiClose0<uiA0)status="failed";
 
-  const info=fibStatusInfo(status);
+  const uiB0=n(fib.B);
+  const info=(uiA0===null||uiB0===null)
+    ?{text:"⚪ 新循環初始化｜等待A→B",cls:"fib-status not-formed"}
+    :fibStatusInfo(status);
 
   const statusEl=document.getElementById("fibStatus");
 
@@ -4299,7 +4302,9 @@ function renderFib(fib,close){
 
       alert.className="fib-alert info";
 
-      alert.textContent="🟡 A、B已形成，仍在等待有效C；目前不把1.618當成正式目標。";
+      alert.textContent=(uiA0===null||uiB0===null)
+        ?"⚪ 新ABC尚未建立；目前先等待A→B，不提前跳到C或1.618。"
+        :"🟡 A、B已形成，仍在等待有效C；目前不把1.618當成正式目標。";
 
     }else if(status==="abc_ready"){
 
@@ -12813,7 +12818,12 @@ function getNStatusV326(report,s){
 
 function getNPhaseV326(report,s,nStatus){
 
+  const A=n(s?.fib?.A),B=n(s?.fib?.B);
+
   if(nStatus==="failed")return "FAILED";
+
+  // V3.7.0 狀態一致性：若目前實際 A 或 B 尚未形成，顯示層只停在建立A→B。
+  if(A===null||B===null)return "WAIT_STRUCTURE";
 
   if(nStatus==="forming")return "WAIT_C";
 
@@ -12829,7 +12839,7 @@ function getNPhaseV326(report,s,nStatus){
 
   if(allowed.has(raw))return raw;
 
-  const close=n(report?.close),B=n(s?.fib?.B),dailyLow=n(report?.dailyLow);
+  const close=n(report?.close),dailyLow=n(report?.dailyLow);
 
   if(close===null||B===null||B<=0)return "EXTENDING";
 
@@ -14078,13 +14088,34 @@ function buildReportTextV325(report){
 
 
 // ========================================================================
-// V3.3.23｜新增「波段階段輔助判讀」：主升段候選／中途整理候選／主升後段高檔延伸／末升段風險升高。
+// V3.7.0｜價格位置顯示一致性
+// ABC 位置與市場整體位置分開判讀；A/B 尚未建立時，不再一律寫「位置資料不足」。
+// ========================================================================
+function marketPositionMetaV370(report,s=null,ab=null){
+  s=s||currentStrategyStateV321(report);
+  ab=ab||buildABPositionV326(report,s);
+  if(ab)return positionZoneMetaV326(ab.positionZone||"UNKNOWN");
+  const rsi=n(report?.dailyRsi),gap=n(s?.maCtx?.gapPct),close=n(report?.close);
+  const fixed=s?.fixed?.next||null;
+  const fixedDist=fixed&&close!==null?n(signedDistancePct(fixed.p,close)):null;
+  const completed=s?.completed||completedRecencyV321(report,s?.fib||{});
+  const recentCompleted=completed?.key==="today"||completed?.key==="recent";
+  const hot=(rsi!==null&&rsi>=80)||(gap!==null&&gap>=20)||(fixedDist!==null&&Math.abs(fixedDist)<=2)||recentCompleted;
+  const elevated=(rsi!==null&&rsi>=70)||(gap!==null&&gap>=10)||(fixedDist!==null&&Math.abs(fixedDist)<=5);
+  if(hot)return {icon:"⚠️",label:"高檔／過熱區",key:"HIGH_HOT",detail:"新ABC位置尚未建立，但市場位置已有高檔／乖離／關卡證據"};
+  if(elevated)return {icon:"🟡",label:"偏高位置／追價需審慎",key:"ELEVATED",detail:"新ABC位置尚未建立，但市場位置已偏高"};
+  if(s?.maCtx?.above===true&&s?.maCtx?.slopeClass?.key==="up")return {icon:"🟢",label:"上升趨勢區",key:"TREND_UP",detail:"新ABC位置尚未建立；市場趨勢仍向上"};
+  return {icon:"➖",label:"新ABC位置尚未建立",key:"ABC_UNKNOWN",detail:"市場位置與新ABC內部位置分開顯示"};
+}
+
+// ========================================================================
+// V3.7.0｜純粹趨勢成熟度輔助：上升推進／趨勢整理／高檔延伸／高檔轉弱風險。
 // 同時加入完整報告獨立章節，以及「📖 新手看這邊」短版提示。
 // 不做正式艾略特浪數計數；不改任何 Worker、N字、月線、Fib、固定倍數計算，只讀既有分析結果轉成波段成熟度白話。
 // ========================================================================
 
 function waveStageAssistV3323(report){
-  if(!report)return {key:"UNDETERMINED",icon:"⚪",label:"階段尚待確認",short:"目前資料不足，先不硬判主升、整理或末升。"};
+  if(!report)return {key:"UNDETERMINED",icon:"⚪",label:"方向尚待確認",short:"目前資料不足，先不硬判推進、整理或高檔轉弱。"};
 
   const s=currentStrategyStateV321(report);
   const monthlyStatus=getMonthlyStatusV326(report);
@@ -14124,31 +14155,32 @@ function waveStageAssistV3323(report){
   if(nStatus==="failed")key="UNDETERMINED";
   else if(riskFlags.length>=1&&matureFlags.length>=1)key="LATE_RISK";
   else if(trendHealthy&&(nPhase==="RETESTING"||(pullbackZone&&!aboveB&&(vol===null||vol<=1.2))))key="MID_CONSOLIDATION";
+  else if(trendHealthy&&matureFlags.length>=2&&((gap!==null&&gap>=15)||(rsi!==null&&rsi>=75)))key="LATE_EXTENSION";
   else if(trendHealthy&&(aboveB||nPhase==="EXTENDING")&&matureFlags.length>=2)key="LATE_EXTENSION";
   else if(trendHealthy)key="MAIN_ADVANCE";
 
   const meta={
     MAIN_ADVANCE:{
-      icon:"🚀",label:"主升段候選",
-      short:"趨勢與日20MA仍偏多，且尚未同時出現明顯高檔轉弱訊號；目前較像主升推進，但不代表一定會繼續上漲。"
+      icon:"🔴",label:"上升趨勢推進",
+      short:"趨勢通道與日20MA仍偏上，且尚未同時出現明顯高檔轉弱訊號；目前屬上升趨勢推進，但不代表一定會繼續上漲。"
     },
     MID_CONSOLIDATION:{
-      icon:"🟡",label:"中途整理候選",
+      icon:"🟡",label:"上升趨勢整理",
       short:B!==null&&close!==null&&close<B&&nStatus!=="confirmed"
-        ?`目前較像主升途中整理；Fib B＝${fmt(B)} 元仍是上方正式突破關卡，往下先看${ma!==null?`日20MA＝${fmt(ma)} 元與既有支撐`:"既有支撐"}能否維持。`
-        :`目前較像主升途中整理；重點看${B!==null&&nStatus==="confirmed"?`已正式突破的B＝${fmt(B)} 元與`:""}${ma!==null?`日20MA＝${fmt(ma)} 元`:"重要支撐"}能否維持。`
+        ?`目前較像上升趨勢中的整理；Fib B＝${fmt(B)} 元仍是上方正式突破關卡，往下先看${ma!==null?`日20MA＝${fmt(ma)} 元與既有支撐`:"既有支撐"}能否維持。`
+        :`目前較像上升趨勢中的整理；重點看${B!==null&&nStatus==="confirmed"?`已正式突破的B＝${fmt(B)} 元與`:""}${ma!==null?`日20MA＝${fmt(ma)} 元`:"重要支撐"}能否維持。`
     },
     LATE_EXTENSION:{
-      icon:"🔥",label:"主升後段／高檔延伸，尚未確認進入末升段",
-      short:`股價已走到相對高檔${gap!==null&&gap>=10?`，日20MA正乖離 ${fmtSignedPct(gap)}`:""}${rsi!==null&&rsi>=70?`、RSI ${fmt(rsi)} 偏高`:""}；目前先視為強勢延伸，不直接認定末升段。若之後出現爆量不漲、跌破B／日20MA等訊號，才提高末升段警戒。`
+      icon:"⚠️",label:"強勢上升延伸／高檔",
+      short:`股價已走到相對高檔${gap!==null&&gap>=10?`，日20MA正乖離 ${fmtSignedPct(gap)}`:""}${rsi!==null&&rsi>=70?`、RSI ${fmt(rsi)} 偏高`:""}；目前先視為強勢上升延伸。若之後出現爆量不漲、關鍵支撐／日20MA失守等訊號，才提高高檔轉弱警戒。`
     },
     LATE_RISK:{
-      icon:"⚠️",label:"末升段風險升高",
+      icon:"⚠️",label:"高檔轉弱風險升高",
       short:"行情已走過一段漲幅，而且開始出現高檔轉弱訊號；這不等於已經見頂，但獲利保護與風控優先級應提高。"
     },
     UNDETERMINED:{
       icon:"⚪",label:nStatus==="failed"?"結構重整／暫不判定波段階段":"階段尚待確認",
-      short:nStatus==="failed"?"目前N字結構已失效，先等待新的A／B／C，不硬貼主升、整理或末升標籤。":"目前訊號還不夠一致，先不硬判主升、整理或末升；等B、日20MA與量價更清楚。"
+      short:nStatus==="failed"?"目前N字結構已失效，先等待新的A／B／C，不硬貼推進、整理或高檔轉弱標籤。":"目前訊號還不夠一致，先不硬判推進、整理或高檔轉弱；等B、日20MA與量價更清楚。"
     }
   };
 
@@ -14244,8 +14276,10 @@ function patternAssistV3325(report,stage=null){
 
   const meta={
     PRE_BREAKOUT:{
-      icon:"🔥",label:"前置突破／多頭延續候選",
-      short:`目前有前置轉強證據，但完整費波那契N字尚未確認。${tacticalRoleText}${fibBRoleText}${ma!==null?` 日20MA＝${fmt(ma)} 元仍是短線趨勢健康度參考。`:""} 後續先看既有戰術防守是否維持，再看能否用完整日K收盤正式突破Fib B；在B正式突破前，不把B寫成已轉支撐。`
+      icon:"🔥",label:B===null?"戰術突破延續／新ABC待建立":"前置突破／多頭延續候選",
+      short:B===null
+        ?`目前戰術突破仍有延續證據，但新的Fib A／B／C尚未建立。${tacticalRoleText}${ma!==null?` 日20MA＝${fmt(ma)} 元仍是短線趨勢健康度參考。`:""} 後續先看既有戰術防守是否維持，同時等待新的A→B；在新的B尚未形成前，不提前談Fib B正式突破。`
+        :`目前有前置轉強證據，但完整費波那契N字尚未確認。${tacticalRoleText}${fibBRoleText}${ma!==null?` 日20MA＝${fmt(ma)} 元仍是短線趨勢健康度參考。`:""} 後續先看既有戰術防守是否維持，再看能否用完整日K收盤正式突破Fib B；在B正式突破前，不把B寫成已轉支撐。`
     },
     BREAKOUT_HOLD:{
       icon:"🟢",label:"突破後站穩／回測續攻候選",
@@ -14260,7 +14294,7 @@ function patternAssistV3325(report,stage=null){
       short:`突破後已出現實際轉弱證據${risk.length?`：${risk.slice(0,3).join("；")}`:""}。這比較接近你提供圖例中的『突破後又跌回頸線／支撐』風險；先提高風控，不把先前突破當成永久有效。`
     },
     TOP_RISK:{
-      icon:"⚠️",label:"高檔做頭／末升風險觀察",
+      icon:"⚠️",label:"高檔做頭／轉弱風險觀察",
       short:`目前處於高檔成熟區，而且開始累積轉弱特徵${risk.length?`：${risk.slice(0,3).join("；")}`:""}。這只能說『做頭風險提高』，不能直接宣告M頭或頭肩頂完成；真正確認仍要看頸線／B／日20MA是否失守。`
     },
     RESET:{
@@ -14452,7 +14486,8 @@ function evidenceChainV340(report){
   const breakout=breakoutQualityEvidenceV340(report,s,nStatus,nPhase);
   const volume=volumePriceEvidenceV340(report,s);
 
-  const close=n(report.close),B=n(s.fib.B),C=n(s.fib.C),ma=n(s.maCtx.value),rsi=n(report.dailyRsi),gap=n(s.maCtx.gapPct);
+  const close=n(report.close),A=n(s.fib.A),B=n(s.fib.B),C=n(s.fib.C),ma=n(s.maCtx.value),rsi=n(report.dailyRsi),gap=n(s.maCtx.gapPct);
+  const waitAB=A===null||B===null;
   const bull=[],risk=[],conflicts=[];
   let directionScore=0,coverage=0;
 
@@ -14486,7 +14521,9 @@ function evidenceChainV340(report){
   // 2. ABC / N字結構
   coverage++;
   let structureLabel="等待新結構";
-  if(nStatus==="confirmed"){
+  if(waitAB){
+    structureLabel="新ABC尚未建立／等待A→B";
+  }else if(nStatus==="confirmed"){
     structureLabel=nPhase==="WEAKENING"?"完整N字曾確認，但目前轉弱修復":nPhase==="RETESTING"?"完整N字確認後回測B":"完整N字確認／延伸";
     if(nPhase!=="WEAKENING"){bull.push("完整ABC/N字已確認");directionScore+=2;}
     else{risk.push("完整N字雖曾確認，但目前收盤轉弱");directionScore-=1;}
@@ -14548,6 +14585,7 @@ function evidenceChainV340(report){
   if(entryQuality==="POOR"&&directionScore>=1)summary="趨勢／結構仍偏多，但目前位置追價風險較高";
   else if(nPhase==="WEAKENING")summary="原突破仍有歷史效力，但目前已進入B下方修復／轉弱觀察";
   else if(nStatus==="abc_ready")summary="ABC已形成，下一個真正確認點是完整日K收盤突破B";
+  else if(waitAB)summary="上一組結構已完成／重置；新的A、B、C尚未建立，現在等待A→B";
   else if(nStatus==="forming")summary="A、B已形成，現在重點是等有效C，而不是提早猜突破";
   else if(nStatus==="failed")summary="原結構失效，先停止沿用舊N字目標，等待新A／B／C";
 
@@ -14557,6 +14595,7 @@ function evidenceChainV340(report){
   else if(nStatus==="confirmed"&&entryQuality==="POOR")action=`已有持股可依B／日20MA續抱與風控；空手以等待回測、乖離收斂為主，不因趨勢強就追價。`;
   else if(nStatus==="confirmed")action="完整N字仍有效；持有者看防守續抱，空手優先等健康回測或整理後再攻。";
   else if(nStatus==="abc_ready")action=B!==null?`等待完整日K收盤突破B＝${fmt(B)} 元，再評估是否從「型態完成」升級為「突破確認」。`:"等待B突破確認。";
+  else if(waitAB)action="等待新的A→B結構建立；上一組N字／1.618只保留歷史回顧，不提前猜新的C。";
   else if(nStatus==="forming")action="等待有效C形成；回檔尚未踩穩前，不把任何單一低點硬指定成C。";
   else if(nStatus==="failed")action="停止使用舊1.618與舊突破作現行依據，重新等待新的A／B／C。";
 
@@ -14842,12 +14881,13 @@ function technicalSopV342(report){
   const nStatus=getNStatusV326(report,s);
   const nPhase=getNPhaseV326(report,s,nStatus);
   const ab=buildABPositionV326(report,s);
-  const pos=positionZoneMetaV326(ab?.positionZone||"UNKNOWN");
+  const pos=marketPositionMetaV370(report,s,ab);
   const ri=getRsiReportInfo(report?.dailyRsi);
   const sp=supportPressureSummaryV342(report,s,nStatus);
   const vol=volumePriceEvidenceV340(report,s);
   const close=n(report?.close);
-  const B=n(s?.fib?.B);
+  const A=n(s?.fib?.A),B=n(s?.fib?.B);
+  const waitAB=A===null||B===null;
   const steps=[];
 
   steps.push({icon:e.directionScore>=3?"🟢":e.directionScore<=-2?"⚠️":"🟡",title:"趨勢",text:`${e.trendLabel}｜正式「頭頭高、底底高／頭頭低、底底低」需要完整頭底序列；目前Worker未回傳完整序列，所以不硬判六字口訣。`});
@@ -14866,6 +14906,7 @@ function technicalSopV342(report){
   if(nPhase==="WEAKENING"&&B!==null)oneLine=`突破曾成立，但目前跌回B＝${fmt(B)} 元下方；先修復B，再談延伸。`;
   else if(nStatus==="confirmed"&&e.entryLabel.includes("偏低"))oneLine=`趨勢可以偏多，但目前新進位置不漂亮；已有部位依防守管理，空手不追價。`;
   else if(nStatus==="abc_ready")oneLine=`ABC已完成，真正確認點仍是完整日K收盤突破B${B!==null?`＝${fmt(B)} 元`:""}。`;
+  else if(waitAB)oneLine=`新ABC已重置，目前只等待A→B建立；不提前跳到C或突破。`;
   else if(nStatus==="forming")oneLine=`A、B已形成，先等有效C；現在的任務是等結構完整，不是猜低點。`;
 
   return {steps,teach,sp,oneLine,e,ma,wave,pattern,nStatus,nPhase,close};
@@ -15304,30 +15345,36 @@ function marketPhaseEngineV360(report){
   const nStatus=getNStatusV326(report,s),nPhase=getNPhaseV326(report,s,nStatus);
   const wave=waveStageAssistV3323(report);
   const vol=volumePositionContextV350(report);
-  const ma=n(s?.maCtx?.value),close=n(report?.close),B=n(s?.fib?.B);
+  const ma=n(s?.maCtx?.value),close=n(report?.close),A=n(s?.fib?.A),B=n(s?.fib?.B);
   const slope=s?.maCtx?.slopeClass?.key||"flat";
   const aboveMa=s?.maCtx?.above===true;
-  const formingAboveB=nStatus==="forming"&&B!==null&&close!==null&&close>B;
+  const waitAB=A===null||B===null;
+  const gap=n(s?.maCtx?.gapPct),rsi=n(report?.dailyRsi);
+  const highPosition=(gap!==null&&gap>=15)||(rsi!==null&&rsi>=75)||["LATE_EXTENSION","LATE_RISK"].includes(wave.key);
+  const formingAboveB=!waitAB&&nStatus==="forming"&&B!==null&&close!==null&&close>B;
   const evidence=[];
   let key="BUILDING",icon="🟡",label="築底／建立結構",summary="目前仍在建立A、B、C與短線趨勢證據。";
 
   if(nStatus==="failed"||(aboveMa===false&&slope==="down"&&monthlyStatus==="FAIL")){
     key="RESET";icon="🔴";label="轉弱／結構重整";summary="主要結構已失效或長短週期同步偏弱，先等待新結構。";
   }else if(nStatus==="confirmed"&&nPhase==="WEAKENING"&&aboveMa===false&&slope==="down"){
-    key="DECLINE";icon="🔴";label="初跌／轉弱確認";summary="突破後跌回關鍵價，且日20MA條件轉弱；風控優先。";
+    key="DECLINE";icon="🔴";label="下降趨勢／轉弱確認";summary="突破後跌回關鍵價，且日20MA條件轉弱；風控優先。";
   }else if(wave.key==="LATE_RISK"){
     key="LATE_RISK";icon="⚠️";label="高檔轉弱警戒";summary="行情已走過一段漲幅，並開始累積高檔轉弱特徵；不等於已確認見頂。";
   }else if(wave.key==="LATE_EXTENSION"){
-    key="HIGH_EXTENSION";icon="🔥";label="高檔整理／延伸";summary="趨勢仍偏多，但位置已不屬於初升區；追價品質下降，獲利保護重要。";
+    key="HIGH_EXTENSION";icon="🔥";label="高檔整理／延伸";summary="趨勢仍偏多，但位置已不屬於低風險起漲區；追價品質下降，獲利保護重要。";
   }else if(nStatus==="confirmed"&&nPhase==="EXTENDING"&&aboveMa&&slope==="up"){
-    key="MAIN_ADVANCE";icon="🟢";label="主升延伸";summary="完整N字確認、B上方延伸、日20MA偏多，屬目前最完整的趨勢推進狀態。";
+    key="MAIN_ADVANCE";icon="🟢";label="上升趨勢推進";summary="完整N字確認、B上方延伸、日20MA偏多，屬目前最完整的趨勢推進狀態。";
   }else if(nStatus==="confirmed"&&nPhase==="RETESTING"){
     key="MID_CONSOLIDATION";icon="🟡";label="突破後整理／回測";summary="突破已發生，現在是在驗證原壓力能否轉為支撐。";
-  }else if(formingAboveB||s?.tacticalActive){
-    key="EARLY_ADVANCE";icon="🔥";label="初升／前置突破";summary="短線價格已先轉強，但完整費波那契N字仍需依既有C與B規則確認。";
+  }else if(waitAB&&aboveMa&&slope==="up"){
+    key="TREND_EXTENSION";icon=highPosition?"⚠️":"🔴";label=highPosition?"強勢上升延伸":"上升趨勢延伸";
+    summary=`趨勢方向仍向上${highPosition?"，但目前位置已偏高／乖離較大":""}；新ABC已重置，現在等待新的A→B，不把「週期剛重置」誤寫成「新的低風險起漲點」。`;
+  }else if(formingAboveB||(!waitAB&&s?.tacticalActive)){
+    key="EARLY_ADVANCE";icon="🔥";label="前置突破／趨勢轉強";summary="短線價格已先轉強，但完整費波那契N字仍需依既有C與B規則確認。";
   }else if(nStatus==="abc_ready"){
     key="ACCUMULATION";icon="🟠";label="整理蓄勢／等待突破";summary="ABC已形成，接下來只看完整日K能否有效突破B。";
-  }else if(nStatus==="forming"){
+  }else if(!waitAB&&nStatus==="forming"){
     key="BUILDING";icon="🟡";label="整理／等待有效C";summary="A、B已形成，回檔是否真正踩穩仍待C確認。";
   }
 
@@ -15337,7 +15384,7 @@ function marketPhaseEngineV360(report){
   if(B!==null&&close!==null&&close>B)evidence.push(`現價站在B＝${fmt(B)} 元上方`);
   if(vol?.key==="BREAKOUT_ATTACK"||vol?.key==="ACTIVE_UP")evidence.push(vol.label);
   const confidence=evidence.length>=4?"高":evidence.length>=2?"中":"低";
-  const next=key==="MAIN_ADVANCE"?"看B／MA20能否守住，並等待健康回測或再攻":key==="MID_CONSOLIDATION"?"看回測是否量縮、收盤守住，再決定是否重新轉強":key==="HIGH_EXTENSION"||key==="LATE_RISK"?"優先看高檔量價是否續強，以及B／MA20是否失守":key==="RESET"||key==="DECLINE"?"先等待止弱、站回MA20與新的A／B／C":"先完成目前這一階段，不提前跳到下一個結論";
+  const next=key==="MAIN_ADVANCE"?"看關鍵支撐／MA20能否守住，並等待健康回測或再攻":key==="TREND_EXTENSION"?"方向維持向上，但先等待新的A→B結構；高檔位置不追價":key==="MID_CONSOLIDATION"?"看回測是否量縮、收盤守住，再決定是否重新轉強":key==="HIGH_EXTENSION"||key==="LATE_RISK"?"優先看高檔量價是否續強，以及關鍵支撐／MA20是否失守":key==="RESET"||key==="DECLINE"?"先等待止弱、站回MA20與新的A／B／C":"先完成目前這一階段，不提前跳到下一個結論";
   return {key,icon,label,summary,evidence,confidence,next,nStatus,nPhase,waveKey:wave.key};
 }
 
@@ -15895,7 +15942,7 @@ function appendDecisionEngineV360(lines,report){
 
 function appendWaveStageSectionV3323(lines,report,stage=null){
   const w=stage||waveStageAssistV3323(report);
-  lineSection(lines,"🧭 趨勢成熟度｜推進、整理還是高檔風險？");
+  lineSection(lines,"🧭 趨勢狀態｜方向、推進、整理與高檔風險");
   lines.push(`${w.icon} 趨勢成熟度輔助判讀：${w.label}`);
   lines.push("📌 這一層只判斷趨勢成熟度與風險，不做艾略特浪號，也不做1～5浪／ABC修正浪計數。");
   lines.push("");
@@ -15922,20 +15969,20 @@ function appendWaveStageSectionV3323(lines,report,stage=null){
     if(w.vol!==null&&w.vol>=1.5)notes.push(`最新相對量約 ${fmt(w.vol,2)} 倍，量能偏活躍，需確認放量是否能繼續推高價格。`);
     (notes.length?notes:["股價已經走過一段漲幅，位置不再屬於剛起漲區。"] ).slice(0,4).forEach((x,i)=>lines.push(`${i+1}. ${x}`));
     lines.push("");
-    lines.push("➡️ 所以現在比較不像『剛起漲』，比較像已經走了一大段之後的高檔強勢區。");
-    lines.push(`⚠️ 目前還不能直接說是末升段，因為${w.maAbove===true?"股價仍在日20MA上方":"價格尚未全面破壞趨勢"}${w.slope!=="down"?"、MA20尚未轉為明顯下彎":""}，也還沒有同時出現足夠的結構轉弱訊號。`);
+    lines.push("➡️ 所以現在比較不像低風險起漲位置，而是已經走了一大段之後的高檔強勢延伸區。");
+    lines.push(`⚠️ 目前仍不能直接宣告趨勢結束，因為${w.maAbove===true?"股價仍在日20MA上方":"價格尚未全面破壞趨勢"}${w.slope!=="down"?"、MA20尚未轉為明顯下彎":""}，也還沒有同時出現足夠的結構轉弱訊號。`);
   }else if(w.key==="MAIN_ADVANCE"){
     lines.push(`目前股價與日20MA的方向仍偏多${w.B!==null&&w.close!==null&&w.close>w.B?`，而且現價已在B＝${fmt(w.B)} 元上方`:""}；高檔過熱與結構轉弱訊號尚未同時出現。`);
-    lines.push("➡️ 這種型態比較接近『主升段候選』：趨勢正在推進，但仍要靠B、日20MA與量價持續確認，而不是看到上漲就認定一定會一路漲。 ");
+    lines.push("➡️ 目前屬『上升趨勢推進』：方向仍偏上，但仍要靠價格結構、日20MA與量價持續確認，而不是看到上漲就認定一定會一路漲。 ");
   }else if(w.key==="MID_CONSOLIDATION"){
     lines.push(`目前比較像上漲趨勢中的整理／回測${w.B!==null?`，B＝${fmt(w.B)} 元是重要結構觀察`:""}${w.ma!==null?`，日20MA＝${fmt(w.ma)} 元則是短線趨勢健康度參考`:""}。`);
-    lines.push("➡️ 如果整理時量能縮、重要支撐守住，通常比較像『主升途中消化漲幅』；若支撐一層層失守，才需要把它從中途整理降級成轉弱。 ");
+    lines.push("➡️ 如果整理時量能縮、重要支撐守住，通常比較像『上升趨勢中的健康整理』；若支撐一層層失守，才需要把它降級成轉弱。 ");
   }else if(w.key==="LATE_RISK"){
     lines.push(`目前行情已經走過一段漲幅，而且開始出現轉弱訊號：${w.riskFlags.slice(0,3).join("；")||"高檔結構開始降溫"}。`);
-    lines.push("➡️ 這時候可以把『末升段風險』提高一級，但不是看到風險就直接宣告見頂；如果之後重新站回重要防線、量價恢復，警戒也可以下降。 ");
+    lines.push("➡️ 這時候可以把『高檔轉弱風險』提高一級，但不是看到風險就直接宣告見頂；如果之後重新站回重要防線、量價恢復，警戒也可以下降。 ");
   }else{
     lines.push(w.short);
-    lines.push("➡️ 目前最重要的是先等結構變清楚，不為了貼『主升／整理／末升』標籤而硬做判斷。 ");
+    lines.push("➡️ 目前最重要的是先等結構變清楚，不為了貼任何波浪／階段標籤而硬做判斷。 ");
   }
 
   appendPatternAssistV3325(lines,report,w);
@@ -15947,9 +15994,9 @@ function appendWaveStageSectionV3323(lines,report,stage=null){
   const bFormallyBroken=w.nStatus==="confirmed";
   const bCurrentlyAbove=w.B!==null&&w.close!==null&&w.close>w.B;
   if(bFormallyBroken){
-    lines.push(`🟢 如果：正式突破後能守住${bText}，且${maText}維持向上／不轉弱，整理後再創高 → 比較像『主升段延續』。`);
-    lines.push(`🟡 如果：高檔震盪、量縮整理，但已突破的${bText}與${maText}都能維持 → 比較像『主升段中的中途整理』。`);
-    lines.push(`🔴 如果：高檔轉弱特徵增加，又重新跌破${bText}與${maText} → 才提高『末升段／行情進入尾聲』警覺。`);
+    lines.push(`🟢 如果：正式突破後能守住${bText}，且${maText}維持向上／不轉弱，整理後再創高 → 上升趨勢延續。`);
+    lines.push(`🟡 如果：高檔震盪、量縮整理，但已突破的${bText}與${maText}都能維持 → 視為上升趨勢中的整理。`);
+    lines.push(`🔴 如果：高檔轉弱特徵增加，又重新跌破${bText}與${maText} → 才提高『趨勢轉弱／高檔風險』警覺。`);
   }else if(bCurrentlyAbove){
     lines.push(`🟢 如果：目前先站在${bText}上方，之後仍能維持並完成正式N字確認，且${maText}不轉弱 → 前置強勢才有進一步升級條件。`);
     lines.push(`🟡 如果：只是暫時站上${bText}但尚未正式確認，先視為前置突破觀察，不提前把B當成正式支撐。`);
@@ -15960,7 +16007,7 @@ function appendWaveStageSectionV3323(lines,report,stage=null){
     lines.push(`🔴 如果：${bText}持續無法突破，同時${maText}與主要支撐陸續失守 → 才把整理狀態進一步降級。`);
   }
   lines.push("");
-  lines.push("🧠 新手一句話：現在不是看到漲很多就直接叫末升段；要看『漲很高之後，有沒有開始守不住重要防線』。");
+  lines.push("🧠 新手一句話：現在不是看到漲很多就直接判定趨勢結束；要看『漲很高之後，有沒有開始守不住重要防線』。");
 }
 
 function buildNewbieLookHereV3318(report,generatedAt=null){
@@ -16015,7 +16062,7 @@ function buildNewbieLookHereV3318(report,generatedAt=null){
 
   const waveStage=waveStageAssistV3323(report);
   lines.push("");
-  lines.push("③【波段成熟度｜目前可能走到哪一段？】");
+  lines.push("③【趨勢狀態｜方向、延伸與高檔風險】");
   lines.push(`${waveStage.icon} ${waveStage.label}`);
   lines.push(`➡️ ${waveStage.short}`);
 
@@ -16190,7 +16237,7 @@ function buildReportTextV326(report){
 
   const qualityMeta=structureQualityMetaV326(quality);
 
-  const posMeta=positionZoneMetaV326(ab?.positionZone||"UNKNOWN");
+  const posMeta=marketPositionMetaV370(report,s,ab);
 
   const entryQuality=getEntryQualityV328(report,s,monthlyStatus,nStatus,nPhase,ab,targetZone,fixedTargetZone,quality);
 
@@ -16218,7 +16265,18 @@ function buildReportTextV326(report){
 
   const ri=getRsiReportInfo(rsi);
 
-  const formingAboveB=nStatus==="forming"&&ab?.positionZone==="ABOVE_B";
+  const waitAB=A===null||B===null;
+
+  const recentCompleted=s?.completed?.key==="today"||s?.completed?.key==="recent";
+
+  // V3.7.0｜單一顯示狀態（Master State）：A或B尚未建立時，所有顯示層一律停在 WAIT_AB。
+  const displayNStatus=waitAB?"WAIT_AB":nStatus.toUpperCase();
+  const displayNPhase=waitAB?"WAIT_STRUCTURE":nPhase;
+  const entryImproveDisplay=waitAB
+    ?"等待新的A→B結構建立；上一組目標完成後不直接跳到等待有效C，也不提前猜新的C。"
+    :entryImprove;
+
+  const formingAboveB=!waitAB&&nStatus==="forming"&&ab?.positionZone==="ABOVE_B";
 
   const waveStage=waveStageAssistV3323(report);
 
@@ -16241,6 +16299,8 @@ function buildReportTextV326(report){
   const cTag=C!==null?`C（${fmt(C)} 元）`:(rawC!==null&&cLife.invalidated?`原C（${fmt(rawC)} 元，已失效）`:"C（尚未形成）");
 
   const phaseStateLabel=()=>{
+
+    if(waitAB)return recentCompleted?`上一組N字目標完成｜新循環初始化｜等待新的A→B`:`新循環初始化｜等待新的A→B`;
 
     if(nStatus==="confirmed"){
 
@@ -16266,6 +16326,8 @@ function buildReportTextV326(report){
 
   const marketLabel=()=>{
 
+    if(waitAB)return `新ABC尚未建立｜趨勢方向與ABC生命週期分開判讀｜等待A→B`;
+
     if(nStatus==="confirmed"){
 
       if(nPhase==="RETESTING")return `費波那契N字已確認（${abcNow}）｜突破後回測${bNow}觀察`;
@@ -16288,7 +16350,7 @@ function buildReportTextV326(report){
 
   };
 
-  lines.push("📘 石頭少爺分析助手｜GitHub 前端 V3.7.0｜純粹趨勢通道箭頭版");
+  lines.push("📘 石頭少爺分析助手｜GitHub 前端 V3.7.0｜純粹趨勢通道箭頭版｜狀態一致性修正");
   lines.push("🧭 趨勢方向改以K線通道箭頭呈現：紅↗上升／綠↘下降／黃→盤整；不使用1～5浪或ABC修正浪計數。 ");
 
   lines.push(`報告產出時間：${generatedAt}`);
@@ -16314,7 +16376,9 @@ function buildReportTextV326(report){
 
   lines.push(`${monthlyMeta.icon} 波段資格：${monthlyMeta.label}${monthlyStatus==="PENDING"?(monthlyNoStart?"｜固定倍數資格待起始月":"｜本次不提前判定"):monthlyStatus==="UNAVAILABLE"?"｜本次不提前判定":""}`);
 
-  lines.push(`🧬 N字進度：${stockNStatusLabelV3328(nStatus)}｜目前階段：${stockNPhaseLabelV3328(nPhase)}`);
+  lines.push(waitAB
+    ?`🧬 N字進度：新循環初始化｜等待A→B｜目前階段：等待A→B建立`
+    :`🧬 N字進度：${stockNStatusLabelV3328(nStatus)}｜目前階段：${stockNPhaseLabelV3328(nPhase)}`);
 
   lines.push(`${posMeta.icon} 價格位置：${posMeta.label}${B!==null?`｜${bNow}`:""}`);
 
@@ -16326,10 +16390,12 @@ function buildReportTextV326(report){
 
   lines.push(`${entryQualityMeta.icon} 新進品質：${entryQualityMeta.label}${entryReasons.length?`｜${entryReasons.slice(0,3).join("；")}`:""}`);
 
-  lines.push(`📌 新進改善條件：${entryImprove}`);
+  lines.push(`📌 新進改善條件：${entryImproveDisplay}`);
   lines.push(`🎯 操作定位：${evidenceChainV340(report).action}`);
 
-  if(nStatus==="confirmed")lines.push(`🟢 完整N字：已確認（${abcNow}）｜${bNow}已突破`);
+  if(waitAB)lines.push(recentCompleted?"🏆 上一組N字目標已完成｜新A／B／C尚未形成，重新等待A→B":"⚪ 新ABC尚未建立｜等待A→B");
+
+  else if(nStatus==="confirmed")lines.push(`🟢 完整N字：已確認（${abcNow}）｜${bNow}已突破`);
 
   else if(nStatus==="abc_ready")lines.push(`🟡 完整N字：ABC已形成（${abcNow}）｜等待完整日K收盤突破${bNow}`);
 
@@ -16398,6 +16464,12 @@ function buildReportTextV326(report){
     lines.push("🟡 新進場：波段新進場暫緩｜官方月線資格未判定");
 
     lines.push("🟡 加碼：波段加碼暫緩｜官方月線資料恢復前不啟用波段加碼");
+
+  }else if(waitAB){
+
+    lines.push("🟡 新進場：新ABC週期尚未建立｜等待新的A→B與後續回測結構，不把上一組完成後的強勢延伸誤當低風險起漲點。");
+
+    lines.push("🟡 加碼：暫不主動加碼｜先依日20MA／既有支撐管理持股，等新A／B可驗證後再重新評估。");
 
   }else if(nStatus==="confirmed"){
 
@@ -16481,7 +16553,11 @@ function buildReportTextV326(report){
 
   lines.push("");
 
-  if(nStatus==="confirmed"){
+  if(waitAB){
+
+    lines.push(recentCompleted?"🏆 目前進度：上一組N字目標已完成並結束；新的A、B、C尚未形成，現在重新等待A→B。":"⏳ 目前進度：新的A、B、C尚未建立，先等待A→B，不提前猜C或突破。");
+
+  }else if(nStatus==="confirmed"){
 
     if(nPhase==="EXTENDING")lines.push(`✅ 目前進度：A、B、C都已形成，而且已由C回升後以完整日K收盤突破B ${fmt(B)} 元；完整N字已確認，目前維持在B上方延伸。`);
 
@@ -16527,7 +16603,11 @@ function buildReportTextV326(report){
 
   }
 
-  if(nStatus==="confirmed"){
+  if(waitAB){
+
+    lines.push(`🟡 新ABC尚未建立；目前${posMeta.label}，方向偏多不等於適合追價，先等待新的A→B。`);
+
+  }else if(nStatus==="confirmed"){
 
     if(nPhase==="WEAKENING")lines.push(`🔴 短線不新進：收盤已跌回B ${fmt(B)} 元下方，先等修復。`);
 
@@ -16918,7 +16998,7 @@ function buildReportTextV326(report){
 
   lines.push("【費波那契N字】");
 
-  lines.push(`N_STATUS：${nStatus.toUpperCase()}｜N_PHASE：${nPhase}`);
+  lines.push(`N_STATUS：${displayNStatus}｜N_PHASE：${displayNPhase}`);
 
   lines.push("ABC白話：A＝起漲點｜B＝前波高點｜C＝回檔低點");
 
@@ -16939,6 +17019,8 @@ function buildReportTextV326(report){
   }else if(nStatus==="abc_ready")lines.push("正式1.618尚未啟用；B突破確認後才啟用。若C被收盤跌破但A守住，回退WAIT_C。");
 
   else if(nStatus==="failed")lines.push("本組N字已失效；舊費波那契結構只作歷史回顧。");
+
+  else if(waitAB)lines.push("目前不產生新的正式1.618；新ABC尚未建立，先等待A→B。");
 
   else lines.push("目前不產生新的正式1.618；先等待有效C。");
 
@@ -16976,11 +17058,11 @@ function buildReportTextV326(report){
 
   lineSection(lines,"🔑 新手小白最後只要記住");
 
-  lines.push(`📍 現價：${fmt(close)} 元｜POSITION_ZONE=${ab?.positionZone||"UNKNOWN"}（${posMeta.label}）`);
+  lines.push(`📍 現價：${fmt(close)} 元｜ABC位置=${waitAB?"尚未建立":(ab?.positionZone||"UNKNOWN")}｜市場位置=${posMeta.label}`);
 
   lines.push(`${monthlyMeta.icon} MONTHLY_STATUS：${monthlyStatus}｜${monthlyMeta.short}`);
 
-  lines.push(`🧬 N_STATUS：${nStatus.toUpperCase()}｜N_PHASE：${nPhase}`);
+  lines.push(`🧬 N_STATUS：${displayNStatus}｜N_PHASE：${displayNPhase}`);
 
   lines.push(`${qualityMeta.icon} 結構品質：${qualityMeta.label}`);
 
@@ -17000,7 +17082,9 @@ function buildReportTextV326(report){
 
       :`${fixedTargetMeta.icon} 月線${fixed.m}×＝${fmt(fixed.p)} 元｜FIXED_TARGET_ZONE=${fixedTargetZone.key}`);
 
-  }else if(nStatus==="abc_ready")lines.push(`🟡 ${cNow}已形成；守住${cNow}並等待${bNow}完整收盤突破。`);
+  }else if(waitAB)lines.push(`🔄 新A／B／C尚未形成；上一組完成後已重置，現在只等待新的A→B，不提前猜C。`);
+
+  else if(nStatus==="abc_ready")lines.push(`🟡 ${cNow}已形成；守住${cNow}並等待${bNow}完整收盤突破。`);
 
   else if(cLife.invalidated)lines.push(`⚠️ 原C＝${fmt(rawC)} 元已失效；${aNow}仍守住，回WAIT_C重新找C。`);
 
@@ -17018,7 +17102,12 @@ function buildReportTextV326(report){
 
   lines.push(`${qualityMeta.icon} 結構品質：${qualityMeta.label}。`);
 
-  if(nStatus==="confirmed"){
+  if(waitAB){
+
+    lines.push("🔄 短線N字：新循環初始化｜A／B／C尚未形成。");
+    lines.push("📌 操作重點：等待A→B建立；上一組目標完成不代表現在是新的低風險起漲點。");
+
+  }else if(nStatus==="confirmed"){
 
     lines.push(`🟢 短線N字：完整確認｜${nPhase}。`);
 
@@ -17058,11 +17147,13 @@ function buildReportTextV326(report){
 
   lines.push(`${monthlyMeta.icon} 月線：${monthlyMeta.detail}`);
 
-  if(nStatus==="forming")lines.push(`🧬 N字進度：A＝${fmt(A)} 元、B＝${fmt(B)} 元已形成｜等待有效C`);
+  if(waitAB)lines.push("🧬 新循環初始化｜A／B／C尚未形成｜等待A→B");
+
+  else if(nStatus==="forming")lines.push(`🧬 N字進度：A＝${fmt(A)} 元、B＝${fmt(B)} 元已形成｜等待有效C`);
 
   else lines.push(`🧬 ${nStatusTextV326(nStatus,nPhase)}`);
 
-  lines.push(`${posMeta.icon} 價格位置：${ab?.positionZone||"UNKNOWN"}｜${posMeta.label}`);
+  lines.push(`${posMeta.icon} 價格位置：${waitAB?"新ABC位置尚未建立":(ab?.positionZone||"UNKNOWN")}｜市場位置：${posMeta.label}`);
 
   lines.push(`${qualityMeta.icon} 結構品質：${qualityMeta.label}`);
 
@@ -17076,7 +17167,7 @@ function buildReportTextV326(report){
 
   lines.push(`${entryQualityMeta.icon} 新進品質：${entryQualityMeta.label}`);
 
-  lines.push(`📌 進場品質改善：${entryImprove}`);
+  lines.push(`📌 進場品質改善：${entryImproveDisplay}`);
 
   if(nStatus==="confirmed"){
 
@@ -17091,6 +17182,8 @@ function buildReportTextV326(report){
   }else if(nStatus==="abc_ready")lines.push(`📌 當前路徑：ABC已完成（${abcNow}）→ 守${cNow} → 等完整收盤突破${bNow}；C破壞則回WAIT_C。`);
 
   else if(formingAboveB)lines.push(`📌 當前路徑：${cNow}但價格先站上${bNow} → 戰術可強、費波那契N字仍未完成；等待新的有效轉折。`);
+
+  else if(waitAB)lines.push("📌 當前路徑：上一組完成／重置 → 新A/B/C尚未形成 → 先建立A→B → 再等待未來有效C。");
 
   else lines.push(`📌 當前路徑：${abNow}形成 → 現在位於${posMeta.label} → 等有效C（${cNow}）。`);
 
@@ -17123,6 +17216,10 @@ function buildReportTextV326(report){
   }else if(formingAboveB){
 
     summary=`${formatStockNameWithCode(report.name,report.code)}目前是「${monthlyText}、FORMING / WAIT_C、${abNow}、${cNow}、POSITION_ZONE=ABOVE_B」；價格已先突破${bNow}，但${cNow}，屬前置強勢突破，不倒推完整費波那契N字或1.618。`;
+
+  }else if(waitAB){
+
+    summary=`${formatStockNameWithCode(report.name,report.code)}目前是「${monthlyText}、新循環初始化／等待A→B、${abcNow}、價格位置：${posMeta.label}、結構品質=${structureQualityZhV330(quality)}」；上一組N字目標${recentCompleted?"已完成並重置":"只保留歷史回顧"}，目前只等待新的A→B，不提前猜C。`;
 
   }else if(nStatus==="forming"){
 
@@ -17843,6 +17940,9 @@ function drawAbcValueRowV3329(ctx,x,y,w,key,color,label,value,date,unit="元"){
 }
 
 function stockInfographicProgressV3329(st){
+  if(st.A===null||st.B===null)return st.s?.completed?.key==="today"||st.s?.completed?.key==="recent"
+    ?"🏆 上一組完成｜新循環初始化｜等待A→B"
+    :"⚪ 新ABC尚未建立｜等待A→B";
   if(st.nStatus==="confirmed")return `✅ 完整N字已確認｜B ${fmt(st.B)} 已突破｜目前${stockNPhaseLabelV3328(st.nPhase)}`;
   if(st.nStatus==="abc_ready")return `⏳ ABC已形成｜等待完整日K收盤突破B ${fmt(st.B)}`;
   if(st.B!==null&&st.close>st.B)return `🔥 A、B已形成｜C尚未形成｜現價先突破B ${fmt(st.B)}`;
@@ -17931,8 +18031,20 @@ function stockPlainActionV362(st){
   const B=n(st.B),rsi=n(st.rsi);
   const hot=rsi!==null&&rsi>=80;
   const poor=st.entryQuality==="POOR"||st.entryMeta?.label?.includes("不宜")||st.marketPhase360?.key==="HIGH_EXTENSION"||st.marketPhase360?.key==="LATE_RISK";
+  const waitAB=st.A===null||st.B===null;
   if(st.nStatus==="failed"){
     return fixedDecisionPackV364("退出為主","原N字已失效，不要再凹單，等新結構","先不進場","等新的A／B／C重新形成","原結構壞掉了，現在先保命，不搶反彈。",bias);
+  }
+  if(waitAB){
+    const posHigh=hot||poor||["TREND_EXTENSION","HIGH_EXTENSION","LATE_RISK"].includes(st.marketPhase360?.key);
+    return fixedDecisionPackV364(
+      "續抱觀察",
+      posHigh?"趨勢仍偏強但位置已高；不追著加碼，依日20MA／既有近端防守保護獲利":"趨勢方向可偏多，但新ABC已重置；先依日20MA與既有防守管理部位",
+      posHigh?"先不要追價":"先等新結構",
+      "等待新的A→B結構建立；上一組完成後不直接跳到等待C，也不把強勢延伸當成新的低風險起漲點",
+      "趨勢方向和ABC生命週期分開看：方向可以向上，但現在的新ABC還沒從A→B開始。",
+      bias
+    );
   }
   if(st.nStatus==="confirmed"&&st.nPhase==="WEAKENING"){
     return fixedDecisionPackV364("減碼優先",B!==null?`先停加碼；若一直站不回B ${fmt(B)}，短線單可考慮退出`:"先停加碼；若站不回突破關卡，短線單可考慮退出", "先不進場",B!==null?`等重新站回B ${fmt(B)} 且量價修復再看`:"等重新站回突破關卡並站穩再看", "突破後已經轉弱，先修復，修不好就別硬撐。",bias);
@@ -17977,7 +18089,7 @@ function stockMapAdviceV362(key,value,report,st){
       holderAction="續抱觀察";
       holderNote="目前仍站在戰術頸線上；若完整收盤跌回其下，前置突破品質下降";
       nonHolderAction="先別追價";
-      nonHolderNote="戰術頸線只是短線第一防線；完整N字仍要等Fib B正式突破";
+      nonHolderNote=st.B===null?"戰術頸線只是短線第一防線；新ABC尚未建立，先等待A→B":"戰術頸線只是短線第一防線；完整N字仍要等Fib B正式突破";
     }else{
       fixedBiasSetV364(setBias,"戰術轉弱","⚠️","#dc2626");
       holderAction="降低短線風險";
@@ -18041,6 +18153,11 @@ function buildStockMapItemsV3328(report,st){
 
 function stockScenarioTextsV3328(st){
   const B=st.B!==null?fmt(st.B):null,ma=st.ma!==null?fmt(st.ma):null;
+  if(st.A===null||st.B===null)return [
+    `強勢延伸：趨勢通道維持向上，但新A／B／C尚未建立。空手：不把急漲當成新起漲點，先等新的A→B；持有：以${ma?`MA20 ${ma}`:"近端防守"}與既有支撐保護獲利。`,
+    `高檔整理：價格震盪／回測後出現新的有效轉折，才開始建立新的A→B。空手：等結構出現再評估；持有：不因整理就亂加碼。`,
+    `快速轉弱：近期支撐陸續失守，${ma?`且MA20 ${ma}也轉弱`:"且趨勢均線也轉弱"}。空手：先不進；持有：降低風險並重新等待新結構。`
+  ];
   if(st.nStatus==="confirmed"&&st.nPhase==="WEAKENING")return [
     `修復成功：收盤重新站回${B?`B ${B}`:"突破關卡"}，量價也轉好。空手：等站穩後再評估；持有：站回後可續看，不急著砍在修復第一天。`,
     `繼續整理：還在${B?`B ${B}`:"突破關卡"}下方，但${ma?`MA20 ${ma}`:"主要支撐"}還守得住。空手：先等；持有：停止加碼，等方向。`,
