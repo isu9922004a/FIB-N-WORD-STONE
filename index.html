@@ -527,7 +527,7 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
 
     <p>月線波段條件判斷＋固定倍數目標價＋費波那契 N字分析</p>
 
-    <span class="version-pill">前端 V3.6.7.9｜顯示一致性收尾｜真實日K＋大盤三叉戟｜個股真實日K＋量能＋日20MA＋壓撐預｜個股圖 1152×2048（9:16）｜大盤圖 1024×1536（2:3）｜V3.4.7 穩定核心完整沿用｜研究建議搭配 Worker V2.9.12</span>
+    <span class="version-pill">前端 V3.6.7.10｜波浪趨勢箭頭版｜真實日K＋大盤三叉戟｜個股真實日K＋量能＋日20MA＋壓撐預｜個股圖 1152×2048（9:16）｜大盤圖 1024×1536（2:3）｜V3.4.7 穩定核心完整沿用｜研究建議搭配 Worker V2.9.12</span>
 
   </div>
 
@@ -930,7 +930,7 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
   </div>
 </div>
 
-<footer class="footer">石頭少爺 Agent｜GitHub 前端 V3.6.7.9｜顯示一致性收尾｜完整套用使用者指定的個股圖片報告格式｜V3.4.7 穩定核心與雙圖片版型完整沿用｜個股主圖支援真實日K＋量能＋MA20＋A/B/C＋三叉戟壓撐預｜價格作戰地圖保留持有／空手固定句型｜本前端不改ABC／Fib／N字與 pivot-abc-v2.4 核心<br>技術分析僅供研究與決策參考，不構成投資建議。<br>本版重點：個股圖片報告固定採用使用者指定之標準版型，作為後續 GitHub 個股圖正式模板。</footer>
+<footer class="footer">石頭少爺 Agent｜GitHub 前端 V3.6.7.10｜波浪趨勢箭頭版｜完整套用使用者指定的個股圖片報告格式｜V3.4.7 穩定核心與雙圖片版型完整沿用｜個股主圖支援真實日K＋量能＋MA20＋A/B/C＋三叉戟壓撐預｜價格作戰地圖保留持有／空手固定句型｜本前端不改ABC／Fib／N字與 pivot-abc-v2.4 核心<br>技術分析僅供研究與決策參考，不構成投資建議。<br>本版重點：個股圖片報告固定採用使用者指定之標準版型，作為後續 GitHub 個股圖正式模板。</footer>
 
 <script>
 
@@ -16277,7 +16277,7 @@ function buildReportTextV326(report){
 
   };
 
-  lines.push("📘 石頭少爺分析助手｜GitHub 前端 V3.6.7.9｜顯示一致性收尾");
+  lines.push("📘 石頭少爺分析助手｜GitHub 前端 V3.6.7.10｜波浪趨勢箭頭版");
 
   lines.push(`報告產出時間：${generatedAt}`);
 
@@ -18142,6 +18142,249 @@ function drawAbcKMarkerV365(ctx,x,y,key,color,anchor="above"){
   fontV3328(ctx,14,950,color,"center");ctx.fillText(key,x,boxY+18);
 }
 
+function buildWavePivotsV3680(values,{minMove=1,minGap=4,maxPivots=6}={}){
+  const arr=(values||[]).map(v=>n(v));
+  const valid=[];
+  arr.forEach((v,i)=>{ if(v!==null && Number.isFinite(v)) valid.push({i,v}); });
+  if(valid.length<2)return [];
+
+  let pivots=[valid[0]];
+  let extreme=valid[0];
+  let trend=0; // 1=往上, -1=往下, 0=尚未確認
+
+  for(let k=1;k<valid.length;k++){
+    const pt=valid[k];
+
+    if(trend===0){
+      const diff=pt.v-pivots[0].v;
+      if(Math.abs(diff)>=minMove){
+        trend=diff>0?1:-1;
+        extreme=pt;
+      }else{
+        if(pt.v>extreme.v) extreme=pt;
+        if(pt.v<extreme.v) extreme=pt;
+      }
+      continue;
+    }
+
+    if(trend>0){
+      if(pt.v>=extreme.v){
+        extreme=pt;
+        continue;
+      }
+      if((extreme.v-pt.v)>=minMove && (extreme.i-pivots[pivots.length-1].i)>=minGap){
+        pivots.push(extreme);
+        trend=-1;
+        extreme=pt;
+      }
+    }else{
+      if(pt.v<=extreme.v){
+        extreme=pt;
+        continue;
+      }
+      if((pt.v-extreme.v)>=minMove && (extreme.i-pivots[pivots.length-1].i)>=minGap){
+        pivots.push(extreme);
+        trend=1;
+        extreme=pt;
+      }
+    }
+  }
+
+  const last=valid[valid.length-1];
+  if(pivots[pivots.length-1].i!==extreme.i) pivots.push(extreme);
+  if(pivots[pivots.length-1].i!==last.i) pivots.push(last);
+
+  const cleaned=[];
+  pivots.forEach(pt=>{
+    if(!cleaned.length){ cleaned.push(pt); return; }
+    if(pt.i===cleaned[cleaned.length-1].i){
+      cleaned[cleaned.length-1]=pt;
+    }else{
+      cleaned.push(pt);
+    }
+  });
+
+  const final=[];
+  cleaned.forEach(pt=>{
+    if(final.length<2){
+      final.push(pt);
+      return;
+    }
+    const a=final[final.length-2];
+    const b=final[final.length-1];
+    const ab=b.v-a.v;
+    const bc=pt.v-b.v;
+
+    if((ab>=0 && bc>=0) || (ab<=0 && bc<=0)){
+      const keep=Math.abs(pt.v-a.v)>=Math.abs(b.v-a.v)?pt:b;
+      final[final.length-1]=keep;
+    }else{
+      final.push(pt);
+    }
+  });
+
+  return final.slice(-maxPivots);
+}
+
+function drawWaveArrowV3680(ctx,x1,y1,x2,y2,{
+  color="#60a5fa",
+  glow="rgba(96,165,250,.50)",
+  lineWidth=4.2,
+  headSize=11,
+  alpha=.92
+}={}){
+  if(!ctx)return;
+  if(Math.abs(x2-x1)<28)return;
+
+  const dx=x2-x1;
+  const dy=y2-y1;
+
+  const c1x=x1+dx*0.30;
+  const c1y=y1+dy*0.10;
+  const c2x=x1+dx*0.72;
+  const c2y=y2-dy*0.10;
+
+  const drawPath=()=>{
+    ctx.beginPath();
+    ctx.moveTo(x1,y1);
+    ctx.bezierCurveTo(c1x,c1y,c2x,c2y,x2,y2);
+  };
+
+  ctx.save();
+  ctx.globalAlpha=alpha;
+  ctx.lineCap="round";
+  ctx.lineJoin="round";
+
+  ctx.shadowColor=glow;
+  ctx.shadowBlur=12;
+  ctx.strokeStyle="rgba(255,255,255,.96)";
+  ctx.lineWidth=lineWidth+4;
+  drawPath();
+  ctx.stroke();
+
+  ctx.shadowBlur=0;
+  ctx.strokeStyle=color;
+  ctx.lineWidth=lineWidth;
+  drawPath();
+  ctx.stroke();
+
+  const ang=Math.atan2(y2-c2y,x2-c2x);
+  const a1=ang+Math.PI*0.88;
+  const a2=ang-Math.PI*0.88;
+
+  const outer1x=x2+Math.cos(a1)*headSize;
+  const outer1y=y2+Math.sin(a1)*headSize;
+  const outer2x=x2+Math.cos(a2)*headSize;
+  const outer2y=y2+Math.sin(a2)*headSize;
+
+  ctx.fillStyle="rgba(255,255,255,.96)";
+  ctx.beginPath();
+  ctx.moveTo(x2,y2);
+  ctx.lineTo(outer1x,outer1y);
+  ctx.lineTo(outer2x,outer2y);
+  ctx.closePath();
+  ctx.fill();
+
+  const inner=headSize*0.72;
+  const inner1x=x2+Math.cos(a1)*inner;
+  const inner1y=y2+Math.sin(a1)*inner;
+  const inner2x=x2+Math.cos(a2)*inner;
+  const inner2y=y2+Math.sin(a2)*inner;
+
+  ctx.fillStyle=color;
+  ctx.beginPath();
+  ctx.moveTo(x2,y2);
+  ctx.lineTo(inner1x,inner1y);
+  ctx.lineTo(inner2x,inner2y);
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.restore();
+}
+
+function drawWaveTrendOverlayV3680(ctx,bars,{
+  x,y,w,h,volY,volH,priceToY,step
+}={}){
+  if(!ctx || !bars || bars.length<12)return;
+
+  const priceVals=bars.map(b=>{
+    const o=n(b.open), c=n(b.close), hi=n(b.high), lo=n(b.low);
+    if([o,c,hi,lo].some(v=>v===null))return null;
+    return (o+c+hi+lo)/4;
+  });
+
+  const priceClean=priceVals.filter(v=>v!==null);
+  if(priceClean.length>=2){
+    const pMin=Math.min(...priceClean);
+    const pMax=Math.max(...priceClean);
+    const pRange=Math.max(1,pMax-pMin);
+
+    const pricePivots=buildWavePivotsV3680(priceVals,{
+      minMove:Math.max(pRange*0.12, Math.abs(pMax)*0.012, 0.8),
+      minGap:4,
+      maxPivots:6
+    });
+
+    const segs=[];
+    for(let i=1;i<pricePivots.length;i++) segs.push([pricePivots[i-1],pricePivots[i]]);
+
+    segs.slice(-4).forEach(([a,b])=>{
+      const x1=x+(a.i+0.5)*step;
+      const x2=x+(b.i+0.5)*step;
+      let y1=priceToY(a.v);
+      let y2=priceToY(b.v);
+
+      const dir=(y2<y1)?-1:1;
+      const offset=(dir<0)?-10:10;
+      y1=Math.max(y+10,Math.min(y+h-10,y1+offset));
+      y2=Math.max(y+10,Math.min(y+h-10,y2+offset));
+
+      drawWaveArrowV3680(ctx,x1,y1,x2,y2,{
+        color:"#60a5fa",
+        glow:"rgba(96,165,250,.55)",
+        lineWidth:4.2,
+        headSize:11,
+        alpha:.90
+      });
+    });
+  }
+
+  const volVals=bars.map(b=>n(b.volume)||0);
+  const vMax=Math.max(0,...volVals);
+
+  if(vMax>0){
+    const volPivots=buildWavePivotsV3680(volVals,{
+      minMove:Math.max(vMax*0.16,1),
+      minGap:4,
+      maxPivots:5
+    });
+
+    const volToY=v=>volY+volH-(v/vMax)*volH;
+    const segs=[];
+    for(let i=1;i<volPivots.length;i++) segs.push([volPivots[i-1],volPivots[i]]);
+
+    segs.slice(-3).forEach(([a,b])=>{
+      const x1=x+(a.i+0.5)*step;
+      const x2=x+(b.i+0.5)*step;
+      let y1=volToY(a.v);
+      let y2=volToY(b.v);
+
+      const dir=(y2<y1)?-1:1;
+      const offset=(dir<0)?-6:6;
+      y1=Math.max(volY+8,Math.min(volY+volH-8,y1+offset));
+      y2=Math.max(volY+8,Math.min(volY+volH-8,y2+offset));
+
+      drawWaveArrowV3680(ctx,x1,y1,x2,y2,{
+        color:"#38bdf8",
+        glow:"rgba(56,189,248,.40)",
+        lineWidth:3.2,
+        headSize:9,
+        alpha:.72
+      });
+    });
+  }
+}
+
 function drawRealKCoreV365(ctx,bars,all,start,ma20,opts){
   const P=infoPaletteV3328();
   const x=opts.x,y=opts.y,w=opts.w,h=opts.h,volY=opts.volY,volH=opts.volH,unit=opts.unit||"元";
@@ -18179,6 +18422,15 @@ function drawRealKCoreV365(ctx,bars,all,start,ma20,opts){
   bars.forEach((b,i)=>{const g=start+i,m=n(ma20[g]);if(m===null)return;const px=x+(i+.5)*step,py=yPrice(m);if(!started){ctx.moveTo(px,py);started=true;}else ctx.lineTo(px,py);});
   if(started)ctx.stroke();ctx.restore();
   fontV3328(ctx,13,900,P.blue2);ctx.fillText("MA20",x+8,y+20);
+
+  // 波浪趨勢箭頭（價格＋量能）
+  if(opts.showWaveTrend!==false){
+    drawWaveTrendOverlayV3680(ctx,bars,{
+      x,y,w,h,volY,volH,
+      priceToY:yPrice,
+      step
+    });
+  }
 
   // 現價 / B / 三叉戟水平線
   const lineIfVisible=(v,color,dash,lw=2)=>{v=n(v);if(v===null||v<minV||v>maxV)return null;const yy=yPrice(v);drawPlainLevelV3329(ctx,x,x+w,yy,color,dash,lw);return yy;};
@@ -18251,8 +18503,8 @@ function drawStockTopChartV365(ctx,report,st){
   const selected=selectStockChartBarsV365(report,st);
   const t=st.trident361;
   if(selected.bars.length>=20){
-    drawCardTitleV3328(ctx,586,213,`真實日K｜最近 ${selected.bars.length} 根＋量能＋日20MA`,P.navy,27);
-    drawFitSingleLineStrictV3661(ctx,"紅K＝上漲、綠K＝下跌｜A/B/C依實際日期定位｜三叉戟直接畫在價位上",586,242,930,{maxSize:15,minSize:12,weight:700,color:P.muted});
+    drawCardTitleV3328(ctx,586,213,`真實日K｜最近 ${selected.bars.length} 根＋量能＋日20MA＋波浪箭頭`,P.navy,27);
+    drawFitSingleLineStrictV3661(ctx,"紅K＝上漲、綠K＝下跌｜藍色波浪箭頭＝價格趨勢｜下方淺藍箭頭＝量能趨勢｜A/B/C依實際日期定位",586,242,930,{maxSize:15,minSize:12,weight:700,color:P.muted});
     drawRealKCoreV365(ctx,selected.bars,selected.all,selected.start,selected.ma20,{
       x:604,y:270,w:744,h:258,volY:542,volH:72,labelX:1370,labelW:176,unit:"元",
       A:st.A,B:st.B,C:st.C,close:st.close,ma20Now:st.ma,
@@ -18347,7 +18599,7 @@ function renderStockInfographicV3328(report){
   fontV3328(ctx,22,900,"#fff","center");ctx.fillText("報告製作 By.石頭少爺",1402,52);
   fontV3328(ctx,18,800,"#fff","center");ctx.fillText("圖片產生時間",1402,83);
   fontV3328(ctx,19,900,"#fff","center");ctx.fillText(reportGeneratedAt().replace("（台灣時間）",""),1402,115);
-  fontV3328(ctx,16,700,"#dbeafe","center");ctx.fillText("V3.6.7.9｜一致性收尾",1402,141);
+  fontV3328(ctx,16,700,"#dbeafe","center");ctx.fillText("V3.6.7.10｜波浪趨勢箭頭",1402,141);
 
   // ===== 上半部：ABC + 結構示意圖 =====
   rrV3328(ctx,24,174,520,520,14,P.white,P.blue,2);
