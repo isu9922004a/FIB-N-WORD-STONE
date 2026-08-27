@@ -527,7 +527,7 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
 
     <p>月線波段條件判斷＋固定倍數目標價＋費波那契 N字分析</p>
 
-    <span class="version-pill">前端 V3.6.7.14｜波浪週期說明版｜真實日K＋大盤三叉戟｜個股真實日K＋量能＋日20MA＋壓撐預｜個股圖 1152×2048（9:16）｜大盤圖 1024×1536（2:3）｜V3.4.7 穩定核心完整沿用｜研究建議搭配 Worker V2.9.12</span>
+    <span class="version-pill">前端 V3.6.7.17｜60分K細微浪2.1＋BOS＋Fib共振版｜真實日K＋大盤三叉戟｜個股真實日K＋量能＋日20MA＋壓撐預｜個股圖 1152×2048（9:16）｜大盤圖 1024×1536（2:3）｜V3.4.7 穩定核心完整沿用｜研究建議搭配 Worker V2.9.13</span>
 
   </div>
 
@@ -926,20 +926,27 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
       <a id="imageDownloadLink" class="image-save-link" href="#" download>💾 儲存 PNG</a>
       <button id="imageShareButton" class="image-share-btn" type="button" onclick="shareInfographicV3328()">📤 分享圖片</button>
     </div>
-    <div id="imagePreviewNote" class="image-preview-note">圖片由目前分析資料直接產生；V3.6.7.9 沿用個股 PNG 1152×2048（9:16）與大盤 PNG 1024×1536（2:3）。個股 Worker 若回傳完整 dailySeries，個股主圖會自動畫成真實近期日K、量能柱、日20MA、A/B/C與三叉戟壓／撐／預；資料不足才退回結構示意圖。大盤部署新版TAIEX Worker後，會使用TAIEX官方OHLC＋FMTQIK市場成交股數組成dailySeries，自動切換真實日K＋量能柱＋MA20＋三叉戟壓／撐／預；若量能資料暫時不可用，才安全退回結構示意圖。</div>
+    <div id="imagePreviewNote" class="image-preview-note">圖片由目前分析資料直接產生；V3.6.7.17 沿用個股 PNG 1152×2048（9:16）與大盤 PNG 1024×1536（2:3）。個股 Worker 若回傳完整 dailySeries，個股主圖會畫真實日K、量能柱、日20MA、A/B/C與三叉戟；若另回傳 intraday60Series，主升／整理／末升的小判斷改由60分K細微浪2.1＋BOS＋Fib共振確認，日K不再硬數細部1~5。大盤部署新版TAIEX Worker後，會使用TAIEX官方OHLC＋FMTQIK市場成交股數組成dailySeries，自動切換真實日K＋量能柱＋MA20＋三叉戟壓／撐／預；若量能資料暫時不可用，才安全退回結構示意圖。</div>
   </div>
 </div>
 
-<footer class="footer">石頭少爺 Agent｜GitHub 前端 V3.6.7.14｜波浪週期說明版｜完整套用使用者指定的個股圖片報告格式｜V3.4.7 穩定核心與雙圖片版型完整沿用｜個股主圖支援真實日K＋量能＋MA20＋A/B/C＋三叉戟壓撐預｜價格作戰地圖保留持有／空手固定句型｜本前端不改ABC／Fib／N字與 pivot-abc-v2.4 核心<br>技術分析僅供研究與決策參考，不構成投資建議。<br>本版重點：個股圖片報告固定採用使用者指定之標準版型，作為後續 GitHub 個股圖正式模板。</footer>
+<footer class="footer">石頭少爺 Agent｜GitHub 前端 V3.6.7.17｜60分K細微浪2.1＋BOS＋Fib共振版｜完整套用使用者指定的個股圖片報告格式｜V3.4.7 穩定核心與雙圖片版型完整沿用｜個股主圖支援真實日K＋量能＋MA20＋A/B/C＋三叉戟壓撐預｜價格作戰地圖保留持有／空手固定句型｜本前端不改ABC／Fib／N字與 pivot-abc-v2.4 核心<br>技術分析僅供研究與決策參考，不構成投資建議。<br>本版重點：個股圖片報告固定採用使用者指定之標準版型，作為後續 GitHub 個股圖正式模板。</footer>
 
 <script>
 
 const API_BASE_URL="https://shitou-agent-fib-api.d318426.workers.dev";
 
+// V3.6.7.17：60分K細微浪2.1＋BOS＋Fib共振版。
+// 核心數浪／ABC／N字／BOS規則不改：新增Fib Wave Profile，把0.236/0.382/0.5/0.618/0.786回撤與1.0/1.272/1.618/2.0/2.618延伸做成「合理度＋目標區」，不把比例當鐵律。
+// Wave5新增「相對Wave1的1.0~1.618倍」主參考；保留既有0→3的0.382/0.618為次參考。ABC新增B/A回撤與C/A等長、1.618延伸資訊。
+// 同時修正個股主圖右側提示，統一改讀最新60分K細微浪2.1引擎，不再誤用V3.6.7.15舊函式。
+
 // V3.6.7.9：延續 GIS-KY 英文名稱修正；新增「戰術頸線突破」與「Fib B正式突破」角色隔離，避免B尚未突破卻被寫成支撐。
 // V3.6.7.9：角色一致性收尾——長文字價格地圖與新手「往下先看」同步納入有效戰術頸線；未正式突破B時，K線／量能文字改成「尚未有正式突破K可評分」。
-// V3.6.7.14：真實日K新增紅1/3/5、綠2/4、白a/b/c的波浪理論候選直線箭頭；量能使用同一波段區間同步標註。僅為前端顯示輔助，不改ABC/Fib/N字核心。
-// V3.6.7.14：波浪候選階段提示移至個股主圖右側 RSI 上方空白區；不改波浪箭頭、ABC/Fib/N字、三叉戟或RSI計算。
+// V3.6.7.16：60分K細微浪2.0＋BOS結構確認版——日K最多420根只作大浪背景與動態120~180根圖面；主升／整理／末升的小判斷改用Worker回傳之已完成60分K。
+// V3.6.7.15：標準推動浪新增硬規則：第2浪不得跌破第1浪起點、第3浪不得為1/3/5中最短、第4浪不得進入第1浪價格區。
+// V3.6.7.15：若1/4重疊或其他鐵律失敗，取消該組標準1~5標示，不再為了湊滿五浪硬畫；ABC/Fib/N字核心完全不變。
+// V3.6.7.15：波浪提示維持右側RSI上方；新增「鐵律失效」提示與候選信心度，不改ABC/Fib/N字、三叉戟或RSI計算。
 // V3.6.7.9：個股主圖右下空白區新增「日RSI 5T」提示卡，只使用Worker既有dailyRsi5，不新增或推導任何RSI資料。
 // V3.6.7.9：顯示一致性收尾——0.80倍以下量能提示燈與量能文字同步；大盤持股提示依N字生命週期動態描述；大盤／個股RSI共用同一分級口徑。
 // V3.6.7.9：量能口徑統一——相對量 < 0.80 一律視為「量能偏縮」；並將有效戰術頸線加入個股價格作戰地圖，不改任何核心計分。
@@ -948,7 +955,7 @@ const API_BASE_URL="https://shitou-agent-fib-api.d318426.workers.dev";
 // 只有時間序列驗證已通過、且目前型態正在等待突破或已出現時才顯示；不改 ABC／Fib／N字／突破品質2.0／三叉戟／既有進出場結論。
 // 卡片顯示「這個訊號偏加分、訊號是否已出現、過去另外測過幾次、5天後通常表現、比類似行情多多少」並固定附上白話提醒。
 
-// V3.6.7.9：延續資料視窗隔離——個股圖80~120根／三叉戟固定120根／OHLCV Walk-Forward研究最多420根。
+// V3.6.7.15：資料視窗隔離——個股圖動態120~180根／波浪內部分析最多420根／三叉戟固定120根／OHLCV Walk-Forward研究最多420根。
 // 目的：只增加研究深度，不讓較長研究歷史偷偷改變舊版三叉戟壓／撐／預；ABC／Fib／N字／突破品質2.0均不變。
 
 // V3.6.7.9：研究閘門仍為時間序列 holdout + 同趨勢基準比較；本版只優化提示文字，不改研究邏輯。
@@ -14074,7 +14081,7 @@ function buildReportTextV325(report){
 // 不做正式艾略特浪數計數；不改任何 Worker、N字、月線、Fib、固定倍數計算，只讀既有分析結果轉成波段成熟度白話。
 // ========================================================================
 
-function waveStageAssistV3323(report){
+function waveStageAssistDailyBaseV3323(report){
   if(!report)return {key:"UNDETERMINED",icon:"⚪",label:"階段尚待確認",short:"目前資料不足，先不硬判主升、整理或末升。"};
 
   const s=currentStrategyStateV321(report);
@@ -14147,6 +14154,778 @@ function waveStageAssistV3323(report){
     key,...meta[key],monthlyStatus,nStatus,nPhase,close,B,ma,rsi,vol,gap,maAbove,slope,pos,quality,
     matureFlags,riskFlags,targetKey:targetZone?.key||"NONE",fixedKey:fixedTargetZone?.key||"NONE",fixedZone:fixedTargetZone,fixed
   };
+}
+
+
+// ========================================================================
+// V3.6.7.15｜60分K細微浪層
+// 原則來自使用者提供之數浪要領：
+// 1) 粗中有細：先用日K定義大浪背景，再用60分K尋找細微浪。
+// 2) 細中尋粗：60分K只負責「目前主升／整理／末升／abc修正」的小判斷，不回寫日K ABC/Fib/N字。
+// 3) 鐵律硬檢查：浪2不破浪1起點、浪3不可最短、浪1/4不重疊。
+// 4) 0.382、交替原則、時間/波幅0.618只作加減分指南，不把經驗規則誤寫成鐵律。
+// ========================================================================
+
+function normalizeIntraday60BarsV36715(report){
+  const rawCandidates=[report?.intraday60Series,report?.intraday60,report?.history?.intraday60,report?.history?.hourly];
+  const raw=rawCandidates.find(x=>Array.isArray(x))||null;
+  if(!raw)return [];
+  const read=(o,keys)=>{
+    if(!o||typeof o!=="object")return null;
+    for(const k of keys){if(o[k]!==undefined&&o[k]!==null&&o[k]!=="")return o[k];}
+    return null;
+  };
+  const out=[];
+  raw.forEach((row,idx)=>{
+    let timestamp=null,datetime=null,date=null,time=null,open=null,high=null,low=null,close=null,volume=null,durationMinutes=60;
+    if(Array.isArray(row)){
+      if(row.length>=6){datetime=row[0];open=n(row[1]);high=n(row[2]);low=n(row[3]);close=n(row[4]);volume=n(row[5]);}
+    }else if(row&&typeof row==="object"){
+      timestamp=n(read(row,["timestamp","ts","timeStamp"]));
+      datetime=read(row,["datetime","dateTime","dt"]);
+      date=read(row,["date","tradeDate","day"]);
+      time=read(row,["time","tradeTime"]);
+      open=n(read(row,["open","o","Open"]));
+      high=n(read(row,["high","h","High"]));
+      low=n(read(row,["low","l","Low"]));
+      close=n(read(row,["close","c","Close"]));
+      volume=n(read(row,["volume","vol","v","Volume","tradeVolume"]));
+      durationMinutes=n(read(row,["durationMinutes","duration","minutes"]))??60;
+    }
+    if(open===null||high===null||low===null||close===null)return;
+    if(volume===null||volume<0)volume=0;
+    if(!datetime&&date)datetime=`${date}${time?` ${time}`:""}`;
+    out.push({idx,timestamp,datetime,date,time,open,high,low,close,volume,durationMinutes});
+  });
+  out.sort((a,b)=>{
+    const ta=n(a.timestamp),tb=n(b.timestamp);
+    if(ta!==null&&tb!==null)return ta-tb;
+    return String(a.datetime||"").localeCompare(String(b.datetime||""));
+  });
+  return out;
+}
+
+function calcRsiSimpleV36715(bars,period=5){
+  if(!Array.isArray(bars)||bars.length<period+1)return null;
+  let gains=0,losses=0;
+  const start=Math.max(1,bars.length-period);
+  for(let i=start;i<bars.length;i++){
+    const d=n(bars[i]?.close)-n(bars[i-1]?.close);
+    if(!Number.isFinite(d))continue;
+    if(d>=0)gains+=d;else losses-=d;
+  }
+  if(gains===0&&losses===0)return 50;
+  if(losses===0)return 100;
+  const rs=gains/losses;
+  return 100-(100/(1+rs));
+}
+
+function fineWaveGuidelineScoreV36715(analysis,bars){
+  if(!analysis?.sequence?.pivots?.length)return {delta:0,evidence:[]};
+  const p=analysis.sequence.pivots,e=[];
+  let delta=0;
+  if(p.length>=3){
+    const w1=p[1].v-p[0].v;
+    const r2=w1>0?(p[1].v-p[2].v)/w1:null;
+    if(r2!==null&&Number.isFinite(r2)){
+      if(r2>=0.30&&r2<=0.50){delta+=4;e.push(`浪2回檔約${Math.round(r2*100)}%，接近0.382常見區`);}
+      else if(r2>0&&r2<1){delta+=1;e.push(`浪2回檔約${Math.round(r2*100)}%`);}
+    }
+  }
+  if(p.length>=5){
+    const d2=p[2].i-p[1].i,d4=p[4].i-p[3].i;
+    if(d2>0&&d4>0){
+      const ratio=Math.max(d2,d4)/Math.max(1,Math.min(d2,d4));
+      if(ratio>=1.35){delta+=3;e.push("浪2／浪4時間結構具交替差異");}
+      else {delta-=1;e.push("浪2／浪4時間結構偏相似，交替性較弱");}
+    }
+  }
+  if(p.length>=6){
+    const w1=p[1].v-p[0].v,w3=p[3].v-p[2].v,w5=p[5].v-p[4].v;
+    const arr=[w1,w3,w5].filter(v=>Number.isFinite(v)&&v>0).sort((a,b)=>a-b);
+    if(arr.length===3){
+      const near=(a,b,tol=.18)=>Math.abs(a-b)/Math.max(a,b)<=tol;
+      if(near(arr[0],arr[1])||near(arr[1],arr[2])){delta+=3;e.push("三個推動浪中有兩段波幅接近");}
+      else {
+        const ratios=[arr[0]/arr[1],arr[0]/arr[2],arr[1]/arr[2]];
+        if(ratios.some(r=>Math.abs(r-0.618)<=0.10)){delta+=2;e.push("推動浪波幅關係接近0.618指南");}
+      }
+    }
+  }
+  const last=bars?.[bars.length-1];
+  if(n(last?.durationMinutes)===30){delta-=2;e.push("最新為13:00~13:30尾盤30分K，細微浪信心小幅降權");}
+  return {delta,evidence:e};
+}
+
+function analyzeFineWave60V36715(report,dailyBase=null){
+  const bars=normalizeIntraday60BarsV36715(report);
+  const meta=report?.intraday60Meta||null;
+  const minimum=40;
+  if(bars.length<minimum){
+    return {
+      available:false,barsCount:bars.length,minBars:minimum,status:"INSUFFICIENT",current:null,confidence:0,
+      label:"60分K資料不足",short:`目前只有 ${bars.length} 根已完成60分K；至少 ${minimum} 根才啟用細微浪，不用日K冒充。`,
+      stageKey:"UNDETERMINED",icon:"⚪",analysis:null,meta
+    };
+  }
+
+  const analysis=analyzeWaveStructureV3684(bars);
+  const rsi60=calcRsiSimpleV36715(bars,5);
+  const ma60=movingAverageAlignedV365(bars,20);
+  const lastMa=n(ma60[ma60.length-1]),prevMa=n(ma60[Math.max(0,ma60.length-6)]);
+  const slope=lastMa!==null&&prevMa!==null?(lastMa>prevMa?"up":lastMa<prevMa?"down":"flat"):"unknown";
+  const lastClose=n(bars[bars.length-1]?.close);
+  const aboveMa=lastClose!==null&&lastMa!==null?lastClose>=lastMa:null;
+
+  if(analysis?.status==="INVALID"){
+    const why=analysis.invalidRule==="W14_OVERLAP"?"1/4重疊":analysis.invalidReason||"推動浪鐵律未通過";
+    return {
+      available:true,barsCount:bars.length,status:"INVALID",current:null,confidence:0,
+      label:`60分K推動浪取消｜${why}`,short:`細微浪出現${why}，依鐵律取消標準1~5，不硬貼主升浪。`,
+      stageKey:"UNDETERMINED",icon:"⚠️",analysis,rsi60,lastMa,slope,aboveMa,meta
+    };
+  }
+  if(analysis?.status!=="VALID"||!analysis?.current){
+    return {
+      available:true,barsCount:bars.length,status:"NONE",current:null,confidence:0,
+      label:"60分K細微浪尚未成形",short:"已取得60分K，但目前轉折不足以形成可靠細微浪；先等結構完成。",
+      stageKey:"UNDETERMINED",icon:"⚪",analysis,rsi60,lastMa,slope,aboveMa,meta
+    };
+  }
+
+  const guide=fineWaveGuidelineScoreV36715(analysis,bars);
+  let confidence=Math.max(35,Math.min(95,Math.round((analysis.confidence||0)+guide.delta)));
+  const current=String(analysis.current).toLowerCase();
+  const dailyOk=!!dailyBase && dailyBase.nStatus!=="failed" && dailyBase.maAbove!==false && dailyBase.slope!=="down";
+  let stageKey="UNDETERMINED",icon="⚪",label="60分K細微浪候選",short="";
+
+  if(current==="3"){
+    if(dailyOk){stageKey="MAIN_ADVANCE";icon="🚀";label=`60分K第3細微浪｜主升推進候選`;short="日K大浪背景未轉弱，60分K又進入第3細微浪；主升小判斷由60分K確認，不再由日K硬數。";}
+    else {stageKey="UNDETERMINED";icon="🟡";label="60分K第3細微浪｜大浪未同步";short="60分K有推進，但日K大浪背景未同步確認，因此只視為短線推進，不升級成正式主升判定。";confidence=Math.max(35,confidence-10);}
+  }else if(current==="4"){
+    stageKey="MID_CONSOLIDATION";icon="⏸️";label="60分K第4細微浪｜主升中途整理";short="60分K正在第4細微浪整理；重點是不能與第1細微浪重疊，否則標準推動浪立即失效。";
+  }else if(current==="5"){
+    const hot=rsi60!==null&&rsi60>=75;
+    stageKey=hot||dailyBase?.riskFlags?.length?"LATE_RISK":"LATE_EXTENSION";
+    icon=stageKey==="LATE_RISK"?"⚠️":"🔥";
+    label=stageKey==="LATE_RISK"?"60分K第5細微浪｜末升風險升高":"60分K第5細微浪｜末升延伸候選";
+    short="60分K已走到第5細微浪；仍可延伸，但不把新高等同安全，開始提高獲利保護與abc修正警戒。";
+  }else if(["a","b","c"].includes(current)){
+    stageKey=dailyOk?"MID_CONSOLIDATION":"UNDETERMINED";icon=current==="b"?"↗️":"🔻";
+    label=`60分K ${current} 修正浪｜細微修正進行中`;
+    short="60分K已進入abc修正；日K仍只提供大浪背景，等60分K修正結束後再判斷是否恢復推進。";
+  }else if(current==="2"){
+    stageKey="MID_CONSOLIDATION";icon="↘️";label="60分K第2細微浪｜初升後回檔";short="60分K正在第2細微浪回檔；可參考0.382常見回檔區，但真正鐵律是不能跌破第1浪起點。";
+  }else if(current==="1"){
+    stageKey="UNDETERMINED";icon="🌱";label="60分K第1細微浪｜起漲候選";short="60分K剛建立第一段推進，尚不足以直接稱主升；需等第2浪守住與第3浪突破確認。";
+  }
+
+  return {
+    available:true,barsCount:bars.length,status:"VALID",current,confidence,label,short,stageKey,icon,
+    analysis,rsi60,lastMa,slope,aboveMa,guidelineEvidence:guide.evidence,meta
+  };
+}
+
+function waveStageAssistV3323(report){
+  const dailyBase=waveStageAssistDailyBaseV3323(report);
+  const fine=analyzeFineWave60V36715(report,dailyBase);
+
+  // V3.6.7.15：主升小判斷必須由60分K接手。60分K不足時不再退回日K硬判主升/第幾浪。
+  if(!fine.available){
+    return {
+      ...dailyBase,
+      key:"UNDETERMINED",icon:"⚪",label:"60分K資料不足｜日K僅作大浪背景",
+      short:fine.short,
+      fineWave60:fine,dailyBackground:dailyBase
+    };
+  }
+  if(fine.status!=="VALID"){
+    return {
+      ...dailyBase,
+      key:"UNDETERMINED",icon:fine.icon,label:fine.label,short:fine.short,
+      fineWave60:fine,dailyBackground:dailyBase
+    };
+  }
+  return {
+    ...dailyBase,
+    key:fine.stageKey,icon:fine.icon,label:fine.label,short:fine.short,
+    fineWave60:fine,dailyBackground:dailyBase
+  };
+}
+
+
+
+// ========================================================================
+// V3.6.7.16｜60分K細微浪 2.0 ＋ BOS 結構確認層
+// 核心原則：
+// 1) 日K只定義大背景；60分K負責細微1~5 / A-B-C候選。
+// 2) Elliott硬規則與BOS分離：鐵律不能被量能或BOS「補分救回」。
+// 3) BOS必須建立在有效Swing結構上；突破採「收盤越過結構位」，不是只看影線刺穿。
+// 4) 成交量、重測、Fib、RSI背離都是確認/降級證據，不把教材中的常見比例誤寫成鐵律。
+// 5) 1/4重疊＝標準Impulse失效，但保留Diagonal候選分流，不再把所有重疊一律丟棄。
+// 6) 多頭與空頭完全對稱；五浪完成後切換CORRECTIVE，再依A/B/C進行下一循環。
+// ========================================================================
+
+function buildConfirmedWaveStateV36716(bars,{minGap=2,maxPivots=32}={}){
+  if(!Array.isArray(bars)||bars.length<8)return {pivots:[],liveExtreme:null,liveTrend:0,atrs:[]};
+  const atrs=waveAtrAlignedV3684(bars,14);
+  const valid=[];
+  bars.forEach((b,i)=>{
+    const high=n(b?.high),low=n(b?.low),close=n(b?.close);
+    if(high!==null&&low!==null&&close!==null)valid.push({i,high,low,close});
+  });
+  if(valid.length<8)return {pivots:[],liveExtreme:null,liveTrend:0,atrs};
+
+  const pivots=[];
+  let trend=0;
+  let highPt={i:valid[0].i,v:valid[0].high,kind:"H"};
+  let lowPt={i:valid[0].i,v:valid[0].low,kind:"L"};
+  let extreme=null;
+
+  const pushPivot=pt=>{
+    if(!pt)return;
+    const last=pivots[pivots.length-1];
+    if(!last){pivots.push({...pt,confirmed:true});return;}
+    if(last.i===pt.i)return;
+    if(last.kind===pt.kind){
+      const better=pt.kind==="H"?pt.v>last.v:pt.v<last.v;
+      if(better)pivots[pivots.length-1]={...pt,confirmed:true};
+      return;
+    }
+    pivots.push({...pt,confirmed:true});
+  };
+
+  for(let k=1;k<valid.length;k++){
+    const b=valid[k];
+    const th=waveMoveThresholdV3684(bars,atrs,b.i)*0.82; // 60分K比日K略敏感，但仍需ATR門檻。
+    if(trend===0){
+      if(b.high>=highPt.v)highPt={i:b.i,v:b.high,kind:"H"};
+      if(b.low<=lowPt.v)lowPt={i:b.i,v:b.low,kind:"L"};
+      const upReady=highPt.i>lowPt.i&&highPt.v-lowPt.v>=th&&highPt.i-lowPt.i>=minGap;
+      const dnReady=lowPt.i>highPt.i&&highPt.v-lowPt.v>=th&&lowPt.i-highPt.i>=minGap;
+      if(upReady){pushPivot(lowPt);trend=1;extreme=highPt;}
+      else if(dnReady){pushPivot(highPt);trend=-1;extreme=lowPt;}
+      continue;
+    }
+    if(trend>0){
+      if(!extreme||b.high>=extreme.v)extreme={i:b.i,v:b.high,kind:"H"};
+      if(extreme.v-b.low>=th&&b.i-extreme.i>=minGap){
+        pushPivot(extreme);trend=-1;extreme={i:b.i,v:b.low,kind:"L"};
+      }
+    }else{
+      if(!extreme||b.low<=extreme.v)extreme={i:b.i,v:b.low,kind:"L"};
+      if(b.high-extreme.v>=th&&b.i-extreme.i>=minGap){
+        pushPivot(extreme);trend=1;extreme={i:b.i,v:b.high,kind:"H"};
+      }
+    }
+  }
+  // 注意：最後 extreme 尚未經反向移動確認，所以不塞入 confirmed pivots。
+  return {pivots:pivots.slice(-maxPivots),liveExtreme:extreme?{...extreme,confirmed:false}:null,liveTrend:trend,atrs};
+}
+
+function validateImpulsePrefixDirectionalV36716(pts,dir){
+  if(!Array.isArray(pts)||pts.length<2)return {ok:false,reason:"PIVOT不足"};
+  const expected=dir>0?["L","H","L","H","L","H"]:["H","L","H","L","H","L"];
+  for(let i=0;i<pts.length;i++){
+    if(pts[i]?.kind!==expected[i])return {ok:false,reason:"方向序列不符"};
+  }
+  const q=pts.map(p=>dir*p.v);
+  const eps=Math.max(Math.abs(q[0])*0.0005,0.001);
+  if(pts.length>=3&&q[2]<=q[0]+eps)return {ok:false,rule:"W2_BREAK_W1_START",reason:"第2浪越過第1浪起點"};
+  if(pts.length>=4&&q[3]<=q[1]+eps)return {ok:false,rule:"W3_NO_BREAK",reason:"第3浪尚未越過第1浪終點"};
+
+  let standard=true,diagonalCandidate=false,warning=null;
+  if(pts.length>=5&&q[4]<=q[1]+eps){
+    standard=false;
+    diagonalCandidate=true;
+    warning="1/4重疊：標準Impulse失效，轉入Diagonal候選檢查";
+  }
+  if(pts.length>=6){
+    const w1=q[1]-q[0],w3=q[3]-q[2],w5=q[5]-q[4];
+    if(w3+eps<Math.min(w1,w5))return {ok:false,rule:"W3_SHORTEST",reason:"第3浪成為1/3/5中最短推進浪"};
+  }
+  return {ok:true,standard,diagonalCandidate,warning};
+}
+
+function nextWaveLabelV36716(last){
+  const m={"1":"2","2":"3","3":"4","4":"5","5":"a","a":"b","b":"c","c":"next"};
+  return m[String(last||"").toLowerCase()]||null;
+}
+
+function activeWaveDirectionV36716(motiveDir,label){
+  const k=String(label||"").toLowerCase();
+  if(["1","3","5"].includes(k))return motiveDir;
+  if(["2","4"].includes(k))return -motiveDir;
+  if(["a","c"].includes(k))return -motiveDir;
+  if(k==="b")return motiveDir;
+  return 0;
+}
+
+function waveSeqBaseConfidenceV36716(core,standard,liveAligned){
+  let s=45+Math.max(0,core.length-2)*8;
+  if(standard)s+=5; else s-=7;
+  if(liveAligned)s+=5; else if(liveAligned===false)s-=4;
+  return Math.max(30,Math.min(90,Math.round(s)));
+}
+
+function analyzeFineWaveSequenceV36716(bars){
+  const state=buildConfirmedWaveStateV36716(bars,{minGap:2,maxPivots:32});
+  const pivots=state.pivots;
+  if(pivots.length<2)return {status:"NONE",...state,sequence:null,motiveDir:0,lastCompleted:null,active:null,confidence:0};
+
+  const candidates=[],invalid=[];
+  for(let s=0;s<pivots.length-1;s++){
+    const dir=pivots[s].kind==="L"?1:pivots[s].kind==="H"?-1:0;
+    if(!dir)continue;
+    const available=Math.min(6,pivots.length-s);
+    if(available<2)continue;
+    const core=pivots.slice(s,s+available);
+    const ck=validateImpulsePrefixDirectionalV36716(core,dir);
+    if(!ck.ok){invalid.push({start:s,end:s+available-1,dir,rule:ck.rule||null,reason:ck.reason});continue;}
+    if(core.length<2)continue;
+
+    let seq=core.slice();
+    let labels=["1","2","3","4","5"].slice(0,core.length-1);
+    let structureType=ck.standard?"STANDARD_IMPULSE":"DIAGONAL_CANDIDATE";
+
+    if(core.length===6){
+      const corrExpected=dir>0?["L","H","L"]:["H","L","H"];
+      for(let j=0;j<3;j++){
+        const p=pivots[s+6+j];
+        if(!p||p.kind!==corrExpected[j])break;
+        seq.push(p);labels.push(["a","b","c"][j]);
+      }
+    }
+
+    const lastCompleted=labels[labels.length-1]||null;
+    const active=nextWaveLabelV36716(lastCompleted);
+    const desiredTrend=activeWaveDirectionV36716(dir,active);
+    const liveAligned=desiredTrend&&state.liveTrend?desiredTrend===state.liveTrend:null;
+    const confidence=waveSeqBaseConfidenceV36716(core,ck.standard,liveAligned);
+    const lastPivot=seq[seq.length-1];
+    const recency=lastPivot?.i??-1;
+    const score=recency*100000+seq.length*1000+(ck.standard?100:0)+(liveAligned?20:0)+s;
+    candidates.push({score,start:s,sequence:seq,labels,lastCompleted,active,motiveDir:dir,confidence,structureType,warning:ck.warning||null,liveAligned});
+  }
+
+  candidates.sort((a,b)=>b.score-a.score);
+  invalid.sort((a,b)=>(pivots[b.end]?.i??-1)-(pivots[a.end]?.i??-1));
+  const best=candidates[0]||null,recentInvalid=invalid[0]||null;
+  if(!best)return {status:"NONE",...state,sequence:null,motiveDir:0,lastCompleted:null,active:null,confidence:0,invalidRule:recentInvalid?.rule||null,invalidReason:recentInvalid?.reason||null};
+
+  const bestEnd=best.sequence[best.sequence.length-1]?.i??-1;
+  const invalidEnd=recentInvalid?pivots[recentInvalid.end]?.i??-1:-1;
+  if(recentInvalid&&invalidEnd>bestEnd&&["W2_BREAK_W1_START","W3_SHORTEST"].includes(recentInvalid.rule)){
+    return {status:"INVALID",...state,sequence:null,motiveDir:recentInvalid.dir,lastCompleted:null,active:null,confidence:0,invalidRule:recentInvalid.rule,invalidReason:recentInvalid.reason,invalidAt:invalidEnd};
+  }
+  return {status:"VALID",...state,sequence:{pivots:best.sequence,labels:best.labels},motiveDir:best.motiveDir,lastCompleted:best.lastCompleted,active:best.active,confidence:best.confidence,structureType:best.structureType,warning:best.warning,liveAligned:best.liveAligned};
+}
+
+function segmentAvgVolumeV36716(bars,a,b){
+  if(!Array.isArray(bars))return null;
+  const lo=Math.max(0,Math.min(a,b)),hi=Math.min(bars.length-1,Math.max(a,b));
+  const vals=[];
+  for(let i=lo;i<=hi;i++){
+    const v=n(bars[i]?.volume),dur=n(bars[i]?.durationMinutes)??60;
+    if(v!==null&&v>0)vals.push(v*(60/Math.max(1,dur)));
+  }
+  return vals.length?vals.reduce((x,y)=>x+y,0)/vals.length:null;
+}
+
+function calcRsiSeriesV36716(bars,period=5){
+  const out=new Array(bars.length).fill(null);
+  if(!Array.isArray(bars)||bars.length<period+1)return out;
+  for(let i=period;i<bars.length;i++){
+    let g=0,l=0;
+    for(let j=i-period+1;j<=i;j++){
+      const d=n(bars[j]?.close)-n(bars[j-1]?.close);
+      if(!Number.isFinite(d))continue;
+      if(d>=0)g+=d;else l-=d;
+    }
+    out[i]=l===0?(g===0?50:100):100-100/(1+g/l);
+  }
+  return out;
+}
+
+function fineWaveMetricsV36716(analysis,bars){
+  const p=analysis?.sequence?.pivots||[],dir=analysis?.motiveDir||0;
+  const q=p.map(x=>dir*x.v),evidence=[];
+  let delta=0;
+  const metrics={r2:null,w3Ext:null,r4:null,w5Ext:null,truncated5:false,vol1:null,vol2:null,vol3:null,vol4:null,vol5:null,rsiDivergence5:false};
+  if(p.length>=3){
+    const den=q[1]-q[0];
+    if(den>0){
+      metrics.r2=(q[1]-q[2])/den;
+      const r=metrics.r2;
+      if(r>=.382&&r<=.618){delta+=6;evidence.push(`浪2回撤 ${fmt(r*100,1)}%｜落在38.2~61.8%高合理區`);}
+      else if(r>.618&&r<=.786){delta+=3;evidence.push(`浪2深回撤 ${fmt(r*100,1)}%｜仍在78.6%內`);}
+      else if(r>0&&r<1){delta+=1;evidence.push(`浪2回撤 ${fmt(r*100,1)}%`);}
+    }
+  }
+  if(p.length>=4){
+    const w1=q[1]-q[0],w3=q[3]-q[2];
+    if(w1>0&&w3>0){
+      metrics.w3Ext=w3/w1;
+      const x=metrics.w3Ext;
+      if(Math.abs(x-1.618)<=.22){delta+=7;evidence.push(`浪3/浪1＝${fmt(x,2)}×｜接近1.618延伸`);}
+      else if(Math.abs(x-2.618)<=.30||Math.abs(x-4.236)<=.45){delta+=6;evidence.push(`浪3延伸＝${fmt(x,2)}×｜屬強延伸區`);}
+      else if(x>=1){delta+=3;evidence.push(`浪3/浪1＝${fmt(x,2)}×`);}
+      else {delta-=4;evidence.push(`浪3/浪1僅 ${fmt(x,2)}×｜動能偏弱`);}
+    }
+  }
+  if(p.length>=5){
+    const den=q[3]-q[0];
+    if(den>0){
+      metrics.r4=(q[3]-q[4])/den;
+      const r=metrics.r4;
+      if(r>=.20&&r<=.42){delta+=5;evidence.push(`浪4回撤0→3約 ${fmt(r*100,1)}%｜接近23.6~38.2%區`);}
+      else if(r>0){evidence.push(`浪4回撤0→3約 ${fmt(r*100,1)}%`);}
+    }
+  }
+  if(p.length>=6){
+    const den=q[3]-q[0];
+    if(den>0){
+      metrics.w5Ext=(q[5]-q[4])/den;
+      const x=metrics.w5Ext;
+      if(Math.abs(x-.382)<=.10||Math.abs(x-.618)<=.12){delta+=4;evidence.push(`浪5對0→3延伸 ${fmt(x,2)}×｜接近0.382/0.618參考`);}
+    }
+    metrics.truncated5=q[5]<=q[3];
+    if(metrics.truncated5){delta-=4;evidence.push("第5浪未超越第3浪終點｜截短第五浪候選");}
+  }
+  for(let k=1;k<=Math.min(5,p.length-1);k++)metrics[`vol${k}`]=segmentAvgVolumeV36716(bars,p[k-1].i,p[k].i);
+  if(metrics.vol3!==null&&metrics.vol1!==null){
+    const vr=metrics.vol3/Math.max(metrics.vol1,1e-9);
+    if(vr>=1.15){delta+=5;evidence.push(`第3浪均量約為第1浪 ${fmt(vr,2)}×｜量能支持`);}
+    else if(vr<.85){delta-=4;evidence.push(`第3浪均量僅第1浪 ${fmt(vr,2)}×｜量能未同步`);}
+  }
+  if(metrics.vol4!==null&&metrics.vol3!==null&&metrics.vol4<metrics.vol3*.90){delta+=2;evidence.push("第4浪量縮｜符合修正段常見節奏");}
+  if(p.length>=6){
+    const rsi=calcRsiSeriesV36716(bars,5),r3=n(rsi[p[3].i]),r5=n(rsi[p[5].i]);
+    const m3=r3===null?null:(dir>0?r3:100-r3),m5=r5===null?null:(dir>0?r5:100-r5);
+    if(m3!==null&&m5!==null&&q[5]>q[3]&&m5<m3-3){metrics.rsiDivergence5=true;delta-=3;evidence.push("第5浪價格創極值但RSI動能未同步｜背離風險");}
+  }
+  return {delta,evidence,metrics};
+}
+
+
+// ========================================================================
+// V3.6.7.17｜Fib Wave Profile：只做比例共振與候選目標，不取代Elliott鐵律／Swing／BOS。
+// 來源口徑：回撤 0.236/0.382/0.500/0.618/0.786；延伸 1.000/1.272/1.618/2.000/2.618。
+// ========================================================================
+const FIB_WAVE_RATIOS_V36717=Object.freeze({
+  retrace:[0.236,0.382,0.500,0.618,0.786],
+  extension:[1.000,1.272,1.618,2.000,2.618],
+  wave5:[1.000,1.272,1.618],
+  b:[0.382,0.500,0.618,0.786],
+  c:[1.000,1.618]
+});
+
+function nearestFibRatioV36717(value,ratios){
+  value=n(value);
+  const rs=(ratios||[]).map(n).filter(v=>v!==null);
+  if(value===null||!rs.length)return {ratio:null,distance:null,quality:"NA"};
+  let best=rs[0],dist=Math.abs(value-rs[0]);
+  for(const r of rs.slice(1)){
+    const d=Math.abs(value-r);
+    if(d<dist){best=r;dist=d;}
+  }
+  const quality=dist<=0.035?"VERY_HIGH":dist<=0.075?"HIGH":dist<=0.14?"MEDIUM":"REFERENCE";
+  return {ratio:best,distance:dist,quality};
+}
+
+function fibProjectedPriceV36717(base,direction,range,ratio){
+  base=n(base);range=n(range);ratio=n(ratio);direction=direction>0?1:direction<0?-1:0;
+  if(base===null||range===null||range<=0||ratio===null||!direction)return null;
+  return base+direction*range*ratio;
+}
+
+function fibTargetLevelsV36717(base,direction,range,ratios){
+  const out={};
+  for(const r of ratios||[]){
+    const v=fibProjectedPriceV36717(base,direction,range,r);
+    if(v!==null)out[String(r)]=v;
+  }
+  return out;
+}
+
+function buildFibWaveProfileV36717(analysis){
+  const p=analysis?.sequence?.pivots||[],dir=analysis?.motiveDir||0,active=String(analysis?.active||"").toLowerCase();
+  const q=p.map(x=>dir*n(x?.v));
+  const profile={
+    ratios:FIB_WAVE_RATIOS_V36717,
+    wave2:null,wave3:null,wave4:null,wave5:null,
+    corrective:{b:null,c:null},
+    active,activeTargets:null,summary:null,targetSummary:null,extraDelta:0
+  };
+  if(!dir||p.length<2)return profile;
+
+  const w1=(q[1]??0)-(q[0]??0);
+  if(p.length>=3&&w1>0){
+    const actual=(q[1]-q[2])/w1;
+    const near=nearestFibRatioV36717(actual,FIB_WAVE_RATIOS_V36717.retrace);
+    const zone=actual>=.382&&actual<=.618?"CORE":actual>.618&&actual<=.786?"DEEP":actual>0&&actual<1?"VALID":"OUT";
+    profile.wave2={actualRetrace:actual,...near,zone};
+  }
+  if(p.length>=4&&w1>0){
+    const w3=q[3]-q[2],actual=w3/w1,near=nearestFibRatioV36717(actual,FIB_WAVE_RATIOS_V36717.extension);
+    profile.wave3={actualExtension:actual,...near};
+  }
+  if(p.length>=5){
+    const range03=q[3]-q[0];
+    if(range03>0){
+      const actual=(q[3]-q[4])/range03,near=nearestFibRatioV36717(actual,FIB_WAVE_RATIOS_V36717.retrace);
+      profile.wave4={actualRetrace03:actual,...near,commonZone:actual>=.20&&actual<=.42};
+    }
+  }
+  if(p.length>=6&&w1>0){
+    const w5=q[5]-q[4],range03=q[3]-q[0];
+    const actualVsW1=w5/w1,nearW1=nearestFibRatioV36717(actualVsW1,FIB_WAVE_RATIOS_V36717.wave5);
+    const actualVs03=range03>0?w5/range03:null,near03=nearestFibRatioV36717(actualVs03,[.382,.618]);
+    profile.wave5={actualVsWave1:actualVsW1,nearestWave1:nearW1.ratio,distanceWave1:nearW1.distance,qualityWave1:nearW1.quality,actualVs03,nearest03:near03.ratio,distance03:near03.distance,truncated:q[5]<=q[3]};
+    if(actualVsW1>=.90&&actualVsW1<=1.75)profile.extraDelta+=3;
+  }
+  if(p.length>=8){
+    const aLen=Math.abs(n(p[6]?.v)-n(p[5]?.v));
+    if(aLen>0){
+      const bLen=Math.abs(n(p[7]?.v)-n(p[6]?.v)),actual=bLen/aLen,near=nearestFibRatioV36717(actual,FIB_WAVE_RATIOS_V36717.b);
+      profile.corrective.b={actualRetraceA:actual,...near,commonZone:actual>=.382&&actual<=.786};
+      if(actual>=.382&&actual<=.786)profile.extraDelta+=2;
+    }
+  }
+  if(p.length>=9){
+    const aLen=Math.abs(n(p[6]?.v)-n(p[5]?.v));
+    if(aLen>0){
+      const cLen=Math.abs(n(p[8]?.v)-n(p[7]?.v)),actual=cLen/aLen,near=nearestFibRatioV36717(actual,FIB_WAVE_RATIOS_V36717.c);
+      profile.corrective.c={actualVsA:actual,...near};
+      if(near.distance!==null&&near.distance<=.16)profile.extraDelta+=3;
+    }
+  }
+  profile.extraDelta=Math.max(0,Math.min(5,profile.extraDelta));
+
+  // 只對「目前下一浪」提供候選價位，不把目標價當成必達。
+  if(active==="2"&&p[0]&&p[1]&&w1>0){
+    profile.activeTargets={wave:"2",basis:"Wave1回撤",levels:fibTargetLevelsV36717(p[1].v,-dir,w1,FIB_WAVE_RATIOS_V36717.retrace)};
+  }else if(active==="3"&&p[2]&&w1>0){
+    profile.activeTargets={wave:"3",basis:"Wave1延伸自Wave2終點",levels:fibTargetLevelsV36717(p[2].v,dir,w1,FIB_WAVE_RATIOS_V36717.extension)};
+  }else if(active==="4"&&p[0]&&p[3]){
+    const range03=Math.abs(n(p[3].v)-n(p[0].v));
+    if(range03>0)profile.activeTargets={wave:"4",basis:"0→3回撤",levels:fibTargetLevelsV36717(p[3].v,-dir,range03,[.236,.382])};
+  }else if(active==="5"&&p[4]&&w1>0){
+    const primary=fibTargetLevelsV36717(p[4].v,dir,w1,FIB_WAVE_RATIOS_V36717.wave5);
+    const range03=p[3]&&p[0]?Math.abs(n(p[3].v)-n(p[0].v)):null;
+    const secondary=range03>0?fibTargetLevelsV36717(p[4].v,dir,range03,[.382,.618]):{};
+    profile.activeTargets={wave:"5",basis:"Wave1倍數（主）＋0→3延伸（次）",levels:primary,secondaryLevels:secondary};
+  }else if(active==="b"&&p[5]&&p[6]){
+    const aLen=Math.abs(n(p[6].v)-n(p[5].v));
+    if(aLen>0)profile.activeTargets={wave:"B",basis:"A浪回撤",levels:fibTargetLevelsV36717(p[6].v,dir,aLen,FIB_WAVE_RATIOS_V36717.b)};
+  }else if(active==="c"&&p[6]&&p[7]){
+    const aLen=Math.abs(n(p[6].v)-n(p[5].v));
+    if(aLen>0)profile.activeTargets={wave:"C",basis:"A浪等長／1.618延伸",levels:fibTargetLevelsV36717(p[7].v,-dir,aLen,FIB_WAVE_RATIOS_V36717.c)};
+  }
+
+  const parts=[];
+  if(profile.wave2?.actualRetrace!==undefined)parts.push(`W2 ${fmt(profile.wave2.actualRetrace*100,1)}%→近${fmt(profile.wave2.ratio*100,1)}%`);
+  if(profile.wave3?.actualExtension!==undefined)parts.push(`W3/W1 ${fmt(profile.wave3.actualExtension,2)}×→近${fmt(profile.wave3.ratio,3)}×`);
+  if(profile.wave4?.actualRetrace03!==undefined)parts.push(`W4(0→3) ${fmt(profile.wave4.actualRetrace03*100,1)}%`);
+  if(profile.wave5?.actualVsWave1!==undefined)parts.push(`W5/W1 ${fmt(profile.wave5.actualVsWave1,2)}×`);
+  if(profile.corrective.b?.actualRetraceA!==undefined)parts.push(`B/A ${fmt(profile.corrective.b.actualRetraceA*100,1)}%`);
+  if(profile.corrective.c?.actualVsA!==undefined)parts.push(`C/A ${fmt(profile.corrective.c.actualVsA,2)}×`);
+  profile.summary=parts.join("｜")||null;
+
+  const lv=profile.activeTargets?.levels||null;
+  if(lv){
+    const wave=profile.activeTargets.wave;
+    const pick=wave==="2"?["0.382","0.5","0.618","0.786"]:wave==="3"?["1.272","1.618","2","2.618"]:wave==="4"?["0.236","0.382"]:wave==="5"?["1","1.272","1.618"]:wave==="B"?["0.382","0.5","0.618","0.786"]:["1","1.618"];
+    const shown=pick.filter(k=>n(lv[k])!==null).map(k=>`${k}=${fmt(lv[k])}`);
+    profile.targetSummary=shown.length?`${wave}候選價｜${shown.join(" / ")}`:null;
+  }
+  return profile;
+}
+
+function analyzeFineWave60V36717(report,dailyBase=null){
+  const base=analyzeFineWave60V36716(report,dailyBase);
+  if(!base?.available||base.status!=="VALID"||!base.analysis)return {...base,fibWaveProfile:null};
+  const fibWaveProfile=buildFibWaveProfileV36717(base.analysis);
+  let confidence=Math.max(30,Math.min(95,Math.round((base.confidence||0)+(fibWaveProfile.extraDelta||0))));
+  const ev=[...(base.guidelineEvidence||[])];
+  if(fibWaveProfile.wave5?.actualVsWave1!==undefined){
+    ev.push(`Fib主參考：浪5/浪1＝${fmt(fibWaveProfile.wave5.actualVsWave1,2)}×${fibWaveProfile.wave5.truncated?"｜截短候選":""}`);
+  }
+  if(fibWaveProfile.corrective.b?.actualRetraceA!==undefined){
+    ev.push(`Fib修正：B/A回撤 ${fmt(fibWaveProfile.corrective.b.actualRetraceA*100,1)}%`);
+  }
+  if(fibWaveProfile.corrective.c?.actualVsA!==undefined){
+    ev.push(`Fib修正：C/A＝${fmt(fibWaveProfile.corrective.c.actualVsA,2)}×`);
+  }
+  if(fibWaveProfile.targetSummary)ev.push(`🎯 ${fibWaveProfile.targetSummary}（候選，不代表必達）`);
+  return {...base,confidence,fibWaveProfile,guidelineEvidence:[...new Set(ev)]};
+}
+
+function normalizedBarVolumeV36716(bar){
+  const v=n(bar?.volume),dur=n(bar?.durationMinutes)??60;
+  return v===null?null:v*(60/Math.max(1,dur));
+}
+
+function medianPrevVolumeV36716(bars,i,lookback=16){
+  const vals=[];
+  for(let j=Math.max(0,i-lookback);j<i;j++){
+    const v=normalizedBarVolumeV36716(bars[j]);
+    if(v!==null&&v>0)vals.push(v);
+  }
+  return waveMedianV3684(vals);
+}
+
+function evaluateBOSV36716(bars,{level,direction,startIndex=0,role="結構突破"}={}){
+  level=n(level);direction=direction>0?1:direction<0?-1:0;
+  if(level===null||!direction||!Array.isArray(bars)||!bars.length)return {status:"NA",role,level,direction,score:0};
+  const atrs=waveAtrAlignedV3684(bars,14);
+  let breakoutIndex=-1;
+  for(let i=Math.max(1,startIndex);i<bars.length;i++){
+    const c=n(bars[i]?.close),atr=n(atrs[i]);
+    if(c===null)continue;
+    const eps=Math.max(Math.abs(level)*0.0005,(atr??0)*0.08,0.001);
+    if(direction>0?c>level+eps:c<level-eps){breakoutIndex=i;break;}
+  }
+  if(breakoutIndex<0)return {status:"WAIT_BREAK",role,level,direction,score:28,label:"等待BOS",text:"尚未以60分K收盤有效越過關鍵結構位。"};
+
+  const b=bars[breakoutIndex],atr=n(atrs[breakoutIndex])??Math.abs(level)*.005;
+  const baseVol=medianPrevVolumeV36716(bars,breakoutIndex,16),boVol=normalizedBarVolumeV36716(b);
+  const volumeRatio=baseVol&&boVol!==null?boVol/baseVol:null;
+  const range=Math.max((n(b.high)??0)-(n(b.low)??0),1e-9),body=Math.abs((n(b.close)??0)-(n(b.open)??0));
+  const bodyRatio=body/range;
+  const closeLoc=direction>0?((n(b.close)-n(b.low))/range):((n(b.high)-n(b.close))/range);
+  const volumeGrade=volumeRatio===null?"UNKNOWN":volumeRatio>=1.30?"STRONG":volumeRatio>=1.05?"OK":"WEAK";
+  const retestTol=Math.max(atr*.25,Math.abs(level)*.0015,0.001);
+  let retestIndex=-1,retestPass=false,falseIndex=-1;
+  const scanEnd=Math.min(bars.length-1,breakoutIndex+12);
+  for(let i=breakoutIndex+1;i<=scanEnd;i++){
+    const x=bars[i],c=n(x.close),lo=n(x.low),hi=n(x.high);
+    if(c===null||lo===null||hi===null)continue;
+    if(direction>0){
+      if(c<level-retestTol){falseIndex=i;break;}
+      if(lo<=level+retestTol&&hi>=level-retestTol){retestIndex=i;if(c>=level-retestTol*.35)retestPass=true;}
+    }else{
+      if(c>level+retestTol){falseIndex=i;break;}
+      if(hi>=level-retestTol&&lo<=level+retestTol){retestIndex=i;if(c<=level+retestTol*.35)retestPass=true;}
+    }
+  }
+  const lastClose=n(bars[bars.length-1]?.close);
+  const stillBeyond=lastClose!==null?(direction>0?lastClose>=level-retestTol:lastClose<=level+retestTol):false;
+  const barsSince=bars.length-1-breakoutIndex;
+  let status,label,text;
+  if(falseIndex>=0||!stillBeyond){status="FALSE_BREAKOUT";label="BOS失敗／跌回結構內";text="突破後又以收盤回到關鍵結構位反向一側，先視為假突破或結構失敗。";}
+  else if(retestPass){status="RETEST_PASS";label="BOS＋重測守住";text="已收盤突破，且後續重測關鍵位仍守住，結構確認度較高。";}
+  else if(barsSince>=2){status="CONFIRMED";label="BOS已站穩";text="突破後至少維持數根60分K在結構位正確一側，但尚未出現明確重測。";}
+  else {status="BREAK_PENDING";label="BOS剛突破｜待站穩";text="剛以60分K收盤越過結構位，仍需後續K棒或重測確認。";}
+
+  let score=48;
+  if(volumeGrade==="STRONG")score+=16;else if(volumeGrade==="OK")score+=8;else if(volumeGrade==="WEAK")score-=10;
+  if(bodyRatio>=.55&&closeLoc>=.70)score+=10;else if(bodyRatio<.25)score-=5;
+  if(status==="RETEST_PASS")score+=16;else if(status==="CONFIRMED")score+=10;else if(status==="FALSE_BREAKOUT")score-=30;
+  score=Math.max(5,Math.min(95,Math.round(score)));
+  return {status,role,level,direction,breakoutIndex,retestIndex,falseIndex,volumeRatio,volumeGrade,bodyRatio,closeLoc,score,label,text};
+}
+
+function bosForFineWaveV36716(analysis,bars){
+  if(analysis?.status!=="VALID"||!analysis.sequence)return {status:"NA",score:0,label:"BOS待結構",text:"細微浪結構尚未足夠，暫無BOS參考位。"};
+  const p=analysis.sequence.pivots,dir=analysis.motiveDir,active=String(analysis.active||"").toLowerCase();
+  let level=null,direction=0,startIndex=0,role="細微浪BOS";
+  if(active==="3"&&p[1]&&p[2]){level=p[1].v;direction=dir;startIndex=p[2].i+1;role="第3浪突破第1浪終點";}
+  else if(active==="5"&&p[3]&&p[4]){level=p[3].v;direction=dir;startIndex=p[4].i+1;role="第5浪突破第3浪終點";}
+  else if(active==="a"&&p[4]&&p[5]){level=p[4].v;direction=-dir;startIndex=p[5].i+1;role="A浪破壞第4浪結構";}
+  else if(active==="c"&&p[6]&&p[7]){level=p[6].v;direction=-dir;startIndex=p[7].i+1;role="C浪突破A浪終點";}
+  else return {status:"NOT_REQUIRED",score:50,label:"本階段不要求BOS",text:"第2/4/B浪主要是修正與回測階段，BOS不是必要成立條件。",active};
+  return {...evaluateBOSV36716(bars,{level,direction,startIndex,role}),active};
+}
+
+function classifySwingStructureV36716(pivots){
+  const hs=(pivots||[]).filter(p=>p.kind==="H").slice(-2),ls=(pivots||[]).filter(p=>p.kind==="L").slice(-2);
+  if(hs.length<2||ls.length<2)return {key:"UNKNOWN",label:"結構尚不足",hh:null,hl:null};
+  const higherH=hs[1].v>hs[0].v,higherL=ls[1].v>ls[0].v,lowerH=hs[1].v<hs[0].v,lowerL=ls[1].v<ls[0].v;
+  if(higherH&&higherL)return {key:"BULL",label:"HH＋HL 上升結構",hh:true,hl:true};
+  if(lowerH&&lowerL)return {key:"BEAR",label:"LH＋LL 下降結構",hh:false,hl:false};
+  return {key:"MIXED",label:"結構混合／區間",hh:higherH,hl:higherL};
+}
+
+function dailyBackgroundDirectionV36716(d){
+  if(!d)return 0;
+  if(d.maAbove===true&&d.slope==="up")return 1;
+  if(d.maAbove===false&&d.slope==="down")return -1;
+  return 0;
+}
+
+function analyzeFineWave60V36716(report,dailyBase=null){
+  const bars=normalizeIntraday60BarsV36715(report),meta=report?.intraday60Meta||null,minimum=48;
+  if(bars.length<minimum)return {available:false,barsCount:bars.length,minBars:minimum,status:"INSUFFICIENT",active:null,current:null,confidence:0,label:"60分K資料不足",short:`目前只有 ${bars.length} 根已完成60分K；至少 ${minimum} 根才啟用細微浪2.1＋BOS＋Fib，不用日K冒充。`,stageKey:"UNDETERMINED",icon:"⚪",analysis:null,meta,bos:null};
+
+  const analysis=analyzeFineWaveSequenceV36716(bars),rsi60=calcRsiSimpleV36715(bars,5),ma60=movingAverageAlignedV365(bars,20);
+  const lastMa=n(ma60[ma60.length-1]),prevMa=n(ma60[Math.max(0,ma60.length-6)]),lastClose=n(bars[bars.length-1]?.close);
+  const slope=lastMa!==null&&prevMa!==null?(lastMa>prevMa?"up":lastMa<prevMa?"down":"flat"):"unknown",aboveMa=lastClose!==null&&lastMa!==null?lastClose>=lastMa:null;
+  if(analysis.status==="INVALID")return {available:true,barsCount:bars.length,status:"INVALID",active:null,current:null,confidence:0,label:`60分K推動浪取消｜${analysis.invalidReason||"鐵律失敗"}`,short:"細微浪違反不可破的Elliott鐵律，取消這組計數並重新尋找起點。",stageKey:"UNDETERMINED",icon:"⚠️",analysis,rsi60,lastMa,slope,aboveMa,meta,bos:null};
+  if(analysis.status!=="VALID"||!analysis.active)return {available:true,barsCount:bars.length,status:"NONE",active:null,current:null,confidence:0,label:"60分K細微浪尚未成形",short:"已取得60分K，但已確認Swing不足以建立可靠細微浪循環。",stageKey:"UNDETERMINED",icon:"⚪",analysis,rsi60,lastMa,slope,aboveMa,meta,bos:null};
+
+  const metrics=fineWaveMetricsV36716(analysis,bars),bos=bosForFineWaveV36716(analysis,bars),structure=classifySwingStructureV36716(analysis.pivots);
+  let confidence=Math.max(30,Math.min(95,Math.round(analysis.confidence+metrics.delta+(bos?.score?Math.round((bos.score-50)*.22):0))));
+  if(analysis.structureType==="DIAGONAL_CANDIDATE")confidence=Math.min(confidence,72);
+  const dailyDir=dailyBackgroundDirectionV36716(dailyBase),aligned=dailyDir===0?null:dailyDir===analysis.motiveDir;
+  if(aligned===true)confidence=Math.min(95,confidence+5);else if(aligned===false)confidence=Math.max(30,confidence-10);
+
+  const active=String(analysis.active).toLowerCase(),motiveWord=analysis.motiveDir>0?"多頭":"空頭";
+  let stageKey="UNDETERMINED",icon="⚪",label="60分K細微浪候選",short="";
+  const bosStrong=["RETEST_PASS","CONFIRMED"].includes(bos?.status)&&bos?.volumeGrade!=="WEAK";
+  const bosFailed=bos?.status==="FALSE_BREAKOUT";
+  if(active==="3"){
+    if(bosStrong&&aligned!==false){stageKey="MAIN_ADVANCE";icon="🚀";label=`60分K第3細微浪｜BOS主升確認`;short=`${motiveWord}第3浪已越過第1浪終點，BOS站穩且量能未偏弱；日K只作大背景，不再硬數細浪。`;}
+    else if(bosFailed){stageKey="UNDETERMINED";icon="⚠️";label="第3細微浪候選｜BOS失敗";short="曾突破第1浪終點但又跌回結構內，暫不升級主升，等待重新突破。";confidence=Math.max(30,confidence-15);}
+    else {stageKey="UNDETERMINED";icon="🌱";label=`60分K第3細微浪候選｜${bos?.label||"等待BOS"}`;short="第2浪已完成候選，但第3浪仍要靠突破第1浪終點、量能與站穩/重測確認。";}
+  }else if(active==="4"){
+    stageKey="MID_CONSOLIDATION";icon="⏸️";label="60分K第4細微浪｜主升中途整理";short="第3浪已完成候選，目前進入第4浪修正；23.6~38.2%只作常見回撤區，1/4重疊則改列Diagonal候選而非標準Impulse。";
+  }else if(active==="5"){
+    const risk=metrics.metrics.rsiDivergence5||bosFailed||(bos?.volumeGrade==="WEAK");
+    stageKey=risk?"LATE_RISK":"LATE_EXTENSION";icon=risk?"⚠️":"🔥";label=risk?"60分K第5細微浪｜末升/末跌風險升高":"60分K第5細微浪｜末段延伸候選";short="第5浪是最後推進段；創新高/新低不等於安全，需比較第3浪量能、RSI動能與BOS品質。";
+  }else if(active==="a"){
+    stageKey="MID_CONSOLIDATION";icon="🔻";label=`60分K A修正浪｜${bos?.label||"結構轉弱候選"}`;short="五浪完成後開始尋找A浪；若反向BOS破壞第4浪結構，修正循環確認度提高。";
+  }else if(active==="b"){
+    stageKey="MID_CONSOLIDATION";icon="↗️";label="60分K B修正浪｜反彈候選";short="B浪屬修正中的反彈，不因反彈強就自動視為新多頭/空頭循環；需看是否真正破壞原修正結構。";
+  }else if(active==="c"){
+    stageKey="MID_CONSOLIDATION";icon="📉";label=`60分K C修正浪｜${bos?.label||"延續候選"}`;short="C浪是修正延續段；若反向BOS越過A浪終點，C浪確認度提高，完成後才尋找下一輪推動。";
+  }else if(active==="2"){
+    stageKey="MID_CONSOLIDATION";icon="↘️";label="60分K第2細微浪｜初段回檔";short="第2浪可深回撤，38.2/50/61.8/78.6%只作合理度參考；真正鐵律是不得越過第1浪起點。";
+  }else if(active==="next"){
+    stageKey="UNDETERMINED";icon="🔄";label="60分K修正循環完成｜尋找下一組1浪";short="A/B/C已完成候選，停止沿用舊浪號，重新從更高層背景與新Swing尋找下一組推動循環。";
+  }
+  if(analysis.structureType==="DIAGONAL_CANDIDATE"){
+    label=`${label}｜對角線候選`;
+    short=`${short} 目前存在1/4重疊，因此不列標準Impulse，只保留Leading/Ending Diagonal候選。`;
+  }
+
+  const guidelineEvidence=[...metrics.evidence];
+  if(bos&&bos.status!=="NOT_REQUIRED"&&bos.status!=="NA")guidelineEvidence.unshift(`${bos.role}：${bos.label}${bos.volumeRatio!==null&&bos.volumeRatio!==undefined?`｜量比${fmt(bos.volumeRatio,2)}×`:""}`);
+  return {available:true,barsCount:bars.length,status:"VALID",active,current:active,confidence,label,short,stageKey,icon,analysis,rsi60,lastMa,slope,aboveMa,metrics:metrics.metrics,guidelineEvidence,bos,structure,alignedDaily:aligned,meta};
+}
+
+function waveStageAssistV3323(report){
+  const dailyBase=waveStageAssistDailyBaseV3323(report);
+  const fine=analyzeFineWave60V36717(report,dailyBase);
+  if(!fine.available)return {...dailyBase,key:"UNDETERMINED",icon:"⚪",label:"60分K資料不足｜日K僅作大浪背景",short:fine.short,fineWave60:fine,dailyBackground:dailyBase};
+  if(fine.status!=="VALID")return {...dailyBase,key:"UNDETERMINED",icon:fine.icon,label:fine.label,short:fine.short,fineWave60:fine,dailyBackground:dailyBase};
+  return {...dailyBase,key:fine.stageKey,icon:fine.icon,label:fine.label,short:fine.short,fineWave60:fine,dailyBackground:dailyBase};
+}
+
+function drawFineWave60HintV36716(ctx,fine,x,y,maxW=176){
+  if(!ctx||!fine)return;
+  const bos=fine.bos;
+  const bad=fine.status==="INVALID"||bos?.status==="FALSE_BREAKOUT";
+  const good=["RETEST_PASS","CONFIRMED"].includes(bos?.status);
+  const color=bad?"#dc2626":good?"#0f766e":fine.icon==="🚀"?"#dc2626":fine.icon==="🔥"?"#ea580c":fine.icon==="⏸️"||fine.icon==="↘️"?"#16a34a":"#334155";
+  let stage=fine.available?`${fine.label}${fine.status==="VALID"&&fine.confidence?`｜${fine.confidence}%`:""}`:"60分K資料不足";
+  if(bos&&!["NA","NOT_REQUIRED"].includes(bos.status))stage+=`｜${bos.label}`;
+  ctx.save();ctx.font="900 11px system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+  const tw=Math.min(maxW,Math.max(100,ctx.measureText(stage).width+16));
+  ctx.fillStyle=bad?"rgba(254,242,242,.98)":"rgba(255,255,255,.96)";ctx.strokeStyle=color;ctx.lineWidth=1.4;
+  ctx.beginPath();if(ctx.roundRect)ctx.roundRect(x,y-16,tw,23,7);else ctx.rect(x,y-16,tw,23);ctx.fill();ctx.stroke();
+  ctx.fillStyle=color;ctx.textAlign="left";ctx.textBaseline="middle";
+  let text=stage;while(text.length>4&&ctx.measureText(text).width>tw-14)text=text.slice(0,-2);if(text!==stage)text=text.replace(/…?$/,"…");ctx.fillText(text,x+7,y-4);ctx.restore();
 }
 
 
@@ -15649,10 +16428,10 @@ function backtestPatternV367(bars,detector){
   return {n:overall.n,pass,reason,train,test,overall,splitIndex:split};
 }
 
-// V3.6.7.9｜資料視窗隔離：個股圖80~120根／三叉戟120根／Research Gate最多420根，維持不變。
-// 1) 圖片：最近80根為主，為了納入A/B/C最多延伸到120根（selectStockChartBarsV365）。
+// V3.6.7.15｜資料視窗隔離：個股圖動態120~180根／波浪分析最多420根／三叉戟120根／Research Gate最多420根。
+// 1) 圖片：預設140根，依ABC與波浪起點動態調整於120~180根（selectStockChartBarsV365）。
 // 2) 三叉戟：固定只掃最近120根已完成OHLCV，維持既有短中期壓／撐／預語意。
-// 3) Research Gate：最多使用最近420根已完成OHLCV，僅供Walk-Forward研究，不回頭改三叉戟。
+// 3) 波浪分析與Research Gate都可讀最多420根已完成OHLCV，但兩者互不改寫；三叉戟仍固定120根。
 const TRIDENT_LOOKBACK_BARS_V3672=120;
 const RESEARCH_LOOKBACK_BARS_V3672=420;
 
@@ -15886,10 +16665,21 @@ function appendDecisionEngineV360(lines,report){
 
 function appendWaveStageSectionV3323(lines,report,stage=null){
   const w=stage||waveStageAssistV3323(report);
-  lineSection(lines,"🌊 現在大概走到哪一段？｜主升、整理還是末升？");
+  lineSection(lines,"🌊 60分K細微浪2.1＋BOS＋Fib｜現在是推進、整理、末段還是ABC修正？");
   lines.push(`${w.icon} 波段階段輔助判讀：${w.label}`);
-  lines.push("📌 這是『波段成熟度』的輔助判讀，不等同正式艾略特第3浪／第5浪計數。");
-  lines.push("");
+  lines.push("📌 60分K採『候選計數＋鐵律硬檢查＋BOS/量能/重測＋Fib共振』；Fib只做合理度與候選目標，不凌駕鐵律／結構，分數也不是勝率。");
+  const f=w.fineWave60||null;
+  if(f?.available){
+    lines.push(`🧭 60分K結構：${f.structure?.label||"結構待確認"}${f.analysis?.structureType==="DIAGONAL_CANDIDATE"?"｜⚠️ 1/4重疊，僅列對角線候選":""}`);
+    if(f.fibWaveProfile?.summary)lines.push(`🌀 Fib共振：${f.fibWaveProfile.summary}`);
+    if(f.fibWaveProfile?.targetSummary)lines.push(`🎯 Fib候選目標：${f.fibWaveProfile.targetSummary}｜僅作參考，不代表必達`);
+    if(f.bos&&!["NA","NOT_REQUIRED"].includes(f.bos.status)){
+      lines.push(`🧱 BOS：${f.bos.label}｜${f.bos.role}${n(f.bos.level)!==null?` ${fmt(f.bos.level)} 元`:""}${n(f.bos.volumeRatio)!==null?`｜突破量比 ${fmt(f.bos.volumeRatio,2)}×`:""}｜品質 ${f.bos.score||0}/100`);
+      lines.push(`➡️ ${f.bos.text}`);
+    }
+    (f.guidelineEvidence||[]).slice(0,4).forEach(x=>lines.push(`• ${x}`));
+    lines.push("");
+  }
   lines.push("📖 白話解釋：");
 
   if(w.key==="LATE_EXTENSION"){
@@ -16279,7 +17069,7 @@ function buildReportTextV326(report){
 
   };
 
-  lines.push("📘 石頭少爺分析助手｜GitHub 前端 V3.6.7.14｜波浪週期說明版");
+  lines.push("📘 石頭少爺分析助手｜GitHub 前端 V3.6.7.17｜60分K細微浪2.1＋BOS＋Fib共振版");
 
   lines.push(`報告產出時間：${generatedAt}`);
 
@@ -17391,7 +18181,7 @@ function buildMarketWorkerReportText(data){
   const lines=[];
   const section=title=>{lines.push("", "━━━━━━━━━━━━━━━━━━", `【${title}】`, "━━━━━━━━━━━━━━━━━━", "");};
 
-  lines.push("📈 石頭少爺分析助手｜GitHub 前端 V3.6.7.9｜大盤環境戰報");
+  lines.push("📈 石頭少爺分析助手｜GitHub 前端 V3.6.7.17｜大盤環境戰報");
   lines.push("判讀核心：大盤前端邏輯沿用 V3.3.10｜ABC演算法沿用 pivot-abc-v2.4｜大盤圖片模組不變");
   lines.push(`報告產出時間：${reportGeneratedAt()}`);
   lines.push("");
@@ -18108,20 +18898,44 @@ function findBarIndexByDateV365(bars,date){
 
 function selectStockChartBarsV365(report,st){
   const all=normalizeDailyBarsV361(report);
-  if(all.length<20)return {all,bars:[],start:0,ma20:[]};
-  // V3.6.7.9：圖片視窗維持原行為——最近80根為主，必要時最多延伸至120根以容納A/B/C。
-  const preferred=80,maxBars=120;
-  let start=Math.max(0,all.length-preferred);
-  const abcDates=[st?.s?.fib?.ADate,st?.s?.fib?.BDate,st?.s?.fib?.CDate].filter(Boolean);
-  const idxs=abcDates.map(d=>findBarIndexByDateV365(all,d)).filter(i=>i>=0);
-  if(idxs.length){
-    const earliest=Math.min(...idxs);
-    if(earliest<start&&all.length-earliest<=maxBars)start=earliest;
-  }
-  start=Math.max(start,all.length-maxBars);
-  return {all,bars:all.slice(start),start,ma20:movingAverageAlignedV365(all,20)};
-}
+  if(all.length<20)return {all,bars:[],start:0,ma20:[],waveAnalysis:null,analysisBarsCount:all.length};
 
+  // V3.6.7.15｜分析與顯示視窗分離：
+  // 1) 波浪結構用 Worker 已回傳的完整逐日資料（目前最多420根）判讀。
+  // 2) 圖面不硬塞420根，預設140根；至少120根、最多180根，依ABC與波浪起點動態向前延伸。
+  const minBars=120,preferred=140,maxBars=180;
+  const waveAnalysis=analyzeWaveStructureV3684(all);
+  let start=Math.max(0,all.length-Math.min(preferred,all.length));
+
+  const anchorIdx=[];
+  const abcDates=[st?.s?.fib?.ADate,st?.s?.fib?.BDate,st?.s?.fib?.CDate].filter(Boolean);
+  abcDates.forEach(d=>{
+    const i=findBarIndexByDateV365(all,d);
+    if(i>=0)anchorIdx.push(i);
+  });
+  (waveAnalysis?.sequence?.pivots||[]).forEach(p=>{
+    if(Number.isInteger(p?.i))anchorIdx.push(p.i);
+  });
+
+  if(anchorIdx.length){
+    const earliest=Math.min(...anchorIdx);
+    const desired=Math.max(0,earliest-10); // 留10根前情，避免第一浪起點貼齊左邊界。
+    if(all.length-desired<=maxBars) start=Math.min(start,desired);
+  }
+
+  // 保證圖面至少120根（若資料本身足夠），但不超過180根。
+  if(all.length>=minBars && all.length-start<minBars) start=all.length-minBars;
+  start=Math.max(start,all.length-maxBars,0);
+
+  return {
+    all,
+    bars:all.slice(start),
+    start,
+    ma20:movingAverageAlignedV365(all,20),
+    waveAnalysis,
+    analysisBarsCount:all.length
+  };
+}
 function normalizeMarketDailyBarsV365(data){
   // 依第三優先規格：只有完整逐日OHLCV才啟用大盤真實K圖。
   return normalizeDailyBarsV361(data);
@@ -18144,90 +18958,230 @@ function drawAbcKMarkerV365(ctx,x,y,key,color,anchor="above"){
   fontV3328(ctx,14,950,color,"center");ctx.fillText(key,x,boxY+18);
 }
 
-function buildWavePivotsV3680(values,{minMove=1,minGap=4,maxPivots=6}={}){
-  const arr=(values||[]).map(v=>n(v));
-  const valid=[];
-  arr.forEach((v,i)=>{ if(v!==null && Number.isFinite(v)) valid.push({i,v}); });
-  if(valid.length<2)return [];
+function waveMedianV3684(values){
+  const a=(values||[]).filter(v=>Number.isFinite(v)).slice().sort((x,y)=>x-y);
+  if(!a.length)return null;
+  const m=Math.floor(a.length/2);
+  return a.length%2?a[m]:(a[m-1]+a[m])/2;
+}
 
-  let pivots=[valid[0]];
-  let extreme=valid[0];
-  let trend=0; // 1=往上, -1=往下, 0=尚未確認
+function waveAtrAlignedV3684(bars,period=14){
+  const out=new Array(bars.length).fill(null);
+  const tr=[];
+  for(let i=0;i<bars.length;i++){
+    const h=n(bars[i]?.high),l=n(bars[i]?.low),prev=i>0?n(bars[i-1]?.close):null;
+    if(h===null||l===null)continue;
+    const v=prev===null?(h-l):Math.max(h-l,Math.abs(h-prev),Math.abs(l-prev));
+    tr.push(v);
+    if(tr.length>period)tr.shift();
+    if(tr.length>=Math.min(5,period))out[i]=tr.reduce((a,b)=>a+b,0)/tr.length;
+  }
+  return out;
+}
+
+function waveMoveThresholdV3684(bars,atrs,i){
+  const c=n(bars[i]?.close)??n(bars[i]?.high)??1;
+  const atr=n(atrs[i]);
+  // ATR負責適應不同波動率；1.35%價格門檻避免低波動盤整被切成太多微浪。
+  return Math.max(atr!==null?atr*1.30:0,Math.abs(c)*0.0135,0.01);
+}
+
+function buildWavePivotsV3680(bars,{minGap=3,maxPivots=26}={}){
+  if(!Array.isArray(bars)||bars.length<8)return [];
+  const atrs=waveAtrAlignedV3684(bars,14);
+  const valid=[];
+  bars.forEach((b,i)=>{
+    const high=n(b?.high),low=n(b?.low),close=n(b?.close);
+    if(high!==null&&low!==null&&close!==null)valid.push({i,high,low,close});
+  });
+  if(valid.length<8)return [];
+
+  const pivots=[];
+  let trend=0; // 1=上行、-1=下行、0=尚未確認
+  let highPt={i:valid[0].i,v:valid[0].high,kind:"H"};
+  let lowPt={i:valid[0].i,v:valid[0].low,kind:"L"};
+  let extreme=null;
+
+  const pushPivot=pt=>{
+    if(!pt)return;
+    const last=pivots[pivots.length-1];
+    if(!last){pivots.push({...pt});return;}
+    if(last.i===pt.i){
+      // 同一根K若同時成高低點，不強行製造一個零時間波浪。
+      return;
+    }
+    if(last.kind===pt.kind){
+      const better=pt.kind==="H"?pt.v>last.v:pt.v<last.v;
+      if(better)pivots[pivots.length-1]={...pt};
+      return;
+    }
+    pivots.push({...pt});
+  };
 
   for(let k=1;k<valid.length;k++){
-    const pt=valid[k];
+    const b=valid[k];
+    const th=waveMoveThresholdV3684(bars,atrs,b.i);
 
     if(trend===0){
-      const diff=pt.v-pivots[0].v;
-      if(Math.abs(diff)>=minMove){
-        trend=diff>0?1:-1;
-        extreme=pt;
-      }else{
-        if(pt.v>extreme.v) extreme=pt;
-        if(pt.v<extreme.v) extreme=pt;
-      }
+      if(b.high>=highPt.v)highPt={i:b.i,v:b.high,kind:"H"};
+      if(b.low<=lowPt.v)lowPt={i:b.i,v:b.low,kind:"L"};
+
+      const upReady=highPt.i>lowPt.i && highPt.v-lowPt.v>=th && highPt.i-lowPt.i>=minGap;
+      const dnReady=lowPt.i>highPt.i && highPt.v-lowPt.v>=th && lowPt.i-highPt.i>=minGap;
+      if(upReady){pushPivot(lowPt);trend=1;extreme=highPt;}
+      else if(dnReady){pushPivot(highPt);trend=-1;extreme=lowPt;}
       continue;
     }
 
     if(trend>0){
-      if(pt.v>=extreme.v){
-        extreme=pt;
-        continue;
-      }
-      if((extreme.v-pt.v)>=minMove && (extreme.i-pivots[pivots.length-1].i)>=minGap){
-        pivots.push(extreme);
+      if(!extreme||b.high>=extreme.v)extreme={i:b.i,v:b.high,kind:"H"};
+      if(extreme.v-b.low>=th && b.i-extreme.i>=minGap){
+        pushPivot(extreme);
         trend=-1;
-        extreme=pt;
+        extreme={i:b.i,v:b.low,kind:"L"};
       }
     }else{
-      if(pt.v<=extreme.v){
-        extreme=pt;
-        continue;
-      }
-      if((pt.v-extreme.v)>=minMove && (extreme.i-pivots[pivots.length-1].i)>=minGap){
-        pivots.push(extreme);
+      if(!extreme||b.low<=extreme.v)extreme={i:b.i,v:b.low,kind:"L"};
+      if(b.high-extreme.v>=th && b.i-extreme.i>=minGap){
+        pushPivot(extreme);
         trend=1;
-        extreme=pt;
+        extreme={i:b.i,v:b.high,kind:"H"};
       }
     }
   }
-
-  const last=valid[valid.length-1];
-  if(pivots[pivots.length-1].i!==extreme.i) pivots.push(extreme);
-  if(pivots[pivots.length-1].i!==last.i) pivots.push(last);
-
-  const cleaned=[];
-  pivots.forEach(pt=>{
-    if(!cleaned.length){ cleaned.push(pt); return; }
-    if(pt.i===cleaned[cleaned.length-1].i){
-      cleaned[cleaned.length-1]=pt;
-    }else{
-      cleaned.push(pt);
-    }
-  });
-
-  const final=[];
-  cleaned.forEach(pt=>{
-    if(final.length<2){
-      final.push(pt);
-      return;
-    }
-    const a=final[final.length-2];
-    const b=final[final.length-1];
-    const ab=b.v-a.v;
-    const bc=pt.v-b.v;
-
-    if((ab>=0 && bc>=0) || (ab<=0 && bc<=0)){
-      const keep=Math.abs(pt.v-a.v)>=Math.abs(b.v-a.v)?pt:b;
-      final[final.length-1]=keep;
-    }else{
-      final.push(pt);
-    }
-  });
-
-  return final.slice(-maxPivots);
+  pushPivot(extreme);
+  return pivots.slice(-maxPivots);
 }
 
+function validateBullImpulsePrefixV3684(pts){
+  if(!Array.isArray(pts)||pts.length<2)return {ok:false,reason:"PIVOT不足"};
+  const expected=["L","H","L","H","L","H"];
+  for(let i=0;i<pts.length;i++){
+    if(pts[i]?.kind!==expected[i])return {ok:false,reason:"方向序列不符"};
+  }
+  const eps=Math.max(Math.abs(pts[0].v)*0.0005,0.001);
+  const p0=pts[0],p1=pts[1],p2=pts[2],p3=pts[3],p4=pts[4],p5=pts[5];
+
+  // Elliott 標準推動浪鐵律 1：第2浪不得跌破第1浪起點。
+  if(pts.length>=3 && p2.v<=p0.v+eps){
+    return {ok:false,rule:"W2_BREAK_W1_START",reason:"第2浪跌破第1浪起點"};
+  }
+  // 為了把第三浪視為新的推進段，至少應突破第1浪高點；否則先不硬標第3浪。
+  if(pts.length>=4 && p3.v<=p1.v+eps){
+    return {ok:false,rule:"W3_NO_BREAK",reason:"第3浪未有效越過第1浪高點"};
+  }
+  // Elliott 標準推動浪鐵律 3：第4浪不得進入第1浪價格區。
+  if(pts.length>=5 && p4.v<=p1.v+eps){
+    return {ok:false,rule:"W14_OVERLAP",reason:"1/4重疊：第4浪進入第1浪價格區"};
+  }
+  // Elliott 標準推動浪鐵律 2：第3浪不能是1、3、5三個推進浪中最短。
+  if(pts.length>=6){
+    const w1=p1.v-p0.v,w3=p3.v-p2.v,w5=p5.v-p4.v;
+    if(w3+eps<Math.min(w1,w5)){
+      return {ok:false,rule:"W3_SHORTEST",reason:"第3浪成為1/3/5中最短推進浪"};
+    }
+  }
+  return {ok:true};
+}
+
+function waveCandidateConfidenceV3684(pts,bars){
+  if(!pts?.length)return 0;
+  let score=44+Math.max(0,pts.length-2)*8;
+  if(pts.length>=4){
+    const w1=pts[1].v-pts[0].v,w3=pts[3].v-pts[2].v;
+    if(w3>w1)score+=8;
+  }
+  if(pts.length>=6){
+    const w5=pts[5].v-pts[4].v;
+    if(w5>0)score+=4;
+    if(pts[5].v>pts[3].v)score+=5;
+    else score-=5; // 截短第五浪保留為候選，但降低信心。
+  }
+  // 越接近最新K棒的結構越有即時參考性。
+  const lastI=pts[pts.length-1]?.i??0;
+  if(Array.isArray(bars)&&bars.length&&lastI>=bars.length-12)score+=5;
+  return Math.max(35,Math.min(95,Math.round(score)));
+}
+
+function analyzeWaveStructureV3684(bars){
+  const pivots=buildWavePivotsV3680(bars,{minGap:3,maxPivots:26});
+  if(pivots.length<2)return {status:"NONE",pivots,sequence:null,current:null,confidence:0,invalidReason:null};
+
+  const candidates=[];
+  const invalid=[];
+  const baseLabels=["1","2","3","4","5"];
+
+  for(let s=0;s<pivots.length-1;s++){
+    if(pivots[s].kind!=="L")continue;
+    const available=Math.min(6,pivots.length-s);
+    if(available<2)continue;
+    const core=pivots.slice(s,s+available);
+    const check=validateBullImpulsePrefixV3684(core);
+    if(!check.ok){
+      invalid.push({start:s,end:s+available-1,rule:check.rule||null,reason:check.reason});
+      continue;
+    }
+
+    // 至少要有1、2兩段才顯示；單一上衝不直接當「完整波浪判讀」。
+    if(core.length<3)continue;
+    let seq=core.slice();
+    let labels=baseLabels.slice(0,core.length-1);
+
+    // 只有完整且通過鐵律的1~5之後，才允許接a/b/c修正候選。
+    if(core.length===6){
+      const corrExpected=["L","H","L"];
+      for(let j=0;j<3;j++){
+        const p=pivots[s+6+j];
+        if(!p||p.kind!==corrExpected[j])break;
+        seq.push(p);
+        labels.push(["a","b","c"][j]);
+      }
+    }
+
+    const end=seq[seq.length-1].i;
+    const confidence=waveCandidateConfidenceV3684(core,bars);
+    // 先以「最近完成的結構」優先，再以完整度與較新的起點做同分排序。
+    const score=end*100000+seq.length*100+(pivots[s].i||0);
+    candidates.push({score,start:s,sequence:seq,labels,current:labels[labels.length-1]||null,confidence});
+  }
+
+  candidates.sort((a,b)=>b.score-a.score);
+  invalid.sort((a,b)=>(pivots[b.end]?.i??-1)-(pivots[a.end]?.i??-1));
+  const best=candidates[0]||null;
+  const recentInvalid=invalid[0]||null;
+  const invalidEnd=recentInvalid?Number(pivots[recentInvalid.end]?.i??-1):-1;
+  const bestEnd=best?Number(best.sequence[best.sequence.length-1]?.i??-1):-1;
+
+  // 若最近發生的結構已觸犯鐵律，而且比最後一組有效候選更晚，就明確取消舊1~5標示。
+  // 同一終點時：完整且已通過鐵律的1~5可保留；只有局部1~2/1~3候選時，不允許它掩蓋較大級別的鐵律失效。
+  const bestHasFive=!!best?.labels?.includes("5");
+  if(recentInvalid && (invalidEnd>bestEnd || (invalidEnd===bestEnd&&!bestHasFive)) && ["W14_OVERLAP","W2_BREAK_W1_START","W3_SHORTEST"].includes(recentInvalid.rule)){
+    return {
+      status:"INVALID",
+      pivots,
+      sequence:null,
+      current:null,
+      confidence:0,
+      invalidRule:recentInvalid.rule,
+      invalidReason:recentInvalid.reason,
+      invalidAt:invalidEnd
+    };
+  }
+
+  if(!best)return {
+    status:"NONE",pivots,sequence:null,current:null,confidence:0,
+    invalidRule:recentInvalid?.rule||null,invalidReason:recentInvalid?.reason||null
+  };
+
+  return {
+    status:"VALID",
+    pivots,
+    sequence:{pivots:best.sequence,labels:best.labels},
+    current:best.current,
+    confidence:best.confidence,
+    invalidReason:null
+  };
+}
 function drawWaveArrowV3680(ctx,x1,y1,x2,y2,{
   color="#ef4444",
   outlineColor="rgba(255,255,255,.98)",
@@ -18338,39 +19292,6 @@ function drawWaveLabelV3681(ctx,label,x,y,meta){
   ctx.restore();
 }
 
-function buildWaveLabelsV3681(count){
-  const base=["1","2","3","4","5","a","b","c"];
-  return base.slice(0,Math.max(0,Math.min(base.length,count)));
-}
-
-function normalizeWaveSequenceV3682(pivots){
-  if(!Array.isArray(pivots)||pivots.length<4)return null;
-  let pts=pivots.slice(-9);
-
-  // 波浪理論的這個顯示模組只從「向上推進」的第一段開始標 1。
-  // 若目前視窗第一段是向下，往後尋找最近可形成向上起點的位置。
-  let start=0;
-  while(start<pts.length-2 && !(pts[start+1].v>pts[start].v)) start++;
-  pts=pts.slice(start);
-  if(pts.length<4)return null;
-
-  // buildWavePivots 已經以轉折方向交替；此處再驗證方向是否符合
-  // 1↑ 2↓ 3↑ 4↓ 5↑ a↓ b↑ c↓ 的候選序列。
-  const expected=[1,-1,1,-1,1,-1,1,-1];
-  const out=[pts[0]];
-  for(let i=1;i<pts.length && out.length<=8;i++){
-    const dir=pts[i].v>out[out.length-1].v?1:pts[i].v<out[out.length-1].v?-1:0;
-    const exp=expected[out.length-1];
-    if(dir===exp) out.push(pts[i]);
-    else break;
-  }
-  if(out.length<4)return null;
-  return {
-    pivots:out,
-    labels:buildWaveLabelsV3681(out.length-1),
-    current:buildWaveLabelsV3681(out.length-1).slice(-1)[0]||null
-  };
-}
 
 function localVolumeAtV3682(volVals,index){
   const vals=[];
@@ -18382,145 +19303,128 @@ function localVolumeAtV3682(volVals,index){
   return vals.reduce((a,b)=>a+b,0)/vals.length;
 }
 
-function drawWaveStageHintV3682(ctx,label,x,y,maxW=170){
-  if(!ctx||!label)return;
-  const meta=waveLabelMetaV3681(label);
-  const labelText=/^[1-5]$/.test(String(label))?`波浪候選：第${label}浪`:`波浪候選：${String(label).toLowerCase()}浪`;
+function drawWaveStageHintV3682(ctx,info,x,y,maxW=176){
+  if(!ctx||!info)return;
+  let label=null,color="#64748b";
+  if(typeof info==="string"){
+    const meta=waveLabelMetaV3681(info);
+    label=/^[1-5]$/.test(info)?`第${info}浪候選`:`${String(info).toLowerCase()}浪候選`;
+    color=meta.color==="#ffffff"?"#334155":meta.color;
+  }else if(info.status==="INVALID"){
+    label=info.invalidRule==="W14_OVERLAP"?"推動浪取消｜1/4重疊":"推動浪鐵律未通過";
+    color="#dc2626";
+  }else if(info.current){
+    const meta=waveLabelMetaV3681(info.current);
+    const stage=/^[1-5]$/.test(String(info.current))?`第${info.current}浪`:`${String(info.current).toLowerCase()}浪`;
+    label=`${stage}候選｜${info.confidence||0}%`;
+    color=meta.color==="#ffffff"?"#334155":meta.color;
+  }
+  if(!label)return;
+
   ctx.save();
   ctx.font="900 12px system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
-  const tw=Math.min(maxW,ctx.measureText(labelText).width+20);
-  ctx.fillStyle="rgba(255,255,255,.92)";
-  ctx.strokeStyle=meta.color==="#ffffff"?meta.outlineColor:meta.color;
+  const tw=Math.min(maxW,ctx.measureText(label).width+18);
+  ctx.fillStyle=info?.status==="INVALID"?"rgba(254,242,242,.97)":"rgba(255,255,255,.94)";
+  ctx.strokeStyle=color;
   ctx.lineWidth=1.4;
   ctx.beginPath();
   if(ctx.roundRect)ctx.roundRect(x,y-16,tw,23,7);else ctx.rect(x,y-16,tw,23);
-  ctx.fill();
-  ctx.stroke();
-  ctx.fillStyle=meta.color==="#ffffff"?"#334155":meta.color;
-  ctx.textAlign="left";
-  ctx.textBaseline="middle";
-  ctx.fillText(labelText,x+9,y-4);
+  ctx.fill();ctx.stroke();
+  ctx.fillStyle=color;ctx.textAlign="left";ctx.textBaseline="middle";
+  ctx.fillText(label,x+8,y-4);
   ctx.restore();
 }
 
-function waveStageMetaV3684(label){
-  const k=String(label||"").toLowerCase();
-  const map={
-    "1":{tag:"第1浪",emoji:"🌱",title:"起漲",desc:"剛開始漲，準備轉強",detail:"低檔開始轉強",border:"#16a34a",fill:"#f0fdf4",titleColor:"#166534"},
-    "2":{tag:"第2浪",emoji:"↘️",title:"拉回",desc:"漲後拉回，測試支撐",detail:"洗掉短線賣壓",border:"#16a34a",fill:"#f0fdf4",titleColor:"#166534"},
-    "3":{tag:"第3浪",emoji:"🚀",title:"主升",desc:"正式主升，通常漲勢最強",detail:"多頭加速上攻",border:"#dc2626",fill:"#fff1f2",titleColor:"#b91c1c"},
-    "4":{tag:"第4浪",emoji:"⏸️",title:"整理",desc:"漲多整理，多頭休息",detail:"主升後獲利了結",border:"#16a34a",fill:"#f0fdf4",titleColor:"#166534"},
-    "5":{tag:"第5浪",emoji:"⚠️",title:"末升",desc:"最後衝高，注意過熱",detail:"追價風險開始升高",border:"#dc2626",fill:"#fff1f2",titleColor:"#b91c1c"},
-    "a":{tag:"A浪",emoji:"🔻",title:"初跌",desc:"多頭開始轉弱，進入修正",detail:"可能是上升趨勢結束的開始",border:"#64748b",fill:"#f8fafc",titleColor:"#334155"},
-    "b":{tag:"B浪",emoji:"↗️",title:"反彈",desc:"跌深反彈，還沒翻多",detail:"小心誘多，趨勢可能尚未翻多",border:"#2563eb",fill:"#eff6ff",titleColor:"#1d4ed8"},
-    "c":{tag:"C浪",emoji:"📉",title:"主跌",desc:"空頭主跌，賣壓加重",detail:"通常跌勢加速，風險較高",border:"#64748b",fill:"#f8fafc",titleColor:"#334155"}
-  };
-  return map[k]||null;
+function drawFineWave60HintV36715(ctx,fine,x,y,maxW=176){
+  if(!ctx||!fine)return;
+  const color=fine.status==="INVALID"?"#dc2626":fine.icon==="🚀"?"#dc2626":fine.icon==="🔥"?"#ea580c":fine.icon==="⏸️"||fine.icon==="↘️"?"#16a34a":"#334155";
+  const stage=fine.available
+    ? `${fine.label}${fine.status==="VALID"&&fine.confidence?`｜${fine.confidence}%`:""}`
+    : "60分K資料不足";
+  ctx.save();
+  ctx.font="900 11px system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+  const tw=Math.min(maxW,Math.max(86,ctx.measureText(stage).width+16));
+  ctx.fillStyle=fine.status==="INVALID"?"rgba(254,242,242,.98)":"rgba(255,255,255,.96)";
+  ctx.strokeStyle=color;ctx.lineWidth=1.4;
+  ctx.beginPath();if(ctx.roundRect)ctx.roundRect(x,y-16,tw,23,7);else ctx.rect(x,y-16,tw,23);ctx.fill();ctx.stroke();
+  ctx.fillStyle=color;ctx.textAlign="left";ctx.textBaseline="middle";
+  let text=stage;
+  while(text.length>4&&ctx.measureText(text).width>tw-14)text=text.slice(0,-2);
+  if(text!==stage)text=text.replace(/…?$/,"…");
+  ctx.fillText(text,x+7,y-4);
+  ctx.restore();
 }
 
-function drawWaveCycleInfoCardV3684(ctx,label,x=1366,y=452,w=180,h=108){
-  const P=infoPaletteV3328();
-  const meta=waveStageMetaV3684(label);
-  if(!ctx||!meta)return;
-  rrV3328(ctx,x,y,w,h,12,meta.fill,meta.border,2);
-  drawFitSingleLineStrictV3661(ctx,"🏆 波浪理論週期",x+10,y+18,w-20,{maxSize:13,minSize:11,weight:900,color:P.navy});
-  drawFitSingleLineStrictV3661(ctx,meta.tag+" "+meta.emoji+" "+meta.title,x+10,y+41,w-20,{maxSize:18,minSize:13,weight:950,color:meta.titleColor});
-  drawFitSingleLineStrictV3661(ctx,meta.desc,x+10,y+63,w-20,{maxSize:11,minSize:9,weight:850,color:P.text});
-  drawFitSingleLineStrictV3661(ctx,"（"+meta.detail+"）",x+10,y+81,w-20,{maxSize:10,minSize:8,weight:700,color:P.muted});
-  drawFitSingleLineStrictV3661(ctx,"依目前波浪候選階段顯示",x+10,y+98,w-20,{maxSize:9,minSize:8,weight:700,color:P.muted});
-}
 function drawWaveTrendOverlayV3680(ctx,bars,{
-  x,y,w,h,volY,volH,priceToY,step
+  x,y,w,h,volY,volH,priceToY,step,visibleStart=0,waveAnalysis=null
 }={}){
-  if(!ctx || !bars || bars.length<14)return null;
+  if(!ctx || !bars || bars.length<20)return null;
+  const analysis=waveAnalysis||analyzeWaveStructureV3684(bars);
+  if(!analysis)return null;
 
-  const priceVals=bars.map(b=>{
-    const hi=n(b.high), lo=n(b.low), c=n(b.close);
-    if([hi,lo,c].some(v=>v===null))return null;
-    return (hi+lo+c*2)/4;
-  });
+  if(analysis.status!=="VALID"||!analysis.sequence){
+    return {
+      status:analysis.status||"NONE",
+      current:null,
+      confidence:0,
+      invalidRule:analysis.invalidRule||null,
+      invalidReason:analysis.invalidReason||null,
+      labels:[],pivots:[]
+    };
+  }
 
-  const priceClean=priceVals.filter(v=>v!==null);
-  if(priceClean.length<6)return null;
+  const pivots=analysis.sequence.pivots||[];
+  const labels=analysis.sequence.labels||[];
+  const localIndex=globalI=>globalI-visibleStart;
+  const visible=i=>i>=0&&i<bars.length;
 
-  const pMin=Math.min(...priceClean);
-  const pMax=Math.max(...priceClean);
-  const pRange=Math.max(1,pMax-pMin);
-  const rawPivots=buildWavePivotsV3680(priceVals,{
-    minMove:Math.max(pRange*0.09,Math.abs(pMax)*0.009,0.55),
-    minGap:3,
-    maxPivots:11
-  });
-  const seq=normalizeWaveSequenceV3682(rawPivots);
-  if(!seq)return null;
-
-  const pivots=seq.pivots;
-  const labels=seq.labels;
-
-  // =========================
-  // 價格波浪：完全直線式箭頭
-  // 紅 1/3/5、綠 2/4、白 a/b/c
-  // =========================
+  // 價格波浪：只畫完整落在目前圖面視窗內的段落；分析本身仍使用完整長視窗。
   for(let i=1;i<pivots.length;i++){
-    const a=pivots[i-1], b=pivots[i];
+    const a=pivots[i-1],b=pivots[i];
+    const ia=localIndex(a.i),ib=localIndex(b.i);
+    if(!visible(ia)||!visible(ib))continue;
     const label=labels[i-1]||"";
     const meta=waveLabelMetaV3681(label);
-    const x1=x+(a.i+0.5)*step;
-    const x2=x+(b.i+0.5)*step;
-    let y1=priceToY(a.v);
-    let y2=priceToY(b.v);
+    const x1=x+(ia+.5)*step,x2=x+(ib+.5)*step;
+    let y1=priceToY(a.v),y2=priceToY(b.v);
     y1=Math.max(y+16,Math.min(y+h-16,y1));
     y2=Math.max(y+16,Math.min(y+h-16,y2));
 
-    drawWaveArrowV3680(ctx,x1,y1,x2,y2,{
-      color:meta.color,
-      outlineColor:meta.outlineColor,
-      glow:meta.glow,
-      lineWidth:4.1,
-      headSize:11,
-      alpha:.94
-    });
-
+    drawWaveArrowV3680(ctx,x1,y1,x2,y2,{color:meta.color,outlineColor:meta.outlineColor,glow:meta.glow,lineWidth:4.1,headSize:11,alpha:.94});
     const isUp=y2<y1;
     const lx=Math.max(x+18,Math.min(x+w-18,x2+(isUp?-6:6)));
     const ly=Math.max(y+18,Math.min(y+h-18,y2+(isUp?-17:17)));
     drawWaveLabelV3681(ctx,label,lx,ly,meta);
   }
 
-  // =========================
-  // 成交量波浪：使用「同一組價格波浪區段」對齊
-  // 不另創一套量能波浪編號，避免價格與量能不同步。
-  // 每個波浪轉折的量能高度採轉折日±1日平均量，降低單日尖峰干擾。
-  // =========================
+  // 成交量波浪：沿用同一組已通過鐵律的價格波浪；不另創量能浪數。
   const volVals=bars.map(b=>n(b.volume)||0);
   const vMax=Math.max(0,...volVals);
   if(vMax>0){
     const volToY=v=>volY+volH-(v/vMax)*volH;
     for(let i=1;i<pivots.length;i++){
-      const a=pivots[i-1], b=pivots[i];
+      const a=pivots[i-1],b=pivots[i];
+      const ia=localIndex(a.i),ib=localIndex(b.i);
+      if(!visible(ia)||!visible(ib))continue;
       const label=labels[i-1]||"";
       const meta=waveLabelMetaV3681(label);
-      const va=localVolumeAtV3682(volVals,a.i);
-      const vb=localVolumeAtV3682(volVals,b.i);
-      const x1=x+(a.i+0.5)*step;
-      const x2=x+(b.i+0.5)*step;
-      let y1=volToY(va), y2=volToY(vb);
+      const va=localVolumeAtV3682(volVals,ia),vb=localVolumeAtV3682(volVals,ib);
+      const x1=x+(ia+.5)*step,x2=x+(ib+.5)*step;
+      let y1=volToY(va),y2=volToY(vb);
       y1=Math.max(volY+7,Math.min(volY+volH-7,y1));
       y2=Math.max(volY+7,Math.min(volY+volH-7,y2));
-      drawWaveArrowV3680(ctx,x1,y1,x2,y2,{
-        color:meta.color,
-        outlineColor:meta.outlineColor,
-        glow:meta.glow,
-        lineWidth:2.5,
-        headSize:7.2,
-        alpha:.76
-      });
+      drawWaveArrowV3680(ctx,x1,y1,x2,y2,{color:meta.color,outlineColor:meta.outlineColor,glow:meta.glow,lineWidth:2.5,headSize:7.2,alpha:.76});
     }
   }
 
-  return {current:seq.current,labels,pivots};
+  return {
+    status:"VALID",
+    current:analysis.current,
+    confidence:analysis.confidence,
+    invalidRule:null,invalidReason:null,
+    labels,pivots
+  };
 }
-
 function drawRealKCoreV365(ctx,bars,all,start,ma20,opts){
   const P=infoPaletteV3328();
   const x=opts.x,y=opts.y,w=opts.w,h=opts.h,volY=opts.volY,volH=opts.volH,unit=opts.unit||"元";
@@ -18559,15 +19463,16 @@ function drawRealKCoreV365(ctx,bars,all,start,ma20,opts){
   if(started)ctx.stroke();ctx.restore();
   fontV3328(ctx,13,900,P.blue2);ctx.fillText("MA20",x+8,y+20);
 
-  // 波浪理論候選標註（價格＋量能）｜僅顯示層，不改ABC/Fib/N字核心
-  // V3.6.7.14：只在K線區畫箭頭與1/2/3/4/5/a/b/c標記；
-  // 「波浪候選：第X浪／a/b/c浪」提示卡移到右側 RSI 上方空白區，避免覆蓋K線。
+  // V3.6.7.15：日K主圖不再畫細部1~5，以免把壓縮日K的小轉折誤當主升細浪。
+  // 日K只保留大浪背景、ABC、量能、MA20、三叉戟；主升／整理／末升小判斷改由60分K細微浪。
   let waveOverlay=null;
   if(opts.showWaveTrend!==false){
     waveOverlay=drawWaveTrendOverlayV3680(ctx,bars,{
       x,y,w,h,volY,volH,
       priceToY:yPrice,
-      step
+      step,
+      visibleStart:start,
+      waveAnalysis:opts.waveAnalysis||null
     });
   }
 
@@ -18642,22 +19547,25 @@ function drawStockTopChartV365(ctx,report,st){
   const selected=selectStockChartBarsV365(report,st);
   const t=st.trident361;
   if(selected.bars.length>=20){
-    drawCardTitleV3328(ctx,586,213,`真實日K｜最近 ${selected.bars.length} 根＋量能＋日20MA＋波浪階段`,P.navy,27);
-    drawFitSingleLineStrictV3661(ctx,"波浪候選：紅1/3/5＝推動｜綠2/4＝調整｜白a/b/c＝修正｜下方同色箭頭＝量能節奏｜右側顯示目前週期",586,242,930,{maxSize:15,minSize:12,weight:700,color:P.muted});
+    drawCardTitleV3328(ctx,586,213,`真實日K｜動態 ${selected.bars.length} 根＋量能＋日20MA＋60分K細微浪2.1/BOS/Fib`,P.navy,27);
+    drawFitSingleLineStrictV3661(ctx,`日K只定義大浪背景｜主升小判斷改用60分K｜粗中有細／細中尋粗｜60分K仍強制檢查浪2、浪3最短、1/4不重疊`,586,242,930,{maxSize:15,minSize:10,weight:700,color:P.muted});
     const chartCore=drawRealKCoreV365(ctx,selected.bars,selected.all,selected.start,selected.ma20,{
       x:604,y:270,w:744,h:258,volY:542,volH:72,labelX:1370,labelW:176,unit:"元",
       A:st.A,B:st.B,C:st.C,close:st.close,ma20Now:st.ma,
-      ADate:st.s.fib.ADate,BDate:st.s.fib.BDate,CDate:st.s.fib.CDate,trident:t
+      ADate:st.s.fib.ADate,BDate:st.s.fib.BDate,CDate:st.s.fib.CDate,trident:t,
+      waveAnalysis:selected.waveAnalysis,
+      showWaveTrend:false
     });
     drawTridentPlainLegendV365(ctx,t,604,t?.preparatory?654:662,720);
-    // 右側 RSI 上方空白區：改為顯示「目前波浪理論週期」白話提示，不再覆蓋K線。
-    if(chartCore?.waveOverlay?.current){
-      drawWaveCycleInfoCardV3684(ctx,chartCore.waveOverlay.current,1368,452,178,108);
-    }
+
+    // V3.6.7.15：右側只顯示60分K細微浪，不再把日K局部1~5覆蓋在主圖上。
+    const dailyBg=waveStageAssistDailyBaseV3323(report);
+    const fine60=analyzeFineWave60V36717(report,dailyBg);
+    drawFineWave60HintV36716(ctx,fine60,1370,550,176);
     drawStockRsiMiniCardV3678(ctx,st.rsi);
   }else{
     drawCardTitleV3328(ctx,586,215,"結構示意圖｜逐日OHLCV不足",P.navy,28);
-    fontV3328(ctx,16,700,P.muted);ctx.fillText("未取得至少20根完整日K時不假裝畫真實K線；部署含dailySeries的個股Worker後會自動升級。",586,246);
+    fontV3328(ctx,16,700,P.muted);ctx.fillText("未取得至少20根完整日K時不假裝畫真實K線；部署含dailySeries的個股Worker後會自動升級；60分K細微浪2.1/BOS/Fib另需 Worker V2.9.13+。",586,246);
     const gx=748,gy=300,gw=550,gh=286,plotRight=gx+gw;
     const vals=[st.A,st.B,st.C,st.close,st.ma];const nums=vals.map(n).filter(v=>v!==null);let minV=Math.min(...nums),maxV=Math.max(...nums);if(!Number.isFinite(minV)||!Number.isFinite(maxV)||minV===maxV){minV=0;maxV=1;}const pad=Math.max((maxV-minV)*.1,Math.abs(maxV)*.02||1);minV-=pad;maxV+=pad;
     if(st.ma!==null)drawPlainLevelV3329(ctx,gx,plotRight,chartYV3328(st.ma,minV,maxV,gy,gh),P.blue2,[6,5],2);
@@ -18742,7 +19650,7 @@ function renderStockInfographicV3328(report){
   fontV3328(ctx,22,900,"#fff","center");ctx.fillText("報告製作 By.石頭少爺",1402,52);
   fontV3328(ctx,18,800,"#fff","center");ctx.fillText("圖片產生時間",1402,83);
   fontV3328(ctx,19,900,"#fff","center");ctx.fillText(reportGeneratedAt().replace("（台灣時間）",""),1402,115);
-  fontV3328(ctx,16,700,"#dbeafe","center");ctx.fillText("V3.6.7.14｜波浪週期說明版",1402,141);
+  fontV3328(ctx,16,700,"#dbeafe","center");ctx.fillText("V3.6.7.17｜細微浪2.1＋BOS＋Fib",1402,141);
 
   // ===== 上半部：ABC + 結構示意圖 =====
   rrV3328(ctx,24,174,520,520,14,P.white,P.blue,2);
@@ -18819,7 +19727,6 @@ function renderStockInfographicV3328(report){
   fontV3328(ctx,32,950,P.blue2);ctx.fillText(st.C!==null?"C 回檔":"等有效 C",702,2692);fontV3328(ctx,30,900,P.navy);ctx.fillText("→",910,2692);
   fontV3328(ctx,32,950,P.red);ctx.fillText("再突破 B",958,2692);
   fontV3328(ctx,28,900,P.navy,"center");ctx.fillText("＝ 完整 N 字確認。",580,2762);
-  drawFitSingleLineStrictV3661(ctx,"🏆 波浪理論週期🌊 起漲 → 拉回 → 主升 → 整理 → 末升 → 初跌 → 反彈 → 主跌",276,2790,850,{maxSize:18,minSize:14,weight:850,color:P.navy});
 
   // 右下角警語：完整保留原文字，只搬移位置；以淡紅底＋紅框確保辨識度。
   rrV3328(ctx,warningX,warningY,warningW,warningH,12,"#fff7f7",P.red,2);
@@ -19431,6 +20338,9 @@ async function analyzeStock(){
     // V3.6.6.1 Replay／三叉戟-ready gate：Worker若有逐日序列，前端直接保留並用於真實日K與三叉戟；
     // 目前沒有就保持 null，不新增任何API請求，也不假裝已完成歷史回測。
     const dailySeries=data?.dailySeries||data?.dailyBars||data?.history?.daily||data?.candles||data?.ohlcv||null;
+    // V3.6.7.15：60分K細微浪資料；若Worker尚未升級則保持null，絕不以日K冒充。
+    const intraday60Series=data?.intraday60Series||data?.intraday60||data?.history?.intraday60||null;
+    const intraday60Meta=data?.intraday60Meta||null;
 
     lastReportData={
 
@@ -19442,13 +20352,13 @@ async function analyzeStock(){
 
       monthlyPass,startMonthConfirmed,monthlyBoundaryAmbiguous,monthlyStartConfirmationSource,monthlyStatus,
 
-      fib,tacticalN,volume,structure,tactical,dailySeries
+      fib,tacticalN,volume,structure,tactical,dailySeries,intraday60Series,intraday60Meta
 
     };
 
     set("stockName",hasRealStockName(name,code)?name:`股票代號 ${code}`);
 
-    set("stockMeta",`${code}｜${market}｜${source}｜後端分析 ${version}｜前端 V3.6.7.9`);
+    set("stockMeta",`${code}｜${market}｜${source}｜後端分析 ${version}｜前端 V3.6.7.17`);
 
     set("closeDate",`最新交易日：${datefmt(closeDate)}`);
 
