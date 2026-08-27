@@ -941,6 +941,8 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
 // 三叉戟、量價位置化、動態防守、OHLCV Research Gate與既有圖片尺寸全部保留。
 // 顯示更新：個股與大盤真實日K加入趨勢通道箭頭。
 // 台股配色：紅＝上升、綠＝下降、黃＝盤整。
+// V3.7.0 最終語意收斂：WAIT_AB 時統一「新循環初始化／等待A→B」；
+// 新B尚未形成前不提前談C、正式B突破、突破日量能或突破K品質。核心公式與 Worker 均不變。
 // 通道永遠先畫在K棒／ABC／價位文字的下層，避免覆蓋文字。
 // 不新增艾略特1～5浪或ABC修正浪計數。
 // ========================================================================
@@ -13167,10 +13169,13 @@ function entryQualityReasonsV328(report,s,monthlyStatus,nStatus,nPhase,fibTarget
   const reasons=[];
 
   const gap=n(s?.maCtx?.gapPct),rsi=n(report?.dailyRsi);
+  const waitAB=n(s?.fib?.A)===null||n(s?.fib?.B)===null;
 
   if(monthlyStatus!=="PASS")reasons.push(`MONTHLY_STATUS=${monthlyStatus}`);
 
-  if(nStatus!=="confirmed")reasons.push(`N_STATUS=${String(nStatus||"").toUpperCase()}，正式N字尚未完成`);
+  if(nStatus!=="confirmed")reasons.push(waitAB
+    ?"N字狀態：新循環初始化｜等待A→B｜正式N字尚未建立"
+    :`N_STATUS=${String(nStatus||"").toUpperCase()}，正式N字尚未完成`);
 
   if(nPhase==="WEAKENING")reasons.push("已跌回B下方，突破品質轉弱");
 
@@ -14811,7 +14816,11 @@ function abcBreakoutTeachingCheckV342(report){
     else if(brVol>=1){checks.push({icon:"🟡",title:"量增",text:`Fib突破日相對量 ${fmt(brVol,2)} 倍，量能有增加但未達1.3倍強確認參考`});}
     else{checks.push({icon:"⚠️",title:"量增",text:`Fib突破日相對量 ${fmt(brVol,2)} 倍，屬量縮／低量突破，後續站穩更重要`});score-=1;}
   }else{
-    checks.push({icon:"⚪",title:"量增",text:nStatus!=="confirmed"?"尚未發生正式B突破，暫無正式突破日量能可評分":"已確認B突破，但目前沒有可驗證的Fib突破日相對量；這一項不加分也不扣分"});
+    checks.push({icon:"⚪",title:"量增",text:waitAB
+      ?"新B尚未形成，因此目前不存在正式B突破日，暫不評分"
+      :nStatus!=="confirmed"
+        ?"尚未發生正式B突破，暫無正式突破日量能可評分"
+        :"已確認B突破，但目前沒有可驗證的Fib突破日相對量；這一項不加分也不扣分"});
   }
 
   if(!waitAB&&candle&&bodyChangePct!==null){
@@ -14824,7 +14833,11 @@ function abcBreakoutTeachingCheckV342(report){
       checks.push({icon:"⚠️",title:"線實",text:`突破K收盤品質偏弱${bodyChangePct!==null?`（實體漲幅 ${fmt(bodyChangePct,2)}%）`:""}${longUpper?"，且長上影明顯":""}${closePos==="low"?"，收盤靠近日低":""}`});score-=1;
     }
   }else{
-    checks.push({icon:"⚪",title:"線實",text:nStatus!=="confirmed"?"尚未發生正式B突破，目前沒有正式突破K可檢核":"已確認B突破，但目前缺少可對應的正式突破K完整OHLC；不硬判突破K品質"});
+    checks.push({icon:"⚪",title:"線實",text:waitAB
+      ?"新B尚未形成，因此目前不存在正式B突破K，暫不檢核"
+      :nStatus!=="confirmed"
+        ?"尚未發生正式B突破，目前沒有正式突破K可檢核"
+        :"已確認B突破，但目前缺少可對應的正式突破K完整OHLC；不硬判突破K品質"});
   }
 
   // 月20MA斜率與「月線上彎」不是同一件事；目前 Worker 沒有月20MA歷史斜率序列。
@@ -16002,7 +16015,11 @@ function appendWaveStageSectionV3323(lines,report,stage=null){
   const maText=w.ma!==null?`日20MA＝${fmt(w.ma)} 元`:"日20MA";
   const bFormallyBroken=w.nStatus==="confirmed";
   const bCurrentlyAbove=w.B!==null&&w.close!==null&&w.close>w.B;
-  if(bFormallyBroken){
+  if(w.B===null){
+    lines.push(`🟢 如果：先守住${maText}與既有下方支撐，之後高檔整理／回測形成可驗證的新A與新B → 才進入後續C與正式突破檢核。`);
+    lines.push(`🟡 如果：新B尚未形成，價格只是在高檔震盪／整理 → 先觀察是否出現新的有效Swing，不提前指定B，也不提前談突破。`);
+    lines.push(`🔴 如果：在新A／B尚未建立前，既有支撐陸續失守且${maText}同步轉弱 → 降低趨勢評級，繼續等待新的可驗證結構。`);
+  }else if(bFormallyBroken){
     lines.push(`🟢 如果：正式突破後能守住${bText}，且${maText}維持向上／不轉弱，整理後再創高 → 上升趨勢延續。`);
     lines.push(`🟡 如果：高檔震盪、量縮整理，但已突破的${bText}與${maText}都能維持 → 視為上升趨勢中的整理。`);
     lines.push(`🔴 如果：高檔轉弱特徵增加，又重新跌破${bText}與${maText} → 才提高『趨勢轉弱／高檔風險』警覺。`);
@@ -16360,7 +16377,7 @@ function buildReportTextV326(report){
 
   };
 
-  lines.push("📘 石頭少爺分析助手｜GitHub 前端 V3.7.0｜純粹趨勢通道箭頭版｜最終狀態一致性");
+  lines.push("📘 石頭少爺分析助手｜GitHub 前端 V3.7.0｜純粹趨勢通道箭頭版｜最終語意收斂");
   lines.push("🧭 趨勢方向改以K線通道箭頭呈現：紅↗上升／綠↘下降／黃→盤整；不使用1～5浪或ABC修正浪計數。 ");
 
   lines.push(`報告產出時間：${generatedAt}`);
