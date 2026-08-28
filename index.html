@@ -527,7 +527,7 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
 
     <p>月線波段條件判斷＋固定倍數目標價＋費波那契 N字分析</p>
 
-    <span class="version-pill">前端 V3.7.1.8｜趨勢方向分離・通道箭頭強化版｜顯示一致性收尾｜個股＋大盤真實日K｜ABC／N字／突破品質2.0／三叉戟／OHLCV Research Gate完整保留｜Worker V2.9.12維持不變</span>
+    <span class="version-pill">前端 V3.7.1.9｜趨勢方向分離・通道箭頭強化版｜顯示一致性收尾｜個股＋大盤真實日K｜ABC／N字／突破品質2.0／三叉戟／OHLCV Research Gate完整保留｜Worker V2.9.12維持不變</span>
 
   </div>
 
@@ -930,7 +930,7 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
   </div>
 </div>
 
-<footer class="footer">石頭少爺 Agent｜GitHub 前端 V3.7.1.8｜趨勢方向分離・通道箭頭強化版｜顯示一致性收尾｜V3.6.7.9 穩定核心完整沿用｜個股＋大盤真實日K加入趨勢通道箭頭｜紅色上升／綠色下降／黃色盤整｜ABC／Fib／N字／突破品質2.0／三叉戟／OHLCV Research Gate核心不變｜Worker V2.9.12維持不變<br>技術分析僅供研究與決策參考，不構成投資建議。<br>本版重點：回歸V3.6.7.9純粹架構；不做浪號計數，個股與大盤K線以趨勢通道箭頭呈現方向，並維持文字避讓與既有固定版型。</footer>
+<footer class="footer">石頭少爺 Agent｜GitHub 前端 V3.7.1.9｜趨勢方向分離・通道箭頭強化版｜顯示一致性收尾｜V3.6.7.9 穩定核心完整沿用｜個股＋大盤真實日K加入趨勢通道箭頭｜紅色上升／綠色下降／黃色盤整｜ABC／Fib／N字／突破品質2.0／三叉戟／OHLCV Research Gate核心不變｜Worker V2.9.12維持不變<br>技術分析僅供研究與決策參考，不構成投資建議。<br>本版重點：回歸V3.6.7.9純粹架構；不做浪號計數，個股與大盤K線以趨勢通道箭頭呈現方向，並維持文字避讓與既有固定版型。</footer>
 
 <script>
 
@@ -19168,7 +19168,7 @@ function renderStockInfographicV3328(report){
   const bullets=[`🚦 現在：${plain362.bias.icon} ${plain362.bias.label}｜一句話：${plain362.summary}`,`👤 空手者：${plain362.nonHolderAction}｜${plain362.nonHolderNote}`,`💼 持有者：${plain362.holderAction}｜${plain362.holderNote}`,`${st.breakoutLife360.icon} 突破確認：${st.breakoutLife360.label}｜${st.breakoutLife360.progress}`,`${q360.icon} 品質：${q360.key==="WAIT"?q360.label:`${q360.label}｜${q360.scoreText}`}｜${qPlus}`,`⚠️ 主要風險：${qRisk}`,`${st.volumePosition.icon} 量價：${st.volumePosition.label}${st.vol!==null?`｜目前 ${fmt(st.vol,2)}倍`:""}${st.volumePosition.brVol!==null?`｜突破日 ${fmt(st.volumePosition.brVol,2)}倍`:""}｜RSI ${st.rsi===null?"-":fmt(st.rsi)}`,b360?.resistance?`⬆️ 壓力：${b360.resistance.text}｜${b360.resistance.strength}`:(cUp?`⬆️ 壓力：${fmt(cUp.avg)} 元｜${cUp.strength}`:(up?`⬆️ 壓力：${up.label} ${fmt(up.value)} 元`:"⬆️ 壓力：等待新關卡")),...defenseBullets370];
   // V3.6.7.9：Research Gate 通過且目前有型態時，仍用獨立白話驗證卡；不把研究結果混進突破品質分數。
   const researchCard3673=researchImageCardDataV3673(st.research367);
-  // V3.7.1.7：三叉戟總結＋預備線提示不再塞在 C 區最底部，
+  // V3.7.1.9：三叉戟總結＋預備線提示不再塞在 C 區最底部，
   // 改放到下方「記住口訣」左側空白區，避免內容超出 C 卡片。
   const footerTridentText3717=tridentImageTextV361(st.trident361);
   const footerPrepHint3717=st.trident361?.preparatory
@@ -19288,7 +19288,7 @@ function renderMarketInfographicV3328(data){
   rrV3328(ctx,2,2,1596,2396,18,P.white,P.blue,3);
   drawHeaderTitleV3328(ctx,"📈 大盤先懂","現在市場走到哪一步？");
   rrV3328(ctx,26,82,1190,72,10,P.navy,null);fontV3328(ctx,31,900,"#facc15");ctx.fillText("臺灣加權股價指數（TAIEX）",48,128);fontV3328(ctx,24,800,"#fff");ctx.fillText(`｜最新交易日 ${datefmt(data.closeDate)}｜資料來源：${data.source||"TWSE Official"}`,500,128);
-  rrV3328(ctx,1232,18,340,136,12,P.navy,null);fontV3328(ctx,22,900,"#fff","center");ctx.fillText("報告製作 By.石頭少爺",1402,52);fontV3328(ctx,18,800,"#fff","center");ctx.fillText("圖片產生時間",1402,83);fontV3328(ctx,19,900,"#fff","center");ctx.fillText(reportGeneratedAt().replace("（台灣時間）",""),1402,115);fontV3328(ctx,17,700,"#dbeafe","center");ctx.fillText("V3.7.1.8｜大盤趨勢通道版",1402,141);
+  rrV3328(ctx,1232,18,340,136,12,P.navy,null);fontV3328(ctx,22,900,"#fff","center");ctx.fillText("報告製作 By.石頭少爺",1402,52);fontV3328(ctx,18,800,"#fff","center");ctx.fillText("圖片產生時間",1402,83);fontV3328(ctx,19,900,"#fff","center");ctx.fillText(reportGeneratedAt().replace("（台灣時間）",""),1402,115);fontV3328(ctx,17,700,"#dbeafe","center");ctx.fillText("V3.7.1.9｜大盤趨勢通道版",1402,141);
 
   rrV3328(ctx,24,174,520,520,14,P.white,P.blue,2);drawCardTitleV3328(ctx,48,215,"📖 ABC 是這套分析的核心：",P.navy,30);drawWrapV3328(ctx,"A＝起漲點、B＝前波高點、C＝B回檔後由Pivot規則正式確認的回檔低點。",48,255,468,31,3,{size:21,weight:650,color:P.text});
   drawAbcValueRowV3329(ctx,48,365,466,"A",P.green,"起漲點",st.A,st.fib.ADate,"點");
@@ -19328,6 +19328,8 @@ function renderMarketInfographicV3328(data){
 
   rrV3328(ctx,800,lowerY,776,lowerH,14,P.white,P.blue,2);
   drawCardTitleV3328(ctx,824,lowerY+42,"C. 現在能不能進？持有要不要出？",P.navy,25);
+  // V3.7.1.9：大盤圖片報告 C 區塊不再顯示三叉戟總結／預備線提示，
+  // 全部統一搬到下方「記住口訣」區塊，避免資訊重複與擠出框外。
   const bullets=[
     `📈 大盤環境：${st.env.state}｜風險${st.env.risk}`,
     `🧬 N字：${progress.combined}`,
@@ -19347,15 +19349,17 @@ function renderMarketInfographicV3328(data){
   bullets.forEach(b=>{ky=drawWrapV3328(ctx,`• ${b}`,824,ky,720,31,2,{size:20,weight:750,color:P.text})+12;});
   drawWrapV3328(ctx,"⚠️ 技術分析僅供研究與決策參考，風險自負。",824,lowerY+lowerH-50,720,28,2,{size:18,weight:800,color:P.red});
 
-  rrV3328(ctx,24,2170,1552,220,14,"#f8fbff",P.blue,2);
-  fontV3328(ctx,30,900,P.navy);ctx.fillText("☁️ 記住口訣：",58,2232);
-  fontV3328(ctx,34,950,P.green);ctx.fillText("A 起漲",300,2232);fontV3328(ctx,32,900,P.navy);ctx.fillText("→",470,2232);
-  fontV3328(ctx,34,950,P.orange);ctx.fillText("B 前高",530,2232);fontV3328(ctx,32,900,P.navy);ctx.fillText("→",710,2232);
-  fontV3328(ctx,34,950,P.blue2);ctx.fillText(st.C!==null?"C 回檔":"等有效 C",770,2232);fontV3328(ctx,32,900,P.navy);ctx.fillText("→",1015,2232);
-  fontV3328(ctx,34,950,P.red);ctx.fillText("再突破 B",1080,2232);
-  fontV3328(ctx,29,900,P.navy,"center");ctx.fillText("＝ 完整 N 字確認",800,2300);
-  drawFitSingleLineStrictV3661(ctx,footerMarketTridentText3718,58,2342,1045,{maxSize:17,minSize:13,weight:850,color:P.navy});
-  drawFitSingleLineStrictV3661(ctx,footerMarketPrepHint3718,58,2370,1045,{maxSize:16,minSize:12,weight:800,color:"#7c3aed"});
+  // V3.7.1.9：口訣框加高，統一容納「大盤三叉戟壓／撐／預」與「預備線提示」兩行，避免再擠出框外。
+  const footerBoxY3719=2160,footerBoxH3719=236;
+  rrV3328(ctx,24,footerBoxY3719,1552,footerBoxH3719,14,"#f8fbff",P.blue,2);
+  fontV3328(ctx,30,900,P.navy);ctx.fillText("☁️ 記住口訣：",58,2226);
+  fontV3328(ctx,34,950,P.green);ctx.fillText("A 起漲",300,2226);fontV3328(ctx,32,900,P.navy);ctx.fillText("→",470,2226);
+  fontV3328(ctx,34,950,P.orange);ctx.fillText("B 前高",530,2226);fontV3328(ctx,32,900,P.navy);ctx.fillText("→",710,2226);
+  fontV3328(ctx,34,950,P.blue2);ctx.fillText(st.C!==null?"C 回檔":"等有效 C",770,2226);fontV3328(ctx,32,900,P.navy);ctx.fillText("→",1015,2226);
+  fontV3328(ctx,34,950,P.red);ctx.fillText("再突破 B",1080,2226);
+  fontV3328(ctx,29,900,P.navy,"center");ctx.fillText("＝ 完整 N 字確認",800,2292);
+  drawFitSingleLineStrictV3661(ctx,footerMarketTridentText3718,58,2336,1045,{maxSize:17,minSize:13,weight:850,color:P.navy});
+  drawFitSingleLineStrictV3661(ctx,footerMarketPrepHint3718,58,2366,1045,{maxSize:16,minSize:12,weight:800,color:"#7c3aed"});
   return canvas;
 }
 
