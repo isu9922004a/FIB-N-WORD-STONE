@@ -527,7 +527,7 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
 
     <p>月線波段條件判斷＋固定倍數目標價＋費波那契 N字分析</p>
 
-    <span class="version-pill">前端 V3.7.3.2｜點火品質小修版｜純粹趨勢通道＋短線轉向＋量價發動｜ABC／N字／突破品質2.0／三叉戟／OHLCV Research Gate完整保留｜Worker V2.9.12維持不變</span>
+    <span class="version-pill">前端 V3.7.3.3｜量比口徑收尾版｜純粹趨勢通道＋短線轉向＋量價發動｜ABC／N字／突破品質2.0／三叉戟／OHLCV Research Gate完整保留｜Worker V2.9.12維持不變</span>
 
   </div>
 
@@ -926,11 +926,11 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
       <a id="imageDownloadLink" class="image-save-link" href="#" download>💾 儲存 PNG</a>
       <button id="imageShareButton" class="image-share-btn" type="button" onclick="shareInfographicV3328()">📤 分享圖片</button>
     </div>
-    <div id="imagePreviewNote" class="image-preview-note">圖片由目前分析資料直接產生；V3.7.3.2 沿用個股 PNG 1152×2048（9:16）與大盤 PNG 1024×1536（2:3）。個股與大盤的趨勢通道箭頭維持原邏輯；個股「發動確認」沿用白話分級，並新增量大時的K棒價格品質過濾；底層仍只用已完成 dailySeries，依收盤是否站上前兩天高點／跌破前兩天低點、3日量比0.8×量縮與1.3×放量，以及既有趨勢／ABC防守判讀；3日量比放大不再自動視為向上點火，會再檢查收盤強弱、日內收盤位置與長上影。技術上沿用三盤規則，但主畫面改用「短線往上轉／往下轉／還沒選方向」。Worker V2.9.12、ABC／Fib／N字、突破品質2.0、三叉戟與嚴格時間證據Gate皆不修改。</div>
+    <div id="imagePreviewNote" class="image-preview-note">圖片由目前分析資料直接產生；V3.7.3.3 沿用個股 PNG 1152×2048（9:16）與大盤 PNG 1024×1536（2:3）。個股與大盤的趨勢通道箭頭維持原邏輯；個股「發動確認」沿用白話分級，並新增量大時的K棒價格品質過濾；底層仍只用已完成 dailySeries，依收盤是否站上前兩天高點／跌破前兩天低點、短線3日量比0.8×量縮與1.3×放量，以及既有趨勢／ABC防守判讀；短線3日量比放大不再自動視為向上點火，會再檢查收盤強弱、日內收盤位置與長上影。技術上沿用三盤規則，但主畫面改用「短線往上轉／往下轉／還沒選方向」；「短線3日量比」只描述最新一日相對前3日均量，「Fib B突破日20日量比」則是正式突破B當日相對20日基準的歷史證據，兩者不可混用。Worker V2.9.12、ABC／Fib／N字、突破品質2.0、三叉戟與嚴格時間證據Gate皆不修改。</div>
   </div>
 </div>
 
-<footer class="footer">石頭少爺 Agent｜GitHub 前端 V3.7.3.2｜點火品質小修版｜V3.7.3.1 完整母版沿用｜純粹趨勢通道＋短線轉向＋3日量比＋點火價格品質過濾｜ABC／Fib／N字／突破品質2.0／三叉戟／OHLCV Research Gate核心不變｜Worker V2.9.12維持不變<br>技術分析僅供研究與決策參考，不構成投資建議。<br>本版重點：回歸V3.6.7.9純粹架構；不做浪號計數，個股與大盤K線以趨勢通道箭頭呈現方向，並維持文字避讓與既有固定版型。</footer>
+<footer class="footer">石頭少爺 Agent｜GitHub 前端 V3.7.3.3｜量比口徑收尾版｜V3.7.3.2 完整母版沿用｜純粹趨勢通道＋短線轉向＋短線3日量比＋點火價格品質過濾＋Fib突破日20日量比口徑分離｜ABC／Fib／N字／突破品質2.0／三叉戟／OHLCV Research Gate核心不變｜Worker V2.9.12維持不變<br>技術分析僅供研究與決策參考，不構成投資建議。<br>本版重點：回歸V3.6.7.9純粹架構；不做浪號計數，個股與大盤K線以趨勢通道箭頭呈現方向，並維持文字避讓與既有固定版型。</footer>
 
 <script>
 
@@ -14852,15 +14852,15 @@ function abcBreakoutTeachingCheckV342(report){
 
   if(!waitAB&&brVol!==null){
     available++;
-    if(brVol>=1.3){checks.push({icon:"✅",title:"量增",text:`Fib突破日相對量 ${fmt(brVol,2)} 倍，達到1.3倍以上的量增參考`});score+=1;}
-    else if(brVol>=1){checks.push({icon:"🟡",title:"量增",text:`Fib突破日相對量 ${fmt(brVol,2)} 倍，量能有增加但未達1.3倍強確認參考`});}
-    else{checks.push({icon:"⚠️",title:"量增",text:`Fib突破日相對量 ${fmt(brVol,2)} 倍，屬量縮／低量突破，後續站穩更重要`});score-=1;}
+    if(brVol>=1.3){checks.push({icon:"✅",title:"量增",text:`Fib B突破日20日量比 ${fmt(brVol,2)} 倍，達到1.3倍以上的量增參考`});score+=1;}
+    else if(brVol>=1){checks.push({icon:"🟡",title:"量增",text:`Fib B突破日20日量比 ${fmt(brVol,2)} 倍，量能有增加但未達1.3倍強確認參考`});}
+    else{checks.push({icon:"⚠️",title:"量增",text:`Fib B突破日20日量比 ${fmt(brVol,2)} 倍，屬量縮／低量突破，後續站穩更重要`});score-=1;}
   }else{
     checks.push({icon:"⚪",title:"量增",text:waitAB
       ?"新B尚未形成，因此目前不存在正式B突破日，暫不評分"
       :nStatus!=="confirmed"
         ?"尚未發生正式B突破，暫無正式突破日量能可評分"
-        :"已確認B突破，但目前沒有可驗證的Fib突破日相對量；這一項不加分也不扣分"});
+        :"已確認B突破，但目前沒有可驗證的Fib B突破日20日量比；這一項不加分也不扣分"});
   }
 
   if(!waitAB&&candle&&bodyChangePct!==null){
@@ -15011,7 +15011,7 @@ function technicalSopV342(report){
   steps.push({icon:nStatus==="confirmed"?"🟢":nStatus==="failed"?"🔴":"🟡",title:"ABC／N字",text:`${e.structureLabel}${B!==null?`｜B＝${fmt(B)} 元`:""}；完整N字與單純站上前高分開判定。`});
   const kCheck=teach.checks.find(x=>x.title==="線實");
   steps.push({icon:kCheck?.icon||"⚪",title:"K線",text:kCheck?.text||"K棒資料不足；不硬判長紅／長黑品質。"});
-  steps.push({icon:vol.icon,title:"成交量",text:`${vol.label}${teach.brVol!==null?`｜Fib突破日相對量 ${fmt(teach.brVol,2)} 倍`:""}；高檔放量要看價格能否續強，不能只看到量大就當利多。`});
+  steps.push({icon:vol.icon,title:"成交量",text:`${vol.label}${teach.brVol!==null?`｜Fib B突破日20日量比 ${fmt(teach.brVol,2)} 倍`:""}；高檔放量要看價格能否續強，不能只看到量大就當利多。`});
   steps.push({icon:pattern.icon,title:"型態",text:`${pattern.label}｜沒有完整轉折點與頸線序列時，只做型態品質輔助，不硬命名W底、M頭、頭肩底／頂、旗形或三角形。`});
   steps.push({icon:"🛡️",title:"支撐壓力",text:`往上先看：${sp.textUp}｜往下先看：${sp.textDown}。角色會隨突破／跌破改變，不把所有線永遠固定叫支撐或壓力。`});
   steps.push({icon:ri.icon,title:"指標",text:`日RSI 5T＝${n(report?.dailyRsi)===null?"-":fmt(report.dailyRsi,2)}｜${ri.label}；RSI只做動能／過熱提醒。MACD、KD歷史序列目前未回傳，所以本版不虛構訊號。`});
@@ -15204,7 +15204,7 @@ function volumePositionContextV350(report){
   }else if(breakout&&brVol!==null&&brVol>=1.3){
     key="BREAKOUT_EXTENSION_VOLUME";icon="🟢";
     label=vol===null?"突破後延伸量能":vol>=1.5?"延伸量能放大":vol>=0.8?"延伸量能正常":"延伸量能偏縮";
-    text=`目前相對量 ${vol===null?"-":fmt(vol,2)} 倍｜突破日相對量 ${fmt(brVol,2)} 倍；突破日攻擊量只保留為歷史確認證據，當前量能用來描述現在的延伸／回測狀態。`;
+    text=`目前20日量比 ${vol===null?"-":fmt(vol,2)} 倍｜Fib B突破日20日量比 ${fmt(brVol,2)} 倍；突破日攻擊量只保留為歷史確認證據，當前量能用來描述現在的延伸／回測狀態。`;
   }else if(pullback&&vol<0.8&&down){
     key="PULLBACK_DRY";icon="🟢";label="量縮回檔";text=`相對量 ${fmt(vol,2)} 倍，回檔時賣壓沒有明顯擴大；接下來看支撐是否守住並重新轉強。`;
   }else if(pullback&&vol>=1.5&&down){
@@ -15533,8 +15533,8 @@ function breakoutQualityV360(report){
   const brVol=n(t?.fibBreakoutVolume);
   if(brVol!==null){
     const ratio=brVol>=1.5?1:brVol>=1.2?0.82:brVol>=1?0.62:brVol>=0.8?0.42:0.12;
-    dims.push(qualityDimV360("VOLUME","突破量",1.5,ratio,`突破日相對量 ${fmt(brVol,2)} 倍｜${brVol>=1.5?"攻擊量明顯":brVol>=1.2?"量能有確認":brVol>=0.8?"量能普通":"量縮突破，後續驗證權重提高"}`));
-  }else dims.push(qualityDimV360("VOLUME","突破量",1.5,0,"沒有可驗證的Fib突破日相對量，本項不計分",false));
+    dims.push(qualityDimV360("VOLUME","突破量",1.5,ratio,`Fib B突破日20日量比 ${fmt(brVol,2)} 倍｜${brVol>=1.5?"攻擊量明顯":brVol>=1.2?"量能有確認":brVol>=0.8?"量能普通":"量縮突破，後續驗證權重提高"}`));
+  }else dims.push(qualityDimV360("VOLUME","突破量",1.5,0,"沒有可驗證的Fib B突破日20日量比，本項不計分",false));
 
   // 4) 突破K：實體、收盤位置、上影一起看。
   const c=br?.candle||null;
@@ -15850,7 +15850,7 @@ function buildLaunchSignalV3730(report,state=null){
     .filter(x=>Number.isFinite(x?.close)&&Number.isFinite(x?.high)&&Number.isFinite(x?.low)&&Number.isFinite(x?.volume));
   const fallback={
     key:"NOT_READY",icon:"⚪",label:"資料還不夠",color:"gray",
-    threeKey:"NONE",threeText:"短線方向：資料不足",volumeKey:"NONE",volumeText:"3日量比：資料不足",
+    threeKey:"NONE",threeText:"短線方向：資料不足",volumeKey:"NONE",volumeText:"短線3日量比：資料不足",
     volumeRatio:null,recentCave:false,trendKey:"UNKNOWN",short:"至少需要4根完整日K才能判斷",
     detail:"逐日OHLCV不足，不提前判定短線轉向或量價發動。"
   };
@@ -15870,14 +15870,14 @@ function buildLaunchSignalV3730(report,state=null){
 
   const avg3=avgFiniteV3730(bars.slice(-4,-1).map(x=>x.volume));
   const volumeRatio=avg3&&avg3>0?latest.volume/avg3:null;
-  let volumeKey="NONE",volumeText="3日量比：前三日均量不足";
+  let volumeKey="NONE",volumeText="短線3日量比：前三日均量不足";
   if(volumeRatio!==null){
-    if(volumeRatio>=1.3){volumeKey="SURGE";volumeText=`🔥 量能明顯放大｜3日量比 ${fmt(volumeRatio,2)}×` ;}
-    else if(volumeRatio<0.8){volumeKey="CAVE";volumeText=`🕳️ 量縮整理｜3日量比 ${fmt(volumeRatio,2)}×`;}
-    else{volumeKey="NORMAL";volumeText=`📊 量能普通｜3日量比 ${fmt(volumeRatio,2)}×`;}
+    if(volumeRatio>=1.3){volumeKey="SURGE";volumeText=`🔥 量能明顯放大｜短線3日量比 ${fmt(volumeRatio,2)}×` ;}
+    else if(volumeRatio<0.8){volumeKey="CAVE";volumeText=`🕳️ 量縮整理｜短線3日量比 ${fmt(volumeRatio,2)}×`;}
+    else{volumeKey="NORMAL";volumeText=`📊 量能普通｜短線3日量比 ${fmt(volumeRatio,2)}×`;}
   }
 
-  // V3.7.3.2：3日量比放大只代表「量先出來」，不直接等同向上點火。
+  // V3.7.3.3：短線3日量比放大只代表「量先出來」，不直接等同向上點火。
   // 再檢查價格是否有配合：前一日漲跌、K棒收高、日內收盤位置與長上影。
   const prevClose=Number.isFinite(p1?.close)?p1.close:null;
   const latestOpen=Number.isFinite(latest?.open)?latest.open:null;
@@ -15935,33 +15935,33 @@ function buildLaunchSignalV3730(report,state=null){
   }else if(trendKey==="UP"&&threeUp&&(volumeKey==="SURGE"||pullbackEvidence)){
     key="REATTACK";icon="🚀";label="再次發動";color="green";
     const evidence=[];
-    if(recentCave)evidence.push(`近5日曾量縮到3日量比 ${fmt(recentCave.ratio,2)}×`);
+    if(recentCave)evidence.push(`近5日曾量縮到短線3日量比 ${fmt(recentCave.ratio,2)}×`);
     if(nPhase==="RETESTING"||gate?.retestHeld)evidence.push("已有整理／回測證據");
-    if(volumeKey==="SURGE")evidence.push(`今天3日量比 ${fmt(volumeRatio,2)}×放大`);
+    if(volumeKey==="SURGE")evidence.push(`今天短線3日量比 ${fmt(volumeRatio,2)}×放大`);
     short=`原本趨勢往上，今天又站上前兩天高點${evidence.length?`；${evidence.join("＋")}`:""}`;
   }else if(trendKey==="UP"&&threeUp){
     key="IGNITION";icon="🔥";label="已有點火跡象";color="orange";
-    short=`價格先站上前兩天高點，但3日量比${volumeRatio===null?"資料不足":`只有 ${fmt(volumeRatio,2)}×`}；屬「價格先到、量待確認」`;
+    short=`價格先站上前兩天高點，但短線3日量比${volumeRatio===null?"資料不足":`只有 ${fmt(volumeRatio,2)}×`}；屬「價格先到、量待確認」`;
   }else if(trendKey==="UP"&&volumeKey==="SURGE"&&priceQualityPositive){
     key="IGNITION";icon="🔥";label="上攻點火觀察";color="orange";
     const positives=[];
     if(closeUp)positives.push("收盤高於前一日");
     if(bullishBody)positives.push("K棒收高");
     if(closePos>=0.60)positives.push("收盤位於日內中上方");
-    short=`3日量比 ${fmt(volumeRatio,2)}×明顯放大，且${positives.slice(0,2).join("＋")||"價格表現偏強"}；尚未站上前兩天高點，先列上攻點火觀察`;
+    short=`短線3日量比 ${fmt(volumeRatio,2)}×明顯放大，且${positives.slice(0,2).join("＋")||"價格表現偏強"}；尚未站上前兩天高點，先列上攻點火觀察`;
   }else if(trendKey==="UP"&&volumeKey==="SURGE"){
     key="VOLUME_WAIT";icon="🟡";label="量能放大｜價格待確認";color="orange";
-    short=`3日量比 ${fmt(volumeRatio,2)}×明顯放大，但${priceQualityReasons.join("、")}；先不視為向上點火，等價格重新轉強`;
+    short=`短線3日量比 ${fmt(volumeRatio,2)}×明顯放大，但${priceQualityReasons.join("、")}；先不視為向上點火，等價格重新轉強`;
   }else if(trendKey==="UP"&&(volumeKey==="CAVE"||recentCave)){
     key="PULLBACK_WAIT";icon="🕳️";label="整理後等發動";color="blue";
     const caveRatio=volumeKey==="CAVE"?volumeRatio:recentCave?.ratio;
-    short=`原本趨勢往上，近期有量縮整理${caveRatio!==null&&caveRatio!==undefined?`（最低3日量比 ${fmt(caveRatio,2)}×）`:""}；等收盤站上前兩天高點`;
+    short=`原本趨勢往上，近期有量縮整理${caveRatio!==null&&caveRatio!==undefined?`（最低短線3日量比 ${fmt(caveRatio,2)}×）`:""}；等收盤站上前兩天高點`;
   }else if(trendKey==="DOWN"&&threeUp){
     key="NORMAL_WAIT";icon="↗️";label="還在整理｜反彈觀察";color="orange";
     short="今天雖站上前兩天高點，但主要趨勢仍往下；先當反彈，不直接視為重新轉多";
   }else if(trendKey==="SIDEWAYS"&&threeUp&&volumeKey==="SURGE"){
     key="IGNITION";icon="🔥";label="已有點火跡象";color="orange";
-    short=`盤整中出現短線往上轉＋3日量比 ${fmt(volumeRatio,2)}×放大；仍需站穩後再升級`;
+    short=`盤整中出現短線往上轉＋短線3日量比 ${fmt(volumeRatio,2)}×放大；仍需站穩後再升級`;
   }else if(threeDown){
     key="STRUCTURE_WEAK";icon="🔴";label="結構轉弱";color="red";
     short="短線已跌破前兩天低點，且主要趨勢不是明確上升；先等止弱";
@@ -16862,7 +16862,7 @@ function buildReportTextV326(report){
 
   };
 
-  lines.push("📘 石頭少爺分析助手｜GitHub 前端 V3.7.3.2｜點火品質小修版｜純粹趨勢通道＋短線轉向＋量價發動｜雙向動態價帶＋嚴格時間證據Gate");
+  lines.push("📘 石頭少爺分析助手｜GitHub 前端 V3.7.3.3｜量比口徑收尾版｜純粹趨勢通道＋短線轉向＋量價發動｜雙向動態價帶＋嚴格時間證據Gate");
   lines.push("🧭 趨勢方向改以K線通道箭頭呈現：紅↗上升／綠↘下降／黃→盤整；不使用1～5浪或ABC修正浪計數。 ");
 
   lines.push(`報告產出時間：${generatedAt}`);
@@ -16899,7 +16899,7 @@ function buildReportTextV326(report){
       :`🧬 N字進度：新循環初始化｜建立A→B｜目前階段：等待B形成`)
     :`🧬 N字進度：${stockNStatusLabelV3328(nStatus)}｜目前階段：${breakoutStageText370()}`);
 
-  lines.push(`${launchSignal3730.icon} 發動狀態：${launchSignal3730.label}｜${launchSignal3730.threeKey==="UP"?"短線往上轉":launchSignal3730.threeKey==="DOWN"?"短線往下轉":"短線未選方向"}${launchSignal3730.volumeRatio!==null?`｜3日量比 ${fmt(launchSignal3730.volumeRatio,2)}×`:""}`);
+  lines.push(`${launchSignal3730.icon} 發動狀態：${launchSignal3730.label}｜${launchSignal3730.threeKey==="UP"?"短線往上轉":launchSignal3730.threeKey==="DOWN"?"短線往下轉":"短線未選方向"}${launchSignal3730.volumeRatio!==null?`｜短線3日量比 ${fmt(launchSignal3730.volumeRatio,2)}×`:""}`);
 
   lines.push(`${posMeta.icon} 價格位置：${posMeta.label}${B!==null?`｜${bNow}`:""}`);
 
@@ -18882,7 +18882,7 @@ function movingAverageAlignedV365(bars,period=20){
 
 
 // ========================================================================
-// V3.7.3.2｜點火品質小修版（只調整前端證據層與顯示語意）
+// V3.7.3.3｜量比口徑收尾版（只調整前端證據層與顯示語意）
 // - 母版：V3.7.2.1 個股C區動態防爆版。
 // - 不改 Worker V2.9.12、ABC／Fib／N字、突破品質2.0、三叉戟、Research Gate。
 // - 新增：短線轉向（底層仍採三盤規則：收盤站上前二高／跌破前二低）、3日量比0.8×量縮、1.3×放量。
@@ -19325,7 +19325,7 @@ function renderStockInfographicV3328(report){
     ctx,cardsX+cw+gap,cardsY2,cw,ch,
     "發動狀態",
     `${st.launch3730.icon} ${st.launch3730.label}`,
-    `${st.launch3730.threeKey==="UP"?"短線往上轉":st.launch3730.threeKey==="DOWN"?"短線往下轉":"短線未選方向"}${st.launch3730.volumeRatio!==null?`｜3日量比 ${fmt(st.launch3730.volumeRatio,2)}×`:"｜3日量比資料不足"}`,
+    `${st.launch3730.threeKey==="UP"?"短線往上轉":st.launch3730.threeKey==="DOWN"?"短線往下轉":"短線未選方向"}${st.launch3730.volumeRatio!==null?`｜短線3日量比 ${fmt(st.launch3730.volumeRatio,2)}×`:"｜短線3日量比資料不足"}`,
     st.launch3730.color||"orange"
   );
   drawMetricCardV3328(
@@ -19384,7 +19384,7 @@ function renderStockInfographicV3328(report){
   if(bDefense370&&firstDefenseKind370!=="b_structure")deeperDefenseParts370.push(`B ${fmt(bDefense370.level)}`);
   if(maDefense370&&firstDefenseKind370!=="ma20")deeperDefenseParts370.push(`MA20 ${fmt(maDefense370.level)}`);
   if(deeperDefenseParts370.length)defenseBullets370.push(`🛡️ 後續防守：${deeperDefenseParts370.join("｜")}`);
-  const bullets=[`🚦 現在：${plain362.bias.icon} ${plain362.bias.label}｜一句話：${plain362.summary}`,`👤 空手者：${plain362.nonHolderAction}｜${plain362.nonHolderNote}`,`💼 持有者：${plain362.holderAction}｜${plain362.holderNote}`,`${st.breakoutLife360.icon} 突破確認：${st.breakoutLife360.label}｜${st.breakoutLife360.progress}`,`${q360.icon} 品質：${q360.key==="WAIT"?q360.label:`${q360.label}｜${q360.scoreText}`}｜${qPlus}`,`⚠️ 主要風險：${qRisk}`,`${st.launch3730.icon} 發動／量價：${st.launch3730.label}｜${st.launch3730.threeKey==="UP"?"短線往上轉":st.launch3730.threeKey==="DOWN"?"短線往下轉":"短線未選方向"}${st.launch3730.volumeRatio!==null?`｜3日量比 ${fmt(st.launch3730.volumeRatio,2)}×`:""}｜${st.volumePosition.label}${st.vol!==null?`｜20日量比 ${fmt(st.vol,2)}×`:""}｜RSI ${st.rsi===null?"-":fmt(st.rsi)}`,b360?.resistance?`⬆️ 壓力：${b360.resistance.text}｜${b360.resistance.strength}`:(cUp?`⬆️ 壓力：${fmt(cUp.avg)} 元｜${cUp.strength}`:(up?`⬆️ 壓力：${up.label} ${fmt(up.value)} 元`:"⬆️ 壓力：等待新關卡")),...defenseBullets370];
+  const bullets=[`🚦 現在：${plain362.bias.icon} ${plain362.bias.label}｜一句話：${plain362.summary}`,`👤 空手者：${plain362.nonHolderAction}｜${plain362.nonHolderNote}`,`💼 持有者：${plain362.holderAction}｜${plain362.holderNote}`,`${st.breakoutLife360.icon} 突破確認：${st.breakoutLife360.label}｜${st.breakoutLife360.progress}`,`${q360.icon} 品質：${q360.key==="WAIT"?q360.label:`${q360.label}｜${q360.scoreText}`}｜${qPlus}`,`⚠️ 主要風險：${qRisk}`,`${st.launch3730.icon} 發動／量價：${st.launch3730.label}｜${st.launch3730.threeKey==="UP"?"短線往上轉":st.launch3730.threeKey==="DOWN"?"短線往下轉":"短線未選方向"}${st.launch3730.volumeRatio!==null?`｜短線3日量比 ${fmt(st.launch3730.volumeRatio,2)}×`:""}｜${st.volumePosition.label}${st.vol!==null?`｜20日量比 ${fmt(st.vol,2)}×`:""}｜RSI ${st.rsi===null?"-":fmt(st.rsi)}`,b360?.resistance?`⬆️ 壓力：${b360.resistance.text}｜${b360.resistance.strength}`:(cUp?`⬆️ 壓力：${fmt(cUp.avg)} 元｜${cUp.strength}`:(up?`⬆️ 壓力：${up.label} ${fmt(up.value)} 元`:"⬆️ 壓力：等待新關卡")),...defenseBullets370];
   // V3.6.7.9：Research Gate 通過且目前有型態時，仍用獨立白話驗證卡；不把研究結果混進突破品質分數。
   const researchCard3673=researchImageCardDataV3673(st.research367);
   // V3.7.2.1：三叉戟總結＋預備線提示不再塞在 C 區最底部，
