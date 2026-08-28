@@ -15115,7 +15115,7 @@ function tradeStateMachineV350(report){
     trigger="若再攻要看價格續創高、量價不背離且關鍵支撐維持";
     defense=sp.textDown;
   }else if(nStatus==="confirmed"&&nPhase==="EXTENDING"){
-    key="EXTENSION";icon="🟢";label="確認後延伸";stage=7;
+    key="EXTENSION";icon="🟢";label="完整N字確認";stage=7;
     task="完整N字已確認並維持B上方延伸；已有部位以續抱與移動風控為主，新進仍看位置。";
     trigger=sp.textUp;
     defense=sp.textDown;
@@ -18994,7 +18994,8 @@ function renderStockInfographicV3328(report){
   if(triPrep370)defenseBullets370.push(`🟣 候選預備：${fmt(triPrep370.level)} 元｜三叉戟預｜不等同正式支撐`);
   if(bDefense370)defenseBullets370.push(`🟠 結構防守：${fmt(bDefense370.level)} 元｜B角色支撐`);
   if(maDefense370)defenseBullets370.push(`🔵 趨勢防守：${fmt(maDefense370.level)} 元｜日20MA`);
-  const bullets=[`🚦 現在：${plain362.bias.icon} ${plain362.bias.label}｜一句話：${plain362.summary}`,`👤 空手者：${plain362.nonHolderAction}｜${plain362.nonHolderNote}`,`💼 持有者：${plain362.holderAction}｜${plain362.holderNote}`,`${st.breakoutLife360.icon} 突破確認：${st.breakoutLife360.label}｜${st.breakoutLife360.progress}`,`${q360.icon} 品質：${q360.key==="WAIT"?q360.label:`${q360.label}｜${q360.scoreText}`}｜${qPlus}`,`⚠️ 主要風險：${qRisk}`,`${st.volumePosition.icon} 量價：${st.volumePosition.label}${st.vol!==null?`｜目前 ${fmt(st.vol,2)}倍`:""}${st.volumePosition.brVol!==null?`｜突破日 ${fmt(st.volumePosition.brVol,2)}倍`:""}｜RSI ${st.rsi===null?"-":fmt(st.rsi)}`,b360?.resistance?`⬆️ 壓力：${b360.resistance.text}｜${b360.resistance.strength}`:(cUp?`⬆️ 壓力：${fmt(cUp.avg)} 元｜${cUp.strength}`:(up?`⬆️ 壓力：${up.label} ${fmt(up.value)} 元`:"⬆️ 壓力：等待新關卡")),...defenseBullets370];
+  const primaryStatusBullet370=(st.machine?.key==="WAIT_AB"||st.nStatus==="forming"&&st.machine?.key==="WAIT_AB")?`🟡 新進狀態：等待｜一句話：${plain362.summary}`:`🚦 現在：${plain362.bias.icon} ${plain362.bias.label}｜一句話：${plain362.summary}`;
+  const bullets=[primaryStatusBullet370,`👤 空手者：${plain362.nonHolderAction}｜${plain362.nonHolderNote}`,`💼 持有者：${plain362.holderAction}｜${plain362.holderNote}`,`${st.breakoutLife360.icon} 突破確認：${st.breakoutLife360.label}｜${st.breakoutLife360.progress}`,`${q360.icon} 品質：${q360.key==="WAIT"?q360.label:`${q360.label}｜${q360.scoreText}`}｜${qPlus}`,`⚠️ 主要風險：${qRisk}`,`${st.volumePosition.icon} 量價：${st.volumePosition.label}${st.vol!==null?`｜目前 ${fmt(st.vol,2)}倍`:""}${st.volumePosition.brVol!==null?`｜突破日 ${fmt(st.volumePosition.brVol,2)}倍`:""}｜RSI ${st.rsi===null?"-":fmt(st.rsi)}`,b360?.resistance?`⬆️ 壓力：${b360.resistance.text}｜${b360.resistance.strength}`:(cUp?`⬆️ 壓力：${fmt(cUp.avg)} 元｜${cUp.strength}`:(up?`⬆️ 壓力：${up.label} ${fmt(up.value)} 元`:"⬆️ 壓力：等待新關卡")),...defenseBullets370];
   // V3.6.7.9：Research Gate 通過且目前有型態時，仍用獨立白話驗證卡；不把研究結果混進突破品質分數。
   const researchCard3673=researchImageCardDataV3673(st.research367);
   bullets.push(tridentImageTextV361(st.trident361));
