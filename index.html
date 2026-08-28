@@ -14883,7 +14883,7 @@ function dynamicDefenseStackV370(report,s=null){
     layers.push({level:v,label,role,kind,candidate});
   };
   if(trident?.support)add(trident.support.value,"最近戰術支撐","三叉戟撐","trident_support",false);
-  if(trident?.preparatory)add(trident.preparatory.value,"候選預備","三叉戟預｜候選線，不等同正式支撐","trident_preparatory",true);
+  if(trident?.preparatory)add(trident.preparatory.value,"候選預備","三叉戟預","trident_preparatory",true);
   if(nStatus==="confirmed"&&B!==null)add(B,"結構防守","B角色支撐","b_structure",false);
   else if(state?.tacticalActive&&n(state?.tacticalEvent?.neckline)!==null)add(state.tacticalEvent.neckline,"戰術頸線","前置突破防守","tactical_neck",false);
   if(ma!==null)add(ma,"趨勢防守","日20MA","ma20",false);
@@ -15231,14 +15231,25 @@ function appendVolumePositionV350(lines,report){
 
 function appendPriceConfluenceV350(lines,report){
   const c=priceConfluenceV350(report);
+  const defense=dynamicDefenseStackV370(report);
+  const nearestFormal=defense?.first||null;
+  const bDefense=defense?.layers?.find(x=>x.kind==="b_structure"&&!x.candidate)||null;
   lineSection(lines,"🧲 價格共振｜哪些價位同時疊到兩個以上理由？");
   if(c.meaningful.length){
     c.meaningful.slice(0,5).forEach((x,i)=>lines.push(`${x.icon} 共振${i+1}：${confluenceTextV350(x)}`));
   }else{
-    lines.push("➖ 目前沒有2項以上價位落在約1.25%內的明顯共振；先依單一B、MA20、Fib與固定倍數關卡分別觀察。 ");
+    lines.push("➖ 目前沒有2項以上價位落在約1.25%內的明顯共振；先依動態防守、B、MA20、Fib與固定倍數關卡分別觀察。 ");
   }
   lines.push(`⬆️ 最近上方：${confluenceTextV350(c.nearestResistance)}`);
-  lines.push(`⬇️ 最近下方：${confluenceTextV350(c.nearestSupport)}`);
+  if(nearestFormal){
+    const role=nearestFormal.kind==="trident_support"?"三叉戟正式支撐":nearestFormal.role;
+    lines.push(`⬇️ 最近下方：${fmt(nearestFormal.level)} 元｜${role}`);
+    if(bDefense&&bDefense.level<nearestFormal.level-Math.max(Math.abs(nearestFormal.level),1)*1e-8){
+      lines.push(`🟠 下一結構防守：${fmt(bDefense.level)} 元｜B角色支撐`);
+    }
+  }else{
+    lines.push(`⬇️ 最近下方：${confluenceTextV350(c.nearestSupport)}`);
+  }
   lines.push("📌 『共振』只代表同一價帶有多個既有技術理由重疊，代表觀察重要性提高；不等於勝率，也不取代突破確認或停損。 ");
 }
 
@@ -16409,7 +16420,7 @@ function buildReportTextV326(report){
 
   };
 
-  lines.push("📘 石頭少爺分析助手｜GitHub 前端 V3.7.0｜純粹趨勢通道箭頭版｜動態防守整合");
+  lines.push("📘 石頭少爺分析助手｜GitHub 前端 V3.7.0｜純粹趨勢通道箭頭版｜動態防守最終同步");
   lines.push("🧭 趨勢方向改以K線通道箭頭呈現：紅↗上升／綠↘下降／黃→盤整；不使用1～5浪或ABC修正浪計數。 ");
 
   lines.push(`報告產出時間：${generatedAt}`);
@@ -16788,11 +16799,17 @@ function buildReportTextV326(report){
 
   if(nStatus==="confirmed"){
 
-    lines.push(`⚠️ 第一層：日K收盤跌回B ${fmt(B)} 元下方 → N_PHASE＝WEAKENING，停止追價與主動加碼。`);
+    const riskDefense370=dynamicDefenseStackV370(report,s);
+    const tacticalRisk370=riskDefense370?.layers?.find(x=>x.kind==="trident_support"&&!x.candidate)||null;
+    if(tacticalRisk370&&(B===null||tacticalRisk370.level>B)){
+      lines.push(`🛡️ 戰術提醒層：${fmt(tacticalRisk370.level)} 元（三叉戟撐）失守 → 提高短線保護、先觀察下一層；不等於N字轉弱，也不等於整組結構失效。`);
+    }
 
-    if(ma!==null)lines.push(`⚠️ 第二層：價格跌回日20MA ${fmt(ma)} 元下方且斜率轉弱 → 短線品質進一步下降。`);
+    lines.push(`⚠️ 結構第一層：日K收盤跌回B ${fmt(B)} 元下方 → N_PHASE＝WEAKENING，突破品質下降，停止追價與主動加碼。`);
 
-    if(C!==null)lines.push(`⚠️ 第三層：跌破本組C ${fmt(C)} 元 → 已確認N字進入更深結構風險區，但是否FAILED仍依A／後端生命週期規則。`);
+    if(ma!==null)lines.push(`⚠️ 趨勢層：價格跌回日20MA ${fmt(ma)} 元下方且斜率轉弱 → 短線趨勢品質進一步下降。`);
+
+    if(C!==null)lines.push(`⚠️ 深層結構：跌破本組C ${fmt(C)} 元 → 已確認N字進入更深結構風險區，但是否FAILED仍依A／後端生命週期規則。`);
 
     if(A!==null)lines.push(`🔴 最終結構：完成日K最低價跌破A ${fmt(A)} 元 → N_STATUS＝FAILED，本組長週期N字結構失效。`);
 
