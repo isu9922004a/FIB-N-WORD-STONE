@@ -14282,7 +14282,9 @@ function patternAssistV3325(report,stage=null){
   if(nStatus==="failed")key="RESET";
   else if(formalWeak)key="FALSE_BREAKOUT_RISK";
   else if(w.key==="LATE_RISK"&&topHeat>=2)key="TOP_RISK";
-  else if(formalHold)key="BREAKOUT_HOLD";
+  // V3.7.0｜完整N字一旦 confirmed，就不允許退回「前置突破」文案。
+  // 後續只描述「突破後延伸／站穩觀察」，是否有三日站穩、回測、再攻則分開列證據。
+  else if(nStatus==="confirmed")key="BREAKOUT_HOLD";
   else if(preBreakStrong||tacticalHold)key="PRE_BREAKOUT";
   else if(consolidation)key="CONSOLIDATION";
 
@@ -14294,8 +14296,8 @@ function patternAssistV3325(report,stage=null){
         :`目前有前置轉強證據，但完整費波那契N字尚未確認。${tacticalRoleText}${fibBRoleText}${ma!==null?` 日20MA＝${fmt(ma)} 元仍是短線趨勢健康度參考。`:""} 後續先看既有戰術防守是否維持，再看能否用完整日K收盤正式突破Fib B；在B正式突破前，不把B寫成已轉支撐。`
     },
     BREAKOUT_HOLD:{
-      icon:"🟢",label:"突破後站穩／回測續攻候選",
-      short:`正式突破後目前仍有站穩／回測守住的證據。${B!==null?`B＝${fmt(B)} 元由壓力轉成防守；` : ""}若回測守住再攻，較接近多頭中繼；若重新跌回B與日20MA下方，才要降級看待。`
+      icon:"🟢",label:"突破後延伸／站穩觀察",
+      short:`完整費波那契N字已確認${B!==null?`，B＝${fmt(B)} 元亦已完成正式突破` : ""}；目前${aboveB?"仍維持B上方延伸":"進入突破後防守觀察"}。${tacticalHold&&tacticalNeck!==null?`戰術頸線 ${fmt(tacticalNeck)} 元仍維持有效；`:""}${ma!==null?`日20MA＝${fmt(ma)} 元作為短線趨勢健康度參考。`:""} 後續重點是觀察${B!==null?`B＝${fmt(B)} 元與`:""}既有戰術支撐能否守住，以及整理後能否續攻；不再使用「尚未確認N字／等待突破B」的前置突破語意。`
     },
     CONSOLIDATION:{
       icon:"🟡",label:"中途整理／蓄勢候選",
@@ -14897,6 +14899,29 @@ function dynamicDefenseStackV370(report,s=null){
   return {layers,first,trident};
 }
 
+function dynamicResistanceStackV370(report,s=null){
+  const state=s||currentStrategyStateV321(report);
+  const nStatus=getNStatusV326(report,state);
+  const close=n(report?.close),B=n(state?.fib?.B),target=n(state?.fib?.target1618);
+  const trident=tridentEngineV361(report);
+  const fixed=state?.fixed?.next||null;
+  const monthlyStatus=getMonthlyStatusV326(report);
+  const fixedReclaim=fixedReclaimContextV3312(report,fixed);
+  const layers=[];
+  const add=(level,label,role,kind)=>{
+    const v=n(level);if(v===null||close===null||v<=close)return;
+    if(layers.some(x=>Math.abs(x.level-v)<=Math.max(Math.abs(v),1)*1e-8))return;
+    layers.push({level:v,label,role,kind});
+  };
+  if(trident?.pressure)add(trident.pressure.value,"最近戰術壓力","三叉戟壓","trident_pressure");
+  if(B!==null)add(B,"結構壓力","B前高／突破關卡","b_resistance");
+  if(state?.tacticalActive&&n(state?.tacticalEvent?.neckline)!==null)add(state.tacticalEvent.neckline,"戰術頸線","前置突破關卡","tactical_neck_resistance");
+  if(monthlyStatus==="PASS"&&fixed)add(fixed.p,"固定倍數關卡",`${fixed.m}×固定倍數${fixedReclaim.crossed?"｜曾越過後待重新站回":""}`,"fixed");
+  if(nStatus==="confirmed"&&target!==null)add(target,"延伸目標","N字1.618正式目標","fib1618");
+  layers.sort((a,b)=>a.level-b.level);
+  return {layers,first:layers[0]||null,trident};
+}
+
 function supportPressureSummaryV342(report,s=null,nStatusArg=null){
   const state=s||currentStrategyStateV321(report);
   const nStatus=nStatusArg||getNStatusV326(report,state);
@@ -14917,13 +14942,15 @@ function supportPressureSummaryV342(report,s=null,nStatusArg=null){
   if(r764!==null)add(below,r764,"Fib 0.764風控");
   above.sort((a,b)=>a.p-b.p);below.sort((a,b)=>b.p-a.p);
   const defenseStack=dynamicDefenseStackV370(report,state);
+  const resistanceStack=dynamicResistanceStackV370(report,state);
   const nearestDefense=defenseStack.first;
+  const nearestResistance=resistanceStack.first;
   return {
-    up:above[0]||null,
+    up:nearestResistance?{p:nearestResistance.level,label:`${nearestResistance.label}｜${nearestResistance.role}`}:(above[0]||null),
     down:nearestDefense?{p:nearestDefense.level,label:`${nearestDefense.label}｜${nearestDefense.role}`}:(below[0]||null),
-    textUp:above[0]?`${above[0].label}＝${fmt(above[0].p)} 元`:"暫無更高的已計算正式關卡",
+    textUp:nearestResistance?`${nearestResistance.label}＝${fmt(nearestResistance.level)} 元（${nearestResistance.role}）`:(above[0]?`${above[0].label}＝${fmt(above[0].p)} 元`:"暫無更高的已計算正式關卡"),
     textDown:nearestDefense?`${nearestDefense.label}＝${fmt(nearestDefense.level)} 元（${nearestDefense.role}）`:(below[0]?`${below[0].label}＝${fmt(below[0].p)} 元`:"暫無更低的已計算正式支撐"),
-    defenseStack
+    defenseStack,resistanceStack
   };
 }
 
@@ -15154,6 +15181,7 @@ function priceConfluenceV350(report,tolerancePct=1.25){
   const A=n(s?.fib?.A),B=n(s?.fib?.B),rawC=n(s?.fib?.C),C=cLife.invalidated?null:rawC;
   const day20=n(s?.maCtx?.value),month20=n(report?.latestMA),target=n(s?.fib?.target1618);
   const fixed=s?.fixed?.next||null;
+  const trident=tridentEngineV361(report);
   const items=[];
   const add=(value,label,type,weight=1)=>{
     const v=n(value);if(v===null||v<=0)return;
@@ -15162,6 +15190,9 @@ function priceConfluenceV350(report,tolerancePct=1.25){
   };
   if(nStatus==="confirmed")add(target,"Fib 1.618正式目標","target",2);
   if(monthlyStatus==="PASS"&&fixed)add(fixed.p,`月線${fixed.m}×固定倍數`,"fixed",2);
+  // V3.7.0｜三叉戟正式壓／撐納入共振；候選預備線不納入正式共振計數。
+  add(trident?.pressure?.value,"三叉戟正式壓力","trident_pressure",3);
+  add(trident?.support?.value,"三叉戟正式支撐","trident_support",3);
   add(B,"B前高／突破關卡","B",3);
   add(day20,"日20MA","ma20",2);
   if(C!==null)add(C,"C回檔低點","C",3);
@@ -15209,7 +15240,12 @@ function confluenceTextV350(cluster){
   if(!cluster)return "暫無可計算關卡";
   const labels=cluster.labels.slice(0,4).join("＋");
   const d=cluster.distancePct===null?"":`｜距現價 ${fmtSignedPct(cluster.distancePct)}`;
-  return `${fmt(cluster.avg)} 元｜${cluster.strength}${cluster.count>=2?`（${cluster.count}項）`:""}｜${labels}${d}`;
+  const members=Array.isArray(cluster.members)?cluster.members:[];
+  const types=new Set(members.map(x=>x.type));
+  const vals=members.map(x=>n(x.value)).filter(x=>x!==null).sort((a,b)=>a-b);
+  const isNearDefensePair=types.has("B")&&types.has("trident_support")&&vals.length>=2;
+  const priceText=isNearDefensePair?`${fmt(vals[0])}～${fmt(vals[vals.length-1])} 元`:`${fmt(cluster.avg)} 元`;
+  return `${priceText}｜${cluster.strength}${cluster.count>=2?`（${cluster.count}項）`:""}｜${labels}${d}`;
 }
 
 function appendTradeStateMachineV350(lines,report){
@@ -15220,7 +15256,12 @@ function appendTradeStateMachineV350(lines,report){
   lines.push(`🔥 下一觸發：${m.trigger}`);
   lines.push(`🛡️ 防守／失效：${m.defense}`);
   lines.push(`🧭 操作定位：${m.action}`);
-  lines.push(`📊 突破品質：${m.teach.icon} ${m.teach.label}｜${m.teach.short}`);
+  const q360=breakoutQualityV360(report);
+  lines.push(`📊 突破品質2.0：${breakoutQualityBadgeV360(q360)}`);
+  const teachStatus=m.teach.nStatus==="confirmed"
+    ?(m.teach.score>=3?"主要條件通過":"仍需確認")
+    :m.teach.nStatus==="failed"?"原結構失效":"尚未進入完整突破檢核";
+  lines.push(`🧪 教材式突破檢核：${m.teach.icon} ${teachStatus}`);
   lines.push("📌 這是前端狀態整理，不改A／B／C、Fib、N字或Worker的任何判斷公式。每次只根據當下已知資料決定下一步，避免事後倒推。 ");
 }
 
@@ -15998,7 +16039,15 @@ function appendDecisionEngineV360(lines,report){
   lines.push("");
   lines.push(`🧲 支撐／壓力角色：${d.bands.bRole}`);
   lines.push(`⬆️ 最近上方價帶：${d.bands.resistance?`${d.bands.resistance.text}｜${d.bands.resistance.strength}｜${d.bands.resistance.labels.slice(0,3).join("＋")}`:"暫無可驗證上方價帶"}`);
-  if(nearestFormal370){
+  if(d.bands.support&&d.bands.support.count>=2){
+    lines.push(`⬇️ 最近防守共振：${d.bands.support.text}｜${d.bands.support.strength}｜${d.bands.support.labels.slice(0,3).join("＋")}`);
+    const bandLow370=n(d.bands.support.low);
+    const nextAfterBand370=(defense370?.layers||[]).find(x=>!x.candidate&&bandLow370!==null&&x.level<bandLow370-Math.max(Math.abs(bandLow370),1)*1e-8)||null;
+    if(nextAfterBand370){
+      const nextRole370=nextAfterBand370.kind==="ma20"?"下一正式趨勢防守｜日20MA":nextAfterBand370.role;
+      lines.push(`🔵 下一正式防守：${fmt(nextAfterBand370.level)} 元｜${nextRole370}`);
+    }
+  }else if(nearestFormal370){
     const nearestRole370=nearestFormal370.kind==="trident_support"?"三叉戟正式支撐":nearestFormal370.role;
     lines.push(`⬇️ 最近戰術支撐：${fmt(nearestFormal370.level)} 元｜${nearestRole370}`);
     if(nextFormal370){
@@ -16222,8 +16271,13 @@ function buildNewbieLookHereV3318(report,generatedAt=null){
   const below=keyLevels.filter(x=>x.p<close).sort((a,b)=>b.p-a.p);
 
   lines.push("");
-  lines.push("⑨【往上先看｜壓力／目標關卡】");
-  if(above.length){
+  lines.push("⑨【往上先看｜動態壓力／目標層級】");
+  const resistanceStack370=dynamicResistanceStackV370(report,s);
+  if(resistanceStack370.layers.length){
+    resistanceStack370.layers.slice(0,3).forEach(x=>{
+      lines.push(`${x.label}＝${fmt(x.level)} 元｜${x.role}`);
+    });
+  }else if(above.length){
     lines.push(`${above[0].label}＝${fmt(above[0].p)} 元`);
   }else{
     lines.push("目前沒有比現價更高的已計算關卡；先觀察後續是否形成新的目標或固定倍數關卡。");
@@ -16439,7 +16493,7 @@ function buildReportTextV326(report){
 
   };
 
-  lines.push("📘 石頭少爺分析助手｜GitHub 前端 V3.7.0｜純粹趨勢通道箭頭版｜三模組最終同步修正");
+  lines.push("📘 石頭少爺分析助手｜GitHub 前端 V3.7.0｜純粹趨勢通道箭頭版｜雙向動態價帶最終整合");
   lines.push("🧭 趨勢方向改以K線通道箭頭呈現：紅↗上升／綠↘下降／黃→盤整；不使用1～5浪或ABC修正浪計數。 ");
 
   lines.push(`報告產出時間：${generatedAt}`);
@@ -16889,8 +16943,16 @@ function buildReportTextV326(report){
 
   add(close,`📍 ${fmt(close)} 元｜現在股價的位置`,`目前最新收盤就在這裡，往上、往下都以這個價位當作地圖中心。`,"目前收盤價");
 
-  // V3.7.0｜價格作戰地圖同步 Dynamic Defense State：
-  // 只把三叉戟正式支撐與候選預備線補進地圖；B／MA20／戰術頸線仍沿用原本各自的正式角色與說明。
+  // V3.7.0｜價格作戰地圖同步 Dynamic Support + Dynamic Resistance State。
+  // 三叉戟正式壓力／支撐納入地圖；候選預備線仍只作候選，不升格成正式支撐。
+  const mapResistance370=dynamicResistanceStackV370(report,s);
+  const mapTriPressure370=mapResistance370?.layers?.find(x=>x.kind==="trident_pressure")||null;
+  if(mapTriPressure370&&!map.some(x=>Math.abs(x.p-mapTriPressure370.level)<=Math.max(Math.abs(mapTriPressure370.level),1)*1e-8))add(
+    mapTriPressure370.level,
+    `⚠️ ${fmt(mapTriPressure370.level)} 元｜三叉戟壓｜最近戰術壓力`,
+    "這是目前現價上方最近的正式三叉戟戰術壓力；先看能否有效突破／站回，再看下一層固定倍數或延伸目標。",
+    "三叉戟壓"
+  );
   const mapDefense370=dynamicDefenseStackV370(report,s);
   const mapTriSupport370=mapDefense370?.layers?.find(x=>x.kind==="trident_support"&&!x.candidate)||null;
   const mapTriPrep370=mapDefense370?.layers?.find(x=>x.kind==="trident_preparatory"&&x.candidate)||null;
