@@ -926,7 +926,7 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
       <a id="imageDownloadLink" class="image-save-link" href="#" download>💾 儲存 PNG</a>
       <button id="imageShareButton" class="image-share-btn" type="button" onclick="shareInfographicV3328()">📤 分享圖片</button>
     </div>
-    <div id="imagePreviewNote" class="image-preview-note">圖片由目前分析資料直接產生；V3.7.0 沿用個股 PNG 1152×2048（9:16）與大盤 PNG 1024×1536（2:3）。個股與大盤只要有完整 dailySeries，就在真實日K主圖加入「趨勢通道箭頭」：台股紅色＝上升、綠色＝下降、黃色＝盤整；通道繪於K棒與文字標記下層，避免覆蓋A/B/C、價位與說明文字。Worker V2.9.12 不需修改；V3.7.0 前端另以逐日OHLCV執行嚴格時間證據Gate，避免剛突破就提前升級三日站穩／回測成熟度。</div>
+    <div id="imagePreviewNote" class="image-preview-note">圖片由目前分析資料直接產生；V3.7.0 沿用個股 PNG 1152×2048（9:16）與大盤 PNG 1024×1536（2:3）。個股與大盤只要有完整 dailySeries，就在真實日K主圖加入「趨勢通道箭頭」：台股紅色＝上升、綠色＝下降、黃色＝盤整；通道繪於K棒與文字標記下層，避免覆蓋A/B/C、價位與說明文字。Worker V2.9.12 不需修改；V3.7.0 前端另以逐日OHLCV執行嚴格3天站穩確認，避免剛突破就提前判定已站穩／已成熟。</div>
   </div>
 </div>
 
@@ -15352,7 +15352,7 @@ function strictBreakoutEvidenceGateV370(report,state=null){
     reattackDate:null,
     extensionConfirmed:false,
     source:"insufficient",
-    statusLine:"⏳ 三日站穩：尚未進入正式突破後時間驗證"
+    statusLine:"⏳ 站穩觀察：尚未進入正式突破後的3天觀察"
   };
   if(!base.applicable)return base;
 
@@ -15381,8 +15381,8 @@ function strictBreakoutEvidenceGateV370(report,state=null){
     base.threeStatus=workerThree==="failed"?"failed":"pending";
     base.threeFailed=base.threeStatus==="failed";
     base.statusLine=base.threeFailed
-      ?"⚠️ 三日站穩：Worker回傳未通過；逐日序列不足以重建突破後3日"
-      :"⏳ 三日站穩：逐日序列尚不足以定位正式突破日／完成嚴格3日Gate";
+      ?"⚠️ 站穩觀察：目前資料顯示未通過，但逐日序列不足以完整重建突破後3天"
+      :"⏳ 站穩觀察：逐日資料還不足，暫時無法完整確認突破後3天是否站穩";
     return base;
   }
 
@@ -15432,11 +15432,11 @@ function strictBreakoutEvidenceGateV370(report,state=null){
   const standingCount=Math.min(3,postBars.filter((x,i)=>i<3&&x.close>=B).length);
   let statusLine="";
   if(threeStatus==="passed"){
-    statusLine=`✅ 三日站穩：已完成3/3個突破後完整交易日，前三日收盤均未跌回B＝${fmt(B)} 元下方`;
+    statusLine=`✅ 站穩確認：已觀察3個完整交易日，期間收盤都沒有跌回B＝${fmt(B)} 元下方`; 
   }else if(threeStatus==="failed"){
-    statusLine=`⚠️ 三日站穩：未通過｜突破後前3個完整交易日內已出現收盤跌回B＝${fmt(B)} 元下方`;
+    statusLine=`⚠️ 站穩確認：未通過｜突破後3天觀察期間已出現收盤跌回B＝${fmt(B)} 元下方`; 
   }else{
-    statusLine=`⏳ 三日站穩：已取得 ${observedAfter}/3 個突破後完整交易日｜等待時間證據完成`;
+    statusLine=`⏳ 站穩觀察：已觀察 ${observedAfter} 天｜需要確認 3 個完整交易日是否守在B上方`; 
   }
 
   return {
@@ -15516,7 +15516,7 @@ function breakoutQualityV360(report){
   else if(gate.threePassed&&gate.extensionConfirmed){followRatio=0.96;followText="三日站穩已完成，且後續完整日K再創突破後新高";}
   else if(gate.threePassed&&gate.retestHeld){followRatio=0.92;followText="三日站穩已完成，且突破後已有實際回測守住B附近";}
   else if(gate.threePassed){followRatio=0.86;followText="突破後三日站穩已由逐日資料確認";}
-  else if(gate.retestHeld){followRatio=0.35;followText="已出現實際回測守住，但三日站穩時間Gate仍未完成";}
+  else if(gate.retestHeld){followRatio=0.35;followText="已出現實際回測守住，但3天站穩確認仍未完成";}
   else{followRatio=0;followText=`三日站穩尚未完成｜目前 ${gate.observedAfter}/3 個突破後完整交易日；未發生的後續證據本項不加分`;}
   dims.push(qualityDimV360("FOLLOW","站穩／回測／再攻",2,followRatio,followText));
 
@@ -15528,7 +15528,7 @@ function breakoutQualityV360(report){
     const flags=Array.isArray(falseRisk?.flags)?falseRisk.flags.slice(0,2).join("、"):"";
     if(rawFalseKey==="low"&&!gate.threePassed){
       effectiveFalseKey="pending";
-      dims.push(qualityDimV360("FALSE_RISK","假突破風險",1,0,`尚待站穩確認｜Worker雖回傳低風險，但嚴格3日Gate尚未完成${flags?`｜${flags}`:""}`));
+      dims.push(qualityDimV360("FALSE_RISK","假突破風險",1,0,`尚待站穩確認｜系統雖回傳低風險，但3天站穩確認尚未完成${flags?`｜${flags}`:""}`));
     }else{
       const ratio=rawFalseKey==="low"?1:rawFalseKey==="medium"?0.45:0.05;
       dims.push(qualityDimV360("FALSE_RISK","假突破風險",1,ratio,`${rawFalseKey==="low"?"低":rawFalseKey==="medium"?"中":"高"}${flags?`｜${flags}`:""}`));
@@ -15584,10 +15584,91 @@ function breakoutLifecycleV360(report){
   else if(nStatus==="confirmed"&&gate.threeFailed){key="FOLLOW_FAIL";icon="⚠️";label="正式突破成立／站穩未通過";step=6;next="降低突破成熟度；先看B與MA20能否守住／修復";}
   else if(nStatus==="confirmed"&&gate.threePassed&&(gate.reattack||gate.extensionConfirmed)){key=gate.reattack?"REATTACK":"EXTENSION_CONFIRMED";icon="🟢";label=gate.reattack?"站穩後回測再攻":"站穩後延伸確認";step=8;next="觀察能否續創高，並持續用量價與動態防守確認";}
   else if(nStatus==="confirmed"&&gate.threePassed&&gate.retestHeld){key="RETEST_HELD";icon="🟢";label="站穩後回測守住";step=8;next="等待再攻，不因單日反彈就追價";}
-  else if(nStatus==="confirmed"&&gate.threePassed){key="STAND_CONFIRMED";icon="🟢";label="三日站穩確認";step=7;next="等待實際回測守B、再攻或後續延伸證據，才升8/8";}
-  else if(nStatus==="confirmed"){key="CONFIRMED";icon="🟡";label="正式突破成立";step=6;next=`等待突破後三日站穩時間Gate（目前 ${gate.observedAfter}/3）`;}
+  else if(nStatus==="confirmed"&&gate.threePassed){key="STAND_CONFIRMED";icon="🟢";label="三日站穩確認";step=7;next="接著看回測B能不能守住，或整理後能不能再攻";}
+  else if(nStatus==="confirmed"){key="CONFIRMED";icon="🟡";label="正式突破成立";step=6;next=`再觀察突破後完整交易日，確認是否能持續守在B上方`;}
 
   return {key,icon,label,step,progress:`${step}/8`,next,A,B,C,close,nStatus,nPhase,quality:q,gate,gateText:gate.statusLine};
+}
+
+// V3.7.0｜新手白話顯示層：保留內部 1/8～8/8 狀態碼，但圖片／報告不直接顯示。
+// 對使用者只呈現「現在到哪裡、已觀察幾天、下一步看什麼」，不改任何 Gate／評分／ABC 核心。
+function breakoutLifecyclePlainV370(life){
+  const l=life||{};
+  const gate=l.gate||{};
+  const observed=Math.max(0,Math.min(3,Number(gate.observedAfter)||0));
+  const remain=Math.max(0,3-observed);
+  let title=l.label||"等待確認";
+  let detail="";
+  let next=l.next||"等待下一個可驗證訊號";
+
+  switch(l.key){
+    case "WAIT_AB":
+      title="等待新結構｜先形成A與B";
+      detail="目前還沒進入正式突破確認";
+      next="先等A與B形成，不提前猜C或突破";
+      break;
+    case "WAIT_C":
+      title="A、B已形成｜等待有效C";
+      detail="C還沒踩穩，現在不急著談突破";
+      next="先等C形成，再看能不能突破B";
+      break;
+    case "PRE_BREAKOUT":
+      title="價格先越過前高｜但C還沒完成";
+      detail="這還不是完整N字的正式突破";
+      next="不倒推C，先等待完整ABC結構";
+      break;
+    case "READY":
+      title="ABC已就緒｜等待正式突破B";
+      detail="結構已準備好，但還沒完成收盤突破";
+      next=l.B!==null?`等待完整日K收盤站上B＝${fmt(l.B)}元`:"等待完整日K收盤突破B";
+      break;
+    case "CONFIRMED":
+      title="剛突破｜等待站穩確認";
+      detail=`站穩觀察：已觀察 ${observed} 天｜需要確認 3 個完整交易日`;
+      next=remain>0?`再觀察 ${remain} 個完整交易日，看看能不能守在B上方`:"等待站穩結果確認";
+      break;
+    case "STAND_CONFIRMED":
+      title="已站穩｜等待回測或續攻";
+      detail="站穩確認：3個完整交易日已完成";
+      next="接著看回測B能不能守住，或整理後能不能再攻";
+      break;
+    case "RETEST_HELD":
+      title="已站穩｜回測守住";
+      detail="突破後已出現實際回測，而且B附近守住";
+      next="等待再攻；不要因單日反彈就追價";
+      break;
+    case "REATTACK":
+      title="已站穩｜回測後再攻";
+      detail="站穩與回測證據都已出現，現在進入續攻觀察";
+      next="觀察能否續創高，並依動態防守管理";
+      break;
+    case "EXTENSION_CONFIRMED":
+      title="已站穩｜延伸續強確認";
+      detail="突破後已站穩，後續完整日K也再創高";
+      next="觀察能否續創高，並持續看量價與防守線";
+      break;
+    case "FOLLOW_FAIL":
+      title="突破後沒站穩｜提高警戒";
+      detail="3天站穩觀察未通過，突破成熟度先降級";
+      next="先看B與日20MA能不能守住或重新修復";
+      break;
+    case "FALSE_BREAK_RISK":
+      title="突破後轉弱｜假突破警戒";
+      detail="價格已出現較明顯轉弱訊號";
+      next=l.B!==null?`先重新站回B＝${fmt(l.B)}元，再重新累積站穩證據`:"先修復突破關卡";
+      break;
+    case "WEAKENING":
+      title="突破後轉弱｜等待修復";
+      detail="突破還沒完全失效，但短線品質已下降";
+      next=l.B!==null?`先重新收回B＝${fmt(l.B)}元，再重新觀察站穩`:"先重新收回突破關卡";
+      break;
+    case "FAILED":
+      title="原結構失效｜重新找新ABC";
+      detail="舊突破不再沿用";
+      next="重新建立A→B→C";
+      break;
+  }
+  return {title,detail,next,observed,remain};
 }
 
 function marketPhaseEngineV360(report){
@@ -16195,9 +16276,10 @@ function appendDecisionEngineV360(lines,report){
   lines.push(`➡️ ${d.phase.summary}`);
   lines.push(`🎯 階段下一步：${d.phase.next}`);
   lines.push("");
-  lines.push(`${d.lifecycle.icon} 突破確認生命週期：${d.lifecycle.label}｜${d.lifecycle.progress}`);
-  if(d.lifecycle.nStatus==="confirmed"&&d.lifecycle.gateText)lines.push(d.lifecycle.gateText);
-  lines.push(`➡️ 下一個有效觸發：${d.lifecycle.next}`);
+  const lifePlain370=breakoutLifecyclePlainV370(d.lifecycle);
+  lines.push(`${d.lifecycle.icon} 突破後狀態：${lifePlain370.title}`);
+  if(lifePlain370.detail)lines.push(`⏳ ${lifePlain370.detail}`);
+  lines.push(`➡️ 下一步：${lifePlain370.next}`);
   lines.push(`${q.icon} 突破品質2.0：${q.key==="WAIT"?q.label:`${q.label}｜${q.scoreText}`}｜證據覆蓋 ${q.coverageLabel}`);
   if(q.key!=="WAIT"){
     q.dims.filter(x=>x.available).forEach(x=>{
@@ -18988,7 +19070,8 @@ function renderStockInfographicV3328(report){
   drawMetricCardV3328(ctx,cardsX+cw+gap,cardsY,cw,ch,"市場階段",`${st.marketPhase360.icon} ${st.marketPhase360.label}`,`證據信心 ${st.marketPhase360.confidence}`,st.marketPhase360.icon==="🔴"||st.marketPhase360.icon==="⚠️"?"red":"blue");
   drawMetricCardV3328(ctx,cardsX+(cw+gap)*2,cardsY,cw,ch,"日20MA",st.ma===null?"資料不足":`${fmt(st.ma)} 元`,st.s.maCtx.gapPct!==null?`乖離 ${fmtSignedPct(st.s.maCtx.gapPct)}｜${st.s.maCtx.slopeClass.label}`:st.s.maCtx.slopeClass.label,"green");
   const cardsY2=cardsY+ch+rowGap;
-  drawMetricCardV3328(ctx,cardsX,cardsY2,cw,ch,"突破確認生命週期",`${st.breakoutLife360.icon} ${st.breakoutLife360.label}`,`進度 ${st.breakoutLife360.progress}`,st.breakoutLife360.icon==="🔴"||st.breakoutLife360.icon==="⚠️"?"red":"blue");
+  const breakoutPlainCard370=breakoutLifecyclePlainV370(st.breakoutLife360);
+  drawMetricCardV3328(ctx,cardsX,cardsY2,cw,ch,"突破後狀態",`${st.breakoutLife360.icon} ${breakoutPlainCard370.title}`,breakoutPlainCard370.detail||"依當下已發生證據判讀",st.breakoutLife360.icon==="🔴"||st.breakoutLife360.icon==="⚠️"?"red":"blue");
   drawMetricCardV3328(ctx,cardsX+cw+gap,cardsY2,cw,ch,"量價位置",`${st.volumePosition.icon} ${st.volumePosition.label}`,st.vol===null?"相對量資料不足":`相對量 ${fmt(st.vol,2)} 倍`,st.volumePosition.icon==="⚠️"?"red":"orange");
   drawMetricCardV3328(ctx,cardsX+(cw+gap)*2,cardsY2,cw,ch,"突破品質2.0",breakoutQualityBadgeV360(st.breakoutQuality360),st.breakoutQuality360.key==="WAIT"?"突破後才評分":`覆蓋 ${st.breakoutQuality360.coverageLabel}｜0–10分≠勝率`,"purple");
 
@@ -19027,7 +19110,9 @@ function renderStockInfographicV3328(report){
   if(bDefense370)defenseBullets370.push(`🟠 結構防守：${fmt(bDefense370.level)} 元｜B角色支撐`);
   if(maDefense370)defenseBullets370.push(`🔵 趨勢防守：${fmt(maDefense370.level)} 元｜日20MA`);
   const primaryStatusBullet370=(st.machine?.key==="WAIT_AB"||st.nStatus==="forming"&&st.machine?.key==="WAIT_AB")?`🟡 新進狀態：等待｜一句話：${plain362.summary}`:`🚦 現在：${plain362.bias.icon} ${plain362.bias.label}｜一句話：${plain362.summary}`;
-  const bullets=[primaryStatusBullet370,`👤 空手者：${plain362.nonHolderAction}｜${plain362.nonHolderNote}`,`💼 持有者：${plain362.holderAction}｜${plain362.holderNote}`,`${st.breakoutLife360.icon} 突破確認：${st.breakoutLife360.label}｜${st.breakoutLife360.progress}`,`${q360.icon} 品質：${q360.key==="WAIT"?q360.label:`${q360.label}｜${q360.scoreText}`}｜${qPlus}`,`⚠️ 主要風險：${qRisk}`,`${st.volumePosition.icon} 量價：${st.volumePosition.label}${st.vol!==null?`｜目前 ${fmt(st.vol,2)}倍`:""}${st.volumePosition.brVol!==null?`｜突破日 ${fmt(st.volumePosition.brVol,2)}倍`:""}｜RSI ${st.rsi===null?"-":fmt(st.rsi)}`,b360?.resistance?`⬆️ 壓力：${b360.resistance.text}｜${b360.resistance.strength}`:(cUp?`⬆️ 壓力：${fmt(cUp.avg)} 元｜${cUp.strength}`:(up?`⬆️ 壓力：${up.label} ${fmt(up.value)} 元`:"⬆️ 壓力：等待新關卡")),...defenseBullets370];
+  const breakoutPlainC370=breakoutLifecyclePlainV370(st.breakoutLife360);
+  const breakoutCText370=`${st.breakoutLife360.icon} 突破狀態：${breakoutPlainC370.title}${breakoutPlainC370.detail?`｜${breakoutPlainC370.detail}`:""}`;
+  const bullets=[primaryStatusBullet370,`👤 空手者：${plain362.nonHolderAction}｜${plain362.nonHolderNote}`,`💼 持有者：${plain362.holderAction}｜${plain362.holderNote}`,breakoutCText370,`${q360.icon} 品質：${q360.key==="WAIT"?q360.label:`${q360.label}｜${q360.scoreText}`}｜${qPlus}`,`⚠️ 主要風險：${qRisk}`,`${st.volumePosition.icon} 量價：${st.volumePosition.label}${st.vol!==null?`｜目前 ${fmt(st.vol,2)}倍`:""}${st.volumePosition.brVol!==null?`｜突破日 ${fmt(st.volumePosition.brVol,2)}倍`:""}｜RSI ${st.rsi===null?"-":fmt(st.rsi)}`,b360?.resistance?`⬆️ 壓力：${b360.resistance.text}｜${b360.resistance.strength}`:(cUp?`⬆️ 壓力：${fmt(cUp.avg)} 元｜${cUp.strength}`:(up?`⬆️ 壓力：${up.label} ${fmt(up.value)} 元`:"⬆️ 壓力：等待新關卡")),...defenseBullets370];
   // V3.6.7.9：Research Gate 通過且目前有型態時，仍用獨立白話驗證卡；不把研究結果混進突破品質分數。
   const researchCard3673=researchImageCardDataV3673(st.research367);
   bullets.push(tridentImageTextV361(st.trident361));
@@ -19048,7 +19133,7 @@ function renderStockInfographicV3328(report){
     const split=splitSummaryBulletsByHeightV370(ctx,bullets,720,available,typo,2);
     split.visible.forEach(b=>{ky=drawWrapV3328(ctx,`• ${b}`,824,ky,720,typo.lineHeight,2,{size:typo.size,weight:750,color:P.text})+typo.gap;});
     mnemonicOverflowBullets370=split.overflow.slice();
-    if(!mnemonicOverflowBullets370.length&&ky<lowerY+lowerH-106)drawWrapV3328(ctx,`🎯 下一步：${st.breakoutLife360?.next||st.machine.trigger}`,824,ky+4,720,28,2,{size:18,weight:850,color:P.navy});
+    if(!mnemonicOverflowBullets370.length&&ky<lowerY+lowerH-106){const lifeNext370=breakoutLifecyclePlainV370(st.breakoutLife360);drawWrapV3328(ctx,`🎯 下一步：${lifeNext370.next||st.machine.trigger}`,824,ky+4,720,28,2,{size:18,weight:850,color:P.navy});}
   }
 
   // ===== 底部口訣＋固定風險警語（V3.6.6.2） =====
