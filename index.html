@@ -527,7 +527,7 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
 
     <p>月線波段條件判斷＋固定倍數目標價＋費波那契 N字分析</p>
 
-    <span class="version-pill">前端 V3.7.5.4｜RSI時效透明版｜純粹趨勢通道＋短線轉向＋量價發動｜ABC／N字／突破品質2.0／三叉戟／OHLCV Research Gate完整保留｜Worker V2.9.12.1｜月K缺漏降級顯示Hotfix</span>
+    <span class="version-pill">前端 V3.7.5.5｜RSI白話收尾版｜純粹趨勢通道＋短線轉向＋量價發動｜ABC／N字／突破品質2.0／三叉戟／OHLCV Research Gate完整保留｜Worker V2.9.12.1｜月K缺漏降級顯示Hotfix</span>
 
   </div>
 
@@ -926,11 +926,11 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
       <a id="imageDownloadLink" class="image-save-link" href="#" download>💾 儲存 PNG</a>
       <button id="imageShareButton" class="image-share-btn" type="button" onclick="shareInfographicV3328()">📤 分享圖片</button>
     </div>
-    <div id="imagePreviewNote" class="image-preview-note">圖片由目前分析資料直接產生；V3.7.4.5 沿用個股 PNG 1152×2048（9:16）與大盤 PNG 1024×1536（2:3）。個股與大盤的趨勢通道箭頭維持原邏輯；個股「發動狀態」採固定優先權 Gate：①結構失效／突破後跌回B且放量收弱 → ②ABC生命週期（A/B已形成但C未確認） → ③高檔／過熱位置 → ④一般短線發動。底層仍只用已完成 dailySeries，短線3日量比與前兩日高低規則不變；短線訊號不得越級蓋過更重要的結構證據。再攻另分「量價同步／價格先行」，高檔則分流為「高檔續強／高檔整理／高檔不追」。20日量比統一採 <0.8量縮、0.8～<1.3正常、1.3～<2量能放大、2～<3明顯放量、≥3高量／爆量級。技術上沿用三盤規則，但主畫面改用「短線往上轉／往下轉／還沒選方向」；「短線3日量比」只描述最新一日相對前3日均量，「Fib B突破日20日量比」則是正式突破B當日相對20日基準的歷史證據，兩者不可混用。V3.7.4.5延續前版高檔再攻與量比Gate，保留B關卡生命週期用語、日20MA狀態感知與量價方向配對，並完成最後一個MA20生命週期顯示Gate：當新A／B尚未形成時，明確顯示「等待新的A→B」，不再誤寫成「等待C」；只有A、B都已形成且C尚未形成時才顯示「等待有效C」。ABC／Fib／N字、突破品質2.0、三叉戟與嚴格時間證據Gate皆不修改；Worker只套用V2.9.12.1月K缺漏降級顯示Hotfix。 V3.7.4.5沿用「動態滾動盈虧比」：不固定綁三叉戟、Fib、B、固定倍數或1.618；先依有效性與ABC生命週期決定哪些價位有資格，再依現價自動判斷壓力／支撐角色，最後取上下最近有效關卡計算（上檔價差÷下檔價差）。突破一關後會自動往下一個有效關卡滾動；候選預備線不參與正式盈虧比，1.618僅在完整N字確認後啟用。這是價差比，不是勝率，也不改任何原核心判斷。 V3.7.4.5完整沿用三道保護：C尚未確認時Fib回檔層不可單獨當正式防守（除非與正式支撐0.3%內共振）；高檔風險會優先寫成「高檔參考／高檔等C」；第一個有效上方關卡若距現價15%以上，會標示「遠端目標」。另外遇到Worker回傳「近期官方月K資料仍有缺漏」時，前端會自動最多補查3次。 V3.7.4.5沿用兩行白話盈虧比顯示，並完成「盈虧比等級＋風險Gate」雙標籤收尾：第一個標籤固定保留幾何盈虧比本身的偏低／普通／較佳評級；第二個標籤再獨立顯示高檔、等待C、新結構未完成、修復或遠端目標等情境Gate，兩者不再互相覆蓋。例如1:0.24高檔顯示「🔴偏低＋⚠️高檔」，1:4.00高檔顯示「🟢較佳＋⚠️高檔」。V3.7.4.2的關卡選擇、Gate與計算公式完全不變。 V3.7.5.3沿用 RSI Context Engine，並加入「RSI訊號時效Gate」：只有最近5個完整交易日內仍有效的價格／RSI不同步訊號才可升格成目前主判讀；超過5日只保留歷史背景。保留原RSI水位分級，再用同一組已完成日K計算 Wilder RSI 5T歷史序列，判讀近3日方向、極端區持續天數、快速脈衝／順勢推升路徑、價格與RSI是否同步，以及價格結構是否完成確認；RSI只升級為動能輔助證據，不取代價格結構、ABC、N字、MA20、量價與三叉戟。圖片與文字報告全面改用白話說法，例如「股價創高但動能沒跟上／股價創低但RSI沒有同步破低」，避免新手被技術術語卡住。大盤風險也不再因RSI≥80自動失去低風險資格，而改看高檔動能是否延續、價格與RSI是否同步，以及價格是否確認轉弱。 V3.7.5.4只做RSI時效透明化小修：當偵測到仍有效的價格／RSI不同步訊號時，圖片與文字直接顯示「今日訊號／距今N日｜5日內有效｜支撐未破／已確認」；超過5日的舊訊號仍只保留歷史背景，不改RSI計算、ABC、N字、MA20、量價、三叉戟或任何交易Gate。</div>
+    <div id="imagePreviewNote" class="image-preview-note">圖片由目前分析資料直接產生；V3.7.4.5 沿用個股 PNG 1152×2048（9:16）與大盤 PNG 1024×1536（2:3）。個股與大盤的趨勢通道箭頭維持原邏輯；個股「發動狀態」採固定優先權 Gate：①結構失效／突破後跌回B且放量收弱 → ②ABC生命週期（A/B已形成但C未確認） → ③高檔／過熱位置 → ④一般短線發動。底層仍只用已完成 dailySeries，短線3日量比與前兩日高低規則不變；短線訊號不得越級蓋過更重要的結構證據。再攻另分「量價同步／價格先行」，高檔則分流為「高檔續強／高檔整理／高檔不追」。20日量比統一採 <0.8量縮、0.8～<1.3正常、1.3～<2量能放大、2～<3明顯放量、≥3高量／爆量級。技術上沿用三盤規則，但主畫面改用「短線往上轉／往下轉／還沒選方向」；「短線3日量比」只描述最新一日相對前3日均量，「Fib B突破日20日量比」則是正式突破B當日相對20日基準的歷史證據，兩者不可混用。V3.7.4.5延續前版高檔再攻與量比Gate，保留B關卡生命週期用語、日20MA狀態感知與量價方向配對，並完成最後一個MA20生命週期顯示Gate：當新A／B尚未形成時，明確顯示「等待新的A→B」，不再誤寫成「等待C」；只有A、B都已形成且C尚未形成時才顯示「等待有效C」。ABC／Fib／N字、突破品質2.0、三叉戟與嚴格時間證據Gate皆不修改；Worker只套用V2.9.12.1月K缺漏降級顯示Hotfix。 V3.7.4.5沿用「動態滾動盈虧比」：不固定綁三叉戟、Fib、B、固定倍數或1.618；先依有效性與ABC生命週期決定哪些價位有資格，再依現價自動判斷壓力／支撐角色，最後取上下最近有效關卡計算（上檔價差÷下檔價差）。突破一關後會自動往下一個有效關卡滾動；候選預備線不參與正式盈虧比，1.618僅在完整N字確認後啟用。這是價差比，不是勝率，也不改任何原核心判斷。 V3.7.4.5完整沿用三道保護：C尚未確認時Fib回檔層不可單獨當正式防守（除非與正式支撐0.3%內共振）；高檔風險會優先寫成「高檔參考／高檔等C」；第一個有效上方關卡若距現價15%以上，會標示「遠端目標」。另外遇到Worker回傳「近期官方月K資料仍有缺漏」時，前端會自動最多補查3次。 V3.7.4.5沿用兩行白話盈虧比顯示，並完成「盈虧比等級＋風險Gate」雙標籤收尾：第一個標籤固定保留幾何盈虧比本身的偏低／普通／較佳評級；第二個標籤再獨立顯示高檔、等待C、新結構未完成、修復或遠端目標等情境Gate，兩者不再互相覆蓋。例如1:0.24高檔顯示「🔴偏低＋⚠️高檔」，1:4.00高檔顯示「🟢較佳＋⚠️高檔」。V3.7.4.2的關卡選擇、Gate與計算公式完全不變。 V3.7.5.3沿用 RSI Context Engine，並加入「RSI訊號時效Gate」：只有最近5個完整交易日內仍有效的價格／RSI不同步訊號才可升格成目前主判讀；超過5日只保留歷史背景。保留原RSI水位分級，再用同一組已完成日K計算 Wilder RSI 5T歷史序列，判讀近3日方向、極端區持續天數、快速脈衝／順勢推升路徑、價格與RSI是否同步，以及價格結構是否完成確認；RSI只升級為動能輔助證據，不取代價格結構、ABC、N字、MA20、量價與三叉戟。圖片與文字報告全面改用白話說法，例如「短線高點有抬高但RSI沒有一起變強／近期低點再破低但下跌力道變弱」，避免新手被技術術語卡住。大盤風險也不再因RSI≥80自動失去低風險資格，而改看高檔動能是否延續、價格與RSI是否同步，以及價格是否確認轉弱。 V3.7.5.5只做RSI白話語意收尾：將「近期高點創高｜動能沒跟上」改成「短線高點有抬高｜RSI沒有一起變強」，並將時效／確認文字改為「今日訊號／距今N日｜5日內留意｜價格還沒跌破最近支撐／已跌破最近支撐」；只改善新手閱讀，不改RSI計算、時效Gate、ABC、N字、MA20、量價、三叉戟或任何交易Gate。</div>
   </div>
 </div>
 
-<footer class="footer">石頭少爺 Agent｜GitHub 前端 V3.7.5.4｜RSI時效透明版｜V3.7.3.5 完整母版沿用｜純粹趨勢通道＋短線轉向＋短線3日量比＋點火價格品質過濾＋高檔續強分流＋ABC生命週期語意Gate＋Fib突破日20日量比口徑分離＋B角色生命週期用語Gate＋MA20生命週期最終Gate＋量價方向配對＋動態滾動盈虧比｜ABC／Fib／N字／突破品質2.0／三叉戟／OHLCV Research Gate核心不變｜Worker V2.9.12.1｜月K缺漏降級顯示Hotfix<br>技術分析僅供研究與決策參考，不構成投資建議。<br>本版重點：回歸V3.6.7.9純粹架構；不做浪號計數，個股與大盤K線以趨勢通道箭頭呈現方向，並維持文字避讓與既有固定版型。</footer>
+<footer class="footer">石頭少爺 Agent｜GitHub 前端 V3.7.5.5｜RSI白話收尾版｜V3.7.3.5 完整母版沿用｜純粹趨勢通道＋短線轉向＋短線3日量比＋點火價格品質過濾＋高檔續強分流＋ABC生命週期語意Gate＋Fib突破日20日量比口徑分離＋B角色生命週期用語Gate＋MA20生命週期最終Gate＋量價方向配對＋動態滾動盈虧比｜ABC／Fib／N字／突破品質2.0／三叉戟／OHLCV Research Gate核心不變｜Worker V2.9.12.1｜月K缺漏降級顯示Hotfix<br>技術分析僅供研究與決策參考，不構成投資建議。<br>本版重點：回歸V3.6.7.9純粹架構；不做浪號計數，個股與大盤K線以趨勢通道箭頭呈現方向，並維持文字避讓與既有固定版型。</footer>
 
 <script>
 
@@ -15898,7 +15898,7 @@ function normalizeDailyBarsV361(report){
 }
 
 // ========================================================================
-// V3.7.5.4｜RSI時效透明版｜小修：把「今日訊號／距今N日、5日內有效、是否已由價格確認」直接顯示；判斷與Gate條件不變。
+// V3.7.5.5｜RSI白話收尾版｜只改顯示語意：短線高點抬高不再誤寫成突破前波高點；「5日內有效」改成較保守的「5日內留意」。判斷與Gate條件不變。
 // V3.7.5.3｜RSI時效Gate版｜沿用V3.7.5.0 RSI計算，新增5個完整交易日的不同步訊號時效Gate，並維持白話顯示
 // V3.7.5.0｜RSI Context Engine｜同週期動能狀態判讀
 // - 保留既有 getRsiReportInfo() 水位分級；新增「路徑／方向／持續時間／價格與RSI同步性／價格確認」。
@@ -16099,9 +16099,9 @@ function rsiContextV3750(source,opts={}){
   let key="NEUTRAL",icon=base.icon,label=base.label,color="#2563eb";
 
   if(divergence.type==="top"&&divergence.status==="confirmed"){
-    key="TOP_DIV_CONFIRMED";icon="🔴";label="上漲動能已轉弱";color="#dc2626";
+    key="TOP_DIV_CONFIRMED";icon="🔴";label="價格開始轉弱｜先前動能已跟不上";color="#dc2626";
   }else if(divergence.type==="top"&&divergence.status==="candidate"){
-    key="TOP_DIV_CANDIDATE";icon="🟠";label="近期高點創高｜動能沒跟上";color="#d97706";
+    key="TOP_DIV_CANDIDATE";icon="🟠";label="短線高點有抬高｜RSI沒有一起變強";color="#d97706";
   }else if(divergence.type==="bottom"&&divergence.status==="confirmed"){
     key="BOTTOM_DIV_CONFIRMED";icon="🟢";label="下跌力道已減弱｜價格轉強";color="#137333";
   }else if(divergence.type==="bottom"&&divergence.status==="candidate"){
@@ -16150,13 +16150,13 @@ function rsiContextV3750(source,opts={}){
       ?(divergence.status==="confirmed"?"價格也已站回關卡｜轉強確認":"先看價格能不能站回關卡")
       :"目前價格與RSI沒有明顯不同步";
 
-  // V3.7.5.4｜RSI時效透明化：只增加「訊號多久以前出現／是否仍在5日有效期」顯示，完全不改訊號成立條件。
+  // V3.7.5.5｜RSI白話收尾：沿用原5日時效Gate，只把「有效」改成較保守的「留意」，完全不改訊號成立條件。
   const signalAge=Number.isFinite(divergence?.signalAge)?Math.max(0,Math.round(divergence.signalAge)):null;
   const signalMaxAge=Number.isFinite(divergence?.maxAge)?divergence.maxAge:5;
   const signalAgeText=signalAge===null?null:(signalAge===0?"今日訊號":`距今${signalAge}日`);
-  const signalValidityText=divergence.type?`${signalMaxAge}日內有效`:null;
+  const signalValidityText=divergence.type?`${signalMaxAge}日內留意`:null;
   const signalConfirmShort=divergence.type==="top"
-    ?(divergence.status==="confirmed"?"已跌破支撐":"支撐未破")
+    ?(divergence.status==="confirmed"?"已跌破最近支撐":"價格還沒跌破最近支撐")
     :divergence.type==="bottom"
       ?(divergence.status==="confirmed"?"已站回關卡":"尚未站回關卡")
       :null;
@@ -16176,9 +16176,9 @@ function rsiContextV3750(source,opts={}){
   if(zoneText)detailParts.push(zoneText);
 
   if(divergence.type){
-    detailParts.push(`這個訊號${signalAge===0?"今天出現":`距今${signalAge}個完整交易日`}，仍在${signalMaxAge}日有效期內`);
+    detailParts.push(`這個訊號${signalAge===0?"今天出現":`距今${signalAge}個完整交易日`}，仍在${signalMaxAge}日留意期內`);
     detailParts.push(divergence.type==="top"
-      ?`近期高點創得更高，但RSI動能沒有同步變強${divergence.count>1?`（最近5個完整交易日內已${divergence.count}次出現）`:""}`
+      ?`短線高點有抬高，但RSI沒有一起變強${divergence.count>1?`（最近5個完整交易日內已${divergence.count}次出現）`:""}`
       :`近期低點再破低，但RSI下跌力道沒有同步變弱${divergence.count>1?`（最近5個完整交易日內已${divergence.count}次出現）`:""}`);
     if(divergence.confirmLevel!==null){
       detailParts.push(divergence.type==="top"
@@ -16193,7 +16193,7 @@ function rsiContextV3750(source,opts={}){
     const age=historicalDivergence.signalAge;
     detailParts.push(
       historicalDivergence.type==="top"
-        ?`先前曾出現「高點創高但動能沒跟上」，距今約${age}個完整交易日，已超過5日時效，只保留歷史背景`
+        ?`先前曾出現「短線高點抬高，但RSI沒有一起變強」，距今約${age}個完整交易日，已超過5日時效，只保留歷史背景`
         :`先前曾出現「低點再破低但下跌力道變弱」，距今約${age}個完整交易日，已超過5日時效，只保留歷史背景`
     );
   }
@@ -17347,7 +17347,7 @@ function buildReportTextV326(report){
 
   };
 
-  lines.push("📘 石頭少爺分析助手｜GitHub 前端 V3.7.5.4｜RSI時效透明版｜純粹趨勢通道＋短線轉向＋量價發動｜雙向動態價帶＋嚴格時間證據Gate");
+  lines.push("📘 石頭少爺分析助手｜GitHub 前端 V3.7.5.5｜RSI白話收尾版｜純粹趨勢通道＋短線轉向＋量價發動｜雙向動態價帶＋嚴格時間證據Gate");
   lines.push("🧭 趨勢方向改以K線通道箭頭呈現：紅↗上升／綠↘下降／黃→盤整；不使用1～5浪或ABC修正浪計數。 ");
 
   lines.push(`報告產出時間：${generatedAt}`);
@@ -18483,7 +18483,7 @@ function marketRsiContextMetaV3750(data){
   else if(c.key==="TOP_DIV_CANDIDATE"||c.key==="TOP_DIV_CONFIRMED"||c.key==="BOTTOM_DIV_CANDIDATE"||c.key==="BOTTOM_DIV_CONFIRMED"){
     const age=Number.isFinite(c?.rsiSignalAge)?c.rsiSignalAge:null;
     const ageText=age===null?"":(age===0?"｜今日訊號":`｜距今${age}日`);
-    cardLabel=`${c.icon}${c.label}${ageText}｜5日內有效`;
+    cardLabel=`${c.icon}${c.label}${ageText}｜5日內留意`;
   }
   else cardLabel=`${c.icon}${c.label}${c.extremeDays>=2?`｜${c.extremeDays}日`:""}`;
   return {label:c.label,cardLabel,icon:c.icon,level:c.level,note:c.detail,context:c};
@@ -18629,8 +18629,8 @@ function buildMarketWorkerReportText(data){
   const lines=[];
   const section=title=>{lines.push("", "━━━━━━━━━━━━━━━━━━", `【${title}】`, "━━━━━━━━━━━━━━━━━━", "");};
 
-  lines.push("📈 石頭少爺分析助手｜GitHub 前端 V3.7.5.4｜大盤環境戰報｜趨勢通道箭頭版");
-  lines.push("判讀核心：ABC演算法沿用 pivot-abc-v2.4｜V3.7.5.4沿用同週期RSI動能狀態，並把訊號距今交易日／5日有效期直接顯示；高RSI本身不等於轉弱，需搭配方向、持續天數、價格與RSI是否同步，以及價格結構確認");
+  lines.push("📈 石頭少爺分析助手｜GitHub 前端 V3.7.5.5｜大盤環境戰報｜趨勢通道箭頭版");
+  lines.push("判讀核心：ABC演算法沿用 pivot-abc-v2.4｜V3.7.5.5沿用同週期RSI動能狀態，並把訊號距今交易日／5日留意期直接顯示；高RSI本身不等於轉弱，需搭配方向、持續天數、價格與RSI是否同步，以及價格結構確認");
   lines.push(`報告產出時間：${reportGeneratedAt()}`);
   lines.push("");
   lines.push(`指數：臺灣加權股價指數（TAIEX）｜資料來源：${data?.source||"TWSE Official"}`);
@@ -20018,7 +20018,7 @@ function renderStockInfographicV3328(report){
   fontV3328(ctx,22,900,"#fff","center");ctx.fillText("報告製作 By.石頭少爺",1402,52);
   fontV3328(ctx,18,800,"#fff","center");ctx.fillText("圖片產生時間",1402,83);
   fontV3328(ctx,19,900,"#fff","center");ctx.fillText(reportGeneratedAt().replace("（台灣時間）",""),1402,115);
-  fontV3328(ctx,16,700,"#dbeafe","center");ctx.fillText("V3.7.5.4｜RSI時效透明",1402,141);
+  fontV3328(ctx,16,700,"#dbeafe","center");ctx.fillText("V3.7.5.5｜RSI白話收尾",1402,141);
 
   // ===== 上半部：ABC + 結構示意圖 =====
   rrV3328(ctx,24,174,520,520,14,P.white,P.blue,2);
@@ -20150,7 +20150,7 @@ function renderStockInfographicV3328(report){
   fontV3328(ctx,30,950,P.red);ctx.fillText("再突破 B",958,2675);
   fontV3328(ctx,24,900,P.navy,"center");ctx.fillText("＝ 完整 N 字確認。",580,2720);
 
-  // V3.7.5.4｜RSI時效透明升級版：核心計算與V3.7.4.2完全相同，只調整圖片顯示。
+  // V3.7.5.5｜RSI白話收尾升級版：核心計算與V3.7.4.2完全相同，只調整圖片顯示。
   // 第一行保留「動態盈虧比＋風險Gate」；第二行直接翻成每承擔1元風險，可換取多少潛在獲利。
   // 移除第三行重複的目標／防守來源，避免字體被壓得太小；關卡來源仍保留在價格作戰地圖與其他報告欄位。
   const rr3742=afterHoursRiskRewardV3742(st);
@@ -20274,7 +20274,7 @@ function renderMarketInfographicV3328(data){
   rrV3328(ctx,2,2,1596,2396,18,P.white,P.blue,3);
   drawHeaderTitleV3328(ctx,"📈 大盤先懂","現在市場走到哪一步？");
   rrV3328(ctx,26,82,1190,72,10,P.navy,null);fontV3328(ctx,31,900,"#facc15");ctx.fillText("臺灣加權股價指數（TAIEX）",48,128);fontV3328(ctx,24,800,"#fff");ctx.fillText(`｜最新交易日 ${datefmt(data.closeDate)}｜資料來源：${data.source||"TWSE Official"}`,500,128);
-  rrV3328(ctx,1232,18,340,136,12,P.navy,null);fontV3328(ctx,22,900,"#fff","center");ctx.fillText("報告製作 By.石頭少爺",1402,52);fontV3328(ctx,18,800,"#fff","center");ctx.fillText("圖片產生時間",1402,83);fontV3328(ctx,19,900,"#fff","center");ctx.fillText(reportGeneratedAt().replace("（台灣時間）",""),1402,115);fontV3328(ctx,17,700,"#dbeafe","center");ctx.fillText("V3.7.5.4｜RSI時效透明版",1402,141);
+  rrV3328(ctx,1232,18,340,136,12,P.navy,null);fontV3328(ctx,22,900,"#fff","center");ctx.fillText("報告製作 By.石頭少爺",1402,52);fontV3328(ctx,18,800,"#fff","center");ctx.fillText("圖片產生時間",1402,83);fontV3328(ctx,19,900,"#fff","center");ctx.fillText(reportGeneratedAt().replace("（台灣時間）",""),1402,115);fontV3328(ctx,17,700,"#dbeafe","center");ctx.fillText("V3.7.5.5｜RSI白話收尾版",1402,141);
 
   rrV3328(ctx,24,174,520,520,14,P.white,P.blue,2);drawCardTitleV3328(ctx,48,215,"📖 ABC 是這套分析的核心：",P.navy,30);drawWrapV3328(ctx,"A＝起漲點、B＝前波高點、C＝B回檔後由Pivot規則正式確認的回檔低點。",48,255,468,31,3,{size:21,weight:650,color:P.text});
   drawAbcValueRowV3329(ctx,48,365,466,"A",P.green,"起漲點",st.A,st.fib.ADate,"點");
@@ -20853,7 +20853,7 @@ async function analyzeStock(){
 
     set("stockName",hasRealStockName(name,code)?name:`股票代號 ${code}`);
 
-    set("stockMeta",`${code}｜${market}｜${source}｜後端分析 ${version}｜前端 V3.7.5.4｜RSI時效透明`);
+    set("stockMeta",`${code}｜${market}｜${source}｜後端分析 ${version}｜前端 V3.7.5.5｜RSI白話收尾`);
 
     set("closeDate",`最新交易日：${datefmt(closeDate)}`);
 
