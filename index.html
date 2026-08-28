@@ -14187,8 +14187,8 @@ function waveStageAssistV3323(report){
         :`目前較像上升趨勢中的整理；重點看${B!==null&&nStatus==="confirmed"?`已正式突破的B＝${fmt(B)} 元與`:""}${ma!==null?`日20MA＝${fmt(ma)} 元`:"重要支撐"}能否維持。`
     },
     LATE_EXTENSION:{
-      icon:"⚠️",label:"強勢上升延伸／高檔",
-      short:`股價已走到相對高檔${gap!==null&&gap>=10?`，日20MA正乖離 ${fmtSignedPct(gap)}`:""}${rsi!==null&&rsi>=70?`、RSI ${fmt(rsi)} 偏高`:""}；目前先視為強勢上升延伸。若之後出現爆量不漲、關鍵支撐／日20MA失守等訊號，才提高高檔轉弱警戒。`
+      icon:"⚠️",label:"高檔整理／延伸",
+      short:`中期趨勢仍偏多，且股價已走到相對高檔${gap!==null&&gap>=10?`，日20MA正乖離 ${fmtSignedPct(gap)}`:""}${rsi!==null&&rsi>=70?`、RSI ${fmt(rsi)} 偏高`:""}；短線先視為高檔整理／延伸。若之後出現爆量不漲、關鍵支撐／日20MA失守等訊號，才提高高檔轉弱警戒。`
     },
     LATE_RISK:{
       icon:"⚠️",label:"高檔轉弱風險升高",
@@ -16044,6 +16044,38 @@ function fitSummaryTypographyV3673(ctx,bullets,maxWidth,availableHeight){
   ];
   for(const opt of candidates){
     const needed=bullets.reduce((sum,b)=>sum+estimateWrappedLinesV3673(ctx,`• ${b}`,maxWidth,opt.size,750,2)*opt.lineHeight+opt.gap,0);
+    if(needed<=availableHeight)return opt;
+  }
+  return candidates[candidates.length-1];
+}
+
+function splitSummaryBulletsByHeightV370(ctx,bullets,maxWidth,availableHeight,typo,maxLinesPerBullet=2){
+  const visible=[],overflow=[];
+  let used=0;
+  bullets.forEach((b,i)=>{
+    const bulletText=`• ${b}`;
+    const lineCount=Math.max(1,Math.min(maxLinesPerBullet,estimateWrappedLinesV3673(ctx,bulletText,maxWidth,typo.size,750,maxLinesPerBullet)));
+    const need=lineCount*typo.lineHeight+typo.gap;
+    const canFit=(used+need)<=availableHeight;
+    if(canFit||(!visible.length&&i===0)){
+      visible.push(b);
+      used+=need;
+    }else{
+      overflow.push(b);
+    }
+  });
+  return {visible,overflow,used};
+}
+
+function fitMnemonicOverflowTypographyV370(ctx,lines,maxWidth,availableHeight){
+  const candidates=[
+    {size:16,lineHeight:22,maxLines:4},
+    {size:15,lineHeight:21,maxLines:5},
+    {size:14,lineHeight:19,maxLines:6},
+    {size:13,lineHeight:18,maxLines:7}
+  ];
+  for(const opt of candidates){
+    const needed=lines.reduce((sum,line)=>sum+Math.max(1,wrapLinesV3328((()=>{fontV3328(ctx,opt.size,780,'#475467','left');return ctx;})(),line,maxWidth).length)*opt.lineHeight,0);
     if(needed<=availableHeight)return opt;
   }
   return candidates[candidates.length-1];
@@ -19001,29 +19033,52 @@ function renderStockInfographicV3328(report){
   bullets.push(tridentImageTextV361(st.trident361));
   bullets.push(st.trident361?.preparatory?"📝 預：如果撐不住，下面還有一條備用防線":"📝 三叉戟：壓＝漲到這裡容易被賣壓卡住｜撐＝跌到這裡要觀察能不能守住");
   let ky=lowerY+94;
+  let mnemonicOverflowBullets370=[];
   if(researchCard3673){
     const cardH=140,cardX=824,cardW=720,cardY=lowerY+lowerH-cardH-18;
     const available=Math.max(180,cardY-ky-10);
     const typo=fitSummaryTypographyV3673(ctx,bullets,720,available);
-    bullets.forEach(b=>{ky=drawWrapV3328(ctx,`• ${b}`,824,ky,720,typo.lineHeight,2,{size:typo.size,weight:750,color:P.text})+typo.gap;});
+    const split=splitSummaryBulletsByHeightV370(ctx,bullets,720,available,typo,2);
+    split.visible.forEach(b=>{ky=drawWrapV3328(ctx,`• ${b}`,824,ky,720,typo.lineHeight,2,{size:typo.size,weight:750,color:P.text})+typo.gap;});
+    mnemonicOverflowBullets370=split.overflow.slice();
     drawResearchValidationCardV3673(ctx,researchCard3673,cardX,cardY,cardW,cardH);
   }else{
-    bullets.forEach(b=>{ky=drawWrapV3328(ctx,`• ${b}`,824,ky,720,33,2,{size:20,weight:750,color:P.text})+14;});
-    if(ky<lowerY+lowerH-106)drawWrapV3328(ctx,`🎯 下一步：${st.breakoutLife360?.next||st.machine.trigger}`,824,ky+4,720,28,2,{size:18,weight:850,color:P.navy});
+    const available=Math.max(170,lowerY+lowerH-118-ky);
+    const typo=fitSummaryTypographyV3673(ctx,bullets,720,available);
+    const split=splitSummaryBulletsByHeightV370(ctx,bullets,720,available,typo,2);
+    split.visible.forEach(b=>{ky=drawWrapV3328(ctx,`• ${b}`,824,ky,720,typo.lineHeight,2,{size:typo.size,weight:750,color:P.text})+typo.gap;});
+    mnemonicOverflowBullets370=split.overflow.slice();
+    if(!mnemonicOverflowBullets370.length&&ky<lowerY+lowerH-106)drawWrapV3328(ctx,`🎯 下一步：${st.breakoutLife360?.next||st.machine.trigger}`,824,ky+4,720,28,2,{size:18,weight:850,color:P.navy});
   }
 
   // ===== 底部口訣＋固定風險警語（V3.6.6.2） =====
-  // 左側保留原本「記住口訣」內容；右下角使用獨立警語框，避免與 C 區或口訣文字互相覆蓋。
+  // 若 C 區文字超出，僅調整顯示層：把多餘摘要搬到「記住口訣」區，不動任何核心計算。
   rrV3328(ctx,24,2626,1552,174,14,"#f8fbff",P.blue,2);
   const mnemonicRight=1136;
   const warningX=1160,warningY=2642,warningW=388,warningH=142;
+  const hasMnemonicOverflow=mnemonicOverflowBullets370.length>0;
+  const mnemonicTitleY=hasMnemonicOverflow?2668:2692;
+  const mnemonicLineY=hasMnemonicOverflow?2708:2692;
+  const mnemonicEqY=hasMnemonicOverflow?2744:2762;
 
-  fontV3328(ctx,30,900,P.navy);ctx.fillText("☁️ 記住口訣：",58,2692);
-  fontV3328(ctx,32,950,P.green);ctx.fillText("A 起漲",286,2692);fontV3328(ctx,30,900,P.navy);ctx.fillText("→",440,2692);
-  fontV3328(ctx,32,950,P.orange);ctx.fillText("B 前高",492,2692);fontV3328(ctx,30,900,P.navy);ctx.fillText("→",650,2692);
-  fontV3328(ctx,32,950,P.blue2);ctx.fillText(st.C!==null?"C 回檔":"等有效 C",702,2692);fontV3328(ctx,30,900,P.navy);ctx.fillText("→",910,2692);
-  fontV3328(ctx,32,950,P.red);ctx.fillText("再突破 B",958,2692);
-  fontV3328(ctx,28,900,P.navy,"center");ctx.fillText("＝ 完整 N 字確認。",580,2762);
+  fontV3328(ctx,30,900,P.navy);ctx.fillText("☁️ 記住口訣：",58,mnemonicTitleY);
+  fontV3328(ctx,32,950,P.green);ctx.fillText("A 起漲",286,mnemonicLineY);fontV3328(ctx,30,900,P.navy);ctx.fillText("→",440,mnemonicLineY);
+  fontV3328(ctx,32,950,P.orange);ctx.fillText("B 前高",492,mnemonicLineY);fontV3328(ctx,30,900,P.navy);ctx.fillText("→",650,mnemonicLineY);
+  fontV3328(ctx,32,950,P.blue2);ctx.fillText(st.C!==null?"C 回檔":"等有效 C",702,mnemonicLineY);fontV3328(ctx,30,900,P.navy);ctx.fillText("→",910,mnemonicLineY);
+  fontV3328(ctx,32,950,P.red);ctx.fillText("再突破 B",958,mnemonicLineY);
+  fontV3328(ctx,28,900,P.navy,"center");ctx.fillText("＝ 完整 N 字確認。",580,mnemonicEqY);
+
+  if(hasMnemonicOverflow){
+    const overflowY=2768,overflowX=58,overflowLabelW=132,overflowTextX=194;
+    drawFitSingleLineStrictV3661(ctx,"📌 C區補充：",overflowX,overflowY,overflowLabelW,{maxSize:16,minSize:13,weight:900,color:P.navy});
+    const overflowLines=mnemonicOverflowBullets370.map(t=>`• ${t}`);
+    const overflowTypography=fitMnemonicOverflowTypographyV370(ctx,overflowLines,mnemonicRight-overflowTextX-12,2800-overflowY-10);
+    let oy=overflowY;
+    overflowLines.forEach((line,idx)=>{
+      if(idx>=4)return;
+      oy=drawWrapV3328(ctx,line,overflowTextX,oy,mnemonicRight-overflowTextX-12,overflowTypography.lineHeight,2,{size:overflowTypography.size,weight:780,color:P.muted})+2;
+    });
+  }
 
   // 右下角警語：完整保留原文字，只搬移位置；以淡紅底＋紅框確保辨識度。
   rrV3328(ctx,warningX,warningY,warningW,warningH,12,"#fff7f7",P.red,2);
