@@ -941,6 +941,9 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
 // 三叉戟、量價位置化、動態防守、OHLCV Research Gate與既有圖片尺寸全部保留。
 // 顯示更新：個股與大盤真實日K加入趨勢通道箭頭。
 // 台股配色：紅＝上升、綠＝下降、黃＝盤整。
+// V3.7.0 三模組最終同步：在不改ABC／Fib／N字／Worker核心的前提下，
+// ① V3.6決策核心最近下方改讀 Dynamic Defense State；② WAIT_AB補齊專屬風險升級；
+// ③ 價格作戰地圖補入三叉戟正式支撐／候選預備線，讓三個深層輸出模組與新手短版一致。
 // V3.7.0 動態防守整合：延續最終語意收斂；新增三項顯示一致性優化：
 // ① 明確區分「ABC交易狀態」與「突破確認生命週期」；
 // ② 當前量能與歷史突破日量能分開顯示；
@@ -15966,6 +15969,13 @@ function decisionEngineV360(report){
 
 function appendDecisionEngineV360(lines,report){
   const d=decisionEngineV360(report),q=d.quality;
+  // V3.7.0｜三模組最終同步：V3.6 決策核心的「最近下方」改吃同一份 Dynamic Defense State，
+  // 避免價格共振／新手短版顯示三叉戟撐，但決策核心仍顯示較遠的 MA20。
+  const defense370=dynamicDefenseStackV370(report);
+  const nearestFormal370=defense370?.first||null;
+  const nextFormal370=nearestFormal370
+    ?defense370.layers.find(x=>!x.candidate&&x.level<nearestFormal370.level-Math.max(Math.abs(nearestFormal370.level),1)*1e-8)||null
+    :null;
   lineSection(lines,"🧠 V3.6 決策核心｜階段 → 突破 → 價帶 → 防守 → 稽核");
   lines.push(`${d.phase.icon} 市場階段：${d.phase.label}｜證據信心 ${d.phase.confidence}`);
   lines.push(`➡️ ${d.phase.summary}`);
@@ -15988,7 +15998,16 @@ function appendDecisionEngineV360(lines,report){
   lines.push("");
   lines.push(`🧲 支撐／壓力角色：${d.bands.bRole}`);
   lines.push(`⬆️ 最近上方價帶：${d.bands.resistance?`${d.bands.resistance.text}｜${d.bands.resistance.strength}｜${d.bands.resistance.labels.slice(0,3).join("＋")}`:"暫無可驗證上方價帶"}`);
-  lines.push(`⬇️ 最近下方價帶：${d.bands.support?`${d.bands.support.text}｜${d.bands.support.strength}｜${d.bands.support.labels.slice(0,3).join("＋")}`:"暫無可驗證下方價帶"}`);
+  if(nearestFormal370){
+    const nearestRole370=nearestFormal370.kind==="trident_support"?"三叉戟正式支撐":nearestFormal370.role;
+    lines.push(`⬇️ 最近戰術支撐：${fmt(nearestFormal370.level)} 元｜${nearestRole370}`);
+    if(nextFormal370){
+      const nextRole370=nextFormal370.kind==="ma20"?"下一正式趨勢防守｜日20MA":nextFormal370.role;
+      lines.push(`🔵 下一正式防守：${fmt(nextFormal370.level)} 元｜${nextRole370}`);
+    }
+  }else{
+    lines.push(`⬇️ 最近下方價帶：${d.bands.support?`${d.bands.support.text}｜${d.bands.support.strength}｜${d.bands.support.labels.slice(0,3).join("＋")}`:"暫無可驗證下方價帶"}`);
+  }
   lines.push("");
   lines.push(`${d.trident.icon} 三叉戟壓支輔助：${d.trident.label}`);
   lines.push(`➡️ ${d.trident.text}`);
@@ -16420,7 +16439,7 @@ function buildReportTextV326(report){
 
   };
 
-  lines.push("📘 石頭少爺分析助手｜GitHub 前端 V3.7.0｜純粹趨勢通道箭頭版｜動態防守最終同步");
+  lines.push("📘 石頭少爺分析助手｜GitHub 前端 V3.7.0｜純粹趨勢通道箭頭版｜三模組最終同步修正");
   lines.push("🧭 趨勢方向改以K線通道箭頭呈現：紅↗上升／綠↘下降／黃→盤整；不使用1～5浪或ABC修正浪計數。 ");
 
   lines.push(`報告產出時間：${generatedAt}`);
@@ -16797,7 +16816,22 @@ function buildReportTextV326(report){
 
   lineSection(lines,"⚠️ 第三層｜風險升級：什麼時候轉弱／落入盤整？");
 
-  if(nStatus==="confirmed"){
+  if(waitAB){
+
+    // V3.7.0｜WAIT_AB 專屬風險層級：新ABC尚未建立時，不硬套 B／C／A 的新結構失效語意。
+    const riskDefense370=dynamicDefenseStackV370(report,s);
+    const tacticalRisk370=riskDefense370?.layers?.find(x=>x.kind==="trident_support"&&!x.candidate)||null;
+    const prepRisk370=riskDefense370?.layers?.find(x=>x.kind==="trident_preparatory"&&x.candidate)||null;
+    const maRisk370=riskDefense370?.layers?.find(x=>x.kind==="ma20"&&!x.candidate)||null;
+    const neckRisk370=riskDefense370?.layers?.find(x=>x.kind==="tactical_neck"&&!x.candidate)||null;
+
+    if(tacticalRisk370)lines.push(`🛡️ 戰術提醒層：${fmt(tacticalRisk370.level)} 元（三叉戟撐）失守 → 提高短線保護、觀察下一層；不代表新ABC失效，也不等於整組趨勢翻空。`);
+    if(prepRisk370)lines.push(`🟣 候選觀察：${fmt(prepRisk370.level)} 元（三叉戟預）僅為候選預備線 → 不作正式支撐，也不參與ABC／費波那契／N字失效判定。`);
+    if(maRisk370)lines.push(`⚠️ 趨勢層：價格跌回日20MA ${fmt(maRisk370.level)} 元下方且均線斜率同步轉弱 → 上升趨勢評級下降，等待新的可驗證結構。`);
+    if(neckRisk370)lines.push(`⚠️ 戰術突破層：完整日K收盤跌回 ${fmt(neckRisk370.level)} 元戰術頸線下方 → 舊戰術突破品質下降；仍不等於新ABC失效。`);
+    lines.push("🔄 ABC層：新A／B尚未建立，因此目前不存在新ABC的B／C／A失效判定；先等待新的A→B。 ");
+
+  }else if(nStatus==="confirmed"){
 
     const riskDefense370=dynamicDefenseStackV370(report,s);
     const tacticalRisk370=riskDefense370?.layers?.find(x=>x.kind==="trident_support"&&!x.candidate)||null;
@@ -16854,6 +16888,24 @@ function buildReportTextV326(report){
   );
 
   add(close,`📍 ${fmt(close)} 元｜現在股價的位置`,`目前最新收盤就在這裡，往上、往下都以這個價位當作地圖中心。`,"目前收盤價");
+
+  // V3.7.0｜價格作戰地圖同步 Dynamic Defense State：
+  // 只把三叉戟正式支撐與候選預備線補進地圖；B／MA20／戰術頸線仍沿用原本各自的正式角色與說明。
+  const mapDefense370=dynamicDefenseStackV370(report,s);
+  const mapTriSupport370=mapDefense370?.layers?.find(x=>x.kind==="trident_support"&&!x.candidate)||null;
+  const mapTriPrep370=mapDefense370?.layers?.find(x=>x.kind==="trident_preparatory"&&x.candidate)||null;
+  if(mapTriSupport370)add(
+    mapTriSupport370.level,
+    `🛡️ ${fmt(mapTriSupport370.level)} 元｜三叉戟撐｜最近戰術支撐`,
+    "這是目前現價下方最近的正式三叉戟戰術支撐；失守後提高短線保護，但不直接等同ABC／N字失效。",
+    "三叉戟撐"
+  );
+  if(mapTriPrep370)add(
+    mapTriPrep370.level,
+    `🟣 ${fmt(mapTriPrep370.level)} 元｜三叉戟預｜候選預備線`,
+    "這條線只作候選備用觀察，不等同正式支撐，也不參與ABC／費波那契／N字失效判定。",
+    "三叉戟預"
+  );
 
   if(s?.tacticalActive&&n(s?.tacticalEvent?.neckline)!==null){
     const tacticalNeck=n(s.tacticalEvent.neckline);
