@@ -527,7 +527,7 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
 
     <p>月線波段條件判斷＋固定倍數目標價＋費波那契 N字分析</p>
 
-    <span class="version-pill">前端 V3.7.4.5｜盈虧比雙標籤收尾版｜純粹趨勢通道＋短線轉向＋量價發動｜ABC／N字／突破品質2.0／三叉戟／OHLCV Research Gate完整保留｜Worker V2.9.12.1｜月K缺漏降級顯示Hotfix</span>
+    <span class="version-pill">前端 V3.7.5.0｜RSI動能狀態升級版｜純粹趨勢通道＋短線轉向＋量價發動｜ABC／N字／突破品質2.0／三叉戟／OHLCV Research Gate完整保留｜Worker V2.9.12.1｜月K缺漏降級顯示Hotfix</span>
 
   </div>
 
@@ -926,11 +926,11 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
       <a id="imageDownloadLink" class="image-save-link" href="#" download>💾 儲存 PNG</a>
       <button id="imageShareButton" class="image-share-btn" type="button" onclick="shareInfographicV3328()">📤 分享圖片</button>
     </div>
-    <div id="imagePreviewNote" class="image-preview-note">圖片由目前分析資料直接產生；V3.7.4.5 沿用個股 PNG 1152×2048（9:16）與大盤 PNG 1024×1536（2:3）。個股與大盤的趨勢通道箭頭維持原邏輯；個股「發動狀態」採固定優先權 Gate：①結構失效／突破後跌回B且放量收弱 → ②ABC生命週期（A/B已形成但C未確認） → ③高檔／過熱位置 → ④一般短線發動。底層仍只用已完成 dailySeries，短線3日量比與前兩日高低規則不變；短線訊號不得越級蓋過更重要的結構證據。再攻另分「量價同步／價格先行」，高檔則分流為「高檔續強／高檔整理／高檔不追」。20日量比統一採 <0.8量縮、0.8～<1.3正常、1.3～<2量能放大、2～<3明顯放量、≥3高量／爆量級。技術上沿用三盤規則，但主畫面改用「短線往上轉／往下轉／還沒選方向」；「短線3日量比」只描述最新一日相對前3日均量，「Fib B突破日20日量比」則是正式突破B當日相對20日基準的歷史證據，兩者不可混用。V3.7.4.5延續前版高檔再攻與量比Gate，保留B關卡生命週期用語、日20MA狀態感知與量價方向配對，並完成最後一個MA20生命週期顯示Gate：當新A／B尚未形成時，明確顯示「等待新的A→B」，不再誤寫成「等待C」；只有A、B都已形成且C尚未形成時才顯示「等待有效C」。ABC／Fib／N字、突破品質2.0、三叉戟與嚴格時間證據Gate皆不修改；Worker只套用V2.9.12.1月K缺漏降級顯示Hotfix。 V3.7.4.5沿用「動態滾動盈虧比」：不固定綁三叉戟、Fib、B、固定倍數或1.618；先依有效性與ABC生命週期決定哪些價位有資格，再依現價自動判斷壓力／支撐角色，最後取上下最近有效關卡計算（上檔價差÷下檔價差）。突破一關後會自動往下一個有效關卡滾動；候選預備線不參與正式盈虧比，1.618僅在完整N字確認後啟用。這是價差比，不是勝率，也不改任何原核心判斷。 V3.7.4.5完整沿用三道保護：C尚未確認時Fib回檔層不可單獨當正式防守（除非與正式支撐0.3%內共振）；高檔風險會優先寫成「高檔參考／高檔等C」；第一個有效上方關卡若距現價15%以上，會標示「遠端目標」。另外遇到Worker回傳「近期官方月K資料仍有缺漏」時，前端會自動最多補查3次。 V3.7.4.5沿用兩行白話盈虧比顯示，並完成「盈虧比等級＋風險Gate」雙標籤收尾：第一個標籤固定保留幾何盈虧比本身的偏低／普通／較佳評級；第二個標籤再獨立顯示高檔、等待C、新結構未完成、修復或遠端目標等情境Gate，兩者不再互相覆蓋。例如1:0.24高檔顯示「🔴偏低＋⚠️高檔」，1:4.00高檔顯示「🟢較佳＋⚠️高檔」。V3.7.4.2的關卡選擇、Gate與計算公式完全不變。</div>
+    <div id="imagePreviewNote" class="image-preview-note">圖片由目前分析資料直接產生；V3.7.4.5 沿用個股 PNG 1152×2048（9:16）與大盤 PNG 1024×1536（2:3）。個股與大盤的趨勢通道箭頭維持原邏輯；個股「發動狀態」採固定優先權 Gate：①結構失效／突破後跌回B且放量收弱 → ②ABC生命週期（A/B已形成但C未確認） → ③高檔／過熱位置 → ④一般短線發動。底層仍只用已完成 dailySeries，短線3日量比與前兩日高低規則不變；短線訊號不得越級蓋過更重要的結構證據。再攻另分「量價同步／價格先行」，高檔則分流為「高檔續強／高檔整理／高檔不追」。20日量比統一採 <0.8量縮、0.8～<1.3正常、1.3～<2量能放大、2～<3明顯放量、≥3高量／爆量級。技術上沿用三盤規則，但主畫面改用「短線往上轉／往下轉／還沒選方向」；「短線3日量比」只描述最新一日相對前3日均量，「Fib B突破日20日量比」則是正式突破B當日相對20日基準的歷史證據，兩者不可混用。V3.7.4.5延續前版高檔再攻與量比Gate，保留B關卡生命週期用語、日20MA狀態感知與量價方向配對，並完成最後一個MA20生命週期顯示Gate：當新A／B尚未形成時，明確顯示「等待新的A→B」，不再誤寫成「等待C」；只有A、B都已形成且C尚未形成時才顯示「等待有效C」。ABC／Fib／N字、突破品質2.0、三叉戟與嚴格時間證據Gate皆不修改；Worker只套用V2.9.12.1月K缺漏降級顯示Hotfix。 V3.7.4.5沿用「動態滾動盈虧比」：不固定綁三叉戟、Fib、B、固定倍數或1.618；先依有效性與ABC生命週期決定哪些價位有資格，再依現價自動判斷壓力／支撐角色，最後取上下最近有效關卡計算（上檔價差÷下檔價差）。突破一關後會自動往下一個有效關卡滾動；候選預備線不參與正式盈虧比，1.618僅在完整N字確認後啟用。這是價差比，不是勝率，也不改任何原核心判斷。 V3.7.4.5完整沿用三道保護：C尚未確認時Fib回檔層不可單獨當正式防守（除非與正式支撐0.3%內共振）；高檔風險會優先寫成「高檔參考／高檔等C」；第一個有效上方關卡若距現價15%以上，會標示「遠端目標」。另外遇到Worker回傳「近期官方月K資料仍有缺漏」時，前端會自動最多補查3次。 V3.7.4.5沿用兩行白話盈虧比顯示，並完成「盈虧比等級＋風險Gate」雙標籤收尾：第一個標籤固定保留幾何盈虧比本身的偏低／普通／較佳評級；第二個標籤再獨立顯示高檔、等待C、新結構未完成、修復或遠端目標等情境Gate，兩者不再互相覆蓋。例如1:0.24高檔顯示「🔴偏低＋⚠️高檔」，1:4.00高檔顯示「🟢較佳＋⚠️高檔」。V3.7.4.2的關卡選擇、Gate與計算公式完全不變。 V3.7.5.0新增 RSI Context Engine：保留原RSI水位分級，但再用同一組已完成日K計算 Wilder RSI 5T歷史序列，判讀近3日方向、極端區持續天數、快速脈衝／順勢推升路徑、頂／底背離候選與價格結構確認；RSI只升級為動能輔助證據，不取代價格結構、ABC、N字、MA20、量價與三叉戟。大盤風險不再因RSI≥80自動失去低風險資格，而改看高檔動能是否延續、是否背離及價格是否確認轉弱。</div>
   </div>
 </div>
 
-<footer class="footer">石頭少爺 Agent｜GitHub 前端 V3.7.4.5｜盈虧比雙標籤收尾版｜V3.7.3.5 完整母版沿用｜純粹趨勢通道＋短線轉向＋短線3日量比＋點火價格品質過濾＋高檔續強分流＋ABC生命週期語意Gate＋Fib突破日20日量比口徑分離＋B角色生命週期用語Gate＋MA20生命週期最終Gate＋量價方向配對＋動態滾動盈虧比｜ABC／Fib／N字／突破品質2.0／三叉戟／OHLCV Research Gate核心不變｜Worker V2.9.12.1｜月K缺漏降級顯示Hotfix<br>技術分析僅供研究與決策參考，不構成投資建議。<br>本版重點：回歸V3.6.7.9純粹架構；不做浪號計數，個股與大盤K線以趨勢通道箭頭呈現方向，並維持文字避讓與既有固定版型。</footer>
+<footer class="footer">石頭少爺 Agent｜GitHub 前端 V3.7.5.0｜RSI動能狀態升級版｜V3.7.3.5 完整母版沿用｜純粹趨勢通道＋短線轉向＋短線3日量比＋點火價格品質過濾＋高檔續強分流＋ABC生命週期語意Gate＋Fib突破日20日量比口徑分離＋B角色生命週期用語Gate＋MA20生命週期最終Gate＋量價方向配對＋動態滾動盈虧比｜ABC／Fib／N字／突破品質2.0／三叉戟／OHLCV Research Gate核心不變｜Worker V2.9.12.1｜月K缺漏降級顯示Hotfix<br>技術分析僅供研究與決策參考，不構成投資建議。<br>本版重點：回歸V3.6.7.9純粹架構；不做浪號計數，個股與大盤K線以趨勢通道箭頭呈現方向，並維持文字避讓與既有固定版型。</footer>
 
 <script>
 
@@ -3877,7 +3877,7 @@ function esc(v){
 
 }
 
-function renderDailyRsi(value){
+function renderDailyRsi(value,source=null){
 
   const el=document.getElementById("rsiNote");
 
@@ -3897,7 +3897,15 @@ function renderDailyRsi(value){
 
   }
 
-  set("dailyRsiSub","日線 Wilder RSI，週期 5T");
+  const rc3750=source?rsiContextV3750(source):null;
+  set("dailyRsiSub",rc3750&&rc3750.key!=="NO_CONTEXT"?`${rc3750.label}${rc3750.hint?`｜${rc3750.hint}`:""}`:"日線 Wilder RSI，週期 5T");
+
+  if(rc3750&&rc3750.key!=="NO_CONTEXT"){
+    const isBear=rc3750.key==="TOP_DIV_CONFIRMED"||rc3750.key==="TOP_DIV_CANDIDATE"||rc3750.key==="HIGH_WEAKENING";
+    el.className=isBear?"rsi-note warn":"rsi-note normal";
+    el.textContent=`${rc3750.icon} ${rc3750.label}｜${rc3750.detail}。高RSI不等於必跌、低RSI不等於必漲；最後由價格結構確認。`;
+    return;
+  }
 
   if(r>=90){
 
@@ -4456,7 +4464,7 @@ function getRsiReportInfo(value){
 
       label:"極度過熱",
 
-      note:"短線動能非常高，追價與高檔震盪風險明顯提高。",
+      note:"短線動能非常高，代表追價成本與高檔震盪風險提高；高RSI本身不等於趨勢即將反轉。",
 
       level:"extreme"
 
@@ -4472,7 +4480,7 @@ function getRsiReportInfo(value){
 
       label:"過熱",
 
-      note:"短線漲幅已大，追價與高檔震盪風險提高。",
+      note:"短線動能已進入高檔，代表追價成本提高；是否轉弱仍要看RSI方向、背離與價格結構確認。",
 
       level:"hot"
 
@@ -4488,7 +4496,7 @@ function getRsiReportInfo(value){
 
       label:"偏高",
 
-      note:"短線動能偏強，但也要留意高檔震盪與獲利了結壓力。",
+      note:"短線動能偏強；高檔只代表位置風險提高，不單獨視為反轉訊號。",
 
       level:"high"
 
@@ -7991,7 +7999,7 @@ function buildStrategyQuickLines(report,s){
 
   if(s.ma.value!==null)lines.push(`${s.ma.icon} 日20MA：${fmt(s.ma.value)} 元｜${s.ma.slope!==null?`近5日斜率 ${fmtSignedPct(s.ma.slope)}`:"斜率-"}${s.ma.direction?`｜${s.ma.direction}`:""}`);
 
-  lines.push(`${getRsiReportInfo(report.dailyRsi).icon} 日 RSI 5T：${fmt(report.dailyRsi)}｜${getRsiReportInfo(report.dailyRsi).label}`);
+  lines.push(rsiReportLineV3750(report));
 
   if(s.fixed?.next){
 
@@ -8517,7 +8525,7 @@ function buildTechnicalV32Lines(report,s){
 
   lines.push("");
 
-  lines.push(`【日 RSI 5T】${fmt(report.dailyRsi)}｜${getRsiReportInfo(report.dailyRsi).label}`);
+  {const rc3750=rsiContextV3750(report);lines.push(`【日 RSI 5T】${fmt(report.dailyRsi)}｜${rc3750.label}${rc3750.hint?`｜${rc3750.hint}`:""}`);}
 
   if(s.ma.value!==null)lines.push(`【日20MA】${fmt(s.ma.value)} 元｜近5日斜率 ${s.ma.slope!==null?fmtSignedPct(s.ma.slope):"-"}｜${s.ma.direction||"-"}`);
 
@@ -9230,7 +9238,7 @@ function buildStrategyQuickLinesV321(report,s){
 
   const rsiInfo=getRsiReportInfo(report.dailyRsi);
 
-  lines.push(`${rsiInfo.icon} 日 RSI 5T：${fmt(report.dailyRsi)}｜${rsiInfo.label}`);
+  lines.push(rsiReportLineV3750(report));
 
   if(s.volume.latestRatio!==null)lines.push(`${s.latestVolume.icon} 最新相對量：${fmt(s.volume.latestRatio,2)} 倍｜${s.latestVolume.label}`);
 
@@ -10224,7 +10232,7 @@ function buildTechnicalV321Lines(report,s){
 
   lines.push("");
 
-  lines.push(`【日 RSI 5T】${fmt(report.dailyRsi)}｜${getRsiReportInfo(report.dailyRsi).label}`);
+  {const rc3750=rsiContextV3750(report);lines.push(`【日 RSI 5T】${fmt(report.dailyRsi)}｜${rc3750.label}${rc3750.hint?`｜${rc3750.hint}`:""}`);}
 
   if(s.maCtx.value!==null)lines.push(`【日20MA】${fmt(s.maCtx.value)} 元｜近5日斜率 ${s.maCtx.slope!==null?fmtSignedPct(s.maCtx.slope):"-"}｜${s.maCtx.slopeClass.label}｜現價乖離 ${s.maCtx.gapPct!==null?fmtSignedPct(s.maCtx.gapPct):"-"}`);
 
@@ -11142,7 +11150,7 @@ function v323RsiLine(report){
 
   const info=getRsiReportInfo(report?.dailyRsi);
 
-  return `${info.icon} 日 RSI（短線動能）：${n(report?.dailyRsi)===null?"-":fmt(report.dailyRsi,2)}｜${info.label}`;
+  {const rc3750=rsiContextV3750(report);return `${rc3750.icon} 日 RSI（短線動能）：${n(report?.dailyRsi)===null?"-":fmt(report.dailyRsi,2)}｜${rc3750.label}${rc3750.hint?`｜${rc3750.hint}`:""}`;}
 
 }
 
@@ -11634,7 +11642,7 @@ function buildTechnicalLinesV323(report,s){
 
   const rsi=getRsiReportInfo(report.dailyRsi);
 
-  lines.push(`【日 RSI 5T】${n(report.dailyRsi)===null?"-":fmt(report.dailyRsi,2)}｜${rsi.label}`);
+  {const rc3750=rsiContextV3750(report);lines.push(`【日 RSI 5T】${n(report.dailyRsi)===null?"-":fmt(report.dailyRsi,2)}｜${rc3750.label}${rc3750.hint?`｜${rc3750.hint}`:""}`);}
 
   if(s.maCtx.value!==null)lines.push(`【日20MA】${fmt(s.maCtx.value)} 元｜近5日斜率 ${s.maCtx.slope!==null?fmtSignedPct(s.maCtx.slope):"-"}｜${s.maCtx.slopeClass.label}｜現價乖離 ${s.maCtx.gapPct!==null?fmtSignedPct(s.maCtx.gapPct):"-"}`);
 
@@ -15085,7 +15093,7 @@ function technicalSopV342(report){
   steps.push({icon:vol.icon,title:"成交量",text:`${vol.label}${teach.brVol!==null?`｜Fib B突破日20日量比 ${fmt(teach.brVol,2)} 倍`:""}；高檔放量要看價格能否續強，不能只看到量大就當利多。`});
   steps.push({icon:pattern.icon,title:"型態",text:`${pattern.label}｜沒有完整轉折點與頸線序列時，只做型態品質輔助，不硬命名W底、M頭、頭肩底／頂、旗形或三角形。`});
   steps.push({icon:"🛡️",title:"支撐壓力",text:`往上先看：${sp.textUp}｜往下先看：${sp.textDown}。角色會隨突破／跌破改變，不把所有線永遠固定叫支撐或壓力。`});
-  steps.push({icon:ri.icon,title:"指標",text:`日RSI 5T＝${n(report?.dailyRsi)===null?"-":fmt(report.dailyRsi,2)}｜${ri.label}；RSI只做動能／過熱提醒。MACD、KD歷史序列目前未回傳，所以本版不虛構訊號。`});
+  {const rc3750=rsiContextV3750(report);steps.push({icon:rc3750.icon,title:"指標",text:`${rsiTechnicalTextV3750(report)} MACD、KD歷史序列目前未回傳，所以本版不虛構訊號。`});}
   steps.push({icon:e.icon,title:"行動",text:e.action});
 
   let oneLine=`${e.summary}；${e.action}`;
@@ -15888,6 +15896,255 @@ function normalizeDailyBarsV361(report){
   });
   return out;
 }
+
+// ========================================================================
+// V3.7.5.0｜RSI Context Engine｜同週期動能狀態判讀
+// - 保留既有 getRsiReportInfo() 水位分級；新增「路徑／方向／持續時間／背離／價格確認」。
+// - 僅使用 Worker 已回傳的完成日K dailySeries；不新增API、不使用未完成K、不改ABC/Fib/N字核心。
+// - RSI高低只做動能與追價/超跌情境輔助；真正轉弱/轉強仍由價格結構確認。
+// ========================================================================
+function rsiSourceValueV3750(source){
+  return n(source?.dailyRsi5 ?? source?.dailyRsi);
+}
+
+function wilderRsiSeriesV3750(bars,period=5){
+  const a=Array.isArray(bars)?bars:[];
+  const out=new Array(a.length).fill(null);
+  if(a.length<=period)return out;
+  let gain=0,loss=0;
+  for(let i=1;i<=period;i++){
+    const ch=a[i].close-a[i-1].close;
+    if(ch>0)gain+=ch;else if(ch<0)loss+=-ch;
+  }
+  let avgGain=gain/period,avgLoss=loss/period;
+  const calc=()=>avgLoss===0?(avgGain===0?50:100):(100-(100/(1+avgGain/avgLoss)));
+  out[period]=calc();
+  for(let i=period+1;i<a.length;i++){
+    const ch=a[i].close-a[i-1].close;
+    const g=ch>0?ch:0,l=ch<0?-ch:0;
+    avgGain=((avgGain*(period-1))+g)/period;
+    avgLoss=((avgLoss*(period-1))+l)/period;
+    out[i]=calc();
+  }
+  return out;
+}
+
+function rsiDirectionV3750(series){
+  const pts=[];
+  (Array.isArray(series)?series:[]).forEach((v,i)=>{if(Number.isFinite(v))pts.push({i,v});});
+  const last=pts.slice(-4);
+  if(last.length<3)return {key:"UNKNOWN",icon:"⚪",label:"方向資料不足",delta:null};
+  const delta=last[last.length-1].v-last[0].v;
+  let ups=0,downs=0;
+  for(let i=1;i<last.length;i++){
+    const d=last[i].v-last[i-1].v;
+    if(d>0.6)ups++;else if(d<-0.6)downs++;
+  }
+  if(delta>=3&&ups>=2)return {key:"UP",icon:"↗️",label:"近3日上升",delta};
+  if(delta<=-3&&downs>=2)return {key:"DOWN",icon:"↘️",label:"近3日下降",delta};
+  return {key:"FLAT",icon:"→",label:"近3日走平",delta};
+}
+
+function consecutiveRsiDaysV3750(series,predicate){
+  let c=0;
+  for(let i=(Array.isArray(series)?series.length:0)-1;i>=0;i--){
+    const v=series[i];
+    if(!Number.isFinite(v))break;
+    if(predicate(v))c++;else break;
+  }
+  return c;
+}
+
+function rsiPathV3750(series,current){
+  const pts=[];
+  (Array.isArray(series)?series:[]).forEach((v,i)=>{if(Number.isFinite(v))pts.push({i,v});});
+  const recent=pts.slice(-7);
+  if(recent.length<3||!Number.isFinite(current))return {key:"UNKNOWN",label:"路徑資料不足"};
+  const anchor=recent[0].v;
+  const prior=recent.slice(0,-1).map(x=>x.v);
+  if(current>=80){
+    if(prior.some(v=>v<=55)&&current-anchor>=18)return {key:"FAST_UP",label:"快速衝高到高檔"};
+    if(prior.slice(-4).filter(v=>v>=60).length>=3)return {key:"TREND_UP",label:"原本偏強後順勢推升"};
+    return {key:"HIGH",label:"進入高檔區"};
+  }
+  if(current<=20){
+    if(prior.some(v=>v>=45)&&anchor-current>=18)return {key:"FAST_DOWN",label:"快速下殺到低檔"};
+    if(prior.slice(-4).filter(v=>v<=40).length>=3)return {key:"TREND_DOWN",label:"原本偏弱後順勢下探"};
+    return {key:"LOW",label:"進入低檔區"};
+  }
+  return {key:"NORMAL",label:"一般動能區"};
+}
+
+function rsiPivotPointsV3750(bars,rsis,type,left=2,right=2){
+  const a=Array.isArray(bars)?bars:[],out=[];
+  for(let i=Math.max(left,5);i<a.length-right;i++){
+    if(!Number.isFinite(rsis?.[i]))continue;
+    const v=type==="high"?a[i].high:a[i].low;
+    if(!Number.isFinite(v))continue;
+    let ok=true,strict=false;
+    for(let j=1;j<=left;j++){
+      const nv=type==="high"?a[i-j].high:a[i-j].low;
+      if(type==="high"?v<nv:v>nv){ok=false;break;}
+      if(type==="high"?v>nv:v<nv)strict=true;
+    }
+    if(!ok)continue;
+    for(let j=1;j<=right;j++){
+      const nv=type==="high"?a[i+j].high:a[i+j].low;
+      if(type==="high"?v<nv:v>nv){ok=false;break;}
+      if(type==="high"?v>nv:v<nv)strict=true;
+    }
+    if(ok&&strict)out.push({index:i,price:v,rsi:rsis[i],date:a[i].date});
+  }
+  return out;
+}
+
+function rsiDivergenceV3750(bars,rsis){
+  const a=Array.isArray(bars)?bars:[];
+  if(a.length<12)return {type:null,status:"none",count:0,confirmLevel:null};
+  const hi=rsiPivotPointsV3750(a,rsis,"high"),lo=rsiPivotPointsV3750(a,rsis,"low");
+  const recentStart=Math.max(0,a.length-60);
+  const top=[],bottom=[];
+  for(let i=1;i<hi.length;i++){
+    const p1=hi[i-1],p2=hi[i];
+    if(p2.index<recentStart)continue;
+    if(p2.price>p1.price*1.003&&p2.rsi<=p1.rsi-3)top.push({first:p1,second:p2,live:false});
+  }
+  for(let i=1;i<lo.length;i++){
+    const p1=lo[i-1],p2=lo[i];
+    if(p2.index<recentStart)continue;
+    if(p2.price<p1.price*0.997&&p2.rsi>=p1.rsi+3)bottom.push({first:p1,second:p2,live:false});
+  }
+  const lastI=a.length-1,last=a[lastI],lastR=rsis?.[lastI];
+  if(Number.isFinite(lastR)){
+    const prevHi=hi.filter(p=>p.index<=lastI-3).slice(-1)[0];
+    if(prevHi&&last.high>prevHi.price*1.003&&lastR<=prevHi.rsi-3){
+      const live={first:prevHi,second:{index:lastI,price:last.high,rsi:lastR,date:last.date},live:true};
+      if(!top.length||live.second.index>=top[top.length-1].second.index)top.push(live);
+    }
+    const prevLo=lo.filter(p=>p.index<=lastI-3).slice(-1)[0];
+    if(prevLo&&last.low<prevLo.price*0.997&&lastR>=prevLo.rsi+3){
+      const live={first:prevLo,second:{index:lastI,price:last.low,rsi:lastR,date:last.date},live:true};
+      if(!bottom.length||live.second.index>=bottom[bottom.length-1].second.index)bottom.push(live);
+    }
+  }
+  const topLast=top[top.length-1]||null,bottomLast=bottom[bottom.length-1]||null;
+  let chosen=null,type=null;
+  if(topLast&&bottomLast){
+    if(topLast.second.index>=bottomLast.second.index){chosen=topLast;type="top";}else{chosen=bottomLast;type="bottom";}
+  }else if(topLast){chosen=topLast;type="top";}else if(bottomLast){chosen=bottomLast;type="bottom";}
+  if(!chosen)return {type:null,status:"none",count:0,topCount:top.length,bottomCount:bottom.length,confirmLevel:null};
+
+  let confirmed=false,confirmLevel=null;
+  if(!chosen.live&&chosen.second.index<a.length-1){
+    const between=a.slice(chosen.second.index+1,a.length-1);
+    if(between.length>=1){
+      if(type==="top"){
+        confirmLevel=Math.min(...between.map(b=>b.low).filter(Number.isFinite));
+        confirmed=Number.isFinite(confirmLevel)&&last.close<confirmLevel;
+      }else{
+        confirmLevel=Math.max(...between.map(b=>b.high).filter(Number.isFinite));
+        confirmed=Number.isFinite(confirmLevel)&&last.close>confirmLevel;
+      }
+    }
+  }
+  return {
+    type,status:confirmed?"confirmed":"candidate",count:type==="top"?top.length:bottom.length,
+    topCount:top.length,bottomCount:bottom.length,confirmLevel,
+    first:chosen.first,second:chosen.second,live:chosen.live
+  };
+}
+
+function rsiContextV3750(source,opts={}){
+  const bars=normalizeDailyBarsV361(source);
+  const current=rsiSourceValueV3750(source);
+  const base=getRsiReportInfo(current);
+  if(bars.length<8||current===null){
+    return {key:"NO_CONTEXT",icon:base.icon,label:base.label,level:base.level,current,direction:{key:"UNKNOWN",label:"方向資料不足"},path:{key:"UNKNOWN",label:"路徑資料不足"},extremeDays:0,divergence:{type:null,status:"none",count:0},hint:"RSI歷史序列不足｜只顯示目前水位",detail:base.note};
+  }
+  const rsis=wilderRsiSeriesV3750(bars,5);
+  rsis[rsis.length-1]=current; // 最新值一律以Worker正式dailyRsi5為準，歷史脈絡才由同一日K序列重建。
+  const direction=rsiDirectionV3750(rsis),path=rsiPathV3750(rsis,current),divergence=rsiDivergenceV3750(bars,rsis);
+  const d80=consecutiveRsiDaysV3750(rsis,v=>v>=80),d70=consecutiveRsiDaysV3750(rsis,v=>v>=70);
+  const d20=consecutiveRsiDaysV3750(rsis,v=>v<=20),d30=consecutiveRsiDaysV3750(rsis,v=>v<=30);
+  let key="NEUTRAL",icon=base.icon,label=base.label,color="#2563eb";
+  if(divergence.type==="top"&&divergence.status==="confirmed"){
+    key="TOP_DIV_CONFIRMED";icon="🔴";label="頂背離已確認";color="#dc2626";
+  }else if(divergence.type==="top"&&divergence.status==="candidate"){
+    key="TOP_DIV_CANDIDATE";icon="🟠";label="頂背離待確認";color="#d97706";
+  }else if(divergence.type==="bottom"&&divergence.status==="confirmed"){
+    key="BOTTOM_DIV_CONFIRMED";icon="🟢";label="底背離已確認";color="#137333";
+  }else if(divergence.type==="bottom"&&divergence.status==="candidate"){
+    key="BOTTOM_DIV_CANDIDATE";icon="🟡";label="底背離待確認";color="#b45309";
+  }else if(current>=80){
+    if(direction.key==="DOWN"){
+      key="HIGH_WEAKENING";icon="🟠";label="高檔動能轉弱";color="#d97706";
+    }else if(d80>=2){
+      key="HIGH_STRONG_EXTENSION";icon="🔥";label="高檔強勢延續";color="#dc2626";
+    }else if(path.key==="FAST_UP"){
+      key="HIGH_SPIKE";icon="⚡";label="高檔急升｜看延續";color="#d97706";
+    }else{
+      key="HIGH_MOMENTUM";icon="🔥";label="高檔動能偏強";color="#dc2626";
+    }
+  }else if(current>=70){
+    if(direction.key==="DOWN"){
+      key="HIGH_WEAKENING";icon="🟠";label="高檔動能轉弱";color="#d97706";
+    }else{
+      key="HIGH_MOMENTUM";icon="🟡";label="高檔動能偏強";color="#d97706";
+    }
+  }else if(current<=20){
+    if(direction.key==="UP"){
+      key="LOW_RECOVERY";icon="🟢";label="低檔動能回升";color="#137333";
+    }else if(d20>=2){
+      key="LOW_PERSIST";icon="🔵";label="低檔鈍化｜待確認";color="#2563eb";
+    }else{
+      key="LOW_WEAK";icon="🔵";label="低檔動能偏弱";color="#2563eb";
+    }
+  }else if(current<40){
+    key=direction.key==="UP"?"LOW_RECOVERY":"LOW_WEAK";
+    icon=direction.key==="UP"?"🟢":"🔵";
+    label=direction.key==="UP"?"低檔動能回升":"動能偏弱";
+    color=direction.key==="UP"?"#137333":"#2563eb";
+  }else{
+    key=direction.key==="UP"?"MID_UP":direction.key==="DOWN"?"MID_DOWN":"MID_FLAT";
+    icon=direction.key==="UP"?"↗️":direction.key==="DOWN"?"↘️":"→";
+    label=direction.key==="UP"?"中性區動能上升":direction.key==="DOWN"?"中性區動能下降":"中性區動能走平";
+    color="#2563eb";
+  }
+
+  const extremeDays=current>=80?d80:current>=70?d70:current<=20?d20:current<=30?d30:0;
+  const zoneText=current>=80&&d80?`連${d80}日≥80`:current>=70&&d70?`連${d70}日≥70`:current<=20&&d20?`連${d20}日≤20`:current<=30&&d30?`連${d30}日≤30`:null;
+  const divText=divergence.type==="top"?(divergence.status==="confirmed"?"頂背離已由價格確認":"頂背離待價格確認"):divergence.type==="bottom"?(divergence.status==="confirmed"?"底背離已由價格確認":"底背離待價格確認"):(current>=60?"目前無頂背離":"目前無明顯背離");
+  let hint="";
+  if(divergence.type){
+    hint=[direction.label,divText].filter(Boolean).join("｜");
+  }else if(current>=70){
+    hint=[zoneText||direction.label,divText].filter(Boolean).join("｜");
+  }else if(current<=30){
+    hint=[zoneText||direction.label,divText].filter(Boolean).join("｜");
+  }else{
+    hint=[direction.label,path.label].filter(Boolean).join("｜");
+  }
+  const detailParts=[`RSI ${fmt(current,2)}`,path.label,direction.label];
+  if(zoneText)detailParts.push(zoneText);
+  if(divergence.type){
+    detailParts.push(divergence.type==="top"?`價格高點上移、RSI高點下降${divergence.count>1?`（近段${divergence.count}次）`:""}`:`價格低點下移、RSI低點上升${divergence.count>1?`（近段${divergence.count}次）`:""}`);
+    if(divergence.confirmLevel!==null)detailParts.push(`${divergence.status==="confirmed"?"已":"尚未"}${divergence.type==="top"?"跌破":"突破"}確認關卡 ${fmt(divergence.confirmLevel)}`);
+  }else{
+    detailParts.push("目前沒有偵測到明顯RSI背離");
+  }
+  return {key,icon,label,color,current,level:base.level,direction,path,extremeDays,d80,d70,d20,d30,divergence,hint,detail:detailParts.join("；"),series:rsis};
+}
+
+function rsiReportLineV3750(source){
+  const c=rsiContextV3750(source),v=rsiSourceValueV3750(source);
+  return `${c.icon} 日 RSI 5T：${v===null?"-":fmt(v,2)}｜${c.label}${c.hint?`｜${c.hint}`:""}`;
+}
+
+function rsiTechnicalTextV3750(source){
+  const c=rsiContextV3750(source),v=rsiSourceValueV3750(source);
+  return `日RSI 5T＝${v===null?"-":fmt(v,2)}｜${c.label}；${c.detail}。RSI只做動能／追價風險與背離輔助，真正轉弱／轉強仍由價格結構確認。`;
+}
+
 
 
 // ========================================================================
@@ -17020,7 +17277,7 @@ function buildReportTextV326(report){
 
   };
 
-  lines.push("📘 石頭少爺分析助手｜GitHub 前端 V3.7.4.5｜盈虧比雙標籤收尾版｜純粹趨勢通道＋短線轉向＋量價發動｜雙向動態價帶＋嚴格時間證據Gate");
+  lines.push("📘 石頭少爺分析助手｜GitHub 前端 V3.7.5.0｜RSI動能狀態升級版｜純粹趨勢通道＋短線轉向＋量價發動｜雙向動態價帶＋嚴格時間證據Gate");
   lines.push("🧭 趨勢方向改以K線通道箭頭呈現：紅↗上升／綠↘下降／黃→盤整；不使用1～5浪或ABC修正浪計數。 ");
 
   lines.push(`報告產出時間：${generatedAt}`);
@@ -18107,10 +18364,14 @@ function marketEnvironmentMetaV3310(data){
     state="偏弱";
   }
 
+  const rsiCtx3750=rsiContextV3750(data,{market:true});
+  const rsiBearConfirmed=rsiCtx3750.key==="TOP_DIV_CONFIRMED";
+  const rsiCaution=["TOP_DIV_CANDIDATE","HIGH_WEAKENING","HIGH_SPIKE"].includes(rsiCtx3750.key);
   let risk="中";
-  if(nStatus==="FAILED"||(!above20&&slopeDown)||nPhase==="WEAKENING"){
+  if(nStatus==="FAILED"||(!above20&&slopeDown)||nPhase==="WEAKENING"||rsiBearConfirmed){
     risk="高";
-  }else if(state==="偏多"&&nStatus==="CONFIRMED"&&above5&&above10&&(rsi===null||rsi<80)){
+  }else if(state==="偏多"&&nStatus==="CONFIRMED"&&above5&&above10&&!rsiCaution){
+    // RSI>=80不再自動阻止低風險：若同週期仍是高檔強勢延續、沒有背離/動能轉弱，可維持低風險。
     risk="低";
   }
 
@@ -18124,7 +18385,7 @@ function marketEnvironmentMetaV3310(data){
   const slopeText=slope===null?"MA20斜率資料不足":`MA20近5日斜率${slope>=0?"+":""}${fmt(slope)}%${slopeUp?"向上":slopeDown?"向下":"走平"}`;
   const description=`${midText}${ma60Text}，${slopeText}；${shortText}。`;
 
-  return {state,risk,above5,above10,above20,above60,slopeUp,slopeDown,description};
+  return {state,risk,above5,above10,above20,above60,slopeUp,slopeDown,description,rsiContext3750};
 }
 
 function marketPositionMetaV3310(data){
@@ -18140,6 +18401,18 @@ function marketPositionMetaV3310(data){
   if(r764!==null&&close>=r764)return {key:"0618_TO_0764",label:"0.618～0.764偏深回檔區"};
   if(close>=A)return {key:"BELOW_0764",label:"0.764以下極深回檔區"};
   return {key:"BELOW_A",label:"A下方結構失效區"};
+}
+
+
+function marketRsiContextMetaV3750(data){
+  const c=rsiContextV3750(data,{market:true});
+  const base=getRsiReportInfo(data?.dailyRsi5);
+  let cardLabel;
+  if(c.key==="NO_CONTEXT")cardLabel=base.level==="warm"?"偏強｜未過熱":base.label;
+  else if(c.key==="HIGH_STRONG_EXTENSION")cardLabel=`${c.icon}${c.label}${c.d80?`｜連${c.d80}日≥80`:""}｜無頂背離`;
+  else if(c.key==="TOP_DIV_CANDIDATE"||c.key==="TOP_DIV_CONFIRMED")cardLabel=`${c.icon}${c.label}｜${c.direction.label}`;
+  else cardLabel=`${c.icon}${c.label}${c.extremeDays>=2?`｜${c.extremeDays}日`:""}`;
+  return {label:c.label,cardLabel,icon:c.icon,level:c.level,note:c.detail,context:c};
 }
 
 function marketRsiMetaV3310(value){
@@ -18271,7 +18544,7 @@ function buildMarketWorkerReportText(data){
   const status=marketNStatusZh(nStatus).text.replace(/^[^ ]+ /,"");
   const env=marketEnvironmentMetaV3310(data);
   const pos=marketPositionMetaV3310(data);
-  const rsiMeta=marketRsiMetaV3310(data?.dailyRsi5);
+  const rsiMeta=marketRsiContextMetaV3750(data);
   const action=marketActionMetaV3310(data);
   const close=n(data?.close),B=n(fib?.B),A=n(fib?.A),C=n(fib?.C),ma20=n(data?.ma20),slope=n(data?.ma20Slope5Pct);
   const tri=tridentEngineV361(data);
@@ -18282,8 +18555,8 @@ function buildMarketWorkerReportText(data){
   const lines=[];
   const section=title=>{lines.push("", "━━━━━━━━━━━━━━━━━━", `【${title}】`, "━━━━━━━━━━━━━━━━━━", "");};
 
-  lines.push("📈 石頭少爺分析助手｜GitHub 前端 V3.7.4.5｜大盤環境戰報｜趨勢通道箭頭版");
-  lines.push("判讀核心：大盤前端核心沿用 V3.3.10｜ABC演算法沿用 pivot-abc-v2.4｜本次僅統一前端版本標示，大盤判斷公式不變");
+  lines.push("📈 石頭少爺分析助手｜GitHub 前端 V3.7.5.0｜大盤環境戰報｜趨勢通道箭頭版");
+  lines.push("判讀核心：ABC演算法沿用 pivot-abc-v2.4｜V3.7.5.0新增同週期RSI動能狀態；高RSI本身不等於轉弱，需搭配方向、持續天數、背離與價格確認");
   lines.push(`報告產出時間：${reportGeneratedAt()}`);
   lines.push("");
   lines.push(`指數：臺灣加權股價指數（TAIEX）｜資料來源：${data?.source||"TWSE Official"}`);
@@ -18296,7 +18569,7 @@ function buildMarketWorkerReportText(data){
   lines.push(`🧬 N字進度：${status}｜目前階段：${marketNPhaseZh(nPhase)}`);
   lines.push(`🔥 價格位置：${pos.label}${B!==null?`｜B＝${fmt(B)} 點`:""}`);
   lines.push(`📏 中期趨勢：${env.description}`);
-  lines.push(`${rsiMeta.icon} 日 RSI 5T：${fmt(data?.dailyRsi5)}（${rsiMeta.label}）`);
+  lines.push(`${rsiMeta.icon} 日 RSI 5T：${fmt(data?.dailyRsi5)}｜${rsiMeta.label}${rsiMeta.context?.hint?`｜${rsiMeta.context.hint}`:""}`);
   lines.push(`📌 正式N字目標：${nStatus==="CONFIRMED"&&n(fib?.target1618)!==null?`1.618＝${fmt(fib.target1618)} 點已啟用`:nStatus==="ABC_READY"?"C已確認，但尚未完整收盤突破B；延伸目標僅作預估":"C尚未確認，正式1.618暫不啟用"}`);
   lines.push(`🎛️ 個股操作環境：${action.label}｜${action.text}`);
   if(triPressure!==null||triSupport!==null||triPrep!==null){
@@ -18972,7 +19245,8 @@ function stockInfographicStateV3328(report){
   const breakoutGrade=breakoutGradeV350(report);
   const decision=decisionEngineV360(report);
   const launch3730=buildLaunchSignalV3730(report,s);
-  return {s,monthlyStatus,monthlyMeta,nStatus,nPhase,ab,wave,pattern,quality,qualityMeta,entryQuality,entryMeta,A,B,C,rawC,cLife,close,ma,monthMa,rsi,vol,fixed,fixedZone,fixedReclaim,target,machine,volumePosition,confluence,breakoutGrade,decision,launch3730,marketPhase360:decision.phase,breakoutLife360:decision.lifecycle,breakoutQuality360:decision.quality,bands360:decision.bands,defense360:decision.defense,candle360:decision.candle,trident361:decision.trident,research367:decision.research};
+  const rsiContext3750=rsiContextV3750(report);
+  return {s,monthlyStatus,monthlyMeta,nStatus,nPhase,ab,wave,pattern,quality,qualityMeta,entryQuality,entryMeta,A,B,C,rawC,cLife,close,ma,monthMa,rsi,vol,fixed,fixedZone,fixedReclaim,target,machine,volumePosition,confluence,breakoutGrade,decision,launch3730,rsiContext3750,marketPhase360:decision.phase,breakoutLife360:decision.lifecycle,breakoutQuality360:decision.quality,bands360:decision.bands,defense360:decision.defense,candle360:decision.candle,trident361:decision.trident,research367:decision.research};
 }
 
 function stockNStatusLabelV3328(key){
@@ -19534,6 +19808,31 @@ function stockRsiMiniMetaV3678(value){
   return {value:fmt(r,2),label:"🔵 偏弱",hint:"非過熱｜留意支撐",border:"#64748b",fill:"#f8fafc",valueColor:"#334155",labelColor:"#475569"};
 }
 
+
+function stockRsiContextMiniMetaV3750(report){
+  const c=rsiContextV3750(report),r=rsiSourceValueV3750(report);
+  const base=stockRsiMiniMetaV3678(r);
+  if(c.key==="NO_CONTEXT")return base;
+  const bearish=["TOP_DIV_CONFIRMED","TOP_DIV_CANDIDATE","HIGH_WEAKENING"].includes(c.key);
+  const positive=["HIGH_STRONG_EXTENSION","LOW_RECOVERY","BOTTOM_DIV_CONFIRMED"].includes(c.key);
+  return {
+    value:r===null?"--":fmt(r,2),label:`${c.icon} ${c.label}`,
+    hint:c.hint||c.path?.label||"同週期動能判讀",
+    border:bearish?"#d97706":positive?"#16a34a":base.border,
+    fill:bearish?"#fff7ed":positive?"#f0fdf4":base.fill,
+    valueColor:base.valueColor,labelColor:c.color||base.labelColor
+  };
+}
+
+function drawStockRsiMiniCardV3750(ctx,report,x=1370,y=568,w=180,h=100){
+  const P=infoPaletteV3328(),m=stockRsiContextMiniMetaV3750(report);
+  rrV3328(ctx,x,y,w,h,12,m.fill,m.border,2);
+  drawFitSingleLineStrictV3661(ctx,"日RSI 5T",x+12,y+21,w-24,{maxSize:14,minSize:12,weight:900,color:P.navy});
+  drawFitSingleLineStrictV3661(ctx,m.value,x+12,y+50,w-24,{maxSize:26,minSize:21,weight:950,color:m.valueColor});
+  drawFitSingleLineStrictV3661(ctx,m.label,x+12,y+72,w-24,{maxSize:13,minSize:9,weight:900,color:m.labelColor});
+  drawFitSingleLineStrictV3661(ctx,m.hint,x+12,y+91,w-24,{maxSize:10.5,minSize:8,weight:750,color:P.muted});
+}
+
 function drawStockRsiMiniCardV3678(ctx,rsi,x=1370,y=568,w=180,h=100){
   const P=infoPaletteV3328(),m=stockRsiMiniMetaV3678(rsi);
   rrV3328(ctx,x,y,w,h,12,m.fill,m.border,2);
@@ -19557,7 +19856,7 @@ function drawStockTopChartV365(ctx,report,st){
       ADate:st.s.fib.ADate,BDate:st.s.fib.BDate,CDate:st.s.fib.CDate,trident:t
     });
     drawTridentPlainLegendV365(ctx,t,604,t?.preparatory?654:662,720);
-    drawStockRsiMiniCardV3678(ctx,st.rsi);
+    drawStockRsiMiniCardV3750(ctx,report);
   }else{
     drawCardTitleV3328(ctx,586,215,"結構示意圖｜逐日OHLCV不足",P.navy,28);
     fontV3328(ctx,16,700,P.muted);ctx.fillText("未取得至少20根完整日K時不假裝畫真實K線；部署含dailySeries的個股Worker後會自動升級。",586,246);
@@ -19570,7 +19869,7 @@ function drawStockTopChartV365(ctx,report,st){
     ctx.save();ctx.strokeStyle=P.green2;ctx.lineWidth=4;ctx.beginPath();if(st.A!==null){ctx.moveTo(xA,yA);if(st.B!==null)ctx.lineTo(xB,yB);if(st.C!==null){ctx.lineTo(xC,yC);ctx.lineTo(xN,yN);}else if(st.close!==null){ctx.setLineDash([10,8]);ctx.lineTo(xN,yN);}}ctx.stroke();ctx.restore();
     if(st.A!==null)drawPointV3328(ctx,xA,yA,"A",dateCompactV3328(st.s.fib.ADate),P.green);if(st.B!==null)drawPointV3328(ctx,xB,yB,"B",dateCompactV3328(st.s.fib.BDate),P.orange);if(st.C!==null)drawPointV3328(ctx,xC,yC,"C",dateCompactV3328(st.s.fib.CDate),P.blue2);else{fontV3328(ctx,19,900,P.blue2,"center");ctx.fillText("C 尚未形成",xC,gy+gh-14);}if(st.close!==null)drawPointV3328(ctx,xN,yN,"現價","",P.red);
     drawTridentPlainLegendV365(ctx,t,586,638,760);
-    drawStockRsiMiniCardV3678(ctx,st.rsi);
+    drawStockRsiMiniCardV3750(ctx,report);
   }
 }
 
@@ -19645,7 +19944,7 @@ function renderStockInfographicV3328(report){
   fontV3328(ctx,22,900,"#fff","center");ctx.fillText("報告製作 By.石頭少爺",1402,52);
   fontV3328(ctx,18,800,"#fff","center");ctx.fillText("圖片產生時間",1402,83);
   fontV3328(ctx,19,900,"#fff","center");ctx.fillText(reportGeneratedAt().replace("（台灣時間）",""),1402,115);
-  fontV3328(ctx,16,700,"#dbeafe","center");ctx.fillText("V3.7.4.5｜盈虧比雙標籤",1402,141);
+  fontV3328(ctx,16,700,"#dbeafe","center");ctx.fillText("V3.7.5.0｜RSI動能狀態",1402,141);
 
   // ===== 上半部：ABC + 結構示意圖 =====
   rrV3328(ctx,24,174,520,520,14,P.white,P.blue,2);
@@ -19777,7 +20076,7 @@ function renderStockInfographicV3328(report){
   fontV3328(ctx,30,950,P.red);ctx.fillText("再突破 B",958,2675);
   fontV3328(ctx,24,900,P.navy,"center");ctx.fillText("＝ 完整 N 字確認。",580,2720);
 
-  // V3.7.4.5｜盈虧比雙標籤收尾版：核心計算與V3.7.4.2完全相同，只調整圖片顯示。
+  // V3.7.5.0｜RSI動能狀態升級版：核心計算與V3.7.4.2完全相同，只調整圖片顯示。
   // 第一行保留「動態盈虧比＋風險Gate」；第二行直接翻成每承擔1元風險，可換取多少潛在獲利。
   // 移除第三行重複的目標／防守來源，避免字體被壓得太小；關卡來源仍保留在價格作戰地圖與其他報告欄位。
   const rr3742=afterHoursRiskRewardV3742(st);
@@ -19830,8 +20129,9 @@ function marketInfographicStateV3328(data){
   const fib=data?.fib||{},ret=fib?.retracement||{};
   const nStatus=String(data?.N_STATUS||data?.nStatus||"FORMING").toUpperCase();
   const nPhase=String(data?.N_PHASE||data?.nPhase||"WAIT_C").toUpperCase();
+  const rsiContext3750=rsiContextV3750(data,{market:true});
   return {
-    fib,ret,nStatus,nPhase,env:marketEnvironmentMetaV3310(data),pos:marketPositionMetaV3310(data),action:marketActionMetaV3310(data),
+    fib,ret,nStatus,nPhase,rsiContext3750,env:marketEnvironmentMetaV3310(data),pos:marketPositionMetaV3310(data),action:marketActionMetaV3310(data),
     close:n(data?.close),A:n(fib.A),B:n(fib.B),C:n(fib.C),ma5:n(data?.ma5),ma10:n(data?.ma10),ma20:n(data?.ma20),ma60:n(data?.ma60),
     rsi:n(data?.dailyRsi5),slope:n(data?.ma20Slope5Pct),gap:n(data?.ma20GapPct),change:n(data?.change),changePct:n(data?.changePct),
     dailySeriesReadyV365:normalizeMarketDailyBarsV365(data).length>=20,
@@ -19900,7 +20200,7 @@ function renderMarketInfographicV3328(data){
   rrV3328(ctx,2,2,1596,2396,18,P.white,P.blue,3);
   drawHeaderTitleV3328(ctx,"📈 大盤先懂","現在市場走到哪一步？");
   rrV3328(ctx,26,82,1190,72,10,P.navy,null);fontV3328(ctx,31,900,"#facc15");ctx.fillText("臺灣加權股價指數（TAIEX）",48,128);fontV3328(ctx,24,800,"#fff");ctx.fillText(`｜最新交易日 ${datefmt(data.closeDate)}｜資料來源：${data.source||"TWSE Official"}`,500,128);
-  rrV3328(ctx,1232,18,340,136,12,P.navy,null);fontV3328(ctx,22,900,"#fff","center");ctx.fillText("報告製作 By.石頭少爺",1402,52);fontV3328(ctx,18,800,"#fff","center");ctx.fillText("圖片產生時間",1402,83);fontV3328(ctx,19,900,"#fff","center");ctx.fillText(reportGeneratedAt().replace("（台灣時間）",""),1402,115);fontV3328(ctx,17,700,"#dbeafe","center");ctx.fillText("V3.7.4.5｜大盤趨勢通道版",1402,141);
+  rrV3328(ctx,1232,18,340,136,12,P.navy,null);fontV3328(ctx,22,900,"#fff","center");ctx.fillText("報告製作 By.石頭少爺",1402,52);fontV3328(ctx,18,800,"#fff","center");ctx.fillText("圖片產生時間",1402,83);fontV3328(ctx,19,900,"#fff","center");ctx.fillText(reportGeneratedAt().replace("（台灣時間）",""),1402,115);fontV3328(ctx,17,700,"#dbeafe","center");ctx.fillText("V3.7.5.0｜大盤RSI動能版",1402,141);
 
   rrV3328(ctx,24,174,520,520,14,P.white,P.blue,2);drawCardTitleV3328(ctx,48,215,"📖 ABC 是這套分析的核心：",P.navy,30);drawWrapV3328(ctx,"A＝起漲點、B＝前波高點、C＝B回檔後由Pivot規則正式確認的回檔低點。",48,255,468,31,3,{size:21,weight:650,color:P.text});
   drawAbcValueRowV3329(ctx,48,365,466,"A",P.green,"起漲點",st.A,st.fib.ADate,"點");
@@ -19911,7 +20211,7 @@ function renderMarketInfographicV3328(data){
   drawMarketTopChartV365(ctx,data,st);
 
   const cardsY=714,cardsX=24,gap=10,cw=(1552-gap*5)/6,ch=166;
-  drawMetricCardV3328(ctx,cardsX+(cw+gap)*0,cardsY,cw,ch,"大盤環境",st.env.state,`市場風險：${st.env.risk}`,"green");drawMarketMa20CardV3330(ctx,cardsX+(cw+gap)*1,cardsY,cw,ch,st);drawMetricCardV3328(ctx,cardsX+(cw+gap)*2,cardsY,cw,ch,"RSI 5T",st.rsi===null?"-":fmt(st.rsi),marketRsiMetaV3310(st.rsi).cardLabel||marketRsiMetaV3310(st.rsi).label,"orange");drawMetricCardV3328(ctx,cardsX+(cw+gap)*3,cardsY,cw,ch,"價格位置",st.pos.label,"Fib位置描述","orange");drawMetricCardV3328(ctx,cardsX+(cw+gap)*4,cardsY,cw,ch,"N字進度",progress.main,progress.sub,"blue");drawMetricCardV3328(ctx,cardsX+(cw+gap)*5,cardsY,cw,ch,"個股操作環境",st.action.label,st.action.label==="保守"?"提高門檻":"依個股自身結構選股","purple");
+  drawMetricCardV3328(ctx,cardsX+(cw+gap)*0,cardsY,cw,ch,"大盤環境",st.env.state,`市場風險：${st.env.risk}`,"green");drawMarketMa20CardV3330(ctx,cardsX+(cw+gap)*1,cardsY,cw,ch,st);drawMetricCardV3328(ctx,cardsX+(cw+gap)*2,cardsY,cw,ch,"RSI 5T",st.rsi===null?"-":fmt(st.rsi),marketRsiContextMetaV3750(data).cardLabel,"orange");drawMetricCardV3328(ctx,cardsX+(cw+gap)*3,cardsY,cw,ch,"價格位置",st.pos.label,"Fib位置描述","orange");drawMetricCardV3328(ctx,cardsX+(cw+gap)*4,cardsY,cw,ch,"N字進度",progress.main,progress.sub,"blue");drawMetricCardV3328(ctx,cardsX+(cw+gap)*5,cardsY,cw,ch,"個股操作環境",st.action.label,st.action.label==="保守"?"提高門檻":"依個股自身結構選股","purple");
 
   // 直式版下半部：大盤作戰地圖全寬，劇本／判讀各半欄。
   const mapY=900,mapH=520;
@@ -20479,7 +20779,7 @@ async function analyzeStock(){
 
     set("stockName",hasRealStockName(name,code)?name:`股票代號 ${code}`);
 
-    set("stockMeta",`${code}｜${market}｜${source}｜後端分析 ${version}｜前端 V3.7.4.5`);
+    set("stockMeta",`${code}｜${market}｜${source}｜後端分析 ${version}｜前端 V3.7.5.0｜RSI動能狀態`);
 
     set("closeDate",`最新交易日：${datefmt(closeDate)}`);
 
@@ -20519,7 +20819,7 @@ async function analyzeStock(){
 
     set("startClose",fmt(startClose));
 
-    renderDailyRsi(dailyRsi);
+    renderDailyRsi(dailyRsi,lastReportData);
 
     set("startHigh",fmt(startHigh));
 
