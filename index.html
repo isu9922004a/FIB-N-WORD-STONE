@@ -926,7 +926,7 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
       <a id="imageDownloadLink" class="image-save-link" href="#" download>💾 儲存 PNG</a>
       <button id="imageShareButton" class="image-share-btn" type="button" onclick="shareInfographicV3328()">📤 分享圖片</button>
     </div>
-    <div id="imagePreviewNote" class="image-preview-note">圖片由目前分析資料直接產生；V3.7.0 沿用個股 PNG 1152×2048（9:16）與大盤 PNG 1024×1536（2:3）。個股與大盤只要有完整 dailySeries，就在真實日K主圖加入「趨勢通道箭頭」：台股紅色＝上升、綠色＝下降、黃色＝盤整；通道繪於K棒與文字標記下層，避免覆蓋A/B/C、價位與說明文字。Worker V2.9.12 不需修改。</div>
+    <div id="imagePreviewNote" class="image-preview-note">圖片由目前分析資料直接產生；V3.7.0 沿用個股 PNG 1152×2048（9:16）與大盤 PNG 1024×1536（2:3）。個股與大盤只要有完整 dailySeries，就在真實日K主圖加入「趨勢通道箭頭」：台股紅色＝上升、綠色＝下降、黃色＝盤整；通道繪於K棒與文字標記下層，避免覆蓋A/B/C、價位與說明文字。Worker V2.9.12 不需修改；V3.7.0 前端另以逐日OHLCV執行嚴格時間證據Gate，避免剛突破就提前升級三日站穩／回測成熟度。</div>
   </div>
 </div>
 
@@ -936,6 +936,9 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
 
 // ========================================================================
 // V3.7.0｜純粹趨勢通道箭頭版
+// V3.7.0｜嚴格時間證據Gate：不改ABC／Fib／N字／Worker判定；
+// 突破確認成熟度改由「正式突破 → 突破後3個完整交易日站穩 → 實際回測／再攻或後續延伸」逐級解鎖。
+// 三日站穩、回測守住、再攻與「假突破風險低」只有在逐日資料真正發生後才可加分／升級，避免剛突破就提前顯示8/8。
 // 基底：V3.6.7.9 顯示一致性收尾版。
 // 核心不變：Worker V2.9.12、ABC／Fib／N字、pivot-abc-v2.4、突破品質2.0、
 // 三叉戟、量價位置化、動態防守、OHLCV Research Gate與既有圖片尺寸全部保留。
@@ -5835,10 +5838,9 @@ function buildCurrentFocusLines(report,fixed,rsiInfo,rrInfo){
 
     }
 
-    if(t.fibThreeDay?.status?.label){
-
-      lines.push(`${t.fibThreeDay.status.icon||"🟡"} Fib三日確認：${t.fibThreeDay.status.label}`);
-
+    {
+      const g370=strictBreakoutEvidenceGateV370(report);
+      if(g370.applicable)lines.push(g370.statusLine.replace("三日站穩","Fib三日確認"));
     }
 
   }else if(fib?.status==="forming"){
@@ -6729,10 +6731,9 @@ function buildTacticalSectionLines(report){
 
     }
 
-    if(t.fibThreeDay?.status?.label){
-
-      lines.push(`${t.fibThreeDay.status.icon||"🟡"} Fib三日確認：${t.fibThreeDay.status.label}`);
-
+    {
+      const g370=strictBreakoutEvidenceGateV370(report);
+      if(g370.applicable)lines.push(g370.statusLine.replace("三日站穩","Fib三日確認"));
     }
 
   }else if(fib.status==="forming"){
@@ -7155,7 +7156,7 @@ function buildMarketBehaviorLines(report,fixed,rsiInfo,rrInfo){
 
     if(n(t.fibDefense?.level)!==null)lines.push(`🛡️ Fib突破K防守：${fmt(t.fibDefense.level)} 元`);
 
-    if(t.fibThreeDay?.status?.label)lines.push(`${t.fibThreeDay.status.icon||"🟡"} Fib三日確認：${t.fibThreeDay.status.label}`);
+    {const g370=strictBreakoutEvidenceGateV370(report);if(g370.applicable)lines.push(g370.statusLine.replace("三日站穩","Fib三日確認"));}
 
   }else{
 
@@ -7230,9 +7231,12 @@ function buildMarketBehaviorLines(report,fixed,rsiInfo,rrInfo){
   }
 
   if(t.falseRisk?.level?.label){
-
-    lines.push(`${t.falseRisk.level.icon||"🟡"} Fib假突破風險：${t.falseRisk.level.label}${Array.isArray(t.falseRisk.flags)&&t.falseRisk.flags.length?`｜${t.falseRisk.flags.join("、")}`:""}`);
-
+    const g370=strictBreakoutEvidenceGateV370(report);
+    if(t.falseRisk?.level?.key==="low"&&!g370.threePassed){
+      lines.push(`🟡 Fib假突破風險：尚待站穩確認｜嚴格3日Gate尚未完成，不提前標示為低`);
+    }else{
+      lines.push(`${t.falseRisk.level.icon||"🟡"} Fib假突破風險：${t.falseRisk.level.label}${Array.isArray(t.falseRisk.flags)&&t.falseRisk.flags.length?`｜${t.falseRisk.flags.join("、")}`:""}`);
+    }
   }
 
   lines.push("");
@@ -7957,7 +7961,7 @@ function buildStrategyQuickLines(report,s){
 
     if(s.t.fibBreakoutVolume!==null)lines.push(`${getVolumeGrade(s.t.fibBreakoutVolume).icon} 正式突破量：${fmt(s.t.fibBreakoutVolume,2)} 倍｜${getVolumeGrade(s.t.fibBreakoutVolume).label}`);
 
-    if(s.t.fibThreeDay?.status?.label)lines.push(`${s.t.fibThreeDay.status.icon||"🟢"} 三日確認：${s.t.fibThreeDay.status.label}`);
+    {const g370=strictBreakoutEvidenceGateV370(report,s);if(g370.applicable)lines.push(g370.statusLine.replace("三日站穩","三日確認"));}
 
   }else if(s.forming){
 
@@ -14230,11 +14234,12 @@ function patternAssistV3325(report,stage=null){
   const falseRisk=t.falseRisk||breakout?.falseBreakoutRisk||null;
   const falseRiskKey=falseRisk?.level?.key||"unknown";
   const falseRiskFlags=Array.isArray(falseRisk?.flags)?falseRisk.flags:[];
-  const fibThreeKey=t.fibThreeDay?.status?.key||breakout?.threeDay?.status?.key||null;
+  const strictGateV370=strictBreakoutEvidenceGateV370(report,s);
+  const fibThreeKey=strictGateV370.threeStatus;
   const longUpper=latestCandle?.upperWickRisk?.key==="long";
   const closeNearLow=latestCandle?.closePosition?.key==="low";
-  const retestHeld=breakout?.retest?.closeHeld===true||t.retest?.closeHeld===true;
-  const reattack=!!(breakout?.reattack||t.reattack);
+  const retestHeld=strictGateV370.retestHeld;
+  const reattack=strictGateV370.reattack;
 
   const evidence=[];
   if(aboveB)evidence.push(`現價 ${fmt(close)} 元仍在B＝${fmt(B)} 元上方`);
@@ -14444,20 +14449,22 @@ function breakoutQualityEvidenceV340(report,s=null,nStatusArg=null,nPhaseArg=nul
     }
   }
 
-  const three=br?.threeDay?.status?.key||t?.fibThreeDay?.status?.key||null;
+  const strictGateV370=strictBreakoutEvidenceGateV370(report,state);
+  const three=strictGateV370.threeStatus;
   if(three==="passed"){
     evidence.push("突破後三日站穩條件已通過");score+=1;
   }else if(three==="failed"){
     risk.push("突破後三日站穩未通過");score-=1;
   }
 
-  const retestHeld=br?.retest?.closeHeld===true||t?.retest?.closeHeld===true;
-  if(retestHeld){evidence.push("突破後曾回測關鍵位且完成收盤守住");score+=1;}
-  if(br?.reattack||t?.reattack){evidence.push("回測後出現再攻行為");score+=1;}
+  const retestHeld=strictGateV370.retestHeld;
+  if(retestHeld){evidence.push("突破後曾實際回測關鍵位且完成收盤守住");score+=1;}
+  if(strictGateV370.reattack){evidence.push("有效回測後已出現實際再攻行為");score+=1;}
 
   const falseRisk=t?.falseRisk||br?.falseBreakoutRisk||null;
   const falseKey=falseRisk?.level?.key||null;
-  if(falseKey==="low"){evidence.push("目前未見明顯假突破風險組合");score+=1;}
+  if(falseKey==="low"&&strictGateV370.threePassed){evidence.push("三日站穩已完成，目前未見明顯假突破風險組合");score+=1;}
+  else if(falseKey==="low"){risk.push("假突破風險仍待三日站穩時間證據確認，不提前標示為低");}
   else if(falseKey==="medium"){
     risk.push(`已有部分假突破風險特徵${Array.isArray(falseRisk?.flags)&&falseRisk.flags.length?`：${falseRisk.flags.slice(0,2).join("、")}`:""}`);score-=1;
   }else if(falseKey==="high"){
@@ -14855,14 +14862,15 @@ function abcBreakoutTeachingCheckV342(report){
   else if(monthlyStatus==="FAIL")checks.push({icon:"⚠️",title:"長週期背景",text:"月線波段資格未成立；即使短線突破，也不能直接視為長週期同步轉強"});
   else checks.push({icon:"⚪",title:"長週期背景",text:"官方月線狀態暫不可完整判定；不補猜月20MA斜率"});
 
-  const three=t?.fibThreeDay?.status?.key||br?.threeDay?.status?.key||null;
+  const strictGateV370=strictBreakoutEvidenceGateV370(report,s);
+  const three=strictGateV370.threeStatus;
   if(!waitAB&&three){
     available++;
     if(three==="passed"){checks.push({icon:"✅",title:"突破後確認",text:"突破後三日站穩條件已通過，突破延續品質加分"});score+=1;}
     else if(three==="failed"){checks.push({icon:"⚠️",title:"突破後確認",text:"突破後三日站穩未通過，先提高假突破／修復警戒"});score-=1;}
     else checks.push({icon:"🟡",title:"突破後確認",text:"突破後三日確認仍在觀察中"});
   }
-  if(!waitAB&&(t?.retest?.closeHeld===true||br?.retest?.closeHeld===true)){checks.push({icon:"✅",title:"回測驗證",text:"突破後曾回測關鍵位且完成收盤守住，支撐角色得到實際驗證"});score+=1;available++;}
+  if(!waitAB&&strictGateV370.retestHeld){checks.push({icon:"✅",title:"回測驗證",text:"突破後逐日資料已出現實際回測關鍵位且完成收盤守住，支撐角色得到驗證"});score+=1;available++;}
   if(!waitAB&&nPhase==="WEAKENING"){checks.push({icon:"⚠️",title:"目前狀態",text:B!==null?`目前收盤已回到B＝${fmt(B)} 元下方，先把修復放在追求目標之前`:`目前突破品質已轉弱，先看修復`});score-=1;}
 
   let icon="🟡",label="教材式突破條件仍待確認";
@@ -15319,6 +15327,137 @@ function qualityDimV360(key,title,weight,ratio,text,available=true){
   return {key,title,weight:w,ratio:r,earned:available?w*r:0,available,text};
 }
 
+
+function strictBreakoutEvidenceGateV370(report,state=null){
+  const s=state||currentStrategyStateV321(report);
+  const nStatus=getNStatusV326(report,s);
+  const fib=report?.fib||{};
+  const br=report?.structure?.breakout||{};
+  const t=getTacticalInfo(report);
+  const B=n(s?.fib?.B??fib.B);
+
+  const base={
+    applicable:nStatus==="confirmed"&&B!==null,
+    B,
+    breakoutDate:null,
+    breakoutKey:"",
+    observedAfter:0,
+    standingCount:0,
+    threeStatus:"pending",
+    threePassed:false,
+    threeFailed:false,
+    retestHeld:false,
+    retestDate:null,
+    reattack:false,
+    reattackDate:null,
+    extensionConfirmed:false,
+    source:"insufficient",
+    statusLine:"⏳ 三日站穩：尚未進入正式突破後時間驗證"
+  };
+  if(!base.applicable)return base;
+
+  const bars=normalizeDailyBarsV361(report)
+    .map(x=>({...x,key:dateKeyV365(x.date)}))
+    .filter(x=>x.key)
+    .sort((a,b)=>a.key.localeCompare(b.key)||a.idx-b.idx);
+
+  const explicitDate=fib.breakoutDate??fib.fibBreakoutDate??br.breakoutDate??br.date??t?.fibDefense?.breakoutDate??null;
+  const explicitKey=dateKeyV365(explicitDate);
+  const cKey=dateKeyV365(fib.CDate??s?.fib?.CDate);
+  let breakoutIdx=-1;
+
+  if(explicitKey){
+    breakoutIdx=bars.findIndex(x=>x.key===explicitKey&&x.close>B);
+    if(breakoutIdx<0)breakoutIdx=bars.findIndex(x=>x.key>=explicitKey&&x.close>B);
+  }
+  if(breakoutIdx<0){
+    breakoutIdx=bars.findIndex(x=>(!cKey||x.key>cKey)&&x.close>B);
+  }
+
+  const workerThree=t?.fibThreeDay?.status?.key||br?.threeDay?.status?.key||null;
+  if(breakoutIdx<0){
+    // 有 confirmed 但逐日序列無法定位正式突破日時，不用 Worker 的 passed 提前升級。
+    base.source="insufficient";
+    base.threeStatus=workerThree==="failed"?"failed":"pending";
+    base.threeFailed=base.threeStatus==="failed";
+    base.statusLine=base.threeFailed
+      ?"⚠️ 三日站穩：Worker回傳未通過；逐日序列不足以重建突破後3日"
+      :"⏳ 三日站穩：逐日序列尚不足以定位正式突破日／完成嚴格3日Gate";
+    return base;
+  }
+
+  const breakoutBar=bars[breakoutIdx];
+  const postBars=bars.slice(breakoutIdx+1);
+  const observedAfter=postBars.length;
+  const firstThree=postBars.slice(0,3);
+  let threeStatus="pending";
+  if(firstThree.length>=3){
+    threeStatus=firstThree.every(x=>x.close>=B)?"passed":"failed";
+  }else if(firstThree.some(x=>x.close<B)){
+    threeStatus="failed";
+  }
+
+  // 回測必須是正式突破後另一根完整日K真正回到B附近，且收盤守回B上方。
+  const tol=0.015;
+  const retestBar=postBars.find(x=>x.low<=B*(1+tol)&&x.low>=B*(1-tol)&&x.close>=B)||null;
+
+  // 若逐日序列沒抓到，但 Worker 有具日期的回測事件，只在日期明確晚於正式突破時採信。
+  const workerRetest=t?.retest||br?.retest||null;
+  const workerRetestKey=dateKeyV365(workerRetest?.date);
+  const workerRetestValid=!!(workerRetest?.closeHeld===true&&workerRetestKey&&workerRetestKey>breakoutBar.key);
+  const retestHeld=!!retestBar||workerRetestValid;
+  const retestDate=retestBar?.date??(workerRetestValid?workerRetest?.date:null);
+  const retestKey=dateKeyV365(retestDate);
+
+  // 再攻必須發生在有效回測之後；沒有日期就不把 Worker 事件當成成熟度證據。
+  let reattackBar=null;
+  if(retestKey){
+    const anchorHigh=retestBar?.high??B;
+    reattackBar=postBars.find(x=>x.key>retestKey&&x.close>Math.max(B,anchorHigh))||null;
+  }
+  const workerReattack=t?.reattack||br?.reattack||null;
+  const workerReattackKey=dateKeyV365(workerReattack?.date);
+  const workerReattackValid=!!(workerReattackKey&&retestKey&&workerReattackKey>retestKey);
+  const reattack=!!reattackBar||workerReattackValid;
+  const reattackDate=reattackBar?.date??(workerReattackValid?workerReattack?.date:null);
+
+  // 沒有回測也可以用「三日站穩後，後續完整日K再創突破後新高」確認延伸；
+  // 但至少要先完成3個突破後交易日，不能拿突破當天或隔日直接升到8/8。
+  let extensionConfirmed=false;
+  if(threeStatus==="passed"&&postBars.length>=4){
+    const baseline=Math.max(breakoutBar.high,...postBars.slice(0,3).map(x=>x.high));
+    extensionConfirmed=postBars.slice(3).some(x=>x.close>baseline);
+  }
+
+  const standingCount=Math.min(3,postBars.filter((x,i)=>i<3&&x.close>=B).length);
+  let statusLine="";
+  if(threeStatus==="passed"){
+    statusLine=`✅ 三日站穩：已完成3/3個突破後完整交易日，前三日收盤均未跌回B＝${fmt(B)} 元下方`;
+  }else if(threeStatus==="failed"){
+    statusLine=`⚠️ 三日站穩：未通過｜突破後前3個完整交易日內已出現收盤跌回B＝${fmt(B)} 元下方`;
+  }else{
+    statusLine=`⏳ 三日站穩：已取得 ${observedAfter}/3 個突破後完整交易日｜等待時間證據完成`;
+  }
+
+  return {
+    applicable:true,B,
+    breakoutDate:breakoutBar.date,
+    breakoutKey:breakoutBar.key,
+    observedAfter,
+    standingCount,
+    threeStatus,
+    threePassed:threeStatus==="passed",
+    threeFailed:threeStatus==="failed",
+    retestHeld,
+    retestDate,
+    reattack,
+    reattackDate,
+    extensionConfirmed,
+    source:"dailySeries",
+    statusLine
+  };
+}
+
 function breakoutQualityV360(report){
   const s=currentStrategyStateV321(report);
   const nStatus=getNStatusV326(report,s);
@@ -15326,14 +15465,15 @@ function breakoutQualityV360(report){
   const t=getTacticalInfo(report);
   const br=report?.structure?.breakout||{};
   const B=n(s?.fib?.B),close=n(report?.close);
+  const gate=strictBreakoutEvidenceGateV370(report,s);
   const dims=[];
 
   if(nStatus==="failed"){
-    return {key:"D",icon:"🔴",label:"D｜結構失效",score:0,scoreText:"0.0 / 10",coverage:1,coverageLabel:"高",dims:[],positive:[],risk:["原N字結構已正式失效，舊突破停止作為現行依據"],nStatus,nPhase,rule:"A≥8｜B 6–7.9｜C 4–5.9｜D<4；分數不是勝率"};
+    return {key:"D",icon:"🔴",label:"D｜結構失效",score:0,scoreText:"0.0 / 10",coverage:1,coverageLabel:"高",dims:[],positive:[],risk:["原N字結構已正式失效，舊突破停止作為現行依據"],nStatus,nPhase,gate,rule:"A≥8｜B 6–7.9｜C 4–5.9｜D<4；分數不是勝率"};
   }
   if(nStatus!=="confirmed"){
     const waitText=nStatus==="abc_ready"?(B!==null?`ABC已完成，等待完整日K收盤突破B＝${fmt(B)} 元`:`ABC已完成，等待突破B`):"結構尚未完成，不提前替尚未發生的突破打分";
-    return {key:"WAIT",icon:"🟡",label:"等待完整突破",score:null,scoreText:"尚未計分",coverage:0,coverageLabel:"尚未進入評分",dims:[],positive:[],risk:[],nStatus,nPhase,waitText,rule:"突破確認後才評0–10分；分數不是勝率"};
+    return {key:"WAIT",icon:"🟡",label:"等待完整突破",score:null,scoreText:"尚未計分",coverage:0,coverageLabel:"尚未進入評分",dims:[],positive:[],risk:[],nStatus,nPhase,gate,waitText,rule:"突破確認後才評0–10分；分數不是勝率"};
   }
 
   // 1) 價格結構：完整N字確認本身是必要條件。
@@ -15369,27 +15509,30 @@ function breakoutQualityV360(report){
     dims.push(qualityDimV360("CANDLE","突破K收盤品質",1.5,ratio,`突破K${body!==null?`實體 ${fmtSignedPct(body)}`:"實體資料不足"}｜${closePos==="high"?"收盤靠近高點":closePos==="low"?"收盤靠近低點":"收盤位置中性"}${longUpper?"｜長上影扣分":""}`));
   }else dims.push(qualityDimV360("CANDLE","突破K收盤品質",1.5,0,"突破K完整OHLC資料不足，本項不計分",false));
 
-  // 5) 突破後行為：三日站穩、回測、再攻與目前N_PHASE。
-  const three=t?.fibThreeDay?.status?.key||br?.threeDay?.status?.key||null;
-  const retestHeld=t?.retest?.closeHeld===true||br?.retest?.closeHeld===true;
-  const reattack=!!(t?.reattack||br?.reattack);
-  let followRatio=0.55,followText="突破已確認，後續仍在觀察";
-  if(reattack){followRatio=1;followText="突破後回測完成，並出現再攻";}
-  else if(retestHeld){followRatio=0.92;followText="突破後回測關鍵位，完成收盤守住";}
-  else if(three==="passed"){followRatio=0.86;followText="突破後三日站穩已通過";}
-  else if(nPhase==="EXTENDING"){followRatio=0.76;followText="目前仍維持B上方延伸";}
-  else if(nPhase==="RETESTING"){followRatio=0.58;followText="目前進入突破後回測，等待守穩驗證";}
-  else if(three==="failed"){followRatio=0.18;followText="突破後三日站穩未通過";}
-  else if(nPhase==="WEAKENING"){followRatio=0.08;followText=B!==null?`目前收盤已跌回B＝${fmt(B)} 元下方，先修復`:`目前突破後價格已轉弱`;}
+  // 5) 嚴格時間／事件Gate：未真正發生的三日站穩、回測、再攻一律不預先加分。
+  let followRatio=0,followText=gate.statusLine.replace(/^[^ ]+ /,"");
+  if(gate.threeFailed){followRatio=0.05;followText="突破後三日站穩未通過，後續確認品質明顯降級";}
+  else if(gate.threePassed&&gate.reattack){followRatio=1;followText="三日站穩已完成，且有效回測後已出現再攻";}
+  else if(gate.threePassed&&gate.extensionConfirmed){followRatio=0.96;followText="三日站穩已完成，且後續完整日K再創突破後新高";}
+  else if(gate.threePassed&&gate.retestHeld){followRatio=0.92;followText="三日站穩已完成，且突破後已有實際回測守住B附近";}
+  else if(gate.threePassed){followRatio=0.86;followText="突破後三日站穩已由逐日資料確認";}
+  else if(gate.retestHeld){followRatio=0.35;followText="已出現實際回測守住，但三日站穩時間Gate仍未完成";}
+  else{followRatio=0;followText=`三日站穩尚未完成｜目前 ${gate.observedAfter}/3 個突破後完整交易日；未發生的後續證據本項不加分`;}
   dims.push(qualityDimV360("FOLLOW","站穩／回測／再攻",2,followRatio,followText));
 
-  // 6) 假突破風險：只有 Worker 有回傳風險層級才納入。
+  // 6) 假突破風險：高／中風險可以立即採信；「低風險」需三日站穩後才解鎖。
   const falseRisk=t?.falseRisk||br?.falseBreakoutRisk||null;
-  const fk=falseRisk?.level?.key||null;
-  if(fk){
-    const ratio=fk==="low"?1:fk==="medium"?0.45:0.05;
+  const rawFalseKey=falseRisk?.level?.key||null;
+  let effectiveFalseKey=rawFalseKey;
+  if(rawFalseKey){
     const flags=Array.isArray(falseRisk?.flags)?falseRisk.flags.slice(0,2).join("、"):"";
-    dims.push(qualityDimV360("FALSE_RISK","假突破風險",1,ratio,`${fk==="low"?"低":fk==="medium"?"中":"高"}${flags?`｜${flags}`:""}`));
+    if(rawFalseKey==="low"&&!gate.threePassed){
+      effectiveFalseKey="pending";
+      dims.push(qualityDimV360("FALSE_RISK","假突破風險",1,0,`尚待站穩確認｜Worker雖回傳低風險，但嚴格3日Gate尚未完成${flags?`｜${flags}`:""}`));
+    }else{
+      const ratio=rawFalseKey==="low"?1:rawFalseKey==="medium"?0.45:0.05;
+      dims.push(qualityDimV360("FALSE_RISK","假突破風險",1,ratio,`${rawFalseKey==="low"?"低":rawFalseKey==="medium"?"中":"高"}${flags?`｜${flags}`:""}`));
+    }
   }else dims.push(qualityDimV360("FALSE_RISK","假突破風險",1,0,"目前沒有可驗證的假突破風險層級，本項不計分",false));
 
   // 7) 現況防守角色：確認後能否仍守在B上方。
@@ -15402,6 +15545,8 @@ function breakoutQualityV360(report){
   const max=avail.reduce((a,x)=>a+x.weight,0);
   const earned=avail.reduce((a,x)=>a+x.earned,0);
   let score=max>0?earned/max*10:0;
+  // 嚴格時間Gate：三日站穩未完成前，分數本身最高封頂 7.9，避免出現「B級但分數>=8」的矛盾。
+  if(!gate.threePassed&&score>=8)score=7.9;
   const coverage=avail.length;
   const coverageLabel=coverage>=6?"高":coverage>=4?"中":"低";
   let key=score>=8?"A":score>=6?"B":score>=4?"C":"D";
@@ -15411,7 +15556,7 @@ function breakoutQualityV360(report){
   score=Math.round(score*10)/10;
   const positive=avail.filter(x=>x.ratio>=0.75).sort((a,b)=>(b.earned/b.weight)-(a.earned/a.weight)).map(x=>`${x.title}：${x.text}`);
   const risk=avail.filter(x=>x.ratio<=0.35).sort((a,b)=>a.ratio-b.ratio).map(x=>`${x.title}：${x.text}`);
-  return {key,icon:meta[0],label:meta[1],score,scoreText:`${fmt(score,1)} / 10`,coverage,coverageLabel,dims,positive,risk,nStatus,nPhase,falseKey:fk,three,retestHeld,reattack,rule:"A≥8｜B 6–7.9｜C 4–5.9｜D<4；覆蓋低時最高只列C；分數不是勝率"};
+  return {key,icon:meta[0],label:meta[1],score,scoreText:`${fmt(score,1)} / 10`,coverage,coverageLabel,dims,positive,risk,nStatus,nPhase,falseKey:effectiveFalseKey,rawFalseKey,three:gate.threeStatus,retestHeld:gate.retestHeld,reattack:gate.reattack,gate,rule:"A≥8｜B 6–7.9｜C 4–5.9｜D<4；三日站穩未完成前最高只列B；分數不是勝率"};
 }
 
 function breakoutQualityBadgeV360(q){
@@ -15423,11 +15568,9 @@ function breakoutQualityBadgeV360(q){
 function breakoutLifecycleV360(report){
   const s=currentStrategyStateV321(report);
   const nStatus=getNStatusV326(report,s),nPhase=getNPhaseV326(report,s,nStatus);
-  const t=getTacticalInfo(report),q=breakoutQualityV360(report);
+  const q=breakoutQualityV360(report);
+  const gate=q?.gate||strictBreakoutEvidenceGateV370(report,s);
   const A=n(s?.fib?.A),B=n(s?.fib?.B),C=n(s?.fib?.C),close=n(report?.close);
-  const three=t?.fibThreeDay?.status?.key||report?.structure?.breakout?.threeDay?.status?.key||null;
-  const retestHeld=t?.retest?.closeHeld===true||report?.structure?.breakout?.retest?.closeHeld===true;
-  const reattack=!!(t?.reattack||report?.structure?.breakout?.reattack);
   const falseKey=q?.falseKey||null;
   let key="WAIT_AB",icon="⚪",label="建立A→B",step=1,next="等待A與B形成";
 
@@ -15436,17 +15579,15 @@ function breakoutLifecycleV360(report){
   else if(nStatus==="forming"&&close!==null&&B!==null&&close>B){key="PRE_BREAKOUT";icon="🔥";label="前置突破／C未形成";step=3;next="不倒推C；先等有效C，再走正式突破流程";}
   else if(nStatus==="forming"){key="WAIT_C";icon="🟡";label="等待有效C";step=2;next="先等C踩穩，不猜低點";}
   else if(nStatus==="abc_ready"){key="READY";icon="🟠";label="ABC就緒／等待突破B";step=4;next=B!==null?`等待完整日K收盤 > B＝${fmt(B)} 元`:"等待完整日K突破B";}
-  else if(nStatus==="confirmed"&&falseKey==="high"&&nPhase==="WEAKENING"){key="FALSE_BREAK_RISK";icon="🔴";label="假突破風險升高";step=6;next=B!==null?`先重新站回B＝${fmt(B)} 元，再談延伸`:"先修復突破關卡";}
-  else if(nStatus==="confirmed"&&nPhase==="WEAKENING"){key="WEAKENING";icon="⚠️";label="突破後轉弱／修復";step=6;next=B!==null?`重新收回B＝${fmt(B)} 元並站穩`:"重新收回突破關卡";}
-  else if(nStatus==="confirmed"&&reattack){key="REATTACK";icon="🟢";label="回測後再攻";step=8;next="觀察能否續創高，並用量價確認延伸";}
-  else if(nStatus==="confirmed"&&retestHeld){key="RETEST_HELD";icon="🟢";label="回測守穩";step=7;next="等待再攻，不因守住一天就追價";}
-  else if(nStatus==="confirmed"&&nPhase==="RETESTING"){key="RETESTING";icon="🟡";label="突破後回測中";step=7;next=B!==null?`確認B＝${fmt(B)} 元是否守穩`:"確認回測是否守穩";}
-  else if(nStatus==="confirmed"&&three==="passed"){key="STAND_CONFIRMED";icon="🟢";label="突破後站穩確認";step=6;next="等待健康回測或整理後再攻";}
-  else if(nStatus==="confirmed"&&three==="failed"){key="FOLLOW_FAIL";icon="⚠️";label="突破後續確認不足";step=6;next="降低突破評價，先看B與MA20能否守住";}
-  else if(nStatus==="confirmed"&&nPhase==="EXTENDING"){key="EXTENDING";icon="🟢";label="突破後延伸";step=8;next="持有看防守；空手看位置，不追單日急漲";}
-  else if(nStatus==="confirmed"){key="CONFIRMED";icon="🟢";label="收盤突破已確認";step=5;next="接著驗證三日站穩、回測與再攻";}
+  else if(nStatus==="confirmed"&&falseKey==="high"&&nPhase==="WEAKENING"){key="FALSE_BREAK_RISK";icon="🔴";label="正式突破後轉弱／假突破警戒";step=6;next=B!==null?`先重新站回B＝${fmt(B)} 元，再重新累積站穩證據`:"先修復突破關卡";}
+  else if(nStatus==="confirmed"&&nPhase==="WEAKENING"){key="WEAKENING";icon="⚠️";label="正式突破後轉弱／修復";step=6;next=B!==null?`重新收回B＝${fmt(B)} 元，再重新累積站穩證據`:"重新收回突破關卡";}
+  else if(nStatus==="confirmed"&&gate.threeFailed){key="FOLLOW_FAIL";icon="⚠️";label="正式突破成立／站穩未通過";step=6;next="降低突破成熟度；先看B與MA20能否守住／修復";}
+  else if(nStatus==="confirmed"&&gate.threePassed&&(gate.reattack||gate.extensionConfirmed)){key=gate.reattack?"REATTACK":"EXTENSION_CONFIRMED";icon="🟢";label=gate.reattack?"站穩後回測再攻":"站穩後延伸確認";step=8;next="觀察能否續創高，並持續用量價與動態防守確認";}
+  else if(nStatus==="confirmed"&&gate.threePassed&&gate.retestHeld){key="RETEST_HELD";icon="🟢";label="站穩後回測守住";step=8;next="等待再攻，不因單日反彈就追價";}
+  else if(nStatus==="confirmed"&&gate.threePassed){key="STAND_CONFIRMED";icon="🟢";label="三日站穩確認";step=7;next="等待實際回測守B、再攻或後續延伸證據，才升8/8";}
+  else if(nStatus==="confirmed"){key="CONFIRMED";icon="🟡";label="正式突破成立";step=6;next=`等待突破後三日站穩時間Gate（目前 ${gate.observedAfter}/3）`;}
 
-  return {key,icon,label,step,progress:`${step}/8`,next,A,B,C,close,nStatus,nPhase,quality:q};
+  return {key,icon,label,step,progress:`${step}/8`,next,A,B,C,close,nStatus,nPhase,quality:q,gate,gateText:gate.statusLine};
 }
 
 function marketPhaseEngineV360(report){
@@ -16023,6 +16164,7 @@ function appendDecisionEngineV360(lines,report){
   lines.push(`🎯 階段下一步：${d.phase.next}`);
   lines.push("");
   lines.push(`${d.lifecycle.icon} 突破確認生命週期：${d.lifecycle.label}｜${d.lifecycle.progress}`);
+  if(d.lifecycle.nStatus==="confirmed"&&d.lifecycle.gateText)lines.push(d.lifecycle.gateText);
   lines.push(`➡️ 下一個有效觸發：${d.lifecycle.next}`);
   lines.push(`${q.icon} 突破品質2.0：${q.key==="WAIT"?q.label:`${q.label}｜${q.scoreText}`}｜證據覆蓋 ${q.coverageLabel}`);
   if(q.key!=="WAIT"){
@@ -16493,7 +16635,7 @@ function buildReportTextV326(report){
 
   };
 
-  lines.push("📘 石頭少爺分析助手｜GitHub 前端 V3.7.0｜純粹趨勢通道箭頭版｜雙向動態價帶最終整合");
+  lines.push("📘 石頭少爺分析助手｜GitHub 前端 V3.7.0｜純粹趨勢通道箭頭版｜雙向動態價帶＋嚴格時間證據Gate");
   lines.push("🧭 趨勢方向改以K線通道箭頭呈現：紅↗上升／綠↘下降／黃→盤整；不使用1～5浪或ABC修正浪計數。 ");
 
   lines.push(`報告產出時間：${generatedAt}`);
