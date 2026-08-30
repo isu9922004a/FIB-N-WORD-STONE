@@ -529,7 +529,7 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
 
     <p>月線波段條件判斷＋固定倍數目標價＋費波那契 N字分析</p>
 
-    <span class="version-pill">前端 V3.7.7.6｜全圖字體極致強化版｜V3.7.6.1雙版本防盜浮水印母版｜純粹趨勢通道＋短線轉向＋量價發動｜ABC／N字／突破品質2.0／三叉戟／OHLCV Research Gate完整保留｜Worker V2.9.12.1｜月K缺漏降級顯示Hotfix</span>
+    <span class="version-pill">前端 V3.7.7.6.1｜全圖字體極致強化 Bugfix版｜V3.7.6.1雙版本防盜浮水印母版｜純粹趨勢通道＋短線轉向＋量價發動｜ABC／N字／突破品質2.0／三叉戟／OHLCV Research Gate完整保留｜Worker V2.9.12.1｜月K缺漏降級顯示Hotfix</span>
 
   </div>
 
@@ -934,12 +934,12 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
   </div>
 </div>
 
-<footer class="footer">石頭少爺 Agent｜GitHub 前端 V3.7.7.6｜全圖字體極致強化版｜V3.7.6.1雙版本防盜浮水印母版｜V3.7.3.5 完整母版沿用｜純粹趨勢通道＋短線轉向＋短線3日量比＋點火價格品質過濾＋高檔續強分流＋ABC生命週期語意Gate＋Fib突破日20日量比口徑分離＋B角色生命週期用語Gate＋MA20生命週期最終Gate＋量價方向配對＋動態滾動盈虧比｜ABC／Fib／N字／突破品質2.0／三叉戟／OHLCV Research Gate核心不變｜Worker V2.9.12.1｜月K缺漏降級顯示Hotfix<br>技術分析僅供研究與決策參考，不構成投資建議。<br>本版重點：回歸V3.6.7.9純粹架構；不做浪號計數，個股與大盤K線以趨勢通道箭頭呈現方向，並維持文字避讓與既有固定版型。</footer>
+<footer class="footer">石頭少爺 Agent｜GitHub 前端 V3.7.7.6.1｜全圖字體極致強化 Bugfix版｜V3.7.6.1雙版本防盜浮水印母版｜V3.7.3.5 完整母版沿用｜純粹趨勢通道＋短線轉向＋短線3日量比＋點火價格品質過濾＋高檔續強分流＋ABC生命週期語意Gate＋Fib突破日20日量比口徑分離＋B角色生命週期用語Gate＋MA20生命週期最終Gate＋量價方向配對＋動態滾動盈虧比｜ABC／Fib／N字／突破品質2.0／三叉戟／OHLCV Research Gate核心不變｜Worker V2.9.12.1｜月K缺漏降級顯示Hotfix<br>技術分析僅供研究與決策參考，不構成投資建議。<br>本版重點：回歸V3.6.7.9純粹架構；不做浪號計數，個股與大盤K線以趨勢通道箭頭呈現方向，並維持文字避讓與既有固定版型。</footer>
 
 <script>
 
 // ========================================================================
-// V3.7.7.6｜全圖字體極致強化版
+// V3.7.7.6.1｜全圖字體極致強化 Bugfix版
 // 基底：V3.7.7.5｜首眼資訊強化＋完整RSI搬移版
 // 本版只調整「個股圖片」可讀性，不改任何股票分析計算：
 // ① 個股圖字體由原 1.16 倍優先提升到 1.23 倍。
@@ -952,7 +952,7 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
 // ========================================================================
 
 // ========================================================================
-// V3.7.7.6｜全圖字體極致強化版
+// V3.7.7.6.1｜全圖字體極致強化 Bugfix版
 // 基底：V3.7.7.4（沿自使用者指定 V3.7.6.1 雙版本防盜浮水印母版）
 // 本版只調整個股圖片顯示／排版：
 // ① 股票名稱＋代號放大、亮黃色、高對比，限制在藍底範圍自動縮字。
@@ -20193,13 +20193,20 @@ function fakeBreakoutReminderV3771(report,st){
       note:(B!==null&&close!==null&&close<B)?`跌回B下方，先重新站回B再評估。`:"突破已轉弱，先修復再評估。"};
   }
 
-  // V3.7.7.4｜8/8 完整閉環：直接沿用既有生命週期判斷，不另造技術條件。
-  const life = lifecycleInfoV3762(report,st);
-  if(life?.progress==="8/8" || st?.nPhase==="RETEST_CONFIRMED" || st?.nPhase==="EXTENSION_CONFIRMED"){
-    if(st?.nPhase==="RETEST_CONFIRMED"){
+  // V3.7.7.6.1｜8/8 Bugfix：
+  // 原 V3.7.7.4 誤呼叫不存在的 lifecycleInfoV3762()，導致產圖直接中止。
+  // 改為沿用程式本來就存在的 breakoutLifecycleV360(report)，不新增任何分析公式。
+  const life = breakoutLifecycleV360(report);
+  if(life?.progress==="8/8"){
+    if(life?.key==="RETEST_HELD"){
       return {color:"#137333",fill:"#f0fff5",border:"#22c55e",
         status:"🟢 回測B守住｜8/8確認完成",
         note:"突破後回測守住B，結構仍有效；再看是否重新上攻。"};
+    }
+    if(life?.key==="REATTACK"){
+      return {color:"#137333",fill:"#f0fff5",border:"#22c55e",
+        status:"🟢 回測守住後再攻｜8/8確認完成",
+        note:"回測B守住後重新上攻，突破結構維持有效。"};
     }
     return {color:"#137333",fill:"#f0fff5",border:"#22c55e",
       status:"🟢 站穩後續攻｜8/8確認完成",
@@ -20372,7 +20379,7 @@ function renderStockInfographicV3328(report){
   fontV3328(ctx,22,900,"#fff","center");ctx.fillText("報告製作 By.石頭少爺",1402,52);
   fontV3328(ctx,18,800,"#fff","center");ctx.fillText("圖片產生時間",1402,83);
   fontV3328(ctx,19,900,"#fff","center");ctx.fillText(reportGeneratedAt().replace("（台灣時間）",""),1402,115);
-  fontV3328(ctx,16,700,"#dbeafe","center");ctx.fillText("V3.7.7.6｜全圖字體極致強化",1402,141);
+  fontV3328(ctx,16,700,"#dbeafe","center");ctx.fillText("V3.7.7.6.1｜全圖字體極致強化 Bugfix",1402,141);
 
   // ===== 上半部：ABC + 結構示意圖 =====
   rrV3328(ctx,24,174,520,520,14,P.white,P.blue,2);
