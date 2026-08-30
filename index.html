@@ -529,7 +529,7 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
 
     <p>月線波段條件判斷＋固定倍數目標價＋費波那契 N字分析</p>
 
-    <span class="version-pill">前端 V3.7.7｜新手中文進度版｜V3.7.6.1雙版本防盜浮水印母版｜純粹趨勢通道＋短線轉向＋量價發動｜ABC／N字／突破品質2.0／三叉戟／OHLCV Research Gate完整保留｜Worker V2.9.12.1｜月K缺漏降級顯示Hotfix</span>
+    <span class="version-pill">前端 V3.7.7.6｜全圖字體極致強化版｜V3.7.6.1雙版本防盜浮水印母版｜純粹趨勢通道＋短線轉向＋量價發動｜ABC／N字／突破品質2.0／三叉戟／OHLCV Research Gate完整保留｜Worker V2.9.12.1｜月K缺漏降級顯示Hotfix</span>
 
   </div>
 
@@ -934,12 +934,25 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
   </div>
 </div>
 
-<footer class="footer">石頭少爺 Agent｜GitHub 前端 V3.7.7｜新手中文進度版｜V3.7.6.1雙版本防盜浮水印母版｜V3.7.3.5 完整母版沿用｜純粹趨勢通道＋短線轉向＋短線3日量比＋點火價格品質過濾＋高檔續強分流＋ABC生命週期語意Gate＋Fib突破日20日量比口徑分離＋B角色生命週期用語Gate＋MA20生命週期最終Gate＋量價方向配對＋動態滾動盈虧比｜ABC／Fib／N字／突破品質2.0／三叉戟／OHLCV Research Gate核心不變｜Worker V2.9.12.1｜月K缺漏降級顯示Hotfix<br>技術分析僅供研究與決策參考，不構成投資建議。<br>本版重點：回歸V3.6.7.9純粹架構；不做浪號計數，個股與大盤K線以趨勢通道箭頭呈現方向，並維持文字避讓與既有固定版型。</footer>
+<footer class="footer">石頭少爺 Agent｜GitHub 前端 V3.7.7.6｜全圖字體極致強化版｜V3.7.6.1雙版本防盜浮水印母版｜V3.7.3.5 完整母版沿用｜純粹趨勢通道＋短線轉向＋短線3日量比＋點火價格品質過濾＋高檔續強分流＋ABC生命週期語意Gate＋Fib突破日20日量比口徑分離＋B角色生命週期用語Gate＋MA20生命週期最終Gate＋量價方向配對＋動態滾動盈虧比｜ABC／Fib／N字／突破品質2.0／三叉戟／OHLCV Research Gate核心不變｜Worker V2.9.12.1｜月K缺漏降級顯示Hotfix<br>技術分析僅供研究與決策參考，不構成投資建議。<br>本版重點：回歸V3.6.7.9純粹架構；不做浪號計數，個股與大盤K線以趨勢通道箭頭呈現方向，並維持文字避讓與既有固定版型。</footer>
 
 <script>
 
 // ========================================================================
-// V3.7.7.5｜首眼資訊強化＋完整RSI搬移版
+// V3.7.7.6｜全圖字體極致強化版
+// 基底：V3.7.7.5｜首眼資訊強化＋完整RSI搬移版
+// 本版只調整「個股圖片」可讀性，不改任何股票分析計算：
+// ① 個股圖字體由原 1.16 倍優先提升到 1.23 倍。
+// ② 單行文字沿用 Strict Fit：先放大，碰到欄位寬度就自動縮回／水平安全壓縮，絕不越過左右邊框。
+// ③ 多行文字採自適應安全倍率：如果放大會超過既有 maxLines，就逐級退回，最低回到舊版 1.16。
+// ④ 白底輔助灰字提高對比，重要標題／股票名稱／RSI／突破真假／盈虧比再加強醒目度。
+// ⑤ V3.7.7.5 的完整 RSI 搬移位置與完整敘述架構全部保留。
+// ⑥ GitHub搜尋首頁版本條、圖片版本標示、Footer 全部同步 V3.7.7.6。
+// ABC／Fib／N字／突破品質2.0／三日站穩／三叉戟／RSI Context／盈虧比／Research Gate／Worker 核心全部不變。
+// ========================================================================
+
+// ========================================================================
+// V3.7.7.6｜全圖字體極致強化版
 // 基底：V3.7.7.4（沿自使用者指定 V3.7.6.1 雙版本防盜浮水印母版）
 // 本版只調整個股圖片顯示／排版：
 // ① 股票名稱＋代號放大、亮黃色、高對比，限制在藍底範圍自動縮字。
@@ -18900,6 +18913,9 @@ const INFOGRAPHIC_LOGICAL_W_V3332=1600;
 const INFOGRAPHIC_LOGICAL_H_V3332=2400;
 const INFOGRAPHIC_SCALE_V3332=INFOGRAPHIC_W_V3328/INFOGRAPHIC_LOGICAL_W_V3332;
 const INFOGRAPHIC_FONT_SCALE_V3333=1.16;
+// V3.7.7.6｜只作用於「個股圖片」的字體極致安全放大倍率。
+// 舊版基準 1.16 保留；個股圖優先嘗試 1.23，若換行內容會超出既有欄位，drawWrapV3328 會自動退回安全倍率。
+const STOCK_INFOGRAPHIC_FONT_SCALE_V3776=1.23;
 const INFO_FONT_V3328='-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","Microsoft JhengHei",Arial,sans-serif';
 let infographicPreviewUrlV3328=null;
 let infographicPreviewBlobV3328=null;
@@ -18929,12 +18945,23 @@ function rrV3328(ctx,x,y,w,h,r,fill,stroke=null,lw=1){
 }
 
 function fontV3328(ctx,size=24,weight=700,color="#172033",align="left"){
-  // V3.3.33：只放大「生成圖片」內的字體，不影響網頁本體與分析邏輯。
-  // V3.6.6.2：個股圖可指定更適合繁中字型的清晰字體堆疊；大盤與網頁本體不受影響。
-  const scaledSize=Math.max(1,Math.round(size*INFOGRAPHIC_FONT_SCALE_V3333));
+  // V3.7.7.6：個股圖片優先放大；大盤圖片與網頁本體仍沿用原 1.16 倍率。
+  // 如果是個股圖，applyStockTextQualityV3662 會掛上 _stockFontScaleV3776。
+  const scale=(ctx&&Number.isFinite(ctx._stockFontScaleV3776))
+    ?ctx._stockFontScaleV3776
+    :INFOGRAPHIC_FONT_SCALE_V3333;
+  const scaledSize=Math.max(1,Math.round(size*scale));
   const fontFamily=ctx?._stockFontFamilyV3662||INFO_FONT_V3328;
+
+  // V3.7.7.6｜白底上的輔助小字提高對比，避免灰字太淡看得吃力。
+  let safeColor=color;
+  if(ctx&&ctx._stockFontScaleV3776){
+    const c=String(color||"").toLowerCase();
+    if(c==="#667085"||c==="#98a2b3"||c==="#94a3b8")safeColor="#475467";
+  }
+
   ctx.font=`${weight} ${scaledSize}px ${fontFamily}`;
-  ctx.fillStyle=color;
+  ctx.fillStyle=safeColor;
   ctx.textAlign=align;
   ctx.textBaseline="alphabetic";
 }
@@ -18960,14 +18987,40 @@ function wrapLinesV3328(ctx,text,maxWidth){
 }
 
 function drawWrapV3328(ctx,text,x,y,maxWidth,lineHeight,maxLines=99,opts={}){
-  fontV3328(ctx,opts.size||24,opts.weight||500,opts.color||"#172033",opts.align||"left");
-  const lines=wrapLinesV3328(ctx,text,maxWidth);
+  const requestedSize=opts.size||24,weight=opts.weight||500,color=opts.color||"#172033",align=opts.align||"left";
+
+  // V3.7.7.6｜個股圖先嘗試較大字；若因此超過原欄位可容納行數，就逐級退回，
+  // 最低退回舊版 1.16 倍率。也就是「能大就大，會超框就不硬放大」。
+  const originalScale=(ctx&&Number.isFinite(ctx._stockFontScaleV3776))?ctx._stockFontScaleV3776:null;
+  let lines;
+  if(originalScale!==null){
+    let testScale=originalScale;
+    while(testScale>=INFOGRAPHIC_FONT_SCALE_V3333){
+      ctx._stockFontScaleV3776=Number(testScale.toFixed(2));
+      fontV3328(ctx,requestedSize,weight,color,align);
+      lines=wrapLinesV3328(ctx,text,maxWidth);
+      if(lines.length<=maxLines)break;
+      testScale-=0.01;
+    }
+    if(lines.length>maxLines){
+      ctx._stockFontScaleV3776=INFOGRAPHIC_FONT_SCALE_V3333;
+      fontV3328(ctx,requestedSize,weight,color,align);
+      lines=wrapLinesV3328(ctx,text,maxWidth);
+    }
+  }else{
+    fontV3328(ctx,requestedSize,weight,color,align);
+    lines=wrapLinesV3328(ctx,text,maxWidth);
+  }
+
   const shown=lines.slice(0,maxLines);
   shown.forEach((line,i)=>{
     let t=line;
     if(i===maxLines-1&&lines.length>maxLines&&t.length>1)t=t.slice(0,-1)+"…";
     ctx.fillText(t,x,y+i*lineHeight);
   });
+
+  // 還原個股圖原本的放大倍率，下一段文字重新獨立判斷。
+  if(originalScale!==null)ctx._stockFontScaleV3776=originalScale;
   return y+shown.length*lineHeight;
 }
 
@@ -20063,14 +20116,14 @@ function drawStockRsiMapCardV3775(ctx,report,x,y,w,h){
   drawFitSingleLineStrictV3661(
     ctx,`📊 日RSI 5T｜${m.value}`,
     x+14,y+23,w-28,
-    {maxSize:20,minSize:16,weight:950,color:P.navy}
+    {maxSize:22,minSize:16,weight:950,color:"#123a86"}
   );
 
   // 第二行：完整主判讀
   drawFitSingleLineStrictV3661(
     ctx,d.headline,
     x+14,y+48,w-28,
-    {maxSize:17,minSize:13,weight:950,color:m.labelColor}
+    {maxSize:19,minSize:13,weight:950,color:m.labelColor}
   );
 
   // 第三行：近3日／訊號時效等原始敘述
@@ -20174,7 +20227,7 @@ function drawFakeBreakoutReminderV3771(ctx,report,st,x,y,w,h){
   const P=infoPaletteV3328(),d=fakeBreakoutReminderV3771(report,st);
   rrV3328(ctx,x,y,w,h,11,d.fill,d.border,2);
   drawFitSingleLineStrictV3661(ctx,"🔍 突破真假判讀",x+14,y+22,w-28,{maxSize:17,minSize:14,weight:950,color:P.navy});
-  drawFitSingleLineStrictV3661(ctx,d.status,x+14,y+48,w-28,{maxSize:22,minSize:16,weight:950,color:d.color});
+  drawFitSingleLineStrictV3661(ctx,d.status,x+14,y+48,w-28,{maxSize:24,minSize:16,weight:950,color:d.color});
   drawFitSingleLineStrictV3661(ctx,d.note,x+14,y+69,w-28,{maxSize:15,minSize:11,weight:800,color:P.text});
 }
 
@@ -20280,6 +20333,8 @@ function applyStockTextQualityV3662(ctx){
   if(!ctx)return;
   // 只作用於「個股圖片」Canvas：優先使用繁中字型，並要求瀏覽器採可讀性優先的文字渲染。
   ctx._stockFontFamilyV3662='"PingFang TC","Noto Sans TC","Microsoft JhengHei",-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif';
+  // V3.7.7.6｜只對個股圖片啟用 1.23 極致安全放大；大盤圖不套用。
+  ctx._stockFontScaleV3776=STOCK_INFOGRAPHIC_FONT_SCALE_V3776;
   if("textRendering" in ctx)ctx.textRendering="optimizeLegibility";
   if("fontKerning" in ctx)ctx.fontKerning="normal";
   if("fontStretch" in ctx)ctx.fontStretch="normal";
@@ -20306,7 +20361,7 @@ function renderStockInfographicV3328(report){
   drawFitSingleLineStrictV3661(
     ctx,stock,
     stockNameX3775,130,stockNameW3775,
-    {maxSize:43,minSize:31,weight:950,color:"#fde047"}
+    {maxSize:45,minSize:31,weight:950,color:"#fff176"}
   );
   drawFitSingleLineStrictV3661(
     ctx,`｜${marketNameZh(report.market)}｜最新交易日 ${datefmt(report.closeDate)}｜資料來源：${sourceNameZh(report.source)}`,
@@ -20317,7 +20372,7 @@ function renderStockInfographicV3328(report){
   fontV3328(ctx,22,900,"#fff","center");ctx.fillText("報告製作 By.石頭少爺",1402,52);
   fontV3328(ctx,18,800,"#fff","center");ctx.fillText("圖片產生時間",1402,83);
   fontV3328(ctx,19,900,"#fff","center");ctx.fillText(reportGeneratedAt().replace("（台灣時間）",""),1402,115);
-  fontV3328(ctx,16,700,"#dbeafe","center");ctx.fillText("V3.7.7.5｜首眼資訊強化＋完整RSI搬移",1402,141);
+  fontV3328(ctx,16,700,"#dbeafe","center");ctx.fillText("V3.7.7.6｜全圖字體極致強化",1402,141);
 
   // ===== 上半部：ABC + 結構示意圖 =====
   rrV3328(ctx,24,174,520,520,14,P.white,P.blue,2);
@@ -20370,9 +20425,9 @@ function renderStockInfographicV3328(report){
   // V3.7.7.5｜A區首眼三分區：
   // 左＝價格作戰地圖；中＝完整日RSI 5T；右＝突破真假判讀。
   // RSI完整保留原本數值／主判讀／近3日或時效／白話敘述；過長就換行，不刪內容。
-  drawFitSingleLineStrictV3661(ctx,"A. 價格作戰地圖",46,mapY+43,480,{maxSize:30,minSize:25,weight:950,color:P.navy});
-  drawFitSingleLineStrictV3661(ctx,"可進／續抱／減碼／退出",48,mapY+74,480,{maxSize:18,minSize:14,weight:850,color:P.muted});
-  drawFitSingleLineStrictV3661(ctx,"由高到低排列｜固定句型快速判讀",48,mapY+100,480,{maxSize:15.5,minSize:12,weight:800,color:P.muted});
+  drawFitSingleLineStrictV3661(ctx,"A. 價格作戰地圖",46,mapY+43,480,{maxSize:32,minSize:25,weight:950,color:P.navy});
+  drawFitSingleLineStrictV3661(ctx,"可進／續抱／減碼／退出",48,mapY+74,480,{maxSize:20,minSize:14,weight:900,color:"#475467"});
+  drawFitSingleLineStrictV3661(ctx,"由高到低排列｜固定句型快速判讀",48,mapY+100,480,{maxSize:17,minSize:12,weight:850,color:"#475467"});
 
   drawStockRsiMapCardV3775(ctx,report,548,mapY+12,472,116);
   drawFakeBreakoutReminderV3771(ctx,report,st,1038,mapY+12,510,116);
