@@ -20052,7 +20052,7 @@ function drawStockRsiMiniCardV3678(ctx,rsi,x=1370,y=568,w=180,h=100){
 
 
 // ========================================================================
-// V3.7.7.3｜首眼提醒中文定稿（只改圖片顯示文字，不改任何分析公式／Gate／Worker）
+// V3.7.7.4｜突破閉環提示（精簡修復提示＋補齊既有8/8顯示；不改分析公式／Gate／Worker）
 // ① 動態盈虧比：由底部「記住口訣」移到真實日K右上角，放大顯示。
 // ② 突破真假提醒：固定放到 A.價格作戰地圖 標題列右側，依既有B突破／3日站穩／假突破風險證據顯示。
 // ========================================================================
@@ -20079,7 +20079,20 @@ function fakeBreakoutReminderV3771(report,st){
   if(st?.nPhase==="WEAKENING" || gate?.threeStatus==="failed" || falseKey==="high"){
     return {color:"#dc2626",fill:"#fff1f2",border:"#ef4444",
       status:"🔴 假突破疑慮升高｜先看修復",
-      note:(B!==null&&close!==null&&close<B)?`目前收盤已回到 B ${fmt(B)} 下方，先重新站回B。`:"已出現轉弱證據，先不要把先前突破當永久有效。"};
+      note:(B!==null&&close!==null&&close<B)?`跌回B下方，先重新站回B再評估。`:"突破已轉弱，先修復再評估。"};
+  }
+
+  // V3.7.7.4｜8/8 完整閉環：直接沿用既有生命週期判斷，不另造技術條件。
+  const life = lifecycleInfoV3762(report,st);
+  if(life?.progress==="8/8" || st?.nPhase==="RETEST_CONFIRMED" || st?.nPhase==="EXTENSION_CONFIRMED"){
+    if(st?.nPhase==="RETEST_CONFIRMED"){
+      return {color:"#137333",fill:"#f0fff5",border:"#22c55e",
+        status:"🟢 回測B守住｜8/8確認完成",
+        note:"突破後回測守住B，結構仍有效；再看是否重新上攻。"};
+    }
+    return {color:"#137333",fill:"#f0fff5",border:"#22c55e",
+      status:"🟢 站穩後續攻｜8/8確認完成",
+      note:"3日站穩後持續延伸，突破結構維持有效。"};
   }
 
   if(gate?.threePassed){
