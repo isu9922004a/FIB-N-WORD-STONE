@@ -939,6 +939,18 @@ body.dark-mode .history-card .history-row strong{color:var(--text)}
 <script>
 
 // ========================================================================
+// V3.7.7.5｜首眼資訊強化＋完整RSI搬移版
+// 基底：V3.7.7.4（沿自使用者指定 V3.7.6.1 雙版本防盜浮水印母版）
+// 本版只調整個股圖片顯示／排版：
+// ① 股票名稱＋代號放大、亮黃色、高對比，限制在藍底範圍自動縮字。
+// ② 完整「日RSI 5T」卡由底部記住口訣區搬到 A.價格作戰地圖上方中央。
+// ③ RSI保留既有完整敘述與架構；文字太長採換行，不刪內容、不改判斷。
+// ④ A區右側「突破真假判讀」完整保留。
+// ⑤ 前端搜尋介面、圖片版本標示與 Footer 同步顯示 V3.7.7.5。
+// ABC／Fib／N字／突破品質2.0／三日站穩／三叉戟／RSI Context／盈虧比／Worker 核心全部不變。
+// ========================================================================
+
+// ========================================================================
 // V3.7.7｜新手中文進度版：以使用者提供的 V3.7.6.1 雙版本防盜浮水印版為唯一母版；只調整使用者可見中文用語，不加入主升動能掃描功能，不改核心計算。
 // V3.7.6.1｜雙版本防盜浮水印版：保留原版PNG，新增可選C版防盜浮水印輸出；分析核心完全不變。
 // V3.7.1.7｜趨勢方向分離・通道箭頭強化版｜顯示一致性收尾
@@ -20041,6 +20053,52 @@ function drawStockRsiFooterCardV3758(ctx,report,x,y,w,h){
   }
 }
 
+
+// V3.7.7.5｜A區完整RSI首眼卡：完整沿用既有 RSI Context 敘述，不刪內容；太長就換行，不硬縮成小字。
+function drawStockRsiMapCardV3775(ctx,report,x,y,w,h){
+  const P=infoPaletteV3328(),d=stockRsiFooterDisplayV3758(report),m=d.m;
+  rrV3328(ctx,x,y,w,h,11,m.fill,m.border,2);
+
+  // 第一行：RSI數值維持醒目
+  drawFitSingleLineStrictV3661(
+    ctx,`📊 日RSI 5T｜${m.value}`,
+    x+14,y+23,w-28,
+    {maxSize:20,minSize:16,weight:950,color:P.navy}
+  );
+
+  // 第二行：完整主判讀
+  drawFitSingleLineStrictV3661(
+    ctx,d.headline,
+    x+14,y+48,w-28,
+    {maxSize:17,minSize:13,weight:950,color:m.labelColor}
+  );
+
+  // 第三行：近3日／訊號時效等原始敘述
+  drawFitSingleLineStrictV3661(
+    ctx,d.line1,
+    x+14,y+70,w-28,
+    {maxSize:14.5,minSize:11.5,weight:850,color:P.text}
+  );
+
+  // 第四行起：完整白話敘述。內容較長時直接換行，不刪字。
+  if(d.line2Wrap){
+    drawWrapV3328(ctx,d.line2,x+14,y+91,w-28,15,2,{size:11.5,weight:850,color:P.text});
+  }else{
+    drawFitSingleLineStrictV3661(
+      ctx,d.line2,
+      x+14,y+92,w-28,
+      {maxSize:13.5,minSize:10.5,weight:850,color:P.text}
+    );
+    if(d.showFooter){
+      drawFitSingleLineStrictV3661(
+        ctx,"RSI只看力道｜真正轉弱仍看股價",
+        x+14,y+109,w-28,
+        {maxSize:10.5,minSize:8.5,weight:800,color:P.muted}
+      );
+    }
+  }
+}
+
 function drawStockRsiMiniCardV3678(ctx,rsi,x=1370,y=568,w=180,h=100){
   const P=infoPaletteV3328(),m=stockRsiMiniMetaV3678(rsi);
   rrV3328(ctx,x,y,w,h,12,m.fill,m.border,2);
@@ -20243,14 +20301,23 @@ function renderStockInfographicV3328(report){
   drawHeaderTitleV3328(ctx,"🧩 新手先懂","這檔現在走到哪一步？");
   rrV3328(ctx,26,82,1190,72,10,P.navy,null);
   const stock=formatStockNameWithCode(report.name,report.code);
-  fontV3328(ctx,31,900,"#facc15");ctx.fillText(stock,48,128);
-  const stockMetaX=48+ctx.measureText(stock).width+12;
-  drawFitSingleLineStrictV3661(ctx,`｜${marketNameZh(report.market)}｜最新交易日 ${datefmt(report.closeDate)}｜資料來源：${sourceNameZh(report.source)}`,stockMetaX,128,1198-stockMetaX,{maxSize:24,minSize:17,weight:800,color:"#fff"});
+  // V3.7.7.5｜股票名稱＋代號首眼強化：放大、提高亮度，並限制在左側藍底範圍內自動縮字，不越界。
+  const stockNameX3775=48,stockNameW3775=500,stockMetaX3775=565;
+  drawFitSingleLineStrictV3661(
+    ctx,stock,
+    stockNameX3775,130,stockNameW3775,
+    {maxSize:43,minSize:31,weight:950,color:"#fde047"}
+  );
+  drawFitSingleLineStrictV3661(
+    ctx,`｜${marketNameZh(report.market)}｜最新交易日 ${datefmt(report.closeDate)}｜資料來源：${sourceNameZh(report.source)}`,
+    stockMetaX3775,128,1198-stockMetaX3775,
+    {maxSize:23,minSize:16,weight:800,color:"#ffffff"}
+  );
   rrV3328(ctx,1232,18,340,136,12,P.navy,null);
   fontV3328(ctx,22,900,"#fff","center");ctx.fillText("報告製作 By.石頭少爺",1402,52);
   fontV3328(ctx,18,800,"#fff","center");ctx.fillText("圖片產生時間",1402,83);
   fontV3328(ctx,19,900,"#fff","center");ctx.fillText(reportGeneratedAt().replace("（台灣時間）",""),1402,115);
-  fontV3328(ctx,16,700,"#dbeafe","center");ctx.fillText("V3.7.7.1｜首眼提醒排版",1402,141);
+  fontV3328(ctx,16,700,"#dbeafe","center");ctx.fillText("V3.7.7.5｜首眼資訊強化＋完整RSI搬移",1402,141);
 
   // ===== 上半部：ABC + 結構示意圖 =====
   rrV3328(ctx,24,174,520,520,14,P.white,P.blue,2);
@@ -20300,12 +20367,18 @@ function renderStockInfographicV3328(report){
   // ===== A. 價格作戰地圖：V3.6.6.2 沿用固定模板安全排版；文字內容完全不變 =====
   const mapY=1062,mapH=744;
   rrV3328(ctx,24,mapY,1552,mapH,14,P.white,P.blue,2);
-  // V3.7.7.1｜A區標題左側保留原標語，右側固定放「突破真假判讀」首眼提醒。
-  drawFitSingleLineStrictV3661(ctx,"A. 價格作戰地圖｜固定句型快速判讀",46,mapY+40,950,{maxSize:27,minSize:23,weight:900,color:P.navy});
-  drawFitSingleLineStrictV3661(ctx,"可進／續抱／減碼／退出｜由高到低排列",48,mapY+69,940,{maxSize:16,minSize:14,weight:800,color:P.muted});
-  drawFakeBreakoutReminderV3771(ctx,report,st,1038,mapY+14,510,78);
-  const map=buildStockMapItemsV3328(report,st).slice(0,12);let my=mapY+106;
-  const mapRowH=50; // V3.6.7.9：多容納一列戰術頸線，同時保留A與月20MA，不改圖片總尺寸。
+  // V3.7.7.5｜A區首眼三分區：
+  // 左＝價格作戰地圖；中＝完整日RSI 5T；右＝突破真假判讀。
+  // RSI完整保留原本數值／主判讀／近3日或時效／白話敘述；過長就換行，不刪內容。
+  drawFitSingleLineStrictV3661(ctx,"A. 價格作戰地圖",46,mapY+43,480,{maxSize:30,minSize:25,weight:950,color:P.navy});
+  drawFitSingleLineStrictV3661(ctx,"可進／續抱／減碼／退出",48,mapY+74,480,{maxSize:18,minSize:14,weight:850,color:P.muted});
+  drawFitSingleLineStrictV3661(ctx,"由高到低排列｜固定句型快速判讀",48,mapY+100,480,{maxSize:15.5,minSize:12,weight:800,color:P.muted});
+
+  drawStockRsiMapCardV3775(ctx,report,548,mapY+12,472,116);
+  drawFakeBreakoutReminderV3771(ctx,report,st,1038,mapY+12,510,116);
+
+  const map=buildStockMapItemsV3328(report,st).slice(0,12);let my=mapY+144;
+  const mapRowH=47; // V3.7.7.5：為完整RSI卡騰出標題高度；仍保留12列價格地圖，不刪價位。
   map.forEach((it,i)=>{drawStockMapRowV3661(ctx,it,my,mapRowH,i===map.length-1);my+=mapRowH;});
   drawFitSingleLineStrictV3661(ctx,"※ 固定句型是把既有技術條件翻成白話動作；看到「可分批進場」仍要等條件成立，不是看到價位就直接買。",48,mapY+mapH-22,1490,{maxSize:16,minSize:13,weight:700,color:P.muted});
 
@@ -20381,8 +20454,7 @@ function renderStockInfographicV3328(report){
   // ===== 底部口訣＋固定風險警語（V3.6.6.2） =====
   // 左側保留原本「記住口訣」內容；右下角使用獨立警語框，避免與 C 區或口訣文字互相覆蓋。
   rrV3328(ctx,24,2626,1552,174,14,"#f8fbff",P.blue,2);
-  const mnemonicRight=1136;
-  const warningX=1160,warningY=2642,warningW=388,warningH=142;
+  const mnemonicRight=1518; // V3.7.7.5｜RSI已移到A區，底部口訣可使用完整寬度。
 
   // V3.7.1.7：口訣整體上移，底下留兩行給三叉戟／預備線提示。
   fontV3328(ctx,29,900,P.navy);ctx.fillText("☁️ 記住口訣：",58,2675);
@@ -20405,8 +20477,7 @@ function renderStockInfographicV3328(report){
     {maxSize:16,minSize:11,weight:800,color:"#7c3aed"}
   );
 
-  // V3.7.5.8｜右下角RSI卡改成分層大字版，位置沿用V3.7.5.7。
-  drawStockRsiFooterCardV3758(ctx,report,warningX,warningY,warningW,warningH);
+  // V3.7.7.5｜完整日RSI 5T已移到A區上方中央；底部不再重複顯示。
   return canvas;
 }
 
