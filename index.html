@@ -20050,6 +20050,88 @@ function drawStockRsiMiniCardV3678(ctx,rsi,x=1370,y=568,w=180,h=100){
   drawFitSingleLineStrictV3661(ctx,m.hint,x+12,y+91,w-24,{maxSize:11,minSize:9,weight:750,color:P.muted});
 }
 
+
+// ========================================================================
+// V3.7.7.1｜首眼提醒排版強化（只改圖片顯示，不改任何分析公式／Gate／Worker）
+// ① 動態盈虧比：由底部「記住口訣」移到真實日K右上角，放大顯示。
+// ② 突破真假提醒：固定放到 A.價格作戰地圖 標題列右側，依既有B突破／3日站穩／假突破風險證據顯示。
+// ========================================================================
+
+function fakeBreakoutReminderV3771(report,st){
+  const t=getTacticalInfo(report);
+  const falseRisk=t?.falseRisk||report?.structure?.breakout?.falseBreakoutRisk||null;
+  const falseKey=falseRisk?.level?.key||"unknown";
+  const gate=strictBreakoutEvidenceGateV370(report);
+  const B=n(st?.B),close=n(st?.close);
+
+  if(st?.nStatus==="failed"){
+    return {color:"#dc2626",fill:"#fff1f2",border:"#ef4444",
+      status:"🔴 結構已失效｜不是有效突破",
+      note:"原本突破／N字停止沿用，等待新的A、B、C。"};
+  }
+
+  if(st?.nStatus!=="confirmed"){
+    return {color:"#b45309",fill:"#fffaf0",border:"#f59e0b",
+      status:"⚪ 尚未正式突破｜暫不判真假",
+      note:B!==null?`等完整日K收盤突破 B ${fmt(B)} 後，再看3日站穩與量價。`:"等B關卡建立並正式突破後再判讀。"};
+  }
+
+  if(st?.nPhase==="WEAKENING" || gate?.threeStatus==="failed" || falseKey==="high"){
+    return {color:"#dc2626",fill:"#fff1f2",border:"#ef4444",
+      status:"🔴 假突破疑慮升高｜先看修復",
+      note:(B!==null&&close!==null&&close<B)?`目前收盤已回到 B ${fmt(B)} 下方，先重新站回B。`:"已出現轉弱證據，先不要把先前突破當永久有效。"};
+  }
+
+  if(gate?.threePassed){
+    return {color:"#137333",fill:"#f0fff5",border:"#22c55e",
+      status:"🟢 3日站穩完成｜突破可信度提高",
+      note:"假突破疑慮下降；後續仍看回測B守住或續攻。"};
+  }
+
+  const observed = Number.isFinite(Number(gate?.observedAfter)) ? Math.max(0,Math.min(3,Number(gate.observedAfter))) : 0;
+  if(falseKey==="medium"){
+    return {color:"#b45309",fill:"#fffaf0",border:"#f59e0b",
+      status:`🟠 已突破B｜3日確認 ${observed}/3`,
+      note:"已有部分假突破風險特徵，站穩前先保守。"};
+  }
+  return {color:"#b45309",fill:"#fffaf0",border:"#f59e0b",
+    status:`🟡 已突破B｜3日確認 ${observed}/3`,
+    note:"尚未完成3日站穩，不提前判定為真突破。"};
+}
+
+function drawFakeBreakoutReminderV3771(ctx,report,st,x,y,w,h){
+  const P=infoPaletteV3328(),d=fakeBreakoutReminderV3771(report,st);
+  rrV3328(ctx,x,y,w,h,11,d.fill,d.border,2);
+  drawFitSingleLineStrictV3661(ctx,"🔍 突破真假判讀",x+14,y+22,w-28,{maxSize:17,minSize:14,weight:950,color:P.navy});
+  drawFitSingleLineStrictV3661(ctx,d.status,x+14,y+47,w-28,{maxSize:20,minSize:15,weight:950,color:d.color});
+  drawFitSingleLineStrictV3661(ctx,d.note,x+14,y+68,w-28,{maxSize:14,minSize:11,weight:800,color:P.text});
+}
+
+function drawRiskRewardTopChartV3771(ctx,st,x,y,w,h){
+  const P=infoPaletteV3328(),rr3742=afterHoursRiskRewardV3742(st);
+  if(rr3742?.available){
+    rrV3328(ctx,x,y,w,h,11,"#ffffff",rr3742.color,2);
+    drawFitSingleLineStrictV3661(
+      ctx,`⚖️ 動態盈虧比 1:${fmt(rr3742.ratio,2)}｜${rr3742.displayLabel||`${rr3742.icon}${rr3742.label}`}`,
+      x+14,y+29,w-28,{maxSize:22,minSize:16,weight:950,color:rr3742.color}
+    );
+    drawFitSingleLineStrictV3661(
+      ctx,`每承擔1元風險｜潛在獲利約 ${fmt(rr3742.ratio,2)} 元`,
+      x+14,y+58,w-28,{maxSize:17,minSize:13,weight:900,color:P.navy}
+    );
+  }else{
+    rrV3328(ctx,x,y,w,h,11,"#ffffff",P.line,1.5);
+    drawFitSingleLineStrictV3661(
+      ctx,"⚖️ 動態盈虧比｜等待有效關卡",
+      x+14,y+29,w-28,{maxSize:20,minSize:15,weight:950,color:P.muted}
+    );
+    drawFitSingleLineStrictV3661(
+      ctx,"目標與防守都確認後才計算",
+      x+14,y+58,w-28,{maxSize:16,minSize:12,weight:850,color:P.muted}
+    );
+  }
+}
+
 function drawStockTopChartV365(ctx,report,st){
   const P=infoPaletteV3328();
   rrV3328(ctx,560,174,1016,520,14,P.white,P.blue,2);
@@ -20057,7 +20139,9 @@ function drawStockTopChartV365(ctx,report,st){
   const t=st.trident361;
   if(selected.bars.length>=20){
     drawCardTitleV3328(ctx,586,213,`真實日K｜最近 ${selected.bars.length} 根＋量能＋日20MA`,P.navy,27);
-    drawFitSingleLineStrictV3661(ctx,"紅K＝上漲、綠K＝下跌｜通道：紅↗上升／綠↘下降／黃→盤整｜A/B/C與三叉戟在上層顯示",586,242,930,{maxSize:15,minSize:12,weight:700,color:P.muted});
+    drawFitSingleLineStrictV3661(ctx,"紅K上漲／綠K下跌｜通道：紅↗上升・綠↘下降・黃→盤整｜A/B/C、三叉戟見圖",586,242,590,{maxSize:15,minSize:12,weight:700,color:P.muted});
+    // V3.7.7.1｜右上角首眼提醒：動態盈虧比放大，不壓K線／右側價位標籤。
+    drawRiskRewardTopChartV3771(ctx,st,1192,190,358,70);
     drawRealKCoreV365(ctx,selected.bars,selected.all,selected.start,selected.ma20,{
       x:604,y:270,w:744,h:258,volY:542,volH:72,labelX:1370,labelW:176,unit:"元",
       A:st.A,B:st.B,C:st.C,close:st.close,ma20Now:st.ma,
@@ -20067,7 +20151,8 @@ function drawStockTopChartV365(ctx,report,st){
     // V3.7.5.7：RSI小卡已移到圖片最下方「記住口訣」右側，不再擠在真實日K內。
   }else{
     drawCardTitleV3328(ctx,586,215,"結構示意圖｜逐日OHLCV不足",P.navy,28);
-    fontV3328(ctx,16,700,P.muted);ctx.fillText("未取得至少20根完整日K時不假裝畫真實K線；部署含dailySeries的個股Worker後會自動升級。",586,246);
+    drawFitSingleLineStrictV3661(ctx,"逐日K不足時不硬畫真實K線；資料到位後自動升級。",586,246,580,{maxSize:15,minSize:12,weight:700,color:P.muted});
+    drawRiskRewardTopChartV3771(ctx,st,1192,190,358,70);
     const gx=748,gy=300,gw=550,gh=286,plotRight=gx+gw;
     const vals=[st.A,st.B,st.C,st.close,st.ma];const nums=vals.map(n).filter(v=>v!==null);let minV=Math.min(...nums),maxV=Math.max(...nums);if(!Number.isFinite(minV)||!Number.isFinite(maxV)||minV===maxV){minV=0;maxV=1;}const pad=Math.max((maxV-minV)*.1,Math.abs(maxV)*.02||1);minV-=pad;maxV+=pad;
     if(st.ma!==null)drawPlainLevelV3329(ctx,gx,plotRight,chartYV3328(st.ma,minV,maxV,gy,gh),P.blue2,[6,5],2);
@@ -20152,7 +20237,7 @@ function renderStockInfographicV3328(report){
   fontV3328(ctx,22,900,"#fff","center");ctx.fillText("報告製作 By.石頭少爺",1402,52);
   fontV3328(ctx,18,800,"#fff","center");ctx.fillText("圖片產生時間",1402,83);
   fontV3328(ctx,19,900,"#fff","center");ctx.fillText(reportGeneratedAt().replace("（台灣時間）",""),1402,115);
-  fontV3328(ctx,16,700,"#dbeafe","center");ctx.fillText("V3.7.6.0｜RSI全白話",1402,141);
+  fontV3328(ctx,16,700,"#dbeafe","center");ctx.fillText("V3.7.7.1｜首眼提醒排版",1402,141);
 
   // ===== 上半部：ABC + 結構示意圖 =====
   rrV3328(ctx,24,174,520,520,14,P.white,P.blue,2);
@@ -20202,8 +20287,10 @@ function renderStockInfographicV3328(report){
   // ===== A. 價格作戰地圖：V3.6.6.2 沿用固定模板安全排版；文字內容完全不變 =====
   const mapY=1062,mapH=744;
   rrV3328(ctx,24,mapY,1552,mapH,14,P.white,P.blue,2);
-  drawFitSingleLineStrictV3661(ctx,"A. 價格作戰地圖｜固定句型快速判讀（可進／續抱／減碼／退出）",46,mapY+42,1490,{maxSize:26,minSize:22,weight:900,color:P.navy});
-  drawFitSingleLineStrictV3661(ctx,"每一列固定顯示：強弱｜持有者動作｜空手者動作；由高到低排列。",48,mapY+70,1470,{maxSize:16,minSize:14,weight:750,color:P.muted});
+  // V3.7.7.1｜A區標題左側保留原標語，右側固定放「突破真假判讀」首眼提醒。
+  drawFitSingleLineStrictV3661(ctx,"A. 價格作戰地圖｜固定句型快速判讀",46,mapY+40,950,{maxSize:27,minSize:23,weight:900,color:P.navy});
+  drawFitSingleLineStrictV3661(ctx,"可進／續抱／減碼／退出｜由高到低排列",48,mapY+69,940,{maxSize:16,minSize:14,weight:800,color:P.muted});
+  drawFakeBreakoutReminderV3771(ctx,report,st,1038,mapY+14,510,78);
   const map=buildStockMapItemsV3328(report,st).slice(0,12);let my=mapY+106;
   const mapRowH=50; // V3.6.7.9：多容納一列戰術頸線，同時保留A與月20MA，不改圖片總尺寸。
   map.forEach((it,i)=>{drawStockMapRowV3661(ctx,it,my,mapRowH,i===map.length-1);my+=mapRowH;});
@@ -20292,46 +20379,16 @@ function renderStockInfographicV3328(report){
   fontV3328(ctx,30,950,P.red);ctx.fillText("再突破 B",958,2675);
   fontV3328(ctx,24,900,P.navy,"center");ctx.fillText("＝ 完整 N 字確認。",580,2720);
 
-  // V3.7.5.5｜RSI白話收尾升級版：核心計算與V3.7.4.2完全相同，只調整圖片顯示。
-  // 第一行保留「動態盈虧比＋風險Gate」；第二行直接翻成每承擔1元風險，可換取多少潛在獲利。
-  // 移除第三行重複的目標／防守來源，避免字體被壓得太小；關卡來源仍保留在價格作戰地圖與其他報告欄位。
-  const rr3742=afterHoursRiskRewardV3742(st);
-  const rrBoxX3741=748,rrBoxY3741=2722,rrBoxW3741=374,rrBoxH3741=68;
-  if(rr3742?.available){
-    rrV3328(ctx,rrBoxX3741,rrBoxY3741,rrBoxW3741,rrBoxH3741,10,"#ffffff",rr3742.color,1.5);
-    drawFitSingleLineStrictV3661(
-      ctx,`⚖️ 動態盈虧比 1:${fmt(rr3742.ratio,2)}｜${rr3742.displayLabel||`${rr3742.icon}${rr3742.label}`}`,
-      rrBoxX3741+12,rrBoxY3741+25,rrBoxW3741-24,
-      {maxSize:17,minSize:12,weight:900,color:rr3742.color}
-    );
-    drawFitSingleLineStrictV3661(
-      ctx,`白話：每承擔1元風險，潛在獲利約${fmt(rr3742.ratio,2)}元`,
-      rrBoxX3741+12,rrBoxY3741+53,rrBoxW3741-24,
-      {maxSize:15,minSize:10,weight:850,color:P.navy}
-    );
-  }else{
-    rrV3328(ctx,rrBoxX3741,rrBoxY3741,rrBoxW3741,rrBoxH3741,10,"#ffffff",P.line,1.2);
-    drawFitSingleLineStrictV3661(
-      ctx,"⚖️ 動態盈虧比：等待有效上下關卡",
-      rrBoxX3741+12,rrBoxY3741+25,rrBoxW3741-24,
-      {maxSize:16,minSize:12,weight:850,color:P.muted}
-    );
-    drawFitSingleLineStrictV3661(
-      ctx,"白話：等目標與防守都確認後再計算",
-      rrBoxX3741+12,rrBoxY3741+53,rrBoxW3741-24,
-      {maxSize:14,minSize:10,weight:800,color:P.muted}
-    );
-  }
-
-  // 原本兩行三叉戟提示保留在左側；縮短可用寬度，與盈虧比卡完全分欄。
+  // V3.7.7.1｜動態盈虧比已移到「真實日K」右上角；底部不再重複顯示，避免資訊分散。
+  // 三叉戟提示保留底部左側；盈虧比移走後放寬文字空間，避免縮字。
   drawFitSingleLineStrictV3661(
     ctx,footerTridentText3717,
-    58,2755,660,
+    58,2755,1040,
     {maxSize:17,minSize:12,weight:850,color:P.navy}
   );
   drawFitSingleLineStrictV3661(
     ctx,footerPrepHint3717,
-    58,2785,660,
+    58,2785,1040,
     {maxSize:16,minSize:11,weight:800,color:"#7c3aed"}
   );
 
